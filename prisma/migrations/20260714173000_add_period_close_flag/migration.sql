@@ -1,0 +1,1 @@
+ALTER TABLE "Period" ADD COLUMN "isClosed" BOOLEAN NOT NULL DEFAULT false;

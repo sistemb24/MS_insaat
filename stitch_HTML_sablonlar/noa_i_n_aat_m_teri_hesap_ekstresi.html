@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+
+<html class="light" lang="tr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Müşteri Hesap Ekstresi - NOA İnşaat ERP</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Theme Config -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary-fixed": "#351000",
+                        "on-surface-variant": "#464555",
+                        "secondary-fixed-dim": "#bec6e0",
+                        "secondary": "#565e74",
+                        "on-primary-container": "#dad7ff",
+                        "on-error": "#ffffff",
+                        "text-muted": "#64748B",
+                        "decorative-navy": "#000080",
+                        "danger-rose": "#E11D48",
+                        "tertiary-container": "#a44100",
+                        "on-tertiary": "#ffffff",
+                        "surface-tint": "#4d44e3",
+                        "surface-container-lowest": "#ffffff",
+                        "decorative-purple": "#800080",
+                        "on-primary-fixed-variant": "#3323cc",
+                        "surface-variant": "#e0e3e5",
+                        "tertiary": "#7e3000",
+                        "on-primary-fixed": "#0f0069",
+                        "on-primary": "#ffffff",
+                        "secondary-container": "#dae2fd",
+                        "inverse-on-surface": "#eff1f3",
+                        "on-secondary-fixed": "#131b2e",
+                        "on-background": "#191c1e",
+                        "surface-dim": "#d8dadc",
+                        "error": "#ba1a1a",
+                        "surface-container-highest": "#e0e3e5",
+                        "background": "#f7f9fb",
+                        "on-tertiary-fixed-variant": "#7b2f00",
+                        "border-slate": "#E2E8F0",
+                        "secondary-fixed": "#dae2fd",
+                        "success-emerald": "#10B981",
+                        "error-container": "#ffdad6",
+                        "on-secondary-fixed-variant": "#3f465c",
+                        "surface-container": "#eceef0",
+                        "outline": "#777587",
+                        "primary-fixed-dim": "#c3c0ff",
+                        "primary-fixed": "#e2dfff",
+                        "warning-amber": "#F59E0B",
+                        "primary-container": "#4f46e5",
+                        "surface": "#f7f9fb",
+                        "on-secondary-container": "#5c647a",
+                        "tertiary-fixed-dim": "#ffb695",
+                        "on-secondary": "#ffffff",
+                        "tertiary-fixed": "#ffdbcc",
+                        "surface-bright": "#f7f9fb",
+                        "on-error-container": "#93000a",
+                        "surface-container-high": "#e6e8ea",
+                        "inverse-surface": "#2d3133",
+                        "inverse-primary": "#c3c0ff",
+                        "on-tertiary-container": "#ffd2be",
+                        "surface-white": "#FFFFFF",
+                        "primary": "#3525cd",
+                        "on-surface": "#191c1e",
+                        "outline-variant": "#c7c4d8",
+                        "surface-container-low": "#f2f4f6"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-md": "1rem",
+                        "sidebar-collapsed": "80px",
+                        "grid-cell-py": "0.5rem",
+                        "grid-cell-px": "0.75rem",
+                        "container-gap": "1.5rem",
+                        "header-height": "64px",
+                        "stack-sm": "0.5rem",
+                        "sidebar-width": "260px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "data-mono": ["JetBrains Mono"],
+                        "body-lg": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "headline-sm": ["Inter"],
+                        "body-md": ["Inter"],
+                        "label-caps": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["30px", {"lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                        "data-mono": ["13px", {"lineHeight": "16px", "fontWeight": "500"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "body-sm": ["13px", {"lineHeight": "18px", "fontWeight": "400"}],
+                        "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .table-row-striped:nth-child(even) {
+            background-color: #f7f9fb; /* surface */
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body-md min-h-screen flex text-body-md antialiased overflow-x-hidden">
+<!-- Mobile Navigation Overlay (Hidden by default) -->
+<div class="fixed inset-0 bg-on-surface/50 z-40 hidden md:hidden" id="mobile-nav-overlay"></div>
+<!-- SideNavBar -->
+<nav class="bg-surface-white dark:bg-inverse-surface shadow-sm fixed left-0 top-0 h-screen w-sidebar flex flex-col border-r border-border-slate dark:border-outline-variant z-50 transform -translate-x-full md:translate-x-0 transition-transform duration-300" id="sidebar">
+<!-- Logo & Header -->
+<div class="h-header-height flex items-center px-6 border-b border-border-slate dark:border-outline-variant">
+<img alt="NOA İnşaat Logo" class="w-8 h-8 rounded-DEFAULT mr-3 object-cover" data-alt="A clean, minimalist corporate logo for a construction management system. The logo features sharp geometric shapes resembling buildings or scaffolding, predominantly in a deep primary indigo blue on a stark white background. The typography is modern and sans-serif, communicating precision, safety, and rigorous engineering standards." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBPdmHoF6OJurazVWy5k3bYXoDWt4Rebg86qKG8lmQUBka_RNggTIyyPEDZYuVMo3xN-tz7Q5L8EbvON9pU2Q4PwiQPXYb2-ZsVn6LJFt-MBty2MvmxOR9pHwODTNQJzO38tOpeUXSI4hENBrMqa_afNbfueIecRywPqQsxfHq-ZAYaTgcstq1QSjWlrvVKZB70AtY1a7bNCGwf4ECtYuSTDy3yVjmgfwZrmmltYlb808IpHbrxS3QW"/>
+<div>
+<h1 class="font-headline-sm text-headline-sm font-bold text-primary dark:text-primary-fixed">NOA ERP</h1>
+<p class="font-label-caps text-label-caps text-on-surface-variant dark:text-surface-variant">İnşaat Yönetim Sistemi</p>
+</div>
+<!-- Close button for mobile -->
+<button class="ml-auto md:hidden text-on-surface-variant" id="close-sidebar">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<!-- CTA Button -->
+<div class="p-6">
+<button class="w-full bg-primary text-on-primary py-2 px-4 rounded-lg font-body-sm text-body-sm font-medium hover:bg-primary-container-low transition-colors shadow-sm flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[20px]">add</span>
+                Yeni Proje Ekle
+            </button>
+</div>
+<!-- Navigation Links -->
+<div class="flex-1 overflow-y-auto px-4 py-2 space-y-1">
+<a class="flex items-center gap-3 px-4 py-2 text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-primary-fixed hover:bg-surface-container-low dark:hover:bg-on-secondary-fixed-variant transition-colors duration-200 rounded-lg" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span>Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-2 text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-primary-fixed hover:bg-surface-container-low dark:hover:bg-on-secondary-fixed-variant transition-colors duration-200 rounded-lg" href="#">
+<span class="material-symbols-outlined">construction</span>
+<span>Şantiyeler</span>
+</a>
+<!-- Finance (Active Semantic Match for Account Statement) -->
+<a class="flex items-center gap-3 px-4 py-2 bg-secondary-container dark:bg-on-secondary-fixed-variant text-primary dark:text-primary-fixed-dim font-semibold rounded-lg scale-[0.98] transition-transform" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">payments</span>
+<span>Finans</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-2 text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-primary-fixed hover:bg-surface-container-low dark:hover:bg-on-secondary-fixed-variant transition-colors duration-200 rounded-lg" href="#">
+<span class="material-symbols-outlined">group</span>
+<span>İnsan Kaynakları</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-2 text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-primary-fixed hover:bg-surface-container-low dark:hover:bg-on-secondary-fixed-variant transition-colors duration-200 rounded-lg" href="#">
+<span class="material-symbols-outlined">local_shipping</span>
+<span>Tedarik Zinciri</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-2 text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-primary-fixed hover:bg-surface-container-low dark:hover:bg-on-secondary-fixed-variant transition-colors duration-200 rounded-lg" href="#">
+<span class="material-symbols-outlined">analytics</span>
+<span>Raporlar</span>
+</a>
+</div>
+<!-- Footer Links -->
+<div class="p-4 border-t border-border-slate dark:border-outline-variant space-y-1">
+<a class="flex items-center gap-3 px-4 py-2 text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-primary-fixed hover:bg-surface-container-low dark:hover:bg-on-secondary-fixed-variant transition-colors duration-200 rounded-lg" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span>Ayarlar</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-2 text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-primary-fixed hover:bg-surface-container-low dark:hover:bg-on-secondary-fixed-variant transition-colors duration-200 rounded-lg" href="#">
+<span class="material-symbols-outlined">help</span>
+<span>Yardım</span>
+</a>
+</div>
+</nav>
+<!-- Main Content Area -->
+<main class="flex-1 md:ml-sidebar min-w-0 flex flex-col h-screen overflow-hidden">
+<!-- TopNavBar -->
+<header class="bg-surface-white/80 dark:bg-inverse-surface/80 backdrop-blur-md sticky top-0 z-40 w-full h-header-height border-b border-border-slate dark:border-outline-variant flex justify-between items-center px-6">
+<!-- Mobile Menu Toggle -->
+<div class="flex items-center md:hidden mr-4">
+<button class="text-on-surface-variant p-1" id="open-sidebar">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</div>
+<!-- Context Breadcrumb / Title (Left) -->
+<div class="flex items-center space-x-4">
+<div class="hidden sm:flex items-center space-x-2 text-sm">
+<span class="text-text-muted font-body-sm text-body-sm">Finans</span>
+<span class="material-symbols-outlined text-[16px] text-text-muted">chevron_right</span>
+<span class="text-text-muted font-body-sm text-body-sm">Cari Hesaplar</span>
+<span class="material-symbols-outlined text-[16px] text-text-muted">chevron_right</span>
+<span class="text-on-surface font-body-sm text-body-sm font-medium">Hesap Ekstresi</span>
+</div>
+<!-- Search (Placeholder logic from JSON) -->
+<div class="hidden lg:flex relative items-center ml-4">
+<span class="material-symbols-outlined absolute left-3 text-text-muted text-[18px]">search</span>
+<input class="pl-10 pr-4 py-1.5 bg-surface-container-low border-none rounded-DEFAULT text-body-sm font-body-sm focus:ring-1 focus:ring-primary w-64 text-on-surface" placeholder="Arama yap..." type="text"/>
+</div>
+</div>
+<!-- Navigation Links (Center-ish, from JSON) -->
+<nav class="hidden md:flex space-x-6">
+<a class="font-label-caps text-label-caps text-on-surface-variant dark:text-surface-variant hover:text-on-surface dark:hover:text-inverse-on-surface py-5 border-b-2 border-transparent transition-colors" href="#">Genel Bakış</a>
+<a class="font-label-caps text-label-caps text-on-surface-variant dark:text-surface-variant hover:text-on-surface dark:hover:text-inverse-on-surface py-5 border-b-2 border-transparent transition-colors" href="#">Hakedişler</a>
+<a class="font-label-caps text-label-caps text-on-surface-variant dark:text-surface-variant hover:text-on-surface dark:hover:text-inverse-on-surface py-5 border-b-2 border-transparent transition-colors" href="#">Bütçe Analizi</a>
+</nav>
+<!-- Trailing Actions (Right) -->
+<div class="flex items-center space-x-4">
+<div class="flex items-center space-x-2 text-on-surface-variant">
+<button class="p-1.5 hover:text-primary dark:hover:text-primary-fixed transition-colors opacity-80 rounded-full hover:bg-surface-container-low"><span class="material-symbols-outlined">notifications</span></button>
+<button class="p-1.5 hover:text-primary dark:hover:text-primary-fixed transition-colors opacity-80 rounded-full hover:bg-surface-container-low"><span class="material-symbols-outlined">apps</span></button>
+<button class="p-1.5 hover:text-primary dark:hover:text-primary-fixed transition-colors opacity-80 rounded-full hover:bg-surface-container-low"><span class="material-symbols-outlined">account_circle</span></button>
+</div>
+<button class="hidden sm:block bg-primary-container/10 text-primary px-3 py-1.5 rounded-DEFAULT font-label-caps text-label-caps hover:bg-primary-container/20 transition-colors border border-primary/20">Hızlı İşlem</button>
+</div>
+</header>
+<!-- Page Content Scrollable Area -->
+<div class="flex-1 overflow-y-auto bg-surface p-4 sm:p-6 lg:p-8">
+<div class="max-w-7xl mx-auto space-y-6">
+<!-- Header Section: Customer Info & Actions -->
+<div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 bg-surface-white p-6 rounded-xl shadow-sm border border-border-slate">
+<div>
+<div class="flex items-center gap-3 mb-1">
+<h2 class="font-headline-md text-headline-md text-on-surface">Zeta Gayrimenkul Yatırım A.Ş.</h2>
+<span class="bg-success-emerald/10 text-success-emerald px-2 py-0.5 rounded-DEFAULT font-label-caps text-label-caps border border-success-emerald/20">Aktif Cari</span>
+</div>
+<p class="font-body-sm text-body-sm text-text-muted flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px]">domain</span> VKN: 9876543210 • İstanbul
+                        </p>
+</div>
+<div class="flex flex-wrap gap-3">
+<!-- Action Cluster -->
+<div class="flex border border-border-slate rounded-lg overflow-hidden shadow-sm">
+<button class="bg-surface-white px-4 py-2 font-body-sm text-body-sm font-medium text-on-surface hover:bg-surface-container-low transition-colors flex items-center gap-2 border-r border-border-slate">
+<span class="material-symbols-outlined text-[18px]">picture_as_pdf</span>
+<span class="hidden sm:inline">PDF İndir</span>
+</button>
+<button class="bg-surface-white px-4 py-2 font-body-sm text-body-sm font-medium text-on-surface hover:bg-surface-container-low transition-colors flex items-center gap-2 border-r border-border-slate">
+<span class="material-symbols-outlined text-[18px]">table_chart</span>
+<span class="hidden sm:inline">Excel</span>
+</button>
+<button class="bg-surface-white px-4 py-2 font-body-sm text-body-sm font-medium text-on-surface hover:bg-surface-container-low transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">print</span>
+</button>
+</div>
+<button class="bg-primary text-on-primary px-5 py-2 rounded-lg font-body-sm text-body-sm font-medium hover:bg-primary/90 transition-colors shadow-sm flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">send</span>
+                            Ekstre Gönder
+                        </button>
+</div>
+</div>
+<!-- Financial Summary Bento Cards -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+<!-- Card 1: Toplam Borç -->
+<div class="bg-surface-white p-5 rounded-xl border border-border-slate shadow-sm relative overflow-hidden group">
+<div class="absolute right-0 top-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-[48px] text-danger-rose">arrow_upward</span>
+</div>
+<p class="font-label-caps text-label-caps text-text-muted mb-2">TOPLAM BORÇ (Müşteri Borcu)</p>
+<h3 class="font-headline-lg text-headline-lg text-on-surface">1.245.000,00 <span class="text-body-lg text-text-muted font-normal">TL</span></h3>
+<p class="font-body-sm text-body-sm text-text-muted mt-2 mt-4 flex items-center gap-1">
+<span class="w-2 h-2 rounded-full bg-danger-rose"></span> Faturalandırılmış
+                        </p>
+</div>
+<!-- Card 2: Toplam Alacak -->
+<div class="bg-surface-white p-5 rounded-xl border border-border-slate shadow-sm relative overflow-hidden group">
+<div class="absolute right-0 top-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-[48px] text-success-emerald">arrow_downward</span>
+</div>
+<p class="font-label-caps text-label-caps text-text-muted mb-2">TOPLAM ALACAK (Tahsilat)</p>
+<h3 class="font-headline-lg text-headline-lg text-on-surface">850.000,00 <span class="text-body-lg text-text-muted font-normal">TL</span></h3>
+<p class="font-body-sm text-body-sm text-text-muted mt-4 flex items-center gap-1">
+<span class="w-2 h-2 rounded-full bg-success-emerald"></span> Gelen Ödemeler
+                        </p>
+</div>
+<!-- Card 3: Net Bakiye -->
+<div class="bg-primary/5 p-5 rounded-xl border border-primary/20 shadow-sm relative overflow-hidden">
+<div class="absolute right-0 top-0 w-32 h-32 bg-primary/10 rounded-full -mr-10 -mt-10 blur-2xl"></div>
+<p class="font-label-caps text-label-caps text-primary mb-2">NET BAKİYE</p>
+<h3 class="font-headline-lg text-headline-lg text-primary">395.000,00 <span class="text-body-lg text-primary/70 font-normal">TL</span></h3>
+<p class="font-body-sm text-body-sm text-primary/80 mt-4 font-medium flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">info</span> Müşteri Borçlu
+                        </p>
+</div>
+</div>
+<!-- Filters & Controls -->
+<div class="bg-surface-white p-4 rounded-xl border border-border-slate shadow-sm flex flex-col sm:flex-row flex-wrap gap-4 items-center justify-between">
+<div class="flex flex-wrap gap-4 w-full sm:w-auto">
+<!-- Date Range -->
+<div class="relative w-full sm:w-64">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-text-muted text-[18px]">calendar_today</span>
+<input class="w-full pl-10 pr-4 py-2 bg-surface-container-low border border-border-slate rounded-lg text-body-sm font-body-sm focus:ring-1 focus:ring-primary focus:border-primary text-on-surface" readonly="" type="text" value="01.01.2023 - 31.12.2023"/>
+</div>
+<!-- Transaction Type Select -->
+<div class="relative w-full sm:w-48">
+<select class="w-full pl-3 pr-10 py-2 bg-surface-container-low border border-border-slate rounded-lg text-body-sm font-body-sm focus:ring-1 focus:ring-primary focus:border-primary text-on-surface appearance-none">
+<option>Tüm Hareketler</option>
+<option>Hakediş Faturaları</option>
+<option>Tahsilatlar (Gelen Havale)</option>
+<option>Virman / Dekont</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-text-muted text-[18px] pointer-events-none">expand_more</span>
+</div>
+</div>
+<div class="flex gap-2 w-full sm:w-auto">
+<button class="px-4 py-2 bg-surface-container-low text-on-surface border border-border-slate rounded-lg font-body-sm text-body-sm font-medium hover:bg-surface-variant transition-colors w-full sm:w-auto">Temizle</button>
+<button class="px-4 py-2 bg-secondary text-on-secondary rounded-lg font-body-sm text-body-sm font-medium hover:bg-secondary/90 transition-colors w-full sm:w-auto shadow-sm">Filtrele</button>
+</div>
+</div>
+<!-- Data Table Container -->
+<div class="bg-surface-white border border-border-slate rounded-xl shadow-sm overflow-hidden">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low border-b border-border-slate">
+<th class="py-grid-cell-py px-grid-cell-px font-label-caps text-label-caps text-text-muted whitespace-nowrap sticky top-0 bg-surface-container-low z-10">Tarih</th>
+<th class="py-grid-cell-py px-grid-cell-px font-label-caps text-label-caps text-text-muted whitespace-nowrap sticky top-0 bg-surface-container-low z-10">Belge No</th>
+<th class="py-grid-cell-py px-grid-cell-px font-label-caps text-label-caps text-text-muted sticky top-0 bg-surface-container-low z-10 w-full">Açıklama</th>
+<th class="py-grid-cell-py px-grid-cell-px font-label-caps text-label-caps text-text-muted text-right whitespace-nowrap sticky top-0 bg-surface-container-low z-10">Borç (TL)</th>
+<th class="py-grid-cell-py px-grid-cell-px font-label-caps text-label-caps text-text-muted text-right whitespace-nowrap sticky top-0 bg-surface-container-low z-10">Alacak (TL)</th>
+<th class="py-grid-cell-py px-grid-cell-px font-label-caps text-label-caps text-text-muted text-right whitespace-nowrap sticky top-0 bg-surface-container-low z-10">Yürüyen Bakiye</th>
+</tr>
+</thead>
+<tbody class="font-data-mono text-data-mono text-on-surface">
+<!-- Devir -->
+<tr class="border-b border-border-slate bg-surface-container-lowest hover:bg-surface-container-low transition-colors">
+<td class="py-grid-cell-py px-grid-cell-px text-text-muted">01.01.2023</td>
+<td class="py-grid-cell-py px-grid-cell-px">-</td>
+<td class="py-grid-cell-py px-grid-cell-px font-body-sm text-body-sm font-medium text-text-muted italic">Açılış Fişi / Devir Bakiyesi</td>
+<td class="py-grid-cell-py px-grid-cell-px text-right text-text-muted">0,00</td>
+<td class="py-grid-cell-py px-grid-cell-px text-right text-text-muted">0,00</td>
+<td class="py-grid-cell-py px-grid-cell-px text-right font-medium text-text-muted">0,00</td>
+</tr>
+<!-- Satır 1 -->
+<tr class="border-b border-border-slate table-row-striped hover:bg-surface-container-low transition-colors">
+<td class="py-grid-cell-py px-grid-cell-px">15.02.2023</td>
+<td class="py-grid-cell-py px-grid-cell-px text-primary">HKD-2023-001</td>
+<td class="py-grid-cell-py px-grid-cell-px font-body-sm text-body-sm">
+<div class="flex items-center gap-2">
+<span class="w-1.5 h-1.5 rounded-full bg-danger-rose"></span>
+                                            1 Nolu Hakediş Faturası (Proje Alpha)
+                                        </div>
+</td>
+<td class="py-grid-cell-py px-grid-cell-px text-right text-danger-rose">450.000,00</td>
+<td class="py-grid-cell-py px-grid-cell-px text-right text-text-muted">-</td>
+<td class="py-grid-cell-py px-grid-cell-px text-right font-medium">450.000,00</td>
+</tr>
+<!-- Satır 2 -->
+<tr class="border-b border-border-slate table-row-striped hover:bg-surface-container-low transition-colors">
+<td class="py-grid-cell-py px-grid-cell-px">20.02.2023</td>
+<td class="py-grid-cell-py px-grid-cell-px text-text-muted">THS-2023-042</td>
+<td class="py-grid-cell-py px-grid-cell-px font-body-sm text-body-sm">
+<div class="flex items-center gap-2">
+<span class="w-1.5 h-1.5 rounded-full bg-success-emerald"></span>
+                                            Gelen Havale (Akbank) - Kısmi Ödeme
+                                        </div>
+</td>
+<td class="py-grid-cell-py px-grid-cell-px text-right text-text-muted">-</td>
+<td class="py-grid-cell-py px-grid-cell-px text-right text-success-emerald">250.000,00</td>
+<td class="py-grid-cell-py px-grid-cell-px text-right font-medium">200.000,00</td>
+</tr>
+<!-- Satır 3 -->
+<tr class="border-b border-border-slate table-row-striped hover:bg-surface-container-low transition-colors">
+<td class="py-grid-cell-py px-grid-cell-px">10.04.2023</td>
+<td class="py-grid-cell-py px-grid-cell-px text-primary">HKD-2023-002</td>
+<td class="py-grid-cell-py px-grid-cell-px font-body-sm text-body-sm">
+<div class="flex items-center gap-2">
+<span class="w-1.5 h-1.5 rounded-full bg-danger-rose"></span>
+                                            2 Nolu Hakediş Faturası (Proje Alpha)
+                                        </div>
+</td>
+<td class="py-grid-cell-py px-grid-cell-px text-right text-danger-rose">795.000,00</td>
+<td class="py-grid-cell-py px-grid-cell-px text-right text-text-muted">-</td>
+<td class="py-grid-cell-py px-grid-cell-px text-right font-medium">995.000,00</td>
+</tr>
+<!-- Satır 4 -->
+<tr class="border-b border-border-slate table-row-striped hover:bg-surface-container-low transition-colors">
+<td class="py-grid-cell-py px-grid-cell-px">15.04.2023</td>
+<td class="py-grid-cell-py px-grid-cell-px text-text-muted">THS-2023-089</td>
+<td class="py-grid-cell-py px-grid-cell-px font-body-sm text-body-sm">
+<div class="flex items-center gap-2">
+<span class="w-1.5 h-1.5 rounded-full bg-success-emerald"></span>
+                                            Gelen Havale (Garanti) - 1.Hakediş Kalan + 2.Hakediş Avans
+                                        </div>
+</td>
+<td class="py-grid-cell-py px-grid-cell-px text-right text-text-muted">-</td>
+<td class="py-grid-cell-py px-grid-cell-px text-right text-success-emerald">600.000,00</td>
+<td class="py-grid-cell-py px-grid-cell-px text-right font-medium">395.000,00</td>
+</tr>
+</tbody>
+<tfoot>
+<tr class="bg-surface-container-high border-t-2 border-border-slate font-data-mono text-data-mono text-on-surface font-semibold">
+<td class="py-3 px-grid-cell-px text-right" colspan="3">TOPLAM:</td>
+<td class="py-3 px-grid-cell-px text-right text-danger-rose">1.245.000,00</td>
+<td class="py-3 px-grid-cell-px text-right text-success-emerald">850.000,00</td>
+<td class="py-3 px-grid-cell-px text-right text-primary">395.000,00 (B)</td>
+</tr>
+</tfoot>
+</table>
+</div>
+</div>
+</div>
+</div>
+</main>
+<script>
+        // Simple Sidebar Toggle for Mobile
+        const btnOpen = document.getElementById('open-sidebar');
+        const btnClose = document.getElementById('close-sidebar');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('mobile-nav-overlay');
+
+        function toggleSidebar() {
+            sidebar.classList.toggle('-translate-x-full');
+            overlay.classList.toggle('hidden');
+        }
+
+        btnOpen.addEventListener('click', toggleSidebar);
+        btnClose.addEventListener('click', toggleSidebar);
+        overlay.addEventListener('click', toggleSidebar);
+    </script>
+</body></html>

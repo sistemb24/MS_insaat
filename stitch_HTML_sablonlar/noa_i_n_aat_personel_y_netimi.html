@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+
+<html class="light" lang="tr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Personel Yönetimi - NOA İnşaat</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-tertiary-container": "#ffd2be",
+                      "on-tertiary": "#ffffff",
+                      "on-error-container": "#93000a",
+                      "outline": "#777587",
+                      "inverse-primary": "#c3c0ff",
+                      "on-secondary-container": "#5c647a",
+                      "inverse-surface": "#2d3133",
+                      "surface-dim": "#d8dadc",
+                      "on-secondary-fixed": "#131b2e",
+                      "on-error": "#ffffff",
+                      "success-emerald": "#10B981",
+                      "surface-variant": "#e0e3e5",
+                      "primary-fixed": "#e2dfff",
+                      "tertiary-container": "#a44100",
+                      "border-slate": "#E2E8F0",
+                      "on-primary-fixed-variant": "#3323cc",
+                      "primary": "#3525cd",
+                      "on-secondary-fixed-variant": "#3f465c",
+                      "surface-container-highest": "#e0e3e5",
+                      "error-container": "#ffdad6",
+                      "warning-amber": "#F59E0B",
+                      "on-surface-variant": "#464555",
+                      "primary-fixed-dim": "#c3c0ff",
+                      "surface-container-high": "#e6e8ea",
+                      "on-tertiary-fixed-variant": "#7b2f00",
+                      "tertiary-fixed-dim": "#ffb695",
+                      "surface-bright": "#f7f9fb",
+                      "secondary-fixed-dim": "#bec6e0",
+                      "surface-tint": "#4d44e3",
+                      "on-primary-container": "#dad7ff",
+                      "surface-container": "#eceef0",
+                      "tertiary": "#7e3000",
+                      "on-primary-fixed": "#0f0069",
+                      "danger-rose": "#E11D48",
+                      "on-background": "#191c1e",
+                      "primary-container": "#4f46e5",
+                      "text-muted": "#64748B",
+                      "surface": "#f7f9fb",
+                      "outline-variant": "#c7c4d8",
+                      "tertiary-fixed": "#ffdbcc",
+                      "on-tertiary-fixed": "#351000",
+                      "secondary-fixed": "#dae2fd",
+                      "decorative-purple": "#800080",
+                      "on-secondary": "#ffffff",
+                      "inverse-on-surface": "#eff1f3",
+                      "surface-container-lowest": "#ffffff",
+                      "error": "#ba1a1a",
+                      "on-surface": "#191c1e",
+                      "background": "#f7f9fb",
+                      "on-primary": "#ffffff",
+                      "secondary": "#565e74",
+                      "decorative-navy": "#000080",
+                      "surface-container-low": "#f2f4f6",
+                      "secondary-container": "#dae2fd",
+                      "surface-white": "#FFFFFF"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "stack-sm": "0.5rem",
+                      "grid-cell-px": "0.75rem",
+                      "container-gap": "1.5rem",
+                      "sidebar-width": "260px",
+                      "stack-md": "1rem",
+                      "header-height": "64px",
+                      "sidebar-collapsed": "80px",
+                      "grid-cell-py": "0.5rem"
+              },
+              "fontFamily": {
+                      "body-md": [
+                              "Inter"
+                      ],
+                      "data-mono": [
+                              "JetBrains Mono"
+                      ],
+                      "body-lg": [
+                              "Inter"
+                      ],
+                      "headline-lg-mobile": [
+                              "Inter"
+                      ],
+                      "headline-lg": [
+                              "Inter"
+                      ],
+                      "label-caps": [
+                              "Inter"
+                      ],
+                      "body-sm": [
+                              "Inter"
+                      ],
+                      "headline-md": [
+                              "Inter"
+                      ],
+                      "headline-sm": [
+                              "Inter"
+                      ]
+              },
+              "fontSize": {
+                      "body-md": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "data-mono": [
+                              "13px",
+                              {
+                                      "lineHeight": "16px",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "body-lg": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "headline-lg-mobile": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "headline-lg": [
+                              "30px",
+                              {
+                                      "lineHeight": "38px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "label-caps": [
+                              "12px",
+                              {
+                                      "lineHeight": "16px",
+                                      "letterSpacing": "0.05em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "body-sm": [
+                              "13px",
+                              {
+                                      "lineHeight": "18px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "headline-md": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "headline-sm": [
+                              "20px",
+                              {
+                                      "lineHeight": "28px",
+                                      "fontWeight": "600"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+    </script>
+</head>
+<body class="bg-background text-on-background font-body-md text-body-md m-0 p-0 overflow-x-hidden">
+<!-- TopNavBar -->
+<header class="h-header-height fixed top-0 right-0 z-40 bg-surface-white/80 dark:bg-inverse-surface/80 backdrop-blur-md border-b border-outline-variant dark:border-outline flex justify-between items-center px-6 w-[calc(100%-theme(spacing.sidebar-width))] ml-sidebar-width transition-all duration-200 flat no shadows">
+<div class="flex items-center w-full max-w-md">
+<div class="relative w-full">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant dark:text-surface-variant">search</span>
+<input class="w-full pl-10 pr-4 py-2 bg-surface-container-lowest dark:bg-inverse-surface border border-border-slate dark:border-outline-variant rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent text-on-surface dark:text-surface-variant font-body-md text-body-md transition-colors" placeholder="Personel Ara..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container dark:hover:bg-surface-container-highest rounded-full transition-colors relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-1 right-1 w-2 h-2 bg-danger-rose rounded-full"></span>
+</button>
+<div class="h-8 w-8 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-headline-sm text-headline-sm font-bold shadow-sm">
+                A
+            </div>
+</div>
+</header>
+<!-- SideNavBar -->
+<nav class="w-sidebar-width h-screen fixed left-0 top-0 bg-surface-white dark:bg-inverse-surface shadow-[0_1px_3px_rgba(79,70,229,0.08)] flex flex-col h-full border-r border-outline-variant dark:border-outline z-50">
+<div class="p-6 border-b border-outline-variant dark:border-outline">
+<div class="flex items-center gap-3">
+<div class="h-10 w-10 bg-primary rounded-lg flex items-center justify-center text-white font-bold text-xl shadow-sm">N</div>
+<div>
+<h1 class="font-headline-sm text-headline-sm font-bold text-primary dark:text-inverse-primary">NOA İnşaat</h1>
+<p class="text-xs text-on-surface-variant dark:text-surface-variant">Construction ERP</p>
+</div>
+</div>
+</div>
+<div class="flex-1 overflow-y-auto py-4 px-3 flex flex-col gap-1">
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-low transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+                Dashboard
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-low transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined">business</span>
+                Firms
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-low transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined">gavel</span>
+                Tender Management
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-low transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined">description</span>
+                Document Center
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 bg-secondary-container dark:bg-primary-container text-primary dark:text-on-primary-container rounded-lg font-semibold transition-all duration-200 active:scale-95" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">group</span>
+                Staff
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-low transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+                Inventory
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-low transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined">directions_car</span>
+                Vehicles
+            </a>
+</div>
+<div class="p-4 border-t border-outline-variant dark:border-outline">
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-low transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined">settings</span>
+                Settings
+            </a>
+</div>
+</nav>
+<!-- Main Content -->
+<main class="ml-sidebar-width pt-header-height p-6 min-h-screen">
+<div class="max-w-7xl mx-auto space-y-container-gap">
+<!-- Header Section -->
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-on-background">Personel Yönetimi</h2>
+<p class="text-on-surface-variant font-body-md mt-1">Toplam <span class="font-bold text-primary">145</span> aktif personel bulunuyor.</p>
+</div>
+<div class="flex flex-wrap gap-3 w-full md:w-auto">
+<button class="bg-surface-white border border-border-slate text-on-surface px-4 py-2 rounded-lg font-body-md flex items-center gap-2 hover:bg-surface-container-low transition-colors shadow-sm">
+<span class="material-symbols-outlined text-[20px]">filter_list</span>
+                        Filtrele
+                    </button>
+<button class="bg-primary text-on-primary px-4 py-2 rounded-lg font-body-md font-medium flex items-center gap-2 hover:bg-primary-container transition-colors shadow-sm active:scale-95">
+<span class="material-symbols-outlined text-[20px]">add</span>
+                        Yeni Personel
+                    </button>
+</div>
+</div>
+<!-- Filter Bar -->
+<div class="flex flex-wrap gap-2 pb-2 border-b border-border-slate">
+<button class="px-4 py-1.5 rounded-full bg-primary-container text-on-primary-container font-body-md text-sm font-medium transition-colors">Tümü</button>
+<button class="px-4 py-1.5 rounded-full bg-surface-white border border-border-slate text-on-surface hover:bg-surface-container-low font-body-md text-sm transition-colors">Merkez Ofis</button>
+<button class="px-4 py-1.5 rounded-full bg-surface-white border border-border-slate text-on-surface hover:bg-surface-container-low font-body-md text-sm transition-colors">Şantiye A</button>
+<button class="px-4 py-1.5 rounded-full bg-surface-white border border-border-slate text-on-surface hover:bg-surface-container-low font-body-md text-sm transition-colors">Şantiye B</button>
+<button class="px-4 py-1.5 rounded-full bg-surface-white border border-border-slate text-on-surface hover:bg-surface-container-low font-body-md text-sm transition-colors">İzinde</button>
+</div>
+<!-- Personnel Grid -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+<!-- Card 1 -->
+<div class="bg-surface-white rounded-xl p-5 shadow-[0_1px_3px_rgba(79,70,229,0.08)] border border-border-slate flex flex-col items-center text-center group hover:shadow-[0_4px_6px_rgba(79,70,229,0.12)] transition-shadow">
+<img class="w-20 h-20 rounded-full object-cover mb-4 border-2 border-surface-container-high" data-alt="A professional headshot of a Turkish male civil engineer in his 30s. He is wearing a white hard hat and a high-visibility yellow vest over a clean blue button-down shirt. The background is a slightly blurred modern construction site with concrete structures. The lighting is bright, natural daylight, conveying a professional, light-mode, corporate construction aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCZqLhox9MJobVNnb-9CIxKGRl8vSON4ZpM2SP6bt2h5j-bITHWWj-TxnN_9TySpLxIPkVM7E6msTETFPwEpcr8HqJCaBxuUu1A0PMxqw_w2xzW9L3BMAouUro-Y4q8I3rCx37mYv72rX2oO1gg5E1LHEEaE6UG2csvbMycramvVonwjYyorUhhh4PaJEi2vgSMZSAvrxd_fRdFWBPnv0h1WeksiL3chktNjULipdJp0bCDrYkgn9Qo"/>
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-1">Ahmet Yılmaz</h3>
+<span class="inline-block bg-secondary-container text-on-secondary-fixed-variant px-2 py-0.5 rounded text-xs font-medium mb-3">Saha Mühendisi</span>
+<div class="flex items-center gap-1.5 text-on-surface-variant font-body-sm mb-5">
+<span class="material-symbols-outlined text-[16px]">location_on</span>
+<span>Şantiye: Maslak Office Tower</span>
+</div>
+<div class="w-full grid grid-cols-3 gap-2 mt-auto border-t border-border-slate pt-4">
+<button class="flex flex-col items-center gap-1 text-on-surface-variant hover:text-primary transition-colors group/btn">
+<span class="material-symbols-outlined text-[20px] group-hover/btn:bg-primary-fixed group-hover/btn:text-on-primary-fixed p-1.5 rounded-md transition-colors">calendar_month</span>
+<span class="text-[10px] font-medium">Puantaj</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-on-surface-variant hover:text-primary transition-colors group/btn">
+<span class="material-symbols-outlined text-[20px] group-hover/btn:bg-primary-fixed group-hover/btn:text-on-primary-fixed p-1.5 rounded-md transition-colors">inventory_2</span>
+<span class="text-[10px] font-medium">Zimmetler</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-on-surface-variant hover:text-primary transition-colors group/btn">
+<span class="material-symbols-outlined text-[20px] group-hover/btn:bg-primary-fixed group-hover/btn:text-on-primary-fixed p-1.5 rounded-md transition-colors">edit</span>
+<span class="text-[10px] font-medium">Düzenle</span>
+</button>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="bg-surface-white rounded-xl p-5 shadow-[0_1px_3px_rgba(79,70,229,0.08)] border border-border-slate flex flex-col items-center text-center group hover:shadow-[0_4px_6px_rgba(79,70,229,0.12)] transition-shadow">
+<img class="w-20 h-20 rounded-full object-cover mb-4 border-2 border-surface-container-high" data-alt="A professional headshot of a Turkish male construction foreman in his 40s. He has a rugged but approachable appearance, wearing a standard orange safety helmet and a sturdy grey work jacket. The background is a bright, clear sky over a generic building frame. The lighting is crisp, natural daylight, fitting a clean, corporate construction aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC3iCJz4YUBwLVYSbSYItXR5b1TEVsnnCs2q8cKN7nJ81MBNSHJr17hDq4QiBQKtSWvFvJgYCo2qRG5-uIpPffDhLXYl-E6e0za3TMckwrL8C3gV2X-AVjfn8cevRxPYvZCTcRLvRDt8Ke7WLIN9C_8oS3bb76a1GCxRQH9GU5UONU00hj3b_0Ze9ct9kJa6glBxoNljQFmMujEb62vWMvteSb88yVf8Qloj1pGBatdsFgHUzKvn8-U"/>
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-1">Mehmet Demir</h3>
+<span class="inline-block bg-[#fef3c7] text-[#92400e] px-2 py-0.5 rounded text-xs font-medium mb-3">Formen</span>
+<div class="flex items-center gap-1.5 text-on-surface-variant font-body-sm mb-5">
+<span class="material-symbols-outlined text-[16px]">location_on</span>
+<span>Şantiye: Maslak Office Tower</span>
+</div>
+<div class="w-full grid grid-cols-3 gap-2 mt-auto border-t border-border-slate pt-4">
+<button class="flex flex-col items-center gap-1 text-on-surface-variant hover:text-primary transition-colors group/btn">
+<span class="material-symbols-outlined text-[20px] group-hover/btn:bg-primary-fixed group-hover/btn:text-on-primary-fixed p-1.5 rounded-md transition-colors">calendar_month</span>
+<span class="text-[10px] font-medium">Puantaj</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-on-surface-variant hover:text-primary transition-colors group/btn">
+<span class="material-symbols-outlined text-[20px] group-hover/btn:bg-primary-fixed group-hover/btn:text-on-primary-fixed p-1.5 rounded-md transition-colors">inventory_2</span>
+<span class="text-[10px] font-medium">Zimmetler</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-on-surface-variant hover:text-primary transition-colors group/btn">
+<span class="material-symbols-outlined text-[20px] group-hover/btn:bg-primary-fixed group-hover/btn:text-on-primary-fixed p-1.5 rounded-md transition-colors">edit</span>
+<span class="text-[10px] font-medium">Düzenle</span>
+</button>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="bg-surface-white rounded-xl p-5 shadow-[0_1px_3px_rgba(79,70,229,0.08)] border border-border-slate flex flex-col items-center text-center group hover:shadow-[0_4px_6px_rgba(79,70,229,0.12)] transition-shadow">
+<img class="w-20 h-20 rounded-full object-cover mb-4 border-2 border-surface-container-high" data-alt="A professional headshot of a Turkish female architect in her late 20s. She is indoors in a modern office environment, holding a rolled architectural blueprint. She is wearing smart-casual business attire with a white blouse. The background is a bright, minimalist corporate office with large windows. The overall mood is modern, professional, and well-lit." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC6ufs-MnM7hyu907HBMGI6QBpfxX61V-ue9iy0kDFl5Wkk7APJiWb3xZHZHa4p66P2Bb5A_-2gLpzZjDsIXMnbhmMZJfVwHJz4luxdvrEeiCL5shyUk3oInAIny6-Dde9a4epevyA1Us9dKVDIsLX4LbR7rNdt48vL0coj_IQbCNHfCyNhSSHTkRg8PRynJgjrmxhYr1EDKuAS1i8mU_EHJLxtd7UnY_RbFHJcqKw3Dcf7U3OC8HJ2"/>
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-1">Ayşe Kaya</h3>
+<span class="inline-block bg-primary-fixed text-on-primary-fixed px-2 py-0.5 rounded text-xs font-medium mb-3">Proje Yöneticisi</span>
+<div class="flex items-center gap-1.5 text-on-surface-variant font-body-sm mb-5">
+<span class="material-symbols-outlined text-[16px]">apartment</span>
+<span>Merkez Ofis</span>
+</div>
+<div class="w-full grid grid-cols-3 gap-2 mt-auto border-t border-border-slate pt-4">
+<button class="flex flex-col items-center gap-1 text-on-surface-variant hover:text-primary transition-colors group/btn">
+<span class="material-symbols-outlined text-[20px] group-hover/btn:bg-primary-fixed group-hover/btn:text-on-primary-fixed p-1.5 rounded-md transition-colors">calendar_month</span>
+<span class="text-[10px] font-medium">Puantaj</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-on-surface-variant hover:text-primary transition-colors group/btn">
+<span class="material-symbols-outlined text-[20px] group-hover/btn:bg-primary-fixed group-hover/btn:text-on-primary-fixed p-1.5 rounded-md transition-colors">inventory_2</span>
+<span class="text-[10px] font-medium">Zimmetler</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-on-surface-variant hover:text-primary transition-colors group/btn">
+<span class="material-symbols-outlined text-[20px] group-hover/btn:bg-primary-fixed group-hover/btn:text-on-primary-fixed p-1.5 rounded-md transition-colors">edit</span>
+<span class="text-[10px] font-medium">Düzenle</span>
+</button>
+</div>
+</div>
+<!-- Card 4 -->
+<div class="bg-surface-white rounded-xl p-5 shadow-[0_1px_3px_rgba(79,70,229,0.08)] border border-border-slate flex flex-col items-center text-center group hover:shadow-[0_4px_6px_rgba(79,70,229,0.12)] transition-shadow">
+<img class="w-20 h-20 rounded-full object-cover mb-4 border-2 border-surface-container-high" data-alt="A portrait of a Turkish male construction worker in his 50s. He wears a slightly weathered yellow hard hat and a reflective safety vest over a dark t-shirt. The background is a soft-focus active construction site. The lighting is bright and clean, emphasizing a dignified, professional, and authentic light-mode aesthetic for a corporate dashboard." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBrW_19969NDJXnryr0V1MrXRm1gkVW9iYi4EHo1lfPcGhuutpGFmP5B4DR8dfdjuXvRn78rIolUBfcDIlhC72HQqM7VYR8cjYXT7wvNk8VRj09fkMK2Jqh-0sCNAWXBUSdKmapHXc7R2cqKYGdJaUtOomLxikC3pEHZwS7ZJpZr8ibLYssBb_X1BGRw-RO-HKLSXsP9HpJmsoZSptD2mJ6JEjmpTwYnWEuDqHf2o_MbAbNqCwebrH8"/>
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-1">Mustafa Çelik</h3>
+<span class="inline-block bg-surface-container-high text-on-surface-variant px-2 py-0.5 rounded text-xs font-medium mb-3">İşçi / Kalıp Ustası</span>
+<div class="flex items-center gap-1.5 text-on-surface-variant font-body-sm mb-5">
+<span class="material-symbols-outlined text-[16px]">location_on</span>
+<span>Şantiye: Kadıköy Konutları</span>
+</div>
+<div class="w-full grid grid-cols-3 gap-2 mt-auto border-t border-border-slate pt-4">
+<button class="flex flex-col items-center gap-1 text-on-surface-variant hover:text-primary transition-colors group/btn">
+<span class="material-symbols-outlined text-[20px] group-hover/btn:bg-primary-fixed group-hover/btn:text-on-primary-fixed p-1.5 rounded-md transition-colors">calendar_month</span>
+<span class="text-[10px] font-medium">Puantaj</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-on-surface-variant hover:text-primary transition-colors group/btn">
+<span class="material-symbols-outlined text-[20px] group-hover/btn:bg-primary-fixed group-hover/btn:text-on-primary-fixed p-1.5 rounded-md transition-colors">inventory_2</span>
+<span class="text-[10px] font-medium">Zimmetler</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-on-surface-variant hover:text-primary transition-colors group/btn">
+<span class="material-symbols-outlined text-[20px] group-hover/btn:bg-primary-fixed group-hover/btn:text-on-primary-fixed p-1.5 rounded-md transition-colors">edit</span>
+<span class="text-[10px] font-medium">Düzenle</span>
+</button>
+</div>
+</div>
+<!-- Repeat cards to fill grid -->
+<!-- Card 5 -->
+<div class="bg-surface-white rounded-xl p-5 shadow-[0_1px_3px_rgba(79,70,229,0.08)] border border-border-slate flex flex-col items-center text-center group hover:shadow-[0_4px_6px_rgba(79,70,229,0.12)] transition-shadow">
+<img class="w-20 h-20 rounded-full object-cover mb-4 border-2 border-surface-container-high" data-alt="A professional headshot of a Turkish male site surveyor in his 30s. He is looking through a modern total station surveying instrument. He wears a white hard hat and safety glasses. The background is a clean, bright outdoor construction site. The image has a high-quality corporate photography style, well-lit and professional." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBuVoUBVTHAlUYAUqVE7sjRism_zLjy9ponL9ODHLJ8gjpyez1ozx9X3mv9m9cUXxCAl9uSogERrT8Jpc2td7GXvUaSG6aTC8hTrIcaHZmZYtTq68eAvxX_hxs3xixgWA74ThwKskr_8pa-lRXpUezUnWXt1c2rzLU6Gktmfq6_26M73ZNU8S3l_hY0pPKJ0EPs28pd5DeB9Tn4Xu0Q5FyCkhWsms6DKixW8r-umwhAErRbPeWpwq6Z"/>
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-1">Burak Öztürk</h3>
+<span class="inline-block bg-secondary-container text-on-secondary-fixed-variant px-2 py-0.5 rounded text-xs font-medium mb-3">Harita Mühendisi</span>
+<div class="flex items-center gap-1.5 text-on-surface-variant font-body-sm mb-5">
+<span class="material-symbols-outlined text-[16px]">location_on</span>
+<span>Şantiye: Kadıköy Konutları</span>
+</div>
+<div class="w-full grid grid-cols-3 gap-2 mt-auto border-t border-border-slate pt-4">
+<button class="flex flex-col items-center gap-1 text-on-surface-variant hover:text-primary transition-colors group/btn">
+<span class="material-symbols-outlined text-[20px] group-hover/btn:bg-primary-fixed group-hover/btn:text-on-primary-fixed p-1.5 rounded-md transition-colors">calendar_month</span>
+<span class="text-[10px] font-medium">Puantaj</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-on-surface-variant hover:text-primary transition-colors group/btn">
+<span class="material-symbols-outlined text-[20px] group-hover/btn:bg-primary-fixed group-hover/btn:text-on-primary-fixed p-1.5 rounded-md transition-colors">inventory_2</span>
+<span class="text-[10px] font-medium">Zimmetler</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-on-surface-variant hover:text-primary transition-colors group/btn">
+<span class="material-symbols-outlined text-[20px] group-hover/btn:bg-primary-fixed group-hover/btn:text-on-primary-fixed p-1.5 rounded-md transition-colors">edit</span>
+<span class="text-[10px] font-medium">Düzenle</span>
+</button>
+</div>
+</div>
+<!-- Card 6 -->
+<div class="bg-surface-white rounded-xl p-5 shadow-[0_1px_3px_rgba(79,70,229,0.08)] border border-border-slate flex flex-col items-center text-center group hover:shadow-[0_4px_6px_rgba(79,70,229,0.12)] transition-shadow">
+<img class="w-20 h-20 rounded-full object-cover mb-4 border-2 border-surface-container-high" data-alt="A professional headshot of a Turkish female HR specialist in her 30s. She is sitting at a clean, modern white desk in a corporate office setting, reviewing documents. She is dressed in smart business attire. The lighting is bright and even, typical of high-end corporate web applications, emphasizing a light-mode aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAxTj695mx6K55uINYoHesa6yNyeAJ_9dOejcGkZnJkTD9IPYHmBfihk6c8axD-FMOAP90UpUDYoqr-0uHXeP7BcWAQhyVpKlAAnXSpvKcnq36yXEWezh7BkSZZ7XSMFrr0gZLnXA4RjfwA_nK-ZXrcfVdmG_ZrtDdvGhDD6AdQDF-RFTF928Ny4sLNFb1aS_Zm-1YZF4BMcdCd8e3YEezovElWk44aS9SFLeK7U3ldpH0lIYUUQ0jg"/>
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-1">Zeynep Şahin</h3>
+<span class="inline-block bg-[#e0e7ff] text-[#3730a3] px-2 py-0.5 rounded text-xs font-medium mb-3">İK Uzmanı</span>
+<div class="flex items-center gap-1.5 text-on-surface-variant font-body-sm mb-5">
+<span class="material-symbols-outlined text-[16px]">apartment</span>
+<span>Merkez Ofis</span>
+</div>
+<div class="w-full grid grid-cols-3 gap-2 mt-auto border-t border-border-slate pt-4">
+<button class="flex flex-col items-center gap-1 text-on-surface-variant hover:text-primary transition-colors group/btn">
+<span class="material-symbols-outlined text-[20px] group-hover/btn:bg-primary-fixed group-hover/btn:text-on-primary-fixed p-1.5 rounded-md transition-colors">calendar_month</span>
+<span class="text-[10px] font-medium">Puantaj</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-on-surface-variant hover:text-primary transition-colors group/btn">
+<span class="material-symbols-outlined text-[20px] group-hover/btn:bg-primary-fixed group-hover/btn:text-on-primary-fixed p-1.5 rounded-md transition-colors">inventory_2</span>
+<span class="text-[10px] font-medium">Zimmetler</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-on-surface-variant hover:text-primary transition-colors group/btn">
+<span class="material-symbols-outlined text-[20px] group-hover/btn:bg-primary-fixed group-hover/btn:text-on-primary-fixed p-1.5 rounded-md transition-colors">edit</span>
+<span class="text-[10px] font-medium">Düzenle</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

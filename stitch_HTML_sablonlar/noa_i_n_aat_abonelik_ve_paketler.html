@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+
+<html class="light" lang="tr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Abonelik ve Paketler - NOA İnşaat</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-surface-variant": "#464555",
+                        "surface-dim": "#d8dadc",
+                        "danger-rose": "#E11D48",
+                        "tertiary": "#7e3000",
+                        "warning-amber": "#F59E0B",
+                        "on-error-container": "#93000a",
+                        "on-primary-fixed-variant": "#3323cc",
+                        "surface-white": "#FFFFFF",
+                        "inverse-primary": "#c3c0ff",
+                        "on-secondary": "#ffffff",
+                        "decorative-purple": "#800080",
+                        "surface-container-highest": "#e0e3e5",
+                        "on-secondary-fixed": "#131b2e",
+                        "secondary-container": "#dae2fd",
+                        "primary": "#3525cd",
+                        "inverse-on-surface": "#eff1f3",
+                        "on-primary-fixed": "#0f0069",
+                        "primary-fixed": "#e2dfff",
+                        "on-background": "#191c1e",
+                        "on-tertiary-fixed-variant": "#7b2f00",
+                        "on-secondary-container": "#5c647a",
+                        "on-surface": "#191c1e",
+                        "on-tertiary": "#ffffff",
+                        "error": "#ba1a1a",
+                        "tertiary-fixed-dim": "#ffb695",
+                        "tertiary-container": "#a44100",
+                        "outline": "#777587",
+                        "error-container": "#ffdad6",
+                        "secondary": "#565e74",
+                        "surface": "#f7f9fb",
+                        "on-tertiary-fixed": "#351000",
+                        "surface-bright": "#f7f9fb",
+                        "on-secondary-fixed-variant": "#3f465c",
+                        "border-slate": "#E2E8F0",
+                        "success-emerald": "#10B981",
+                        "surface-container-high": "#e6e8ea",
+                        "surface-container-lowest": "#ffffff",
+                        "primary-fixed-dim": "#c3c0ff",
+                        "tertiary-fixed": "#ffdbcc",
+                        "background": "#f7f9fb",
+                        "secondary-fixed-dim": "#bec6e0",
+                        "secondary-fixed": "#dae2fd",
+                        "primary-container": "#4f46e5",
+                        "inverse-surface": "#2d3133",
+                        "on-primary-container": "#dad7ff",
+                        "text-muted": "#64748B",
+                        "on-error": "#ffffff",
+                        "surface-container-low": "#f2f4f6",
+                        "surface-variant": "#e0e3e5",
+                        "decorative-navy": "#000080",
+                        "outline-variant": "#c7c4d8",
+                        "on-tertiary-container": "#ffd2be",
+                        "surface-tint": "#4d44e3",
+                        "on-primary": "#ffffff",
+                        "surface-container": "#eceef0"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "sidebar-width": "260px",
+                        "grid-cell-py": "0.5rem",
+                        "stack-md": "1rem",
+                        "container-gap": "1.5rem",
+                        "grid-cell-px": "0.75rem",
+                        "stack-sm": "0.5rem",
+                        "sidebar-collapsed": "80px",
+                        "header-height": "64px"
+                    },
+                    "fontFamily": {
+                        "data-mono": ["JetBrains Mono"],
+                        "body-md": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "headline-sm": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "body-sm": ["Inter"]
+                    },
+                    "fontSize": {
+                        "data-mono": ["13px", { "lineHeight": "16px", "fontWeight": "500" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "headline-lg": ["30px", { "lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "700" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "body-sm": ["13px", { "lineHeight": "18px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-surface text-on-surface font-body-md text-body-md overflow-x-hidden min-h-screen">
+<!-- Top Navigation Bar -->
+<header class="h-header-height fixed top-0 right-0 z-40 bg-surface-white/80 dark:bg-inverse-surface/80 backdrop-blur-md border-b border-outline-variant dark:border-outline flat no shadows flex justify-between items-center px-6 w-[calc(100%-theme(spacing.sidebar-width))] ml-sidebar-width hidden md:flex">
+<div class="flex items-center gap-4">
+<h1 class="font-headline-sm text-headline-sm font-bold text-primary dark:text-inverse-primary hidden">NOA İnşaat</h1>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors duration-200">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<div class="w-8 h-8 rounded-full overflow-hidden border border-outline-variant">
+<img alt="User Profile Avatar" class="w-full h-full object-cover" data-alt="A professional headshot of an executive in a modern office environment, wearing business casual attire. The lighting is bright and even, typical of a professional corporate portrait. The background is slightly blurred showing subtle architectural elements. The color palette is neutral with soft blues and whites." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCUVM6jV51Krt5UdwFXGNJUuSFEEypn3Eiyz244YRAUkYrhXgy92Qlsrt1_fZlOLDMhyhasvcOUiczlt-QNxEzv6IjlCKNSi0tOvTrraKKyvvKTQZrweo-33Pi-LBdb1oUNpMdvzIxARvd8trQvOfjBL_N6N5IMl1tpc5k4Y7UEAEBt3u18CLx17zxT8NsV_GeKIodELVLVObFYSGaeSeqPqV15KznPxs1RrU1KBzfJdGatpcFwC6av"/>
+</div>
+</div>
+</header>
+<!-- Side Navigation Bar -->
+<aside class="w-sidebar-width h-screen fixed left-0 top-0 bg-surface-white dark:bg-inverse-surface shadow-sm shadow-[0_1px_3px_rgba(79,70,229,0.08)] flex flex-col h-full border-r border-outline-variant dark:border-outline z-50 hidden md:flex">
+<div class="px-6 py-6 border-b border-outline-variant/50">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary font-bold">
+                    N
+                </div>
+<div>
+<h2 class="font-headline-sm text-headline-sm font-bold text-primary dark:text-inverse-primary">NOA İnşaat</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Construction ERP</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 px-4 py-6 overflow-y-auto space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-low transition-colors duration-200 active:scale-95 rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span>Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-low transition-colors duration-200 active:scale-95 rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="business">business</span>
+<span>Firms</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-low transition-colors duration-200 active:scale-95 rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="gavel">gavel</span>
+<span>Tender Management</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-low transition-colors duration-200 active:scale-95 rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="description">description</span>
+<span>Document Center</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-low transition-colors duration-200 active:scale-95 rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span>Staff</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-low transition-colors duration-200 active:scale-95 rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
+<span>Inventory</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-low transition-colors duration-200 active:scale-95 rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="directions_car">directions_car</span>
+<span>Vehicles</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 bg-secondary-container dark:bg-primary-container text-primary dark:text-on-primary-container rounded-lg font-semibold transition-all duration-200 active:scale-95" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span>Settings</span>
+</a>
+</nav>
+</aside>
+<!-- Main Content Area -->
+<main class="md:ml-sidebar-width pt-header-height min-h-screen p-container-gap">
+<div class="max-w-6xl mx-auto space-y-container-gap">
+<!-- Header -->
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+<div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface">Abonelik ve Paketler</h1>
+<p class="text-on-surface-variant mt-1">Sistem kullanım planınızı ve faturalarınızı yönetin.</p>
+</div>
+</div>
+<!-- Current Subscription Status -->
+<section class="bg-surface-white rounded-xl p-6 shadow-[0_1px_3px_rgba(79,70,229,0.08)] border border-outline-variant/30">
+<div class="flex flex-col md:flex-row gap-8 items-start md:items-center">
+<div class="flex-1">
+<div class="flex items-center gap-3 mb-2">
+<h2 class="font-headline-md text-headline-md text-on-surface">Professional Plan</h2>
+<span class="bg-success-emerald/10 text-success-emerald font-label-caps text-label-caps px-2 py-1 rounded">AKTİF</span>
+</div>
+<p class="text-on-surface-variant text-body-sm">Yenileme Tarihi: <span class="font-medium text-on-surface">15 Kasım 2024</span></p>
+</div>
+<div class="flex-1 w-full space-y-4">
+<div>
+<div class="flex justify-between text-body-sm mb-1">
+<span class="text-on-surface-variant">Kullanıcı Sayısı</span>
+<span class="font-medium">12 / 20</span>
+</div>
+<div class="w-full bg-surface-container-highest rounded-full h-2">
+<div class="bg-primary h-2 rounded-full" style="width: 60%"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between text-body-sm mb-1">
+<span class="text-on-surface-variant">Depolama Alanı</span>
+<span class="font-medium">45GB / 100GB</span>
+</div>
+<div class="w-full bg-surface-container-highest rounded-full h-2">
+<div class="bg-primary h-2 rounded-full" style="width: 45%"></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Pricing Plans -->
+<section>
+<div class="flex justify-center mb-8">
+<div class="bg-surface-container-highest p-1 rounded-lg inline-flex">
+<button class="px-6 py-2 rounded-md bg-surface-white shadow-sm font-medium text-sm text-on-surface">Aylık</button>
+<button class="px-6 py-2 rounded-md font-medium text-sm text-on-surface-variant hover:text-on-surface">Yıllık <span class="text-success-emerald text-xs ml-1">%20 İndirim</span></button>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- Starter Plan -->
+<div class="bg-surface-white rounded-xl p-6 shadow-[0_1px_3px_rgba(79,70,229,0.08)] border border-outline-variant/30 flex flex-col">
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-2">Starter</h3>
+<p class="text-on-surface-variant text-body-sm mb-4">Küçük ekipler ve başlangıç projeleri için ideal.</p>
+<div class="mb-6">
+<span class="text-3xl font-bold text-on-surface">₺999</span>
+<span class="text-on-surface-variant">/ay</span>
+</div>
+<ul class="space-y-3 mb-8 flex-1">
+<li class="flex items-center gap-2 text-body-sm text-on-surface">
+<span class="material-symbols-outlined text-success-emerald text-lg" data-icon="check_circle">check_circle</span> 5 Kullanıcı
+                            </li>
+<li class="flex items-center gap-2 text-body-sm text-on-surface">
+<span class="material-symbols-outlined text-success-emerald text-lg" data-icon="check_circle">check_circle</span> 10GB Depolama
+                            </li>
+<li class="flex items-center gap-2 text-body-sm text-on-surface">
+<span class="material-symbols-outlined text-success-emerald text-lg" data-icon="check_circle">check_circle</span> Temel Raporlama
+                            </li>
+</ul>
+<button class="w-full py-2 px-4 rounded-lg border border-primary text-primary hover:bg-primary/5 transition-colors font-medium">Plana Geç</button>
+</div>
+<!-- Professional Plan -->
+<div class="bg-primary rounded-xl p-6 shadow-lg border border-primary flex flex-col relative transform md:-translate-y-4">
+<div class="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-surface-white text-primary px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider border border-primary">
+                            En Çok Tercih Edilen
+                        </div>
+<h3 class="font-headline-sm text-headline-sm text-surface-white mb-2 mt-2">Professional</h3>
+<p class="text-primary-fixed-dim text-body-sm mb-4">Büyüyen inşaat firmaları için tam kapsamlı çözüm.</p>
+<div class="mb-6 text-surface-white">
+<span class="text-3xl font-bold">₺2.499</span>
+<span class="text-primary-fixed-dim">/ay</span>
+</div>
+<ul class="space-y-3 mb-8 flex-1">
+<li class="flex items-center gap-2 text-body-sm text-surface-white">
+<span class="material-symbols-outlined text-surface-white text-lg" data-icon="check_circle">check_circle</span> 20 Kullanıcı
+                            </li>
+<li class="flex items-center gap-2 text-body-sm text-surface-white">
+<span class="material-symbols-outlined text-surface-white text-lg" data-icon="check_circle">check_circle</span> 100GB Depolama
+                            </li>
+<li class="flex items-center gap-2 text-body-sm text-surface-white">
+<span class="material-symbols-outlined text-surface-white text-lg" data-icon="check_circle">check_circle</span> Gelişmiş İhale Yönetimi
+                            </li>
+<li class="flex items-center gap-2 text-body-sm text-surface-white">
+<span class="material-symbols-outlined text-surface-white text-lg" data-icon="check_circle">check_circle</span> Tam Entegrasyon Desteği
+                            </li>
+</ul>
+<button class="w-full py-2 px-4 rounded-lg bg-surface-white text-primary hover:bg-surface-container-lowest transition-colors font-medium">Mevcut Planınız</button>
+</div>
+<!-- Enterprise Plan -->
+<div class="bg-surface-white rounded-xl p-6 shadow-[0_1px_3px_rgba(79,70,229,0.08)] border border-outline-variant/30 flex flex-col">
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-2">Enterprise</h3>
+<p class="text-on-surface-variant text-body-sm mb-4">Büyük ölçekli projeler ve kurumsal yapılar için.</p>
+<div class="mb-6">
+<span class="text-3xl font-bold text-on-surface">Özel</span>
+<span class="text-on-surface-variant">/fiyatlandırma</span>
+</div>
+<ul class="space-y-3 mb-8 flex-1">
+<li class="flex items-center gap-2 text-body-sm text-on-surface">
+<span class="material-symbols-outlined text-success-emerald text-lg" data-icon="check_circle">check_circle</span> Sınırsız Kullanıcı
+                            </li>
+<li class="flex items-center gap-2 text-body-sm text-on-surface">
+<span class="material-symbols-outlined text-success-emerald text-lg" data-icon="check_circle">check_circle</span> Sınırsız Depolama
+                            </li>
+<li class="flex items-center gap-2 text-body-sm text-on-surface">
+<span class="material-symbols-outlined text-success-emerald text-lg" data-icon="check_circle">check_circle</span> Özel Sunucu Seçeneği
+                            </li>
+<li class="flex items-center gap-2 text-body-sm text-on-surface">
+<span class="material-symbols-outlined text-success-emerald text-lg" data-icon="check_circle">check_circle</span> 7/24 Özel Destek
+                            </li>
+</ul>
+<button class="w-full py-2 px-4 rounded-lg border border-outline-variant text-on-surface hover:bg-surface-container-low transition-colors font-medium">İletişime Geç</button>
+</div>
+</div>
+</section>
+<!-- Payment History -->
+<section class="bg-surface-white rounded-xl shadow-[0_1px_3px_rgba(79,70,229,0.08)] border border-outline-variant/30 overflow-hidden">
+<div class="px-6 py-4 border-b border-outline-variant/30 flex justify-between items-center bg-surface-white">
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Fatura Geçmişi</h3>
+<button class="text-primary hover:text-primary-container text-sm font-medium">Tümünü Gör</button>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-lowest border-b border-outline-variant/30">
+<th class="font-label-caps text-label-caps text-on-surface-variant px-6 py-grid-cell-py">Tarih</th>
+<th class="font-label-caps text-label-caps text-on-surface-variant px-6 py-grid-cell-py">Plan</th>
+<th class="font-label-caps text-label-caps text-on-surface-variant px-6 py-grid-cell-py">Tutar</th>
+<th class="font-label-caps text-label-caps text-on-surface-variant px-6 py-grid-cell-py">Durum</th>
+<th class="font-label-caps text-label-caps text-on-surface-variant px-6 py-grid-cell-py text-right">İşlem</th>
+</tr>
+</thead>
+<tbody class="font-data-mono text-data-mono">
+<tr class="border-b border-outline-variant/10 hover:bg-surface-container-low transition-colors">
+<td class="px-6 py-grid-cell-py text-on-surface">15 Eki 2024</td>
+<td class="px-6 py-grid-cell-py text-on-surface">Professional Plan (Aylık)</td>
+<td class="px-6 py-grid-cell-py text-on-surface">₺2.499</td>
+<td class="px-6 py-grid-cell-py">
+<span class="inline-flex items-center gap-1 bg-success-emerald/10 text-success-emerald px-2 py-0.5 rounded text-xs">
+<span class="w-1.5 h-1.5 rounded-full bg-success-emerald"></span> Ödendi
+                                    </span>
+</td>
+<td class="px-6 py-grid-cell-py text-right">
+<button class="text-primary hover:text-primary-container p-1" title="PDF İndir">
+<span class="material-symbols-outlined text-sm" data-icon="download">download</span>
+</button>
+</td>
+</tr>
+<tr class="border-b border-outline-variant/10 hover:bg-surface-container-low transition-colors">
+<td class="px-6 py-grid-cell-py text-on-surface">15 Eyl 2024</td>
+<td class="px-6 py-grid-cell-py text-on-surface">Professional Plan (Aylık)</td>
+<td class="px-6 py-grid-cell-py text-on-surface">₺2.499</td>
+<td class="px-6 py-grid-cell-py">
+<span class="inline-flex items-center gap-1 bg-success-emerald/10 text-success-emerald px-2 py-0.5 rounded text-xs">
+<span class="w-1.5 h-1.5 rounded-full bg-success-emerald"></span> Ödendi
+                                    </span>
+</td>
+<td class="px-6 py-grid-cell-py text-right">
+<button class="text-primary hover:text-primary-container p-1" title="PDF İndir">
+<span class="material-symbols-outlined text-sm" data-icon="download">download</span>
+</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="px-6 py-grid-cell-py text-on-surface">15 Ağu 2024</td>
+<td class="px-6 py-grid-cell-py text-on-surface">Professional Plan (Aylık)</td>
+<td class="px-6 py-grid-cell-py text-on-surface">₺2.499</td>
+<td class="px-6 py-grid-cell-py">
+<span class="inline-flex items-center gap-1 bg-success-emerald/10 text-success-emerald px-2 py-0.5 rounded text-xs">
+<span class="w-1.5 h-1.5 rounded-full bg-success-emerald"></span> Ödendi
+                                    </span>
+</td>
+<td class="px-6 py-grid-cell-py text-right">
+<button class="text-primary hover:text-primary-container p-1" title="PDF İndir">
+<span class="material-symbols-outlined text-sm" data-icon="download">download</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</div>
+</main>
+</body></html>

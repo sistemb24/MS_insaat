@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+
+<html lang="tr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>NOA İnşaat - Bildirim Ayarları</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary-fixed": "#351000",
+                        "on-surface-variant": "#464555",
+                        "secondary-fixed-dim": "#bec6e0",
+                        "secondary": "#565e74",
+                        "on-primary-container": "#dad7ff",
+                        "on-error": "#ffffff",
+                        "text-muted": "#64748B",
+                        "decorative-navy": "#000080",
+                        "danger-rose": "#E11D48",
+                        "tertiary-container": "#a44100",
+                        "on-tertiary": "#ffffff",
+                        "surface-tint": "#4d44e3",
+                        "surface-container-lowest": "#ffffff",
+                        "decorative-purple": "#800080",
+                        "on-primary-fixed-variant": "#3323cc",
+                        "surface-variant": "#e0e3e5",
+                        "tertiary": "#7e3000",
+                        "on-primary-fixed": "#0f0069",
+                        "on-primary": "#ffffff",
+                        "secondary-container": "#dae2fd",
+                        "inverse-on-surface": "#eff1f3",
+                        "on-secondary-fixed": "#131b2e",
+                        "on-background": "#191c1e",
+                        "surface-dim": "#d8dadc",
+                        "error": "#ba1a1a",
+                        "surface-container-highest": "#e0e3e5",
+                        "background": "#f7f9fb",
+                        "on-tertiary-fixed-variant": "#7b2f00",
+                        "border-slate": "#E2E8F0",
+                        "secondary-fixed": "#dae2fd",
+                        "success-emerald": "#10B981",
+                        "error-container": "#ffdad6",
+                        "on-secondary-fixed-variant": "#3f465c",
+                        "surface-container": "#eceef0",
+                        "outline": "#777587",
+                        "primary-fixed-dim": "#c3c0ff",
+                        "primary-fixed": "#e2dfff",
+                        "warning-amber": "#F59E0B",
+                        "primary-container": "#4f46e5",
+                        "surface": "#f7f9fb",
+                        "on-secondary-container": "#5c647a",
+                        "tertiary-fixed-dim": "#ffb695",
+                        "on-secondary": "#ffffff",
+                        "tertiary-fixed": "#ffdbcc",
+                        "surface-bright": "#f7f9fb",
+                        "on-error-container": "#93000a",
+                        "surface-container-high": "#e6e8ea",
+                        "inverse-surface": "#2d3133",
+                        "inverse-primary": "#c3c0ff",
+                        "on-tertiary-container": "#ffd2be",
+                        "surface-white": "#FFFFFF",
+                        "primary": "#3525cd",
+                        "on-surface": "#191c1e",
+                        "outline-variant": "#c7c4d8",
+                        "surface-container-low": "#f2f4f6"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-md": "1rem",
+                        "sidebar-collapsed": "80px",
+                        "grid-cell-py": "0.5rem",
+                        "grid-cell-px": "0.75rem",
+                        "container-gap": "1.5rem",
+                        "header-height": "64px",
+                        "stack-sm": "0.5rem",
+                        "sidebar-width": "260px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "data-mono": ["JetBrains Mono"],
+                        "body-lg": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "headline-sm": ["Inter"],
+                        "body-md": ["Inter"],
+                        "label-caps": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["30px", {"lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                        "data-mono": ["13px", {"lineHeight": "16px", "fontWeight": "500"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "body-sm": ["13px", {"lineHeight": "18px", "fontWeight": "400"}],
+                        "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .icon-fill {
+            font-variation-settings: 'FILL' 1;
+        }
+        
+        /* Custom Toggle Switch Styles for macOS feel */
+        .toggle-checkbox:checked {
+            right: 0;
+            border-color: #4f46e5; /* primary-container */
+        }
+        .toggle-checkbox:checked + .toggle-label {
+            background-color: #4f46e5; /* primary-container */
+        }
+        .toggle-checkbox:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen flex">
+<!-- SideNavBar (Suppressed on Mobile, active on Ayarlar) -->
+<nav class="hidden md:flex flex-col h-full border-r border-border-slate fixed left-0 top-0 w-sidebar bg-surface-white shadow-sm z-50">
+<div class="p-6">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-primary-container text-on-primary-container flex items-center justify-center font-bold text-sm">NOA</div>
+<div>
+<h1 class="font-headline-sm text-headline-sm font-bold text-primary">NOA ERP</h1>
+<p class="font-body-sm text-body-sm text-on-surface-variant">İnşaat Yönetim Sistemi</p>
+</div>
+</div>
+<button class="mt-6 w-full bg-primary-container text-on-primary-container py-2 px-4 rounded-lg font-body-md text-body-md font-medium hover:bg-primary transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[20px]">add</span>
+                Yeni Proje Ekle
+            </button>
+</div>
+<div class="flex-1 overflow-y-auto px-4 py-2 space-y-1">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-low transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-body-md text-body-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-low transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="construction">construction</span>
+<span class="font-body-md text-body-md">Şantiyeler</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-low transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="payments">payments</span>
+<span class="font-body-md text-body-md">Finans</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-low transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span class="font-body-md text-body-md">İnsan Kaynakları</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-low transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="local_shipping">local_shipping</span>
+<span class="font-body-md text-body-md">Tedarik Zinciri</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-low transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span>
+<span class="font-body-md text-body-md">Raporlar</span>
+</a>
+</div>
+<div class="p-4 border-t border-border-slate space-y-1">
+<a class="flex items-center gap-3 px-3 py-2 bg-secondary-container text-primary font-semibold rounded-lg scale-[0.98] transition-transform" href="#">
+<span class="material-symbols-outlined icon-fill" data-icon="settings" data-weight="fill">settings</span>
+<span class="font-body-md text-body-md">Ayarlar</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-low transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+<span class="font-body-md text-body-md">Yardım</span>
+</a>
+</div>
+</nav>
+<!-- Main Content Area -->
+<main class="flex-1 md:ml-sidebar min-h-screen flex flex-col bg-background">
+<!-- TopNavBar -->
+<header class="sticky top-0 z-40 w-full h-header-height flex justify-between items-center px-6 bg-surface-white/80 backdrop-blur-md border-b border-border-slate">
+<div class="flex items-center gap-4">
+<button class="md:hidden text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<div class="hidden md:flex gap-6">
+<a class="font-label-caps text-label-caps text-on-surface-variant hover:text-on-surface transition-colors pb-1" href="#">GENEL BAKIŞ</a>
+<a class="font-label-caps text-label-caps text-primary border-b-2 border-primary pb-1" href="#">BİLDİRİM AYARLARI</a>
+<a class="font-label-caps text-label-caps text-on-surface-variant hover:text-on-surface transition-colors pb-1" href="#">GÜVENLİK</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-on-surface-variant hover:text-primary transition-colors relative">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span class="absolute top-0 right-0 w-2 h-2 bg-danger-rose rounded-full"></span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="apps">apps</span>
+</button>
+<button class="w-8 h-8 rounded-full bg-surface-container overflow-hidden border border-border-slate hover:opacity-80 transition-opacity">
+<img alt="Kullanıcı Profili" class="w-full h-full object-cover" data-alt="A professional headshot of a construction manager in a well-lit modern office. They are wearing a sharp navy blue blazer over a crisp white shirt. The lighting is soft and high-key, conveying a corporate, trustworthy, and modern light-mode aesthetic. The background is slightly blurred showing glass partitions and architectural blueprints." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC1g_iN2YUIRhDblwyedRIea2sSWS-CAcD4GzRPf5KrVqhLIpP4ieN3puhpalqNhXyuhXrE4DhbiqxNpkc3JMA8iztQZOd9VHabxqQcG7KG5ebdbRbHh28Dawb9HcerSNc9UhRzi30XcbJBH9tmqD33NKsRCrb1IVlUmSaVHj-fVJHF4B5mAUbsJaasOqgViBHq9Bj-mMkkZKHnB2bZSMjAYpnMmeciLeRYdFlXH1YaN7npcLztbArW"/>
+</button>
+</div>
+</header>
+<!-- Settings Canvas -->
+<div class="p-6 md:p-8 flex-1 max-w-5xl mx-auto w-full">
+<div class="mb-8">
+<h2 class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface mb-2">Bildirim Tercihleri</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">NOA ERP üzerindeki kritik olaylar için hangi kanallardan bildirim almak istediğinizi yönetin.</p>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-container-gap">
+<!-- Main Settings Area (Left/Center) -->
+<div class="lg:col-span-8 space-y-container-gap">
+<!-- Global Settings Card -->
+<div class="bg-surface-white rounded-xl shadow-sm border border-border-slate overflow-hidden">
+<div class="p-5 border-b border-border-slate bg-surface-bright">
+<h3 class="font-headline-sm text-headline-sm text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">tune</span>
+                                Genel Ayarlar
+                            </h3>
+</div>
+<div class="p-5 space-y-6">
+<div class="flex items-center justify-between">
+<div>
+<h4 class="font-body-lg text-body-lg font-medium text-on-surface">Rahatsız Etme (DND)</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Belirlenen saatler arasında tüm push ve e-posta bildirimlerini duraklatır. (Kritik uyarılar hariç)</p>
+</div>
+<div class="relative inline-block w-12 mr-2 align-middle select-none transition duration-200 ease-in">
+<input class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer border-surface-variant" id="toggle_dnd" name="toggle_dnd" type="checkbox"/>
+<label class="toggle-label block overflow-hidden h-6 rounded-full bg-surface-variant cursor-pointer" for="toggle_dnd"></label>
+</div>
+</div>
+<div class="h-px bg-border-slate w-full"></div>
+<div class="flex items-center justify-between">
+<div>
+<h4 class="font-body-lg text-body-lg font-medium text-on-surface">Günlük Özet E-postası</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Her sabah 08:00'de o güne ait vade, sözleşme ve onay bekleyen işlemlerin özetini alın.</p>
+</div>
+<div class="relative inline-block w-12 mr-2 align-middle select-none transition duration-200 ease-in">
+<input checked="" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer border-primary-container" id="toggle_summary" name="toggle_summary" type="checkbox"/>
+<label class="toggle-label block overflow-hidden h-6 rounded-full bg-primary-container cursor-pointer" for="toggle_summary"></label>
+</div>
+</div>
+</div>
+</div>
+<!-- Category Specific Settings -->
+<div class="bg-surface-white rounded-xl shadow-sm border border-border-slate overflow-hidden">
+<div class="p-5 border-b border-border-slate flex justify-between items-center bg-surface-bright">
+<h3 class="font-headline-sm text-headline-sm text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">category</span>
+                                Kategori Bazlı Bildirimler
+                            </h3>
+</div>
+<!-- Table/List Header -->
+<div class="hidden md:grid grid-cols-12 gap-4 p-4 border-b border-border-slate bg-surface-container-low font-label-caps text-label-caps text-on-surface-variant">
+<div class="col-span-6">KATEGORİ</div>
+<div class="col-span-2 text-center">UYGULAMA İÇİ</div>
+<div class="col-span-2 text-center">E-POSTA</div>
+<div class="col-span-2 text-center">PUSH</div>
+</div>
+<!-- Row 1: Finans -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-4 p-4 md:p-5 border-b border-border-slate items-center hover:bg-surface-bright transition-colors">
+<div class="col-span-1 md:col-span-6 mb-4 md:mb-0">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-emerald-50 flex items-center justify-center text-success-emerald">
+<span class="material-symbols-outlined">payments</span>
+</div>
+<div>
+<h4 class="font-body-md text-body-md font-semibold text-on-surface">Finans &amp; Vade Bildirimleri</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">Ödeme onayları, yaklaşan vadeler, bütçe aşımları.</p>
+</div>
+</div>
+</div>
+<div class="col-span-1 md:col-span-6 grid grid-cols-3 gap-2">
+<div class="flex flex-col items-center gap-2">
+<span class="md:hidden font-label-caps text-label-caps text-on-surface-variant">Uygulama</span>
+<input checked="" class="w-5 h-5 rounded border-border-slate text-primary-container focus:ring-primary-container cursor-pointer" type="checkbox"/>
+</div>
+<div class="flex flex-col items-center gap-2">
+<span class="md:hidden font-label-caps text-label-caps text-on-surface-variant">E-posta</span>
+<input checked="" class="w-5 h-5 rounded border-border-slate text-primary-container focus:ring-primary-container cursor-pointer" type="checkbox"/>
+</div>
+<div class="flex flex-col items-center gap-2">
+<span class="md:hidden font-label-caps text-label-caps text-on-surface-variant">Push</span>
+<input checked="" class="w-5 h-5 rounded border-border-slate text-primary-container focus:ring-primary-container cursor-pointer" type="checkbox"/>
+</div>
+</div>
+</div>
+<!-- Row 2: Sözleşmeler -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-4 p-4 md:p-5 border-b border-border-slate items-center hover:bg-surface-bright transition-colors">
+<div class="col-span-1 md:col-span-6 mb-4 md:mb-0">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-amber-50 flex items-center justify-center text-warning-amber">
+<span class="material-symbols-outlined">history_edu</span>
+</div>
+<div>
+<h4 class="font-body-md text-body-md font-semibold text-on-surface">Sözleşme Bitişleri</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">Taşeron ve tedarikçi sözleşme yenileme uyarıları.</p>
+</div>
+</div>
+</div>
+<div class="col-span-1 md:col-span-6 grid grid-cols-3 gap-2">
+<div class="flex flex-col items-center gap-2">
+<span class="md:hidden font-label-caps text-label-caps text-on-surface-variant">Uygulama</span>
+<input checked="" class="w-5 h-5 rounded border-border-slate text-primary-container focus:ring-primary-container cursor-pointer" type="checkbox"/>
+</div>
+<div class="flex flex-col items-center gap-2">
+<span class="md:hidden font-label-caps text-label-caps text-on-surface-variant">E-posta</span>
+<input checked="" class="w-5 h-5 rounded border-border-slate text-primary-container focus:ring-primary-container cursor-pointer" type="checkbox"/>
+</div>
+<div class="flex flex-col items-center gap-2">
+<span class="md:hidden font-label-caps text-label-caps text-on-surface-variant">Push</span>
+<input class="w-5 h-5 rounded border-border-slate text-primary-container focus:ring-primary-container cursor-pointer" type="checkbox"/>
+</div>
+</div>
+</div>
+<!-- Row 3: Stok -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-4 p-4 md:p-5 border-b border-border-slate items-center hover:bg-surface-bright transition-colors">
+<div class="col-span-1 md:col-span-6 mb-4 md:mb-0">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-indigo-50 flex items-center justify-center text-primary-container">
+<span class="material-symbols-outlined">inventory_2</span>
+</div>
+<div>
+<h4 class="font-body-md text-body-md font-semibold text-on-surface">Stok &amp; Depo Uyarıları</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">Kritik seviye uyarıları, irsaliye kabulleri.</p>
+</div>
+</div>
+</div>
+<div class="col-span-1 md:col-span-6 grid grid-cols-3 gap-2">
+<div class="flex flex-col items-center gap-2">
+<span class="md:hidden font-label-caps text-label-caps text-on-surface-variant">Uygulama</span>
+<input checked="" class="w-5 h-5 rounded border-border-slate text-primary-container focus:ring-primary-container cursor-pointer" type="checkbox"/>
+</div>
+<div class="flex flex-col items-center gap-2">
+<span class="md:hidden font-label-caps text-label-caps text-on-surface-variant">E-posta</span>
+<input class="w-5 h-5 rounded border-border-slate text-primary-container focus:ring-primary-container cursor-pointer" type="checkbox"/>
+</div>
+<div class="flex flex-col items-center gap-2">
+<span class="md:hidden font-label-caps text-label-caps text-on-surface-variant">Push</span>
+<input checked="" class="w-5 h-5 rounded border-border-slate text-primary-container focus:ring-primary-container cursor-pointer" type="checkbox"/>
+</div>
+</div>
+</div>
+<!-- Row 4: Araç Bakım -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-4 p-4 md:p-5 items-center hover:bg-surface-bright transition-colors">
+<div class="col-span-1 md:col-span-6 mb-4 md:mb-0">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-rose-50 flex items-center justify-center text-danger-rose">
+<span class="material-symbols-outlined">car_repair</span>
+</div>
+<div>
+<h4 class="font-body-md text-body-md font-semibold text-on-surface">Araç &amp; Ekipman Bakım</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">Periyodik bakım yaklaşanlar, sigorta yenilemeleri.</p>
+</div>
+</div>
+</div>
+<div class="col-span-1 md:col-span-6 grid grid-cols-3 gap-2">
+<div class="flex flex-col items-center gap-2">
+<span class="md:hidden font-label-caps text-label-caps text-on-surface-variant">Uygulama</span>
+<input checked="" class="w-5 h-5 rounded border-border-slate text-primary-container focus:ring-primary-container cursor-pointer" type="checkbox"/>
+</div>
+<div class="flex flex-col items-center gap-2">
+<span class="md:hidden font-label-caps text-label-caps text-on-surface-variant">E-posta</span>
+<input class="w-5 h-5 rounded border-border-slate text-primary-container focus:ring-primary-container cursor-pointer" type="checkbox"/>
+</div>
+<div class="flex flex-col items-center gap-2">
+<span class="md:hidden font-label-caps text-label-caps text-on-surface-variant">Push</span>
+<input class="w-5 h-5 rounded border-border-slate text-primary-container focus:ring-primary-container cursor-pointer" type="checkbox"/>
+</div>
+</div>
+</div>
+</div>
+<!-- Action Buttons -->
+<div class="flex justify-end gap-4 mt-6">
+<button class="px-6 py-2 rounded-lg border border-border-slate text-on-surface hover:bg-surface-container-low font-body-md font-medium transition-colors">
+                            İptal
+                        </button>
+<button class="px-6 py-2 rounded-lg bg-primary-container text-on-primary-container hover:bg-primary font-body-md font-medium shadow-sm transition-colors">
+                            Değişiklikleri Kaydet
+                        </button>
+</div>
+</div>
+<!-- Right Sidebar / Info Panel -->
+<div class="lg:col-span-4 space-y-container-gap">
+<!-- Helpful Tip Card -->
+<div class="bg-secondary-container/30 rounded-xl p-5 border border-secondary-fixed-dim">
+<div class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary mt-0.5">lightbulb</span>
+<div>
+<h4 class="font-body-md text-body-md font-semibold text-on-surface mb-1">Bildirim Kanalları Hakkında</h4>
+<ul class="space-y-2 mt-3 font-body-sm text-body-sm text-on-surface-variant">
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-[16px] mt-0.5">desktop_windows</span>
+<span><strong>Uygulama İçi:</strong> Sisteme giriş yaptığınızda sağ üstteki zil ikonundan ulaşabilirsiniz.</span>
+</li>
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-[16px] mt-0.5">mail</span>
+<span><strong>E-posta:</strong> Kayıtlı kurumsal adresinize gönderilir. Kanıt gerektiren uyarılar için önerilir.</span>
+</li>
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-[16px] mt-0.5">smartphone</span>
+<span><strong>Push:</strong> Mobil uygulamamız yüklüyse telefonunuza anlık olarak düşer. Acil durumlar için idealdir.</span>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<!-- Push Test Action -->
+<div class="bg-surface-white rounded-xl p-5 shadow-sm border border-border-slate flex flex-col items-center text-center">
+<div class="w-12 h-12 rounded-full bg-surface-container-low flex items-center justify-center text-on-surface-variant mb-3">
+<span class="material-symbols-outlined text-[24px]">vibration</span>
+</div>
+<h4 class="font-body-md text-body-md font-semibold text-on-surface mb-1">Push Bildirim Testi</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-4">Cihazınızın bildirim alıp almadığını kontrol edin.</p>
+<button class="w-full py-2 rounded-lg border border-primary text-primary hover:bg-primary-fixed-dim/20 font-body-md font-medium transition-colors">
+                            Test Bildirimi Gönder
+                        </button>
+</div>
+</div>
+</div>
+</div>
+</main>
+<script>
+        // Simple logic to toggle the custom DND checkbox visual state
+        const dndToggle = document.getElementById('toggle_dnd');
+        const dndLabel = dndToggle.nextElementSibling;
+        
+        dndToggle.addEventListener('change', function() {
+            if(this.checked) {
+                dndLabel.classList.remove('bg-surface-variant');
+                dndLabel.classList.add('bg-primary-container');
+            } else {
+                dndLabel.classList.remove('bg-primary-container');
+                dndLabel.classList.add('bg-surface-variant');
+            }
+        });
+        
+        // Ensure initial state is correct for pre-checked summary toggle
+        const summaryToggle = document.getElementById('toggle_summary');
+        const summaryLabel = summaryToggle.nextElementSibling;
+        if(summaryToggle.checked) {
+             summaryLabel.classList.remove('bg-surface-variant');
+             summaryLabel.classList.add('bg-primary-container');
+        }
+    </script>
+</body></html>

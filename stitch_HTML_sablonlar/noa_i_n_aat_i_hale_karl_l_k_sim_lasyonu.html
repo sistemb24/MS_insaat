@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+
+<html lang="tr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>NOA İnşaat - İhale Karlılık Simülasyonu</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Config -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-tertiary-fixed": "#351000",
+                    "on-surface-variant": "#464555",
+                    "secondary-fixed-dim": "#bec6e0",
+                    "secondary": "#565e74",
+                    "on-primary-container": "#dad7ff",
+                    "on-error": "#ffffff",
+                    "text-muted": "#64748B",
+                    "decorative-navy": "#000080",
+                    "danger-rose": "#E11D48",
+                    "tertiary-container": "#a44100",
+                    "on-tertiary": "#ffffff",
+                    "surface-tint": "#4d44e3",
+                    "surface-container-lowest": "#ffffff",
+                    "decorative-purple": "#800080",
+                    "on-primary-fixed-variant": "#3323cc",
+                    "surface-variant": "#e0e3e5",
+                    "tertiary": "#7e3000",
+                    "on-primary-fixed": "#0f0069",
+                    "on-primary": "#ffffff",
+                    "secondary-container": "#dae2fd",
+                    "inverse-on-surface": "#eff1f3",
+                    "on-secondary-fixed": "#131b2e",
+                    "on-background": "#191c1e",
+                    "surface-dim": "#d8dadc",
+                    "error": "#ba1a1a",
+                    "surface-container-highest": "#e0e3e5",
+                    "background": "#f7f9fb",
+                    "on-tertiary-fixed-variant": "#7b2f00",
+                    "border-slate": "#E2E8F0",
+                    "secondary-fixed": "#dae2fd",
+                    "success-emerald": "#10B981",
+                    "error-container": "#ffdad6",
+                    "on-secondary-fixed-variant": "#3f465c",
+                    "surface-container": "#eceef0",
+                    "outline": "#777587",
+                    "primary-fixed-dim": "#c3c0ff",
+                    "primary-fixed": "#e2dfff",
+                    "warning-amber": "#F59E0B",
+                    "primary-container": "#4f46e5",
+                    "surface": "#f7f9fb",
+                    "on-secondary-container": "#5c647a",
+                    "tertiary-fixed-dim": "#ffb695",
+                    "on-secondary": "#ffffff",
+                    "tertiary-fixed": "#ffdbcc",
+                    "surface-bright": "#f7f9fb",
+                    "on-error-container": "#93000a",
+                    "surface-container-high": "#e6e8ea",
+                    "inverse-surface": "#2d3133",
+                    "inverse-primary": "#c3c0ff",
+                    "on-tertiary-container": "#ffd2be",
+                    "surface-white": "#FFFFFF",
+                    "primary": "#3525cd",
+                    "on-surface": "#191c1e",
+                    "outline-variant": "#c7c4d8",
+                    "surface-container-low": "#f2f4f6"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "stack-md": "1rem",
+                    "sidebar-collapsed": "80px",
+                    "grid-cell-py": "0.5rem",
+                    "grid-cell-px": "0.75rem",
+                    "container-gap": "1.5rem",
+                    "header-height": "64px",
+                    "stack-sm": "0.5rem",
+                    "sidebar-width": "260px"
+            },
+            "fontFamily": {
+                    "headline-lg": ["Inter"],
+                    "headline-lg-mobile": ["Inter"],
+                    "data-mono": ["JetBrains Mono"],
+                    "body-lg": ["Inter"],
+                    "headline-md": ["Inter"],
+                    "body-sm": ["Inter"],
+                    "headline-sm": ["Inter"],
+                    "body-md": ["Inter"],
+                    "label-caps": ["Inter"]
+            },
+            "fontSize": {
+                    "headline-lg": ["30px", {"lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                    "data-mono": ["13px", {"lineHeight": "16px", "fontWeight": "500"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "body-sm": ["13px", {"lineHeight": "18px", "fontWeight": "400"}],
+                    "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700"}]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        /* Hide scrollbar for clean UI */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #E2E8F0; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #c7c4d8; }
+        
+        /* Custom Range Slider */
+        input[type=range] {
+            -webkit-appearance: none;
+            width: 100%;
+            background: transparent;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+            background: #4f46e5;
+            cursor: pointer;
+            margin-top: -8px;
+            box-shadow: 0 1px 3px rgba(79, 70, 229, 0.3);
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 4px;
+            cursor: pointer;
+            background: #E2E8F0;
+            border-radius: 2px;
+        }
+        input[type=range]:focus {
+            outline: none;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body-md antialiased overflow-x-hidden">
+<!-- SideNavBar (Shared Component) -->
+<aside class="fixed left-0 top-0 h-screen w-sidebar bg-surface-white shadow-sm flex flex-col border-r border-border-slate z-50 hidden md:flex">
+<!-- Header -->
+<div class="p-6 flex items-center gap-4 border-b border-border-slate">
+<div class="w-10 h-10 rounded-lg bg-secondary-container flex items-center justify-center text-primary font-headline-sm">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">domain</span>
+</div>
+<div>
+<h1 class="font-headline-sm text-headline-sm font-bold text-primary">NOA ERP</h1>
+<p class="font-label-caps text-label-caps text-text-muted mt-0.5">İnşaat Yönetim Sistemi</p>
+</div>
+</div>
+<!-- Main Navigation -->
+<nav class="flex-1 overflow-y-auto p-4 flex flex-col gap-1">
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-primary transition-colors duration-200" href="#">
+<span class="material-symbols-outlined text-[20px]">dashboard</span>
+<span class="font-body-md text-body-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-primary transition-colors duration-200" href="#">
+<span class="material-symbols-outlined text-[20px]">construction</span>
+<span class="font-body-md text-body-md">Şantiyeler</span>
+</a>
+<!-- Active Tab: Finans (Semantic match for Profitability/Tender Simulation) -->
+<a class="flex items-center gap-3 px-3 py-2.5 bg-secondary-container text-primary font-semibold rounded-lg scale-[0.98] transition-transform shadow-sm" href="#">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">payments</span>
+<span class="font-body-md text-body-md">Finans</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-primary transition-colors duration-200" href="#">
+<span class="material-symbols-outlined text-[20px]">group</span>
+<span class="font-body-md text-body-md">İnsan Kaynakları</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-primary transition-colors duration-200" href="#">
+<span class="material-symbols-outlined text-[20px]">local_shipping</span>
+<span class="font-body-md text-body-md">Tedarik Zinciri</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-primary transition-colors duration-200" href="#">
+<span class="material-symbols-outlined text-[20px]">analytics</span>
+<span class="font-body-md text-body-md">Raporlar</span>
+</a>
+</nav>
+<!-- CTA & Footer -->
+<div class="p-4 border-t border-border-slate flex flex-col gap-4">
+<button class="w-full bg-primary text-on-primary font-body-md text-body-md font-medium py-2.5 rounded-lg hover:bg-on-primary-fixed-variant transition-colors flex items-center justify-center gap-2 shadow-sm">
+<span class="material-symbols-outlined text-[18px]">add</span>
+                Yeni Proje Ekle
+            </button>
+<div class="flex flex-col gap-1">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-primary transition-colors text-sm" href="#">
+<span class="material-symbols-outlined text-[18px]">settings</span>
+<span>Ayarlar</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-primary transition-colors text-sm" href="#">
+<span class="material-symbols-outlined text-[18px]">help</span>
+<span>Yardım</span>
+</a>
+</div>
+</div>
+</aside>
+<!-- TopNavBar (Shared Component) -->
+<header class="sticky top-0 z-40 w-full h-header-height flex justify-between items-center px-6 md:ml-sidebar bg-surface-white/90 backdrop-blur-md border-b border-border-slate transition-all">
+<!-- Mobile Menu Button & Brand (Visible on Mobile) -->
+<div class="flex items-center gap-3 md:hidden">
+<button class="text-on-surface-variant p-1">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<span class="font-headline-md text-headline-md font-extrabold text-primary">NOA</span>
+</div>
+<!-- Navigation Links (Center/Left on Desktop) -->
+<div class="hidden md:flex items-center gap-8 h-full">
+<a class="font-label-caps text-label-caps text-on-surface-variant hover:text-on-surface transition-colors h-full flex items-center" href="#">Genel Bakış</a>
+<a class="font-label-caps text-label-caps text-on-surface-variant hover:text-on-surface transition-colors h-full flex items-center" href="#">Hakedişler</a>
+<!-- Active Sub-nav: Bütçe Analizi -->
+<a class="font-label-caps text-label-caps text-primary border-b-2 border-primary h-full flex items-center pt-[2px]" href="#">Bütçe Analizi</a>
+</div>
+<!-- Trailing Actions -->
+<div class="flex items-center gap-4">
+<button class="hidden md:flex items-center justify-center px-4 py-1.5 border border-primary text-primary rounded-full font-label-caps text-label-caps hover:bg-surface-container-low transition-colors">
+                Hızlı İşlem
+            </button>
+<div class="flex items-center gap-2 text-on-surface-variant">
+<button class="p-1.5 hover:bg-surface-container-low rounded-full transition-colors relative opacity-80 hover:opacity-100">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-1 right-1 w-2 h-2 bg-danger-rose rounded-full"></span>
+</button>
+<button class="p-1.5 hover:bg-surface-container-low rounded-full transition-colors opacity-80 hover:opacity-100">
+<span class="material-symbols-outlined">apps</span>
+</button>
+<button class="p-1.5 hover:bg-surface-container-low rounded-full transition-colors opacity-80 hover:opacity-100 ml-2">
+<img alt="Kullanıcı Profili" class="w-8 h-8 rounded-full object-cover border border-border-slate" data-alt="A professional headshot of an executive in a modern corporate setting, clean lighting, high resolution, wearing business casual attire, neutral background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDJFBmQfqF-UsAnwFwAcR7ijQaUK8LVvzgWVD3eJoOeM1HxroHqwVNPRtOkW6qDWbHDHdt9-7AKvweNuLEeGiNhv1n5sYzovlaDRBU_sQKbo1TVq7eFqdqJUWAWNCwMsmJBmJR9laEEi1P8g21wmOfHCJ8UztOPzhSg2Q9ic4ch913M-3bp-OTJs3Rf7ZZs2YrQku8tGYnQI-9VTkA6QR1lBNiVmrWDP411jmRbPPvuFpyizj9VnHQj"/>
+</button>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="md:ml-sidebar p-6 md:p-8 max-w-7xl mx-auto flex flex-col gap-container-gap">
+<!-- Page Header -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+<div>
+<div class="flex items-center gap-2 text-text-muted font-label-caps text-label-caps mb-2">
+<span>İhale Yönetimi</span>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<span>Ankara Ofis Kompleksi Projesi</span>
+</div>
+<h2 class="font-headline-lg text-headline-lg md:font-headline-lg text-on-surface">İhale Karlılık Simülasyonu</h2>
+<p class="font-body-md text-body-md text-text-muted mt-1">Teklif öncesi maliyet, genel gider ve kar marjı senaryo analizi.</p>
+</div>
+<div class="flex items-center gap-3">
+<button class="px-4 py-2 bg-surface-white border border-border-slate rounded-lg text-on-surface-variant font-body-sm text-body-sm hover:bg-surface-container-low transition flex items-center gap-2 shadow-sm">
+<span class="material-symbols-outlined text-[18px]">download</span>
+                    PDF Dışa Aktar
+                </button>
+<button class="px-4 py-2 bg-primary text-on-primary rounded-lg font-body-sm text-body-sm font-medium hover:bg-on-primary-fixed-variant transition flex items-center gap-2 shadow-sm">
+<span class="material-symbols-outlined text-[18px]">save</span>
+                    Senaryoyu Kaydet
+                </button>
+</div>
+</div>
+<!-- Bento Grid Layout -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-container-gap items-start">
+<!-- LEFT COLUMN: Inputs (Col Span 4) -->
+<div class="lg:col-span-4 flex flex-col gap-container-gap">
+<!-- Base Cost Card -->
+<div class="bg-surface-white rounded-xl shadow-sm border border-border-slate p-5">
+<div class="flex items-center justify-between mb-4">
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Maliyet Girdileri</h3>
+<span class="material-symbols-outlined text-text-muted text-[20px]">receipt_long</span>
+</div>
+<div class="flex flex-col gap-4">
+<div>
+<label class="block font-label-caps text-label-caps text-text-muted mb-1.5">BOQ Toplam Maliyeti (TL)</label>
+<div class="relative">
+<input class="w-full bg-surface-container-low border border-border-slate rounded-lg px-3 py-2 font-data-mono text-data-mono text-on-surface focus:outline-none text-right" readonly="" type="text" value="45.000.000"/>
+<span class="absolute left-3 top-2 text-text-muted font-body-sm">Salt Okunur</span>
+</div>
+</div>
+<div>
+<label class="block font-label-caps text-label-caps text-text-muted mb-1.5">Merkez Genel Gider Oranı (%)</label>
+<div class="relative">
+<input class="w-full bg-surface-white border border-border-slate rounded-lg px-3 py-2 font-data-mono text-data-mono text-on-surface focus:ring-2 focus:ring-primary focus:border-primary text-right transition-shadow" id="input-overhead" step="0.5" type="number" value="5.0"/>
+<span class="absolute left-3 top-2 text-text-muted font-body-sm">%</span>
+</div>
+</div>
+<div class="pt-3 border-t border-border-slate flex justify-between items-center">
+<span class="font-body-sm text-body-sm text-text-muted">Net Maliyet Tabanı:</span>
+<span class="font-data-mono text-data-mono text-on-surface font-semibold" id="display-net-cost">47.250.000 TL</span>
+</div>
+</div>
+</div>
+<!-- Target Parameters Card -->
+<div class="bg-surface-white rounded-xl shadow-sm border border-border-slate p-5">
+<div class="flex items-center justify-between mb-4">
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Hedef Parametreler</h3>
+<span class="material-symbols-outlined text-text-muted text-[20px]">track_changes</span>
+</div>
+<div class="flex flex-col gap-4">
+<div>
+<label class="block font-label-caps text-label-caps text-text-muted mb-1.5">Hedef Kar Marjı (%)</label>
+<div class="relative">
+<input class="w-full bg-surface-white border border-border-slate rounded-lg px-3 py-2 font-data-mono text-data-mono text-on-surface focus:ring-2 focus:ring-primary focus:border-primary text-right transition-shadow" id="input-target-profit" step="0.5" type="number" value="12.0"/>
+<span class="absolute left-3 top-2 text-text-muted font-body-sm">%</span>
+</div>
+</div>
+<div>
+<label class="block font-label-caps text-label-caps text-text-muted mb-1.5">Risk Marjı (%)</label>
+<div class="relative">
+<input class="w-full bg-surface-white border border-border-slate rounded-lg px-3 py-2 font-data-mono text-data-mono text-on-surface focus:ring-2 focus:ring-primary focus:border-primary text-right transition-shadow" id="input-risk" step="0.5" type="number" value="2.0"/>
+<span class="absolute left-3 top-2 text-text-muted font-body-sm">%</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Information Note -->
+<div class="bg-secondary-container/50 rounded-lg p-4 border border-secondary-fixed flex gap-3">
+<span class="material-symbols-outlined text-primary text-[20px] shrink-0 mt-0.5">info</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+                        BOQ maliyetleri dinamik olarak şantiye modülünden çekilmektedir. Manuel değişiklik yapılamaz.
+                    </p>
+</div>
+</div>
+<!-- RIGHT COLUMN: Analysis & Visualization (Col Span 8) -->
+<div class="lg:col-span-8 flex flex-col gap-container-gap">
+<!-- KPI Strip (3 Cards) -->
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+<!-- Target Bid -->
+<div class="bg-surface-white rounded-xl shadow-sm border border-border-slate p-4 flex flex-col justify-between relative overflow-hidden">
+<div class="absolute right-0 top-0 w-16 h-16 bg-primary/5 rounded-bl-full -mr-4 -mt-4"></div>
+<span class="font-label-caps text-label-caps text-text-muted mb-2">Önerilen Teklif Bedeli</span>
+<div class="flex items-end gap-1">
+<span class="font-data-mono text-data-mono text-2xl font-bold text-on-surface" id="kpi-rec-bid">53.865.000</span>
+<span class="font-body-sm text-body-sm text-text-muted mb-1">TL</span>
+</div>
+</div>
+<!-- Total Profit -->
+<div class="bg-surface-white rounded-xl shadow-sm border border-border-slate p-4 flex flex-col justify-between">
+<span class="font-label-caps text-label-caps text-text-muted mb-2">Beklenen Net Kar</span>
+<div class="flex items-end gap-1">
+<span class="font-data-mono text-data-mono text-2xl font-bold text-success-emerald" id="kpi-total-profit">6.615.000</span>
+<span class="font-body-sm text-body-sm text-text-muted mb-1">TL</span>
+</div>
+</div>
+<!-- Margin -->
+<div class="bg-surface-white rounded-xl shadow-sm border border-border-slate p-4 flex flex-col justify-between">
+<div class="flex justify-between items-start mb-2">
+<span class="font-label-caps text-label-caps text-text-muted">Kar Oranı</span>
+<span class="px-2 py-0.5 rounded text-[10px] font-bold tracking-wider uppercase bg-[#ecfdf5] text-success-emerald border border-[#a7f3d0]" id="kpi-status-badge">Optimum</span>
+</div>
+<div class="flex items-end gap-1">
+<span class="font-data-mono text-data-mono text-2xl font-bold text-on-surface" id="kpi-margin">14.0</span>
+<span class="font-body-sm text-body-sm text-text-muted mb-1">%</span>
+</div>
+</div>
+</div>
+<!-- Interactive Scenario Card -->
+<div class="bg-surface-white rounded-xl shadow-sm border border-border-slate p-6">
+<div class="flex items-center justify-between mb-6">
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Teklif Senaryosu Testi</h3>
+<p class="font-body-sm text-body-sm text-text-muted">Nihai teklif bedelini kaydırarak kar/zarar durumunu simüle edin.</p>
+</div>
+<button class="text-primary hover:bg-surface-container-low p-2 rounded-lg transition-colors flex items-center gap-1 font-body-sm text-body-sm">
+<span class="material-symbols-outlined text-[18px]">refresh</span> Sıfırla
+                        </button>
+</div>
+<div class="flex flex-col gap-6">
+<!-- Slider Area -->
+<div class="relative pt-8 pb-4">
+<!-- Value Tooltip (Static positioning for demo, dynamic in real app) -->
+<div class="absolute left-1/2 -ml-16 top-0 bg-inverse-surface text-inverse-on-surface font-data-mono text-[12px] py-1 px-3 rounded shadow-md text-center w-32 after:content-[''] after:absolute after:top-full after:left-1/2 after:-ml-1 after:border-4 after:border-transparent after:border-t-inverse-surface">
+<span id="slider-val-display">53.865.000 TL</span>
+</div>
+<input class="w-full" id="scenario-slider" max="65000000" min="45000000" step="100000" type="range" value="53865000"/>
+<div class="flex justify-between mt-2 font-data-mono text-[11px] text-text-muted">
+<span>Risk Sınırı: 47.25M</span>
+<span>Tavan: 65.0M</span>
+</div>
+</div>
+<!-- Visual Breakdown Chart -->
+<div class="mt-4">
+<h4 class="font-label-caps text-label-caps text-text-muted mb-3">Maliyet ve Kar Dağılımı</h4>
+<!-- Stacked Bar -->
+<div class="h-8 w-full bg-surface-container-high rounded-lg overflow-hidden flex shadow-inner">
+<div class="h-full bg-secondary text-white flex items-center px-3 font-data-mono text-[11px] overflow-hidden whitespace-nowrap" id="bar-boq" style="width: 70%;" title="BOQ Maliyeti: 45M">
+                                    BOQ
+                                </div>
+<div class="h-full bg-warning-amber text-white flex items-center px-2 font-data-mono text-[11px] overflow-hidden whitespace-nowrap" id="bar-overhead" style="width: 10%;" title="Genel Gider: 2.25M">
+                                    G.Gider
+                                </div>
+<div class="h-full bg-success-emerald text-white flex items-center px-3 font-data-mono text-[11px] overflow-hidden whitespace-nowrap transition-all duration-300" id="bar-profit" style="width: 20%;" title="Kar">
+                                    Kar Marjı
+                                </div>
+</div>
+<!-- Legend -->
+<div class="flex items-center gap-4 mt-4 flex-wrap">
+<div class="flex items-center gap-1.5">
+<div class="w-3 h-3 rounded-sm bg-secondary"></div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Ana Maliyet</span>
+</div>
+<div class="flex items-center gap-1.5">
+<div class="w-3 h-3 rounded-sm bg-warning-amber"></div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Genel Gider</span>
+</div>
+<div class="flex items-center gap-1.5">
+<div class="w-3 h-3 rounded-sm bg-success-emerald transition-colors duration-300" id="legend-profit-color"></div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Kar</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Tabular Breakdown -->
+<div class="bg-surface-white rounded-xl shadow-sm border border-border-slate overflow-hidden">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low border-b border-border-slate">
+<th class="py-3 px-4 font-label-caps text-label-caps text-text-muted">Açıklama</th>
+<th class="py-3 px-4 font-label-caps text-label-caps text-text-muted text-right">Tutar (TL)</th>
+<th class="py-3 px-4 font-label-caps text-label-caps text-text-muted text-right">Oran (%)</th>
+</tr>
+</thead>
+<tbody class="font-data-mono text-[13px] text-on-surface divide-y divide-border-slate">
+<tr class="hover:bg-surface-container-lowest transition-colors">
+<td class="py-2.5 px-4 font-body-sm text-body-sm">Saha Maliyeti (BOQ)</td>
+<td class="py-2.5 px-4 text-right">45.000.000</td>
+<td class="py-2.5 px-4 text-right text-text-muted">100.0</td>
+</tr>
+<tr class="hover:bg-surface-container-lowest transition-colors">
+<td class="py-2.5 px-4 font-body-sm text-body-sm">Merkez Genel Gider</td>
+<td class="py-2.5 px-4 text-right">2.250.000</td>
+<td class="py-2.5 px-4 text-right text-text-muted">5.0</td>
+</tr>
+<tr class="bg-surface-container-low/50">
+<td class="py-2.5 px-4 font-body-sm text-body-sm font-semibold">Toplam Maliyet (A)</td>
+<td class="py-2.5 px-4 text-right font-semibold">47.250.000</td>
+<td class="py-2.5 px-4 text-right text-text-muted">-</td>
+</tr>
+<tr class="hover:bg-surface-container-lowest transition-colors">
+<td class="py-2.5 px-4 font-body-sm text-body-sm text-success-emerald">Kar Payı</td>
+<td class="py-2.5 px-4 text-right text-success-emerald" id="table-profit-val">6.615.000</td>
+<td class="py-2.5 px-4 text-right text-success-emerald" id="table-profit-pct">14.0</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</main>
+<!-- Simple Interactivity Script (Vanilla JS for Simulation) -->
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const baseCost = 45000000;
+            const slider = document.getElementById('scenario-slider');
+            const sliderDisplay = document.getElementById('slider-val-display');
+            
+            // KPIs
+            const kpiRecBid = document.getElementById('kpi-rec-bid');
+            const kpiTotalProfit = document.getElementById('kpi-total-profit');
+            const kpiMargin = document.getElementById('kpi-margin');
+            const kpiBadge = document.getElementById('kpi-status-badge');
+            
+            // Chart Bars
+            const barProfit = document.getElementById('bar-profit');
+            const legendProfit = document.getElementById('legend-profit-color');
+            
+            // Table
+            const tableProfitVal = document.getElementById('table-profit-val');
+            const tableProfitPct = document.getElementById('table-profit-pct');
+            
+            // Inputs
+            const overheadInput = document.getElementById('input-overhead');
+            
+            function formatCurrency(num) {
+                return num.toLocaleString('tr-TR');
+            }
+
+            function updateSimulation() {
+                const currentBid = parseInt(slider.value);
+                const overheadPct = parseFloat(overheadInput.value) / 100;
+                
+                const overheadCost = baseCost * overheadPct;
+                const totalCost = baseCost + overheadCost;
+                
+                const profit = currentBid - totalCost;
+                const profitMargin = (profit / totalCost) * 100;
+                
+                // Update Displays
+                sliderDisplay.textContent = formatCurrency(currentBid) + ' TL';
+                kpiRecBid.textContent = formatCurrency(currentBid);
+                kpiTotalProfit.textContent = formatCurrency(Math.floor(profit));
+                kpiMargin.textContent = profitMargin.toFixed(1);
+                
+                tableProfitVal.textContent = formatCurrency(Math.floor(profit));
+                tableProfitPct.textContent = profitMargin.toFixed(1);
+                
+                // Update Chart Proportions (Rough estimation for visual)
+                const maxChartVal = Math.max(currentBid, totalCost);
+                const pWidth = Math.max(0, (profit / maxChartVal) * 100);
+                barProfit.style.width = pWidth + '%';
+                
+                // Styling based on profitability
+                if (profit < 0) {
+                    kpiTotalProfit.classList.replace('text-success-emerald', 'text-danger-rose');
+                    kpiMargin.classList.replace('text-success-emerald', 'text-danger-rose');
+                    barProfit.classList.replace('bg-success-emerald', 'bg-danger-rose');
+                    legendProfit.classList.replace('bg-success-emerald', 'bg-danger-rose');
+                    
+                    kpiBadge.textContent = 'Zarar';
+                    kpiBadge.className = 'px-2 py-0.5 rounded text-[10px] font-bold tracking-wider uppercase bg-error-container text-error border border-[#fecaca]';
+                    
+                    tableProfitVal.classList.replace('text-success-emerald', 'text-danger-rose');
+                    tableProfitPct.classList.replace('text-success-emerald', 'text-danger-rose');
+                } else if (profitMargin < 5) {
+                    // Risk
+                    kpiTotalProfit.className = 'font-data-mono text-data-mono text-2xl font-bold text-warning-amber';
+                    kpiMargin.className = 'font-data-mono text-data-mono text-2xl font-bold text-on-surface';
+                    barProfit.className = 'h-full bg-warning-amber text-white flex items-center px-3 font-data-mono text-[11px] overflow-hidden whitespace-nowrap transition-all duration-300';
+                    legendProfit.className = 'w-3 h-3 rounded-sm bg-warning-amber transition-colors duration-300';
+                    
+                    kpiBadge.textContent = 'Riskli';
+                    kpiBadge.className = 'px-2 py-0.5 rounded text-[10px] font-bold tracking-wider uppercase bg-[#fef3c7] text-warning-amber border border-[#fde68a]';
+                    
+                    tableProfitVal.className = 'py-2.5 px-4 text-right text-warning-amber';
+                    tableProfitPct.className = 'py-2.5 px-4 text-right text-warning-amber';
+                } else {
+                    // Good
+                    kpiTotalProfit.className = 'font-data-mono text-data-mono text-2xl font-bold text-success-emerald';
+                    kpiMargin.className = 'font-data-mono text-data-mono text-2xl font-bold text-on-surface';
+                    barProfit.className = 'h-full bg-success-emerald text-white flex items-center px-3 font-data-mono text-[11px] overflow-hidden whitespace-nowrap transition-all duration-300';
+                    legendProfit.className = 'w-3 h-3 rounded-sm bg-success-emerald transition-colors duration-300';
+                    
+                    kpiBadge.textContent = 'Optimum';
+                    kpiBadge.className = 'px-2 py-0.5 rounded text-[10px] font-bold tracking-wider uppercase bg-[#ecfdf5] text-success-emerald border border-[#a7f3d0]';
+                    
+                    tableProfitVal.className = 'py-2.5 px-4 text-right text-success-emerald';
+                    tableProfitPct.className = 'py-2.5 px-4 text-right text-success-emerald';
+                }
+            }
+
+            slider.addEventListener('input', updateSimulation);
+            overheadInput.addEventListener('input', updateSimulation);
+            
+            // Initial call
+            updateSimulation();
+        });
+    </script>
+</body></html>

@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+
+<html class="light" lang="tr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Hakediş Özeti - Hakediş Pro</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "inverse-surface": "#2d3133",
+                        "surface-container": "#eceef0",
+                        "outline": "#777587",
+                        "surface-container-high": "#e6e8ea",
+                        "success-emerald": "#10B981",
+                        "secondary-container": "#dae2fd",
+                        "on-primary-fixed": "#0f0069",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary-fixed-dim": "#bec6e0",
+                        "secondary-fixed": "#dae2fd",
+                        "text-muted": "#64748B",
+                        "surface-dim": "#d8dadc",
+                        "on-secondary": "#ffffff",
+                        "tertiary-fixed": "#ffdbcc",
+                        "error": "#ba1a1a",
+                        "decorative-purple": "#800080",
+                        "inverse-primary": "#c3c0ff",
+                        "on-primary-fixed-variant": "#3323cc",
+                        "outline-variant": "#c7c4d8",
+                        "on-secondary-fixed": "#131b2e",
+                        "danger-rose": "#E11D48",
+                        "on-secondary-fixed-variant": "#3f465c",
+                        "primary-fixed": "#e2dfff",
+                        "on-surface": "#191c1e",
+                        "decorative-navy": "#000080",
+                        "surface-bright": "#f7f9fb",
+                        "surface": "#f7f9fb",
+                        "inverse-on-surface": "#eff1f3",
+                        "on-primary-container": "#dad7ff",
+                        "surface-container-low": "#f2f4f6",
+                        "tertiary-container": "#a44100",
+                        "on-secondary-container": "#5c647a",
+                        "tertiary-fixed-dim": "#ffb695",
+                        "surface-tint": "#4d44e3",
+                        "surface-container-highest": "#e0e3e5",
+                        "on-surface-variant": "#464555",
+                        "warning-amber": "#F59E0B",
+                        "on-error-container": "#93000a",
+                        "primary-fixed-dim": "#c3c0ff",
+                        "on-tertiary-fixed": "#351000",
+                        "on-background": "#191c1e",
+                        "secondary": "#565e74",
+                        "on-primary": "#ffffff",
+                        "primary": "#3525cd",
+                        "on-tertiary-fixed-variant": "#7b2f00",
+                        "surface-white": "#FFFFFF",
+                        "background": "#f7f9fb",
+                        "primary-container": "#4f46e5",
+                        "error-container": "#ffdad6",
+                        "border-slate": "#E2E8F0",
+                        "on-error": "#ffffff",
+                        "on-tertiary-container": "#ffd2be",
+                        "tertiary": "#7e3000",
+                        "surface-variant": "#e0e3e5",
+                        "on-tertiary": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "grid-cell-px": "0.75rem",
+                        "sidebar-width": "260px",
+                        "container-gap": "1.5rem",
+                        "header-height": "64px",
+                        "sidebar-collapsed": "80px",
+                        "stack-md": "1rem",
+                        "stack-sm": "0.5rem",
+                        "grid-cell-py": "0.5rem"
+                    },
+                    "fontFamily": {
+                        "headline-sm": ["Inter"],
+                        "data-mono": ["JetBrains Mono"],
+                        "headline-md": ["Inter"],
+                        "body-md": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "body-sm": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "data-mono": ["13px", { "lineHeight": "16px", "fontWeight": "500" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "headline-lg": ["30px", { "lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "700" }],
+                        "body-sm": ["13px", { "lineHeight": "18px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-background text-on-background font-body-md text-body-md h-screen overflow-hidden flex">
+<!-- SideNavBar -->
+<nav class="bg-surface-white dark:bg-inverse-surface border-r border-outline-variant dark:border-outline shadow-sm fixed left-0 top-0 h-full w-sidebar-width flex flex-col py-stack-md transition-all duration-300 ease-in-out z-40 hidden md:flex">
+<div class="px-4 mb-8 flex items-center gap-3">
+<div class="w-10 h-10 rounded bg-primary-container flex items-center justify-center text-primary font-bold shadow-sm">HP</div>
+<div>
+<div class="font-headline-sm text-headline-sm font-bold text-primary">Hakediş Pro</div>
+<div class="text-xs text-on-surface-variant">Structural Intelligence</div>
+</div>
+</div>
+<div class="px-4 mb-6">
+<button class="w-full bg-primary text-on-primary py-2 px-4 rounded-lg font-medium hover:bg-primary/90 transition-colors shadow-sm flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-sm">add</span>
+                New Certificate
+            </button>
+</div>
+<div class="flex-1 overflow-y-auto">
+<ul class="space-y-1">
+<li>
+<a class="flex items-center gap-3 px-4 py-2 mx-2 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-low transition-colors duration-200 rounded-lg" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span>Dashboard</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-2 mx-2 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-low transition-colors duration-200 rounded-lg" href="#">
+<span class="material-symbols-outlined">gavel</span>
+<span>Tenders</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-2 mx-2 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-low transition-colors duration-200 rounded-lg" href="#">
+<span class="material-symbols-outlined">description</span>
+<span>Contracts</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-2 mx-2 bg-primary-container dark:bg-primary text-on-primary-container dark:text-on-primary rounded-lg font-medium" href="#">
+<span class="material-symbols-outlined">payments</span>
+<span>Payment Certificates</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-2 mx-2 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-low transition-colors duration-200 rounded-lg" href="#">
+<span class="material-symbols-outlined">engineering</span>
+<span>HR &amp; Personnel</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-2 mx-2 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-low transition-colors duration-200 rounded-lg" href="#">
+<span class="material-symbols-outlined">analytics</span>
+<span>Financial Reports</span>
+</a>
+</li>
+</ul>
+</div>
+<div class="mt-auto border-t border-outline-variant pt-4">
+<ul class="space-y-1">
+<li>
+<a class="flex items-center gap-3 px-4 py-2 mx-2 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-low transition-colors duration-200 rounded-lg" href="#">
+<span class="material-symbols-outlined">help</span>
+<span>Support</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-2 mx-2 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-low transition-colors duration-200 rounded-lg" href="#">
+<span class="material-symbols-outlined">person</span>
+<span>Account</span>
+</a>
+</li>
+</ul>
+</div>
+</nav>
+<!-- Main Content Wrapper -->
+<div class="flex-1 flex flex-col md:ml-[260px] overflow-hidden">
+<!-- TopNavBar -->
+<header class="sticky top-0 z-30 flex justify-between items-center h-header-height px-grid-cell-px w-full bg-surface-white dark:bg-inverse-surface border-b border-outline-variant dark:border-outline shadow-sm font-body-md text-body-md transition-colors duration-200">
+<div class="flex items-center gap-4">
+<button class="md:hidden p-2 text-on-surface-variant hover:bg-surface-container-low rounded-lg">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<div class="font-headline-md text-headline-md font-bold text-primary dark:text-inverse-primary md:hidden">Hakediş Pro</div>
+<div class="hidden md:flex items-center relative w-64">
+<span class="material-symbols-outlined absolute left-3 text-on-surface-variant text-sm">search</span>
+<input class="w-full pl-9 pr-3 py-1.5 border border-outline-variant rounded-md bg-surface-container-lowest text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-shadow" placeholder="Search..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<button class="hidden md:flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-on-surface border border-outline-variant rounded hover:bg-surface-container-low transition-colors">
+<span class="material-symbols-outlined text-sm">print</span>
+                    Print
+                </button>
+<button class="flex items-center gap-2 px-3 py-1.5 text-sm font-medium bg-primary text-on-primary rounded hover:bg-primary/90 transition-colors shadow-sm">
+<span class="material-symbols-outlined text-sm">file_download</span>
+                    Export PDF
+                </button>
+<div class="h-6 w-px bg-outline-variant mx-1"></div>
+<button class="p-1.5 text-on-surface-variant hover:bg-surface-container-low rounded-full transition-colors">
+<span class="material-symbols-outlined">share</span>
+</button>
+<button class="p-1.5 text-on-surface-variant hover:bg-surface-container-low rounded-full transition-colors">
+<span class="material-symbols-outlined">settings</span>
+</button>
+<div class="w-8 h-8 rounded-full bg-surface-container-high overflow-hidden ml-2 border border-outline-variant cursor-pointer">
+<img alt="User profile" class="w-full h-full object-cover" data-alt="A professional headshot of a corporate user, neutral expression, modern business attire, bright studio lighting, light mode corporate aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBPDSf_e9D6eFB49uJyYEHIAw4Srwe5ocVtiquSUhLSmtaCOTDWP5wlJ_6A4qo7RxZDCtDEoylO-p6DeL_FBWW7EFKgUhNnM-cxEhwfc0KE7xSeqfxZpDIvP2_n6vgqt6J_Tnb62shaWj8Ut5SMYWkenJFfXpM-ihLitWbgLZcSBSuPGYFGg9gSQRVmFaG7iFRSsOORYEk3Us-1lHJG1D8Y79t0oLwDKporooX6rwYcgJIVUzZPDh3z"/>
+</div>
+</div>
+</header>
+<!-- Canvas -->
+<main class="flex-1 overflow-y-auto p-4 md:p-8 bg-background">
+<div class="max-w-5xl mx-auto space-y-6">
+<!-- Page Header & Actions -->
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+<div>
+<h1 class="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-background">Hakediş Özeti</h1>
+<p class="text-on-surface-variant mt-1">İstanbul Finans Merkezi - Blok B</p>
+</div>
+<div class="flex items-center gap-2">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-warning-amber/10 text-warning-amber font-medium text-xs border border-warning-amber/20">
+<span class="w-1.5 h-1.5 rounded-full bg-warning-amber"></span>
+                            Onay Bekliyor
+                        </span>
+</div>
+</div>
+<!-- Document Paper Container -->
+<div class="bg-surface-white rounded-xl shadow-sm border border-outline-variant/50 p-6 md:p-10">
+<!-- Report Meta Data -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10 pb-6 border-b border-outline-variant/30">
+<div>
+<div class="font-label-caps text-label-caps text-text-muted mb-1">PROJE</div>
+<div class="font-medium text-on-surface">İstanbul Finans Merkezi - Blok B</div>
+<div class="font-label-caps text-label-caps text-text-muted mb-1 mt-4">YÜKLENİCİ</div>
+<div class="font-medium text-on-surface">NOA Yapı Teknolojileri A.Ş.</div>
+</div>
+<div class="md:text-right">
+<div class="font-label-caps text-label-caps text-text-muted mb-1">HAKEDİŞ NO</div>
+<div class="font-medium text-on-surface text-lg">05</div>
+<div class="font-label-caps text-label-caps text-text-muted mb-1 mt-4">DÖNEM</div>
+<div class="font-medium text-on-surface">Kasım 2023</div>
+</div>
+</div>
+<!-- Financial Summary Table -->
+<div class="mb-10">
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-4 border-b-2 border-primary w-max pb-1">1. İmalat Tutarları</h3>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<tbody>
+<tr class="border-b border-outline-variant/30 hover:bg-surface-bright transition-colors">
+<td class="py-3 px-2 text-on-surface-variant">Toplam Sözleşme Bedeli</td>
+<td class="py-3 px-2 text-right font-data-mono text-data-mono font-medium text-on-surface">150,000,000.00 ₺</td>
+</tr>
+<tr class="border-b border-outline-variant/30 hover:bg-surface-bright transition-colors">
+<td class="py-3 px-2 text-on-surface-variant">Önceki Dönemler Toplamı</td>
+<td class="py-3 px-2 text-right font-data-mono text-data-mono font-medium text-on-surface">45,250,000.00 ₺</td>
+</tr>
+<tr class="border-b border-outline-variant/30 bg-primary/5">
+<td class="py-3 px-2 font-medium text-primary">Bu Dönem İmalat Tutarı</td>
+<td class="py-3 px-2 text-right font-data-mono text-data-mono font-bold text-primary">12,400,000.00 ₺</td>
+</tr>
+<tr class="border-b border-outline-variant/50 border-t-2 border-t-outline-variant bg-surface-container-low">
+<td class="py-3 px-2 font-semibold text-on-surface">Toplam İmalat (Kümülatif)</td>
+<td class="py-3 px-2 text-right font-data-mono text-data-mono font-bold text-on-surface">57,650,000.00 ₺</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Deductions Section -->
+<div class="mb-10">
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-4 border-b-2 border-primary w-max pb-1">2. Kesintiler</h3>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<tbody>
+<tr class="border-b border-outline-variant/30 hover:bg-surface-bright transition-colors">
+<td class="py-3 px-2 text-on-surface-variant">Teminat Kesintisi (%5)</td>
+<td class="py-3 px-2 text-right font-data-mono text-data-mono font-medium text-danger-rose">- 620,000.00 ₺</td>
+</tr>
+<tr class="border-b border-outline-variant/30 hover:bg-surface-bright transition-colors">
+<td class="py-3 px-2 text-on-surface-variant">Gelir Vergisi Stopajı</td>
+<td class="py-3 px-2 text-right font-data-mono text-data-mono font-medium text-danger-rose">- 372,000.00 ₺</td>
+</tr>
+<tr class="border-b border-outline-variant/30 hover:bg-surface-bright transition-colors">
+<td class="py-3 px-2 text-on-surface-variant">Avans Mahsubu</td>
+<td class="py-3 px-2 text-right font-data-mono text-data-mono font-medium text-danger-rose">- 1,240,000.00 ₺</td>
+</tr>
+<tr class="border-b border-outline-variant/50 border-t-2 border-t-outline-variant bg-surface-container-low">
+<td class="py-3 px-2 font-semibold text-on-surface">Toplam Kesinti</td>
+<td class="py-3 px-2 text-right font-data-mono text-data-mono font-bold text-danger-rose">- 2,232,000.00 ₺</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Final Totals -->
+<div class="mb-12 bg-primary/5 rounded-lg p-4 border border-primary/20">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<tbody>
+<tr class="border-b border-primary/10">
+<td class="py-2 px-2 text-on-surface font-medium">Net Ödenecek (KDV Hariç)</td>
+<td class="py-2 px-2 text-right font-data-mono text-data-mono font-medium text-on-surface">10,168,000.00 ₺</td>
+</tr>
+<tr class="border-b border-primary/20">
+<td class="py-2 px-2 text-on-surface font-medium">KDV (%20)</td>
+<td class="py-2 px-2 text-right font-data-mono text-data-mono font-medium text-on-surface">2,033,600.00 ₺</td>
+</tr>
+<tr>
+<td class="py-3 px-2 font-bold text-primary text-lg">Toplam Tahakkuk (KDV Dahil)</td>
+<td class="py-3 px-2 text-right font-data-mono text-data-mono font-bold text-primary text-lg">12,201,600.00 ₺</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Approval Section -->
+<div class="mt-16 pt-8 border-t border-outline-variant/30">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<div class="text-center">
+<div class="font-label-caps text-label-caps text-text-muted mb-16">YÜKLENİCİ TEMSİLCİSİ</div>
+<div class="border-b border-outline-variant/50 mx-4 mb-2"></div>
+<div class="font-medium text-sm text-on-surface">Ad Soyad</div>
+<div class="text-xs text-on-surface-variant">İmza / Kaşe</div>
+</div>
+<div class="text-center">
+<div class="font-label-caps text-label-caps text-text-muted mb-16">KONTROL MÜHENDİSİ</div>
+<div class="border-b border-outline-variant/50 mx-4 mb-2"></div>
+<div class="font-medium text-sm text-on-surface">Ad Soyad</div>
+<div class="text-xs text-on-surface-variant">İmza</div>
+</div>
+<div class="text-center">
+<div class="font-label-caps text-label-caps text-text-muted mb-16">PROJE MÜDÜRÜ</div>
+<div class="border-b border-outline-variant/50 mx-4 mb-2"></div>
+<div class="font-medium text-sm text-on-surface">Ad Soyad</div>
+<div class="text-xs text-on-surface-variant">İmza / Onay</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

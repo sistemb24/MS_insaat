@@ -1,0 +1,69 @@
+@import "tailwindcss";
+
+:root {
+  --font-inter: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-jetbrains-mono: "JetBrains Mono", "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  --app-header-height: 56px;
+  --app-sidebar-width: 248px;
+  --data-row-height: 34px;
+  --radius-control: 4px;
+  --radius-panel: 6px;
+  --background: #f7f9fb;
+  --foreground: #191c1e;
+  --surface: #f7f9fb;
+  --surface-container-lowest: #ffffff;
+  --surface-container-low: #f2f4f6;
+  --surface-container: #eceef0;
+  --on-surface: #191c1e;
+  --on-surface-variant: #444653;
+  --grid-border: #e2e8f0;
+  --primary: #00288e;
+  --primary-hover: #001f70;
+  --primary-fixed: #dde1ff;
+  --status-draft: #94a3b8;
+  --status-process: #3b82f6;
+  --status-approved: #10b981;
+  --status-cancelled: #ef4444;
+  --mandatory-indicator: #b91c1c;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-inter);
+  --font-mono: var(--font-jetbrains-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+  --font-inter: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-jetbrains-mono: "JetBrains Mono", "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+    --background: #111827;
+    --foreground: #f9fafb;
+    --surface: #111827;
+    --surface-container-lowest: #172033;
+    --surface-container-low: #1f2937;
+    --surface-container: #273449;
+    --on-surface: #f9fafb;
+    --on-surface-variant: #cbd5e1;
+    --grid-border: #334155;
+    --primary-hover: #1d4ed8;
+    --primary-fixed: #1e3a8a;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-inter), Arial, Helvetica, sans-serif;
+}
+
+button,
+a {
+  letter-spacing: 0;
+}
+

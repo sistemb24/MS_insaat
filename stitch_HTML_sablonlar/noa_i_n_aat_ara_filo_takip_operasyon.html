@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Araç ve Filo Yönetimi - NOA İnşaat ERP</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined.filled {
+            font-variation-settings: 'FILL' 1;
+        }
+        
+        /* Custom scrollbar for high-density tables */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #c7c4d8; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #777587; 
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary-fixed-dim": "#bec6e0",
+                        "on-error": "#ffffff",
+                        "secondary-fixed": "#dae2fd",
+                        "tertiary-fixed": "#ffdbcc",
+                        "success-emerald": "#10B981",
+                        "primary": "#3525cd",
+                        "surface-tint": "#4d44e3",
+                        "surface-bright": "#f7f9fb",
+                        "warning-amber": "#F59E0B",
+                        "primary-fixed": "#e2dfff",
+                        "on-tertiary-container": "#ffd2be",
+                        "error-container": "#ffdad6",
+                        "on-tertiary-fixed-variant": "#7b2f00",
+                        "on-primary": "#ffffff",
+                        "decorative-purple": "#800080",
+                        "inverse-on-surface": "#eff1f3",
+                        "danger-rose": "#E11D48",
+                        "primary-fixed-dim": "#c3c0ff",
+                        "tertiary": "#7e3000",
+                        "surface-container-highest": "#e0e3e5",
+                        "outline-variant": "#c7c4d8",
+                        "on-tertiary-fixed": "#351000",
+                        "on-background": "#191c1e",
+                        "surface-variant": "#e0e3e5",
+                        "error": "#ba1a1a",
+                        "text-muted": "#64748B",
+                        "on-secondary": "#ffffff",
+                        "on-secondary-fixed-variant": "#3f465c",
+                        "tertiary-fixed-dim": "#ffb695",
+                        "on-surface": "#191c1e",
+                        "tertiary-container": "#a44100",
+                        "on-primary-fixed-variant": "#3323cc",
+                        "secondary": "#565e74",
+                        "surface-container-low": "#f2f4f6",
+                        "surface": "#f7f9fb",
+                        "inverse-surface": "#2d3133",
+                        "primary-container": "#4f46e5",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary-container": "#5c647a",
+                        "decorative-navy": "#000080",
+                        "outline": "#777587",
+                        "on-secondary-fixed": "#131b2e",
+                        "border-slate": "#E2E8F0",
+                        "background": "#f7f9fb",
+                        "secondary-container": "#dae2fd",
+                        "surface-white": "#FFFFFF",
+                        "surface-container-high": "#e6e8ea",
+                        "surface-container": "#eceef0",
+                        "on-surface-variant": "#464555",
+                        "on-primary-container": "#dad7ff",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-fixed": "#0f0069",
+                        "on-error-container": "#93000a",
+                        "surface-dim": "#d8dadc",
+                        "inverse-primary": "#c3c0ff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-md": "1rem",
+                        "grid-cell-py": "0.5rem",
+                        "container-gap": "1.5rem",
+                        "header-height": "64px",
+                        "sidebar-collapsed": "80px",
+                        "sidebar-width": "260px",
+                        "stack-sm": "0.5rem",
+                        "grid-cell-px": "0.75rem"
+                    },
+                    "fontFamily": {
+                        "headline-sm": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "data-mono": ["JetBrains Mono"]
+                    },
+                    "fontSize": {
+                        "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "headline-lg": ["30px", { "lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "700" }],
+                        "body-sm": ["13px", { "lineHeight": "18px", "fontWeight": "400" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "data-mono": ["13px", { "lineHeight": "16px", "fontWeight": "500" }]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-background text-on-surface font-body-md min-h-screen flex selection:bg-primary-fixed selection:text-on-primary-fixed">
+<aside class="fixed left-0 top-0 bottom-0 w-[260px] z-50 bg-surface-white border-r border-outline-variant shadow-md flex flex-col h-full py-4 hidden md:flex">
+<div class="px-6 mb-8 flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-primary-container flex items-center justify-center text-on-primary-container">
+<span class="material-symbols-outlined filled font-headline-md text-headline-md">business</span>
+</div>
+<div>
+<h1 class="font-headline-sm text-headline-sm font-black text-primary">NOA İnşaat</h1>
+<p class="font-label-caps text-label-caps tracking-wider text-text-muted">Technical &amp; Rigorous</p>
+</div>
+</div>
+<nav class="flex-1 overflow-y-auto">
+<ul class="flex flex-col gap-1">
+<li>
+<a class="flex items-center gap-3 text-secondary hover:bg-surface-container-low transition-all duration-200 ease-in-out rounded-lg mx-2 my-1 px-4 py-2" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-caps text-label-caps tracking-wider">Dashboard</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 text-secondary hover:bg-surface-container-low transition-all duration-200 ease-in-out rounded-lg mx-2 my-1 px-4 py-2" href="#">
+<span class="material-symbols-outlined">description</span>
+<span class="font-label-caps text-label-caps tracking-wider">Tender Management</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 text-secondary hover:bg-surface-container-low transition-all duration-200 ease-in-out rounded-lg mx-2 my-1 px-4 py-2" href="#">
+<span class="material-symbols-outlined">payments</span>
+<span class="font-label-caps text-label-caps tracking-wider">Project Finance</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 text-secondary hover:bg-surface-container-low transition-all duration-200 ease-in-out rounded-lg mx-2 my-1 px-4 py-2" href="#">
+<span class="material-symbols-outlined">groups</span>
+<span class="font-label-caps text-label-caps tracking-wider">Human Resources</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 bg-secondary-container text-on-secondary-container font-semibold rounded-lg mx-2 my-1 px-4 py-2 transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined filled text-primary">inventory_2</span>
+<span class="font-label-caps text-label-caps tracking-wider text-primary">Inventory</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 text-secondary hover:bg-surface-container-low transition-all duration-200 ease-in-out rounded-lg mx-2 my-1 px-4 py-2" href="#">
+<span class="material-symbols-outlined">assessment</span>
+<span class="font-label-caps text-label-caps tracking-wider">Reports</span>
+</a>
+</li>
+</ul>
+</nav>
+<div class="mt-auto px-2 pt-4 border-t border-outline-variant/30">
+<a class="flex items-center gap-3 text-secondary hover:bg-surface-container-low transition-all duration-200 ease-in-out rounded-lg mx-2 my-1 px-4 py-2" href="#">
+<span class="material-symbols-outlined">help</span>
+<span class="font-label-caps text-label-caps tracking-wider">Help Center</span>
+</a>
+<a class="flex items-center gap-3 text-danger-rose hover:bg-error-container transition-all duration-200 ease-in-out rounded-lg mx-2 my-1 px-4 py-2" href="#">
+<span class="material-symbols-outlined">logout</span>
+<span class="font-label-caps text-label-caps tracking-wider">Logout</span>
+</a>
+</div>
+</aside>
+<main class="flex-1 flex flex-col md:ml-[260px] min-w-0 transition-all duration-300">
+<header class="fixed top-0 right-0 left-0 z-40 bg-surface-container-lowest shadow-sm flex justify-between items-center h-[64px] px-6 w-full md:ml-[260px] md:max-w-[calc(100%-260px)] transition-all duration-300">
+<div class="flex items-center">
+</div>
+<div class="flex items-center gap-4">
+<button class="w-10 h-10 rounded-full flex items-center justify-center text-on-surface-variant hover:bg-surface-container transition-colors cursor-pointer active:scale-95 duration-150 relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-danger-rose rounded-full"></span>
+</button>
+<button class="w-10 h-10 rounded-full flex items-center justify-center text-on-surface-variant hover:bg-surface-container transition-colors cursor-pointer active:scale-95 duration-150">
+<span class="material-symbols-outlined">settings</span>
+</button>
+<div class="h-8 w-[1px] bg-outline-variant mx-2"></div>
+<button class="flex items-center gap-2 hover:bg-surface-container p-1 pr-3 rounded-full transition-colors cursor-pointer active:scale-95 duration-150">
+<div class="w-8 h-8 rounded-full bg-secondary-fixed text-on-secondary-fixed flex items-center justify-center font-bold text-sm">
+                        SY
+                    </div>
+</button>
+</div>
+</header>
+<div class="pt-[88px] px-6 pb-12 w-full max-w-7xl mx-auto flex flex-col gap-6">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Araç ve Filo Yönetimi</h2>
+<p class="font-body-md text-body-md text-text-muted mt-1">Arvento Telemetry System Integration • Son Güncelleme: 14:02</p>
+</div>
+<div class="flex items-center gap-3">
+<button class="flex items-center gap-2 px-4 py-2 bg-surface-white border border-outline-variant rounded-lg text-on-surface font-body-sm text-body-sm hover:bg-surface-container-low transition-colors shadow-sm">
+<span class="material-symbols-outlined text-lg">filter_list</span>
+                        Filtrele
+                    </button>
+<button class="flex items-center gap-2 px-4 py-2 bg-primary text-on-primary rounded-lg font-body-sm text-body-sm font-medium hover:bg-surface-tint transition-colors shadow-[0_1px_3px_rgba(53,37,205,0.2)]">
+<span class="material-symbols-outlined text-lg">add</span>
+                        Yeni Araç Ekle
+                    </button>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="bg-surface-white rounded-xl p-5 shadow-[0_2px_4px_rgba(53,37,205,0.04)] border border-border-slate flex items-start justify-between">
+<div>
+<p class="font-label-caps text-label-caps text-text-muted mb-1">HAREKET HALİNDE</p>
+<div class="flex items-baseline gap-2">
+<span class="font-headline-lg text-headline-lg text-on-surface">42</span>
+<span class="font-body-sm text-body-sm text-success-emerald flex items-center">
+<span class="material-symbols-outlined text-sm">trending_up</span> 12%
+                            </span>
+</div>
+</div>
+<div class="w-12 h-12 rounded-full bg-[#ecfdf5] text-success-emerald flex items-center justify-center">
+<span class="material-symbols-outlined filled">directions_car</span>
+</div>
+</div>
+<div class="bg-surface-white rounded-xl p-5 shadow-[0_2px_4px_rgba(53,37,205,0.04)] border border-border-slate flex items-start justify-between">
+<div>
+<p class="font-label-caps text-label-caps text-text-muted mb-1">PARK HALİNDE</p>
+<div class="flex items-baseline gap-2">
+<span class="font-headline-lg text-headline-lg text-on-surface">18</span>
+</div>
+</div>
+<div class="w-12 h-12 rounded-full bg-surface-container text-secondary flex items-center justify-center">
+<span class="material-symbols-outlined filled">local_parking</span>
+</div>
+</div>
+<div class="bg-surface-white rounded-xl p-5 shadow-[0_2px_4px_rgba(53,37,205,0.04)] border border-border-slate flex items-start justify-between">
+<div>
+<p class="font-label-caps text-label-caps text-text-muted mb-1">SİNYAL KAYBI / ARIZA</p>
+<div class="flex items-baseline gap-2">
+<span class="font-headline-lg text-headline-lg text-danger-rose">3</span>
+<span class="font-body-sm text-body-sm text-danger-rose flex items-center">
+                                Dikkat Gerektiriyor
+                            </span>
+</div>
+</div>
+<div class="w-12 h-12 rounded-full bg-error-container text-danger-rose flex items-center justify-center">
+<span class="material-symbols-outlined filled">warning</span>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-6 h-[600px]">
+<div class="lg:col-span-8 bg-surface-white rounded-xl shadow-[0_2px_4px_rgba(53,37,205,0.04)] border border-border-slate overflow-hidden flex flex-col">
+<div class="p-4 border-b border-border-slate flex justify-between items-center bg-surface-bright">
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Canlı Filo Durumu</h3>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-text-muted text-lg">search</span>
+<input class="pl-10 pr-4 py-2 w-64 bg-surface-white border border-outline-variant rounded-lg font-body-sm text-body-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all" placeholder="Plaka veya sürücü ara..." type="text"/>
+</div>
+</div>
+<div class="flex-1 overflow-auto">
+<table class="w-full text-left border-collapse min-w-[800px]">
+<thead class="sticky top-0 bg-surface-bright z-10 border-b border-border-slate">
+<tr>
+<th class="py-3 px-4 font-label-caps text-label-caps text-text-muted whitespace-nowrap">PLAKA / ARAÇ</th>
+<th class="py-3 px-4 font-label-caps text-label-caps text-text-muted whitespace-nowrap">SÜRÜCÜ</th>
+<th class="py-3 px-4 font-label-caps text-label-caps text-text-muted whitespace-nowrap">DURUM</th>
+<th class="py-3 px-4 font-label-caps text-label-caps text-text-muted whitespace-nowrap">SON KONUM</th>
+<th class="py-3 px-4 font-label-caps text-label-caps text-text-muted whitespace-nowrap text-right">GÜNLÜK KM</th>
+<th class="py-3 px-4 font-label-caps text-label-caps text-text-muted whitespace-nowrap">YAKIT</th>
+</tr>
+</thead>
+<tbody class="font-body-sm text-body-sm divide-y divide-border-slate">
+<tr class="hover:bg-surface-container-lowest transition-colors cursor-pointer bg-primary-fixed-dim/10">
+<td class="py-3 px-4">
+<div class="font-data-mono text-data-mono text-on-surface font-semibold bg-surface-container-high inline-block px-2 py-1 rounded border border-outline-variant/50">34 NOA 01</div>
+<div class="text-text-muted text-[11px] mt-1">Ford Trucks 1833</div>
+</td>
+<td class="py-3 px-4 text-on-surface-variant">Ahmet Yılmaz</td>
+<td class="py-3 px-4">
+<span class="inline-flex items-center gap-1.5 px-2 py-1 rounded-md bg-[#ecfdf5] text-success-emerald font-medium text-[11px]">
+<span class="w-1.5 h-1.5 rounded-full bg-success-emerald animate-pulse"></span>
+                                            Hareket Halinde (45 km/h)
+                                        </span>
+</td>
+<td class="py-3 px-4 text-on-surface-variant truncate max-w-[150px]" title="Şantiye A, Kuzey Otoyolu Girişi">
+                                        Şantiye A, Kuzey Otoyolu Girişi
+                                        <div class="text-text-muted text-[11px] mt-0.5">1 dk önce</div>
+</td>
+<td class="py-3 px-4 font-data-mono text-data-mono text-right">124.5</td>
+<td class="py-3 px-4">
+<div class="w-full bg-surface-container-high rounded-full h-1.5 mb-1">
+<div class="bg-success-emerald h-1.5 rounded-full" style="width: 75%"></div>
+</div>
+<div class="text-[10px] text-text-muted text-right">%75</div>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-lowest transition-colors cursor-pointer">
+<td class="py-3 px-4">
+<div class="font-data-mono text-data-mono text-on-surface font-semibold bg-surface-container-high inline-block px-2 py-1 rounded border border-outline-variant/50">34 NOA 15</div>
+<div class="text-text-muted text-[11px] mt-1">Mercedes Arocs</div>
+</td>
+<td class="py-3 px-4 text-on-surface-variant">Mehmet Demir</td>
+<td class="py-3 px-4">
+<span class="inline-flex items-center gap-1.5 px-2 py-1 rounded-md bg-surface-container text-secondary font-medium text-[11px]">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+                                            Park Halinde
+                                        </span>
+</td>
+<td class="py-3 px-4 text-on-surface-variant truncate max-w-[150px]">
+                                        Merkez Depo
+                                        <div class="text-text-muted text-[11px] mt-0.5">45 dk önce</div>
+</td>
+<td class="py-3 px-4 font-data-mono text-data-mono text-right">12.0</td>
+<td class="py-3 px-4">
+<div class="w-full bg-surface-container-high rounded-full h-1.5 mb-1">
+<div class="bg-warning-amber h-1.5 rounded-full" style="width: 40%"></div>
+</div>
+<div class="text-[10px] text-text-muted text-right">%40</div>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-lowest transition-colors cursor-pointer">
+<td class="py-3 px-4">
+<div class="font-data-mono text-data-mono text-on-surface font-semibold bg-surface-container-high inline-block px-2 py-1 rounded border border-outline-variant/50">06 NOA 88</div>
+<div class="text-text-muted text-[11px] mt-1">Volvo FMX</div>
+</td>
+<td class="py-3 px-4 text-on-surface-variant">Caner Kaya</td>
+<td class="py-3 px-4">
+<span class="inline-flex items-center gap-1.5 px-2 py-1 rounded-md bg-error-container text-danger-rose font-medium text-[11px]">
+<span class="material-symbols-outlined text-[12px]">warning</span>
+                                            Sinyal Yok
+                                        </span>
+</td>
+<td class="py-3 px-4 text-on-surface-variant truncate max-w-[150px]">
+                                        Ankara Proje Alanı
+                                        <div class="text-danger-rose text-[11px] mt-0.5 font-medium">3 saat önce</div>
+</td>
+<td class="py-3 px-4 font-data-mono text-data-mono text-right">85.2</td>
+<td class="py-3 px-4">
+<div class="w-full bg-surface-container-high rounded-full h-1.5 mb-1">
+<div class="bg-secondary-fixed-dim h-1.5 rounded-full" style="width: 15%"></div>
+</div>
+<div class="text-[10px] text-text-muted text-right">Bilinmiyor</div>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-lowest transition-colors cursor-pointer">
+<td class="py-3 px-4">
+<div class="font-data-mono text-data-mono text-on-surface font-semibold bg-surface-container-high inline-block px-2 py-1 rounded border border-outline-variant/50">34 PRJ 04</div>
+<div class="text-text-muted text-[11px] mt-1">Toyota Hilux (Pickup)</div>
+</td>
+<td class="py-3 px-4 text-on-surface-variant">Serkan Çelik</td>
+<td class="py-3 px-4">
+<span class="inline-flex items-center gap-1.5 px-2 py-1 rounded-md bg-[#ecfdf5] text-success-emerald font-medium text-[11px]">
+<span class="w-1.5 h-1.5 rounded-full bg-success-emerald animate-pulse"></span>
+                                            Hareket Halinde (82 km/h)
+                                        </span>
+</td>
+<td class="py-3 px-4 text-on-surface-variant truncate max-w-[150px]">
+                                        O-2 Çevreyolu, Güney
+                                        <div class="text-text-muted text-[11px] mt-0.5">Şimdi</div>
+</td>
+<td class="py-3 px-4 font-data-mono text-data-mono text-right">210.8</td>
+<td class="py-3 px-4">
+<div class="w-full bg-surface-container-high rounded-full h-1.5 mb-1">
+<div class="bg-success-emerald h-1.5 rounded-full" style="width: 88%"></div>
+</div>
+<div class="text-[10px] text-text-muted text-right">%88</div>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-lowest transition-colors cursor-pointer">
+<td class="py-3 px-4">
+<div class="font-data-mono text-data-mono text-on-surface font-semibold bg-surface-container-high inline-block px-2 py-1 rounded border border-outline-variant/50">34 NOA 22</div>
+<div class="text-text-muted text-[11px] mt-1">Caterpillar 320</div>
+</td>
+<td class="py-3 px-4 text-on-surface-variant">Operatör: Ali V.</td>
+<td class="py-3 px-4">
+<span class="inline-flex items-center gap-1.5 px-2 py-1 rounded-md bg-[#ecfdf5] text-success-emerald font-medium text-[11px]">
+<span class="w-1.5 h-1.5 rounded-full bg-success-emerald animate-pulse"></span>
+                                            Rölantide Çalışıyor
+                                        </span>
+</td>
+<td class="py-3 px-4 text-on-surface-variant truncate max-w-[150px]">
+                                        Şantiye A, Kazı Alanı 2
+                                        <div class="text-text-muted text-[11px] mt-0.5">2 dk önce</div>
+</td>
+<td class="py-3 px-4 font-data-mono text-data-mono text-right">0.0 <span class="text-[10px] text-text-muted">(6 Saat)</span></td>
+<td class="py-3 px-4">
+<div class="w-full bg-surface-container-high rounded-full h-1.5 mb-1">
+<div class="bg-primary h-1.5 rounded-full" style="width: 60%"></div>
+</div>
+<div class="text-[10px] text-text-muted text-right">%60</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="lg:col-span-4 bg-surface-white rounded-xl shadow-[0_2px_4px_rgba(53,37,205,0.04)] border border-border-slate flex flex-col overflow-hidden">
+<div class="p-4 border-b border-border-slate bg-surface-bright flex justify-between items-start">
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface flex items-center gap-2">
+                                34 NOA 01
+                                <span class="bg-[#ecfdf5] text-success-emerald text-[10px] px-1.5 py-0.5 rounded uppercase font-bold tracking-wider">Aktif</span>
+</h3>
+<p class="text-body-sm font-body-sm text-text-muted mt-0.5">Ahmet Yılmaz • Ford Trucks 1833</p>
+</div>
+<button class="text-text-muted hover:text-primary transition-colors">
+<span class="material-symbols-outlined">open_in_new</span>
+</button>
+</div>
+<div class="relative w-full h-48 bg-surface-container-high border-b border-border-slate">
+<div class="absolute inset-0 bg-cover bg-center w-full h-full opacity-90" data-alt="A highly detailed, professional UI map view showing a construction site area in a modern city. The map style is clean and technical, typical of enterprise fleet management software in light mode. It features muted, subtle topography with sharp, high-contrast roads in slate grays and crisp whites. A distinct, bright indigo marker indicates a vehicle's position, accompanied by a subtle glowing radius effect. The overall aesthetic is rigorous, corporate, and data-focused, perfectly matching a high-end construction ERP interface." data-location="Istanbul" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAslcobMLlsvREL1jRgyrDOU_ja5UoKxX879WFXn3_geLhxlIwHAca99FkKmhuvcMwrsBe6oiVtzukGHp-d8YvevYMf3I40ls250ECBQSMyV0mMHoG1b6FHGo-Ld4wTecZpDFJ18hunhfJJTmejC9Gho3scgK9UhxPiity0Htg6ePrvZjtF5KvfW8xCPJu6f_hWSGFDq3ycuEZyLMi55w-wgeBfKLVAlc_ch_TxVrbazeaf8XE4sJQJ')"></div>
+<div class="absolute bottom-3 left-3 right-3 bg-surface-white/95 backdrop-blur-sm p-2.5 rounded-lg shadow-sm border border-outline-variant/30 flex items-center justify-between">
+<div class="flex items-center gap-2 text-on-surface">
+<span class="material-symbols-outlined text-primary text-sm">location_on</span>
+<span class="font-body-sm text-body-sm font-medium truncate max-w-[200px]">Şantiye A, Kuzey Otoyolu...</span>
+</div>
+<span class="text-[10px] text-text-muted">14:01:22</span>
+</div>
+</div>
+<div class="p-4 flex-1 flex flex-col gap-4 overflow-y-auto">
+<div class="grid grid-cols-2 gap-3">
+<div class="bg-surface-bright p-3 rounded-lg border border-border-slate">
+<p class="text-[11px] text-text-muted font-label-caps mb-1">HIZ</p>
+<p class="font-headline-sm text-headline-sm text-on-surface">45 <span class="text-body-sm font-normal text-text-muted">km/h</span></p>
+</div>
+<div class="bg-surface-bright p-3 rounded-lg border border-border-slate">
+<p class="text-[11px] text-text-muted font-label-caps mb-1">KONTAK</p>
+<p class="font-headline-sm text-headline-sm text-success-emerald flex items-center gap-1">AÇIK <span class="material-symbols-outlined text-sm">key</span></p>
+</div>
+<div class="bg-surface-bright p-3 rounded-lg border border-border-slate">
+<p class="text-[11px] text-text-muted font-label-caps mb-1">GÜNLÜK KM</p>
+<p class="font-headline-sm text-headline-sm text-on-surface">124.5 <span class="text-body-sm font-normal text-text-muted">km</span></p>
+</div>
+<div class="bg-surface-bright p-3 rounded-lg border border-border-slate">
+<p class="text-[11px] text-text-muted font-label-caps mb-1">GÜNLÜK YAKIT</p>
+<p class="font-headline-sm text-headline-sm text-on-surface">32.4 <span class="text-body-sm font-normal text-text-muted">lt</span></p>
+</div>
+</div>
+<div>
+<h4 class="font-label-caps text-label-caps text-text-muted mb-3 flex items-center gap-2">
+<span class="material-symbols-outlined text-[14px]">insights</span>
+                                KM TRENDİ (SON 5 GÜN)
+                            </h4>
+<div class="h-24 flex items-end justify-between gap-2 px-2">
+<div class="w-full flex flex-col items-center gap-1">
+<div class="w-full bg-secondary-fixed rounded-t-sm" style="height: 60%;"></div>
+<span class="text-[9px] text-text-muted">Pzt</span>
+</div>
+<div class="w-full flex flex-col items-center gap-1">
+<div class="w-full bg-secondary-fixed rounded-t-sm" style="height: 85%;"></div>
+<span class="text-[9px] text-text-muted">Sal</span>
+</div>
+<div class="w-full flex flex-col items-center gap-1">
+<div class="w-full bg-secondary-fixed rounded-t-sm" style="height: 40%;"></div>
+<span class="text-[9px] text-text-muted">Çar</span>
+</div>
+<div class="w-full flex flex-col items-center gap-1">
+<div class="w-full bg-primary-fixed-dim rounded-t-sm relative group" style="height: 100%;">
+<div class="absolute -top-6 left-1/2 -translate-x-1/2 bg-inverse-surface text-inverse-on-surface text-[10px] px-1.5 py-0.5 rounded opacity-0 group-hover:opacity-100 transition-opacity">210km</div>
+</div>
+<span class="text-[9px] text-text-muted font-bold">Per</span>
+</div>
+<div class="w-full flex flex-col items-center gap-1">
+<div class="w-full bg-primary rounded-t-sm relative group" style="height: 55%;">
+<div class="absolute -top-6 left-1/2 -translate-x-1/2 bg-inverse-surface text-inverse-on-surface text-[10px] px-1.5 py-0.5 rounded opacity-0 group-hover:opacity-100 transition-opacity">124km</div>
+</div>
+<span class="text-[9px] text-primary font-bold">Bugün</span>
+</div>
+</div>
+</div>
+<button class="mt-auto w-full py-2.5 border border-outline-variant rounded-lg text-primary font-body-sm text-body-sm font-medium hover:bg-surface-container-low transition-colors flex items-center justify-center gap-2">
+                            Detaylı Rapor
+                            <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

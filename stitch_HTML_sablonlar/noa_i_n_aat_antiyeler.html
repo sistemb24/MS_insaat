@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+
+<html class="light" lang="tr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Şantiyeler - NOA İnşaat</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-background": "#191c1e",
+                        "surface-container": "#eceef0",
+                        "tertiary": "#7e3000",
+                        "on-primary-fixed": "#0f0069",
+                        "danger-rose": "#E11D48",
+                        "surface-tint": "#4d44e3",
+                        "on-primary-container": "#dad7ff",
+                        "surface": "#f7f9fb",
+                        "text-muted": "#64748B",
+                        "primary-container": "#4f46e5",
+                        "tertiary-fixed": "#ffdbcc",
+                        "outline-variant": "#c7c4d8",
+                        "secondary-fixed": "#dae2fd",
+                        "decorative-purple": "#800080",
+                        "on-secondary": "#ffffff",
+                        "on-tertiary-fixed": "#351000",
+                        "surface-container-lowest": "#ffffff",
+                        "error": "#ba1a1a",
+                        "inverse-on-surface": "#eff1f3",
+                        "secondary": "#565e74",
+                        "decorative-navy": "#000080",
+                        "on-primary": "#ffffff",
+                        "on-surface": "#191c1e",
+                        "background": "#f7f9fb",
+                        "surface-container-low": "#f2f4f6",
+                        "surface-white": "#FFFFFF",
+                        "secondary-container": "#dae2fd",
+                        "inverse-surface": "#2d3133",
+                        "outline": "#777587",
+                        "inverse-primary": "#c3c0ff",
+                        "on-secondary-container": "#5c647a",
+                        "on-tertiary-container": "#ffd2be",
+                        "on-tertiary": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "surface-dim": "#d8dadc",
+                        "on-secondary-fixed": "#131b2e",
+                        "tertiary-container": "#a44100",
+                        "border-slate": "#E2E8F0",
+                        "success-emerald": "#10B981",
+                        "surface-variant": "#e0e3e5",
+                        "primary-fixed": "#e2dfff",
+                        "on-error": "#ffffff",
+                        "on-secondary-fixed-variant": "#3f465c",
+                        "primary": "#3525cd",
+                        "on-primary-fixed-variant": "#3323cc",
+                        "warning-amber": "#F59E0B",
+                        "surface-container-highest": "#e0e3e5",
+                        "error-container": "#ffdad6",
+                        "surface-container-high": "#e6e8ea",
+                        "primary-fixed-dim": "#c3c0ff",
+                        "on-surface-variant": "#464555",
+                        "tertiary-fixed-dim": "#ffb695",
+                        "on-tertiary-fixed-variant": "#7b2f00",
+                        "surface-bright": "#f7f9fb",
+                        "secondary-fixed-dim": "#bec6e0"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-md": "1rem",
+                        "sidebar-width": "260px",
+                        "stack-sm": "0.5rem",
+                        "grid-cell-px": "0.75rem",
+                        "container-gap": "1.5rem",
+                        "grid-cell-py": "0.5rem",
+                        "sidebar-collapsed": "80px",
+                        "header-height": "64px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "body-md": ["Inter"],
+                        "data-mono": ["JetBrains Mono"],
+                        "headline-sm": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "headline-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["30px", { "lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "700" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "data-mono": ["13px", { "lineHeight": "16px", "fontWeight": "500" }],
+                        "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "body-sm": ["13px", { "lineHeight": "18px", "fontWeight": "400" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined.fill {
+            font-variation-settings: 'FILL' 1;
+        }
+        
+        /* Subtle scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #c7c4d8;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #777587;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md h-screen overflow-hidden flex">
+<!-- SideNavBar -->
+<nav class="hidden md:flex flex-col h-full border-r border-outline-variant dark:border-outline bg-surface-white dark:bg-inverse-surface shadow-[0_1px_3px_rgba(79,70,229,0.08)] w-sidebar-width fixed left-0 top-0 z-50">
+<!-- Brand Header -->
+<div class="h-header-height flex items-center px-6 border-b border-outline-variant dark:border-outline shrink-0">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-lg bg-primary flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined fill text-[20px]">apartment</span>
+</div>
+<div>
+<h1 class="font-headline-sm text-headline-sm font-bold text-primary dark:text-inverse-primary">NOA İnşaat</h1>
+<p class="font-body-sm text-body-sm text-text-muted leading-tight">Construction ERP</p>
+</div>
+</div>
+</div>
+<!-- Navigation Links -->
+<div class="flex-1 overflow-y-auto py-4 px-3 flex flex-col gap-1">
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container dark:hover:bg-surface-container-highest transition-colors rounded-lg group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">dashboard</span>
+<span class="font-body-md text-body-md font-medium">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 bg-secondary-container dark:bg-primary-container text-primary dark:text-on-primary-container rounded-lg font-semibold transition-all duration-200 active:scale-95 shadow-[0_1px_2px_rgba(79,70,229,0.1)]" href="#">
+<span class="material-symbols-outlined fill">business</span>
+<span class="font-body-md text-body-md">Şantiyeler</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container dark:hover:bg-surface-container-highest transition-colors rounded-lg group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">gavel</span>
+<span class="font-body-md text-body-md font-medium">Tender Management</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container dark:hover:bg-surface-container-highest transition-colors rounded-lg group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">description</span>
+<span class="font-body-md text-body-md font-medium">Document Center</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container dark:hover:bg-surface-container-highest transition-colors rounded-lg group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">group</span>
+<span class="font-body-md text-body-md font-medium">Staff</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container dark:hover:bg-surface-container-highest transition-colors rounded-lg group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">inventory_2</span>
+<span class="font-body-md text-body-md font-medium">Inventory</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container dark:hover:bg-surface-container-highest transition-colors rounded-lg group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">directions_car</span>
+<span class="font-body-md text-body-md font-medium">Vehicles</span>
+</a>
+</div>
+<!-- Bottom Settings -->
+<div class="p-3 border-t border-outline-variant dark:border-outline shrink-0">
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container dark:hover:bg-surface-container-highest transition-colors rounded-lg group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">settings</span>
+<span class="font-body-md text-body-md font-medium">Settings</span>
+</a>
+</div>
+</nav>
+<!-- Main Content Wrapper -->
+<div class="flex-1 flex flex-col md:ml-[260px] h-screen overflow-hidden bg-background">
+<!-- TopNavBar -->
+<header class="h-header-height flex justify-between items-center px-6 bg-surface-white/80 dark:bg-inverse-surface/80 backdrop-blur-md border-b border-outline-variant dark:border-outline shrink-0 sticky top-0 z-40">
+<!-- Mobile Menu Toggle (Visible only on mobile) -->
+<button class="md:hidden text-on-surface-variant p-2 rounded-lg hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<!-- Search (Left aligned as per JSON) -->
+<div class="hidden md:flex items-center flex-1 max-w-md">
+<div class="relative w-full">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-text-muted text-[20px]">search</span>
+<input class="w-full bg-surface-container-low border-none rounded-full py-2 pl-10 pr-4 font-body-sm text-body-sm text-on-surface focus:ring-2 focus:ring-primary/20 transition-all placeholder:text-text-muted" placeholder="Hızlı arama..." type="text"/>
+</div>
+</div>
+<!-- Actions -->
+<div class="flex items-center gap-4 ml-auto">
+<button class="w-10 h-10 rounded-full flex items-center justify-center text-on-surface-variant hover:bg-surface-container hover:text-primary transition-colors relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-danger-rose rounded-full border border-surface-white"></span>
+</button>
+<div class="h-6 w-px bg-outline-variant mx-1"></div>
+<button class="flex items-center gap-2 hover:bg-surface-container-low p-1 pr-3 rounded-full transition-colors border border-transparent hover:border-outline-variant">
+<img class="w-8 h-8 rounded-full object-cover bg-surface-container" data-alt="A professional headshot of a corporate engineer in a well-lit office setting. The lighting is soft and natural, casting a subtle glow on the subject's face. The aesthetic is clean, modern, and light-themed, aligning with a corporate ERP interface. The background is a slightly out-of-focus bright office space, reinforcing a sense of high-end business professionalism." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDisCm1EAePwYcG_5qCAcaDBJ-XiwsMVCjJtHZc34qdkCdMbL9nhG8ETdwTEqTJromvMuwhtrKYj8jRZ4S4qlr0tP1CZG9x3IiOMA1E9m6ai_FpfQwdhtBeQq51PucxI-7pQB2lIeuK5f9KztW5HUEeFB7dD7_QgUlAA3lhdPGCQaMdb1HekWe7AfDCRs8CAu9MTuB-Z9tZBpL2jCL0r0gwi196xQqxXHrSVUnSTTMDvaq_DuIIFaFL"/>
+<span class="font-body-sm text-body-sm font-medium text-on-surface hidden lg:block">Admin User</span>
+<span class="material-symbols-outlined text-[18px] text-text-muted hidden lg:block">expand_more</span>
+</button>
+</div>
+</header>
+<!-- Page Content Canvas -->
+<main class="flex-1 overflow-y-auto p-4 md:p-6 lg:p-8">
+<div class="max-w-7xl mx-auto space-y-container-gap">
+<!-- Page Header Area -->
+<div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-on-background">Şantiyeler</h2>
+<p class="font-body-md text-body-md text-text-muted mt-1">Aktif ve geçmiş tüm proje sahalarının yönetimi.</p>
+</div>
+<button class="bg-primary hover:bg-primary-fixed-variant text-on-primary font-body-md text-body-md font-medium py-2.5 px-5 rounded-lg flex items-center gap-2 transition-all shadow-[0_2px_4px_rgba(79,70,229,0.2)] active:scale-95">
+<span class="material-symbols-outlined text-[20px]">add</span>
+                        Yeni Şantiye Ekle
+                    </button>
+</div>
+<!-- Filters & Search Toolbar -->
+<div class="bg-surface-white rounded-xl p-4 shadow-[0_1px_3px_rgba(79,70,229,0.08)] border border-border-slate flex flex-col md:flex-row gap-4 justify-between items-center">
+<!-- Tabs -->
+<div class="flex p-1 bg-surface-container-low rounded-lg self-stretch md:self-auto">
+<button class="flex-1 md:flex-none px-4 py-1.5 bg-surface-white text-primary font-body-sm text-body-sm font-medium rounded shadow-sm border border-border-slate transition-all">
+                            Tümü (12)
+                        </button>
+<button class="flex-1 md:flex-none px-4 py-1.5 text-text-muted hover:text-on-surface font-body-sm text-body-sm font-medium rounded transition-all">
+                            Aktif (8)
+                        </button>
+<button class="flex-1 md:flex-none px-4 py-1.5 text-text-muted hover:text-on-surface font-body-sm text-body-sm font-medium rounded transition-all">
+                            Tamamlandı (4)
+                        </button>
+</div>
+<!-- Refine Search -->
+<div class="flex items-center gap-3 w-full md:w-auto">
+<div class="relative flex-1 md:w-64">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-text-muted text-[18px]">search</span>
+<input class="w-full bg-surface text-on-surface border border-border-slate rounded-lg py-1.5 pl-9 pr-3 font-body-sm text-body-sm focus:border-primary focus:ring-1 focus:ring-primary transition-colors" placeholder="Proje adı veya kod ara..." type="text"/>
+</div>
+<button class="p-1.5 text-text-muted hover:text-primary border border-border-slate rounded-lg hover:bg-surface-container-low transition-colors" title="Detaylı Filtre">
+<span class="material-symbols-outlined text-[20px]">tune</span>
+</button>
+</div>
+</div>
+<!-- Projects Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+<!-- Project Card 1: Marmaray -->
+<div class="bg-surface-white rounded-xl border border-border-slate shadow-[0_1px_3px_rgba(79,70,229,0.08)] overflow-hidden flex flex-col group hover:shadow-[0_4px_12px_rgba(79,70,229,0.12)] transition-shadow duration-300">
+<!-- Cover Image Placeholder Area -->
+<div class="h-32 bg-surface-container relative">
+<div class="bg-cover bg-center w-full h-full opacity-90 group-hover:opacity-100 transition-opacity" data-alt="A modern architectural rendering of a large commercial building construction site under a clear blue sky. The scene is bright and professional, representing a major public infrastructure project. The aesthetic is clean, light-mode, and corporate, with subtle indigo structural steel elements visible in the construction frame." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAcwDdKCvu8M0NdvvGKFvH2ZhPOERII5UGufhSCbdUefbzaZ9W6AZowp3nW2nuHJwTk3imX_B0ClwWxNLRhYZhQ0pK2RgBkbN0TctL3qKdRsa2UFDBo-DXpxwMo7Byrux_muXAqNeNoUG8ldhz3jMiVngMSmmy6RwD4lk3aS6u0HX2dvS_WaaWUhHKLSi4ROT_zCJZKzqeodfTeKiiERLgokvuyfQHqKGAAwSfypo4uJZzhyn_1Z0uo')"></div>
+<div class="absolute top-3 right-3">
+<span class="bg-emerald-50 text-success-emerald border border-emerald-200 px-2.5 py-0.5 rounded-full font-label-caps text-label-caps flex items-center gap-1 backdrop-blur-sm bg-opacity-90">
+<span class="w-1.5 h-1.5 rounded-full bg-success-emerald"></span> Aktif
+                                </span>
+</div>
+</div>
+<div class="p-5 flex-1 flex flex-col">
+<div class="flex justify-between items-start mb-4">
+<div>
+<p class="font-data-mono text-[11px] text-text-muted mb-1">PRJ-2023-014</p>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-semibold group-hover:text-primary transition-colors line-clamp-1">Marmaray Ek Hizmet Binası</h3>
+<p class="font-body-sm text-body-sm text-text-muted flex items-center gap-1 mt-1">
+<span class="material-symbols-outlined text-[14px]">location_on</span> Kadıköy, İstanbul
+                                    </p>
+</div>
+<button class="text-outline hover:text-primary transition-colors p-1">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</button>
+</div>
+<!-- Financial Progress Bento Item -->
+<div class="bg-surface-bright rounded-lg p-3 border border-border-slate mb-4 mt-auto">
+<div class="flex justify-between items-end mb-2">
+<div>
+<p class="font-label-caps text-label-caps text-text-muted uppercase mb-0.5">Gerçekleşen Maliyet</p>
+<p class="font-data-mono text-data-mono text-on-surface font-semibold">₺45.2M</p>
+</div>
+<div class="text-right">
+<p class="font-label-caps text-label-caps text-text-muted uppercase mb-0.5">Toplam Bütçe</p>
+<p class="font-data-mono text-data-mono text-text-muted">₺68.5M</p>
+</div>
+</div>
+<div class="w-full bg-surface-container-high rounded-full h-1.5 overflow-hidden">
+<div class="bg-primary h-1.5 rounded-full" style="width: 66%"></div>
+</div>
+<div class="flex justify-between mt-1">
+<span class="font-body-sm text-[11px] text-text-muted">%66 Harcandı</span>
+<span class="font-body-sm text-[11px] text-success-emerald font-medium">Bütçe İçi</span>
+</div>
+</div>
+<!-- Footer Info -->
+<div class="flex items-center justify-between pt-3 border-t border-border-slate">
+<div class="flex items-center gap-2">
+<img class="w-6 h-6 rounded-full bg-surface-container object-cover border border-surface-white shadow-sm" data-alt="A portrait of a male construction project manager wearing a white hard hat and a safety vest over a collared shirt. He is outdoors in bright daylight, looking professional and capable. The aesthetic is clean, corporate, and fits a light-themed UI." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCwobadczjXZj_xaPIhfUK99xij9nKBvsG3jKjrtJxO68muLxykVUyxiZcWa3EMMLaiNUCNgPQ3VYkZUhtBag442TdvSaB7eSghHH0Ytw_7DadKx8zKUx9th2B4mMFDcqv-rGB2XL9O6k17o_IMjpyhgE3Xwo7gy3eYaXCx4_1f0ofhKL2q3BsrTR5Z0VbsqF0rSldeVmdrKlyOHxsqhNKdNwu6ESiXUinZaR708c1dqfIzXmGhQGrc"/>
+<span class="font-body-sm text-body-sm text-on-surface font-medium">Ahmet Yılmaz</span>
+</div>
+<div class="flex -space-x-2">
+<div class="w-6 h-6 rounded-full bg-secondary-container border-2 border-surface-white flex items-center justify-center text-[10px] font-bold text-primary z-20">+3</div>
+<div class="w-6 h-6 rounded-full bg-surface-variant border-2 border-surface-white z-10" title="Taşeron Ekipler"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Project Card 2: Zeta Residence -->
+<div class="bg-surface-white rounded-xl border border-border-slate shadow-[0_1px_3px_rgba(79,70,229,0.08)] overflow-hidden flex flex-col group hover:shadow-[0_4px_12px_rgba(79,70,229,0.12)] transition-shadow duration-300">
+<div class="h-32 bg-surface-container relative">
+<div class="bg-cover bg-center w-full h-full opacity-90 group-hover:opacity-100 transition-opacity" data-alt="A high-end architectural rendering of a luxury high-rise residential building (Zeta Residence) during the construction phase. The structure features modern glass elements and prominent concrete pillars. The lighting is soft morning light, creating a bright, optimistic, and corporate aesthetic suitable for a professional ERP dashboard." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDMOiSeTuKUwNXb0_dPGV1gJBcF8MmSU2g18opoQu0_jpo3sKv4CZPeI3FqSiXQ_CVzuQVE9w_tBL3q0_ITLWcq_LFmAMjsV7I63xzVaqda5TQPXJRg8zvQ_S8kL8oY1k5GQx8r-d4H8tXxApV-OHXuchE4qnDj2c_cHxjC47-gGxFYNZvL3GmxRodkK56GeeCjm8-odC6ReGFIjy8h5QnJMemxpJGW40Kvxk8KzXf9v7c8gJAnQtE7')"></div>
+<div class="absolute top-3 right-3">
+<span class="bg-emerald-50 text-success-emerald border border-emerald-200 px-2.5 py-0.5 rounded-full font-label-caps text-label-caps flex items-center gap-1 backdrop-blur-sm bg-opacity-90">
+<span class="w-1.5 h-1.5 rounded-full bg-success-emerald"></span> Aktif
+                                </span>
+</div>
+</div>
+<div class="p-5 flex-1 flex flex-col">
+<div class="flex justify-between items-start mb-4">
+<div>
+<p class="font-data-mono text-[11px] text-text-muted mb-1">PRJ-2023-089</p>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-semibold group-hover:text-primary transition-colors line-clamp-1">Zeta Residence Projesi</h3>
+<p class="font-body-sm text-body-sm text-text-muted flex items-center gap-1 mt-1">
+<span class="material-symbols-outlined text-[14px]">location_on</span> Ataşehir, İstanbul
+                                    </p>
+</div>
+<button class="text-outline hover:text-primary transition-colors p-1">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</button>
+</div>
+<div class="bg-surface-bright rounded-lg p-3 border border-border-slate mb-4 mt-auto">
+<div class="flex justify-between items-end mb-2">
+<div>
+<p class="font-label-caps text-label-caps text-text-muted uppercase mb-0.5">Gerçekleşen Maliyet</p>
+<p class="font-data-mono text-data-mono text-on-surface font-semibold">₺112.4M</p>
+</div>
+<div class="text-right">
+<p class="font-label-caps text-label-caps text-text-muted uppercase mb-0.5">Toplam Bütçe</p>
+<p class="font-data-mono text-data-mono text-text-muted">₺120.0M</p>
+</div>
+</div>
+<div class="w-full bg-surface-container-high rounded-full h-1.5 overflow-hidden">
+<div class="bg-warning-amber h-1.5 rounded-full" style="width: 93%"></div>
+</div>
+<div class="flex justify-between mt-1">
+<span class="font-body-sm text-[11px] text-text-muted">%93 Harcandı</span>
+<span class="font-body-sm text-[11px] text-warning-amber font-medium">Bütçe Sınırında</span>
+</div>
+</div>
+<div class="flex items-center justify-between pt-3 border-t border-border-slate">
+<div class="flex items-center gap-2">
+<img class="w-6 h-6 rounded-full bg-surface-container object-cover border border-surface-white shadow-sm" data-alt="A portrait of a female lead structural engineer in a professional construction office environment. She is reviewing documents. The lighting is bright and modern, conveying a sense of rigorous technical professionalism suitable for a light-themed enterprise software interface." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBW8oP4G5WtP3PSKpaQB6U_tLPvf4-awDCOGNgmzwalFRFxPXcGcQ3TcJeJnFcwvfGliMKmNMxqKbS81a_XBojo5h1pc-rv67TslR5JBMCnGtvRkPTIJOM5zoDepPYZwuBu1LVu4StNm-MdfmIkcQa6vInES8W2962mUPpr7BihPLNqKvfeM1ix036J2XZpgbrEIs9Z2KlJUfX7Aa5Sq3a5TBTNv6XLC5VmhwMXLKbrV8zlohoKKQxt"/>
+<span class="font-body-sm text-body-sm text-on-surface font-medium">Elif Demir</span>
+</div>
+<div class="flex -space-x-2">
+<div class="w-6 h-6 rounded-full bg-secondary-container border-2 border-surface-white flex items-center justify-center text-[10px] font-bold text-primary z-20">+5</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Project Card 3: İzmir Lojistik (Pasif/Tamamlandı Example) -->
+<div class="bg-surface-white rounded-xl border border-border-slate shadow-[0_1px_3px_rgba(79,70,229,0.08)] overflow-hidden flex flex-col group opacity-80 hover:opacity-100 transition-opacity">
+<div class="h-32 bg-surface-container relative filter grayscale-[30%]">
+<div class="bg-cover bg-center w-full h-full opacity-80 group-hover:opacity-100 transition-opacity" data-alt="A wide angle architectural photograph of a completed massive logistics warehouse facility with numerous loading docks. The building is clean, modern, and practical. The sky is bright blue. The image represents a successfully finished construction project in a light, corporate UI context." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAl3uoCxdeOcvMGY1YigyItAFbJ1D5mhY2xhYLJ8lW7MvMD0aGKHfCemPo7l2cX-h3qShbYDr4tGCOohikQeYOYJ1PSgClCghbj0cDNbR1ur5TTmBpoFv3SGT7n960b-QhE7k8fA63RHzpbFKGivyp5JaAmY5BYH0yYY4ntJmTzOLdk4X4eCL6v2WkBd5ghEAmv2XmfozAtVcO63SY34Q8nJQ7D9fDrfIMju_nhLbPvciUdXD6TcwLT')"></div>
+<div class="absolute top-3 right-3">
+<span class="bg-surface-variant text-on-surface-variant border border-outline-variant px-2.5 py-0.5 rounded-full font-label-caps text-label-caps flex items-center gap-1 backdrop-blur-sm bg-opacity-90">
+<span class="material-symbols-outlined text-[12px]">check_circle</span> Tamamlandı
+                                </span>
+</div>
+</div>
+<div class="p-5 flex-1 flex flex-col">
+<div class="flex justify-between items-start mb-4">
+<div>
+<p class="font-data-mono text-[11px] text-text-muted mb-1">PRJ-2022-045</p>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-semibold group-hover:text-primary transition-colors line-clamp-1">İzmir Lojistik Merkezi</h3>
+<p class="font-body-sm text-body-sm text-text-muted flex items-center gap-1 mt-1">
+<span class="material-symbols-outlined text-[14px]">location_on</span> Kemalpaşa, İzmir
+                                    </p>
+</div>
+<button class="text-outline hover:text-primary transition-colors p-1">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</button>
+</div>
+<div class="bg-surface-bright rounded-lg p-3 border border-border-slate mb-4 mt-auto">
+<div class="flex justify-between items-end mb-2">
+<div>
+<p class="font-label-caps text-label-caps text-text-muted uppercase mb-0.5">Kesin Hesap Tutarı</p>
+<p class="font-data-mono text-data-mono text-on-surface font-semibold">₺84.1M</p>
+</div>
+<div class="text-right">
+<p class="font-label-caps text-label-caps text-text-muted uppercase mb-0.5">İhale Bedeli</p>
+<p class="font-data-mono text-data-mono text-text-muted">₺85.0M</p>
+</div>
+</div>
+<div class="w-full bg-surface-container-high rounded-full h-1.5 overflow-hidden">
+<div class="bg-success-emerald h-1.5 rounded-full" style="width: 100%"></div>
+</div>
+<div class="flex justify-between mt-1">
+<span class="font-body-sm text-[11px] text-text-muted">Teslim: 12 Kas 2023</span>
+<span class="font-body-sm text-[11px] text-text-muted font-medium">Kapalı</span>
+</div>
+</div>
+<div class="flex items-center justify-between pt-3 border-t border-border-slate">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-surface-variant flex items-center justify-center text-text-muted border border-border-slate">
+<span class="material-symbols-outlined text-[14px]">person</span>
+</div>
+<span class="font-body-sm text-body-sm text-text-muted font-medium">Arşiv Sorumlusu</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

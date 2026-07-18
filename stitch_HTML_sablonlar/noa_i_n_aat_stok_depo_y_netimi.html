@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>NOA İnşaat - Stok/Depo Yönetimi</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Config -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "inverse-primary": "#c3c0ff",
+                        "on-error-container": "#93000a",
+                        "surface-dim": "#d8dadc",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-fixed": "#0f0069",
+                        "on-primary-container": "#dad7ff",
+                        "surface-container-high": "#e6e8ea",
+                        "surface-container": "#eceef0",
+                        "on-surface-variant": "#464555",
+                        "surface-white": "#FFFFFF",
+                        "secondary-container": "#dae2fd",
+                        "border-slate": "#E2E8F0",
+                        "background": "#f7f9fb",
+                        "outline": "#777587",
+                        "decorative-navy": "#000080",
+                        "on-secondary-fixed": "#131b2e",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary-container": "#5c647a",
+                        "surface": "#f7f9fb",
+                        "inverse-surface": "#2d3133",
+                        "primary-container": "#4f46e5",
+                        "surface-container-low": "#f2f4f6",
+                        "secondary": "#565e74",
+                        "on-primary-fixed-variant": "#3323cc",
+                        "on-surface": "#191c1e",
+                        "tertiary-container": "#a44100",
+                        "on-secondary-fixed-variant": "#3f465c",
+                        "tertiary-fixed-dim": "#ffb695",
+                        "on-secondary": "#ffffff",
+                        "text-muted": "#64748B",
+                        "on-tertiary-fixed": "#351000",
+                        "on-background": "#191c1e",
+                        "outline-variant": "#c7c4d8",
+                        "error": "#ba1a1a",
+                        "surface-variant": "#e0e3e5",
+                        "primary-fixed-dim": "#c3c0ff",
+                        "surface-container-highest": "#e0e3e5",
+                        "tertiary": "#7e3000",
+                        "danger-rose": "#E11D48",
+                        "decorative-purple": "#800080",
+                        "inverse-on-surface": "#eff1f3",
+                        "on-tertiary-fixed-variant": "#7b2f00",
+                        "on-primary": "#ffffff",
+                        "primary-fixed": "#e2dfff",
+                        "on-tertiary-container": "#ffd2be",
+                        "error-container": "#ffdad6",
+                        "surface-bright": "#f7f9fb",
+                        "surface-tint": "#4d44e3",
+                        "warning-amber": "#F59E0B",
+                        "primary": "#3525cd",
+                        "success-emerald": "#10B981",
+                        "tertiary-fixed": "#ffdbcc",
+                        "secondary-fixed": "#dae2fd",
+                        "on-error": "#ffffff",
+                        "secondary-fixed-dim": "#bec6e0"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "sidebar-width": "260px",
+                        "stack-sm": "0.5rem",
+                        "grid-cell-px": "0.75rem",
+                        "stack-md": "1rem",
+                        "grid-cell-py": "0.5rem",
+                        "container-gap": "1.5rem",
+                        "sidebar-collapsed": "80px",
+                        "header-height": "64px"
+                    },
+                    "fontFamily": {
+                        "headline-lg-mobile": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "headline-sm": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "data-mono": ["JetBrains Mono"]
+                    },
+                    "fontSize": {
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "700" }],
+                        "body-sm": ["13px", { "lineHeight": "18px", "fontWeight": "400" }],
+                        "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "headline-lg": ["30px", { "lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "data-mono": ["13px", { "lineHeight": "16px", "fontWeight": "500" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined.filled {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        /* Custom subtle shadow for cards per style guide */
+        .shadow-soft-indigo {
+            box-shadow: 0 1px 3px rgba(79, 70, 229, 0.08);
+        }
+        /* Scrollbar styling for data tables */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #E2E8F0; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #c7c4d8; }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md h-screen overflow-hidden flex">
+<!-- SideNavBar (Shared Component) -->
+<nav class="fixed left-0 top-0 h-screen w-sidebar-width bg-surface-white border-r border-border-slate flex flex-col z-50">
+<!-- Header -->
+<div class="h-header-height flex items-center px-6 border-b border-border-slate gap-3">
+<div class="w-8 h-8 rounded-lg bg-primary-container flex items-center justify-center text-on-primary font-bold">N</div>
+<div>
+<h1 class="font-headline-sm text-headline-sm font-bold text-primary">NOA İnşaat</h1>
+<p class="font-label-caps text-label-caps text-text-muted mt-0.5">Construction ERP</p>
+</div>
+</div>
+<!-- CTA -->
+<div class="p-4">
+<button class="w-full flex items-center justify-center gap-2 bg-primary text-on-primary font-body-sm text-body-sm py-2 rounded-lg hover:bg-primary-fixed-variant transition-colors shadow-soft-indigo">
+<span class="material-symbols-outlined text-[18px]">add</span>
+                New Project
+            </button>
+</div>
+<!-- Main Navigation Tabs -->
+<div class="flex-1 overflow-y-auto py-2 px-2 space-y-1">
+<!-- Dashboard -->
+<a class="flex items-center gap-3 text-secondary px-4 py-2 rounded-lg hover:bg-surface-container-low transition-colors group" href="#">
+<span class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">dashboard</span>
+<span class="font-body-md text-body-md">Dashboard</span>
+</a>
+<!-- Projects -->
+<a class="flex items-center gap-3 text-secondary px-4 py-2 rounded-lg hover:bg-surface-container-low transition-colors group" href="#">
+<span class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">business_center</span>
+<span class="font-body-md text-body-md">Projects</span>
+</a>
+<!-- Tender -->
+<a class="flex items-center gap-3 text-secondary px-4 py-2 rounded-lg hover:bg-surface-container-low transition-colors group" href="#">
+<span class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">gavel</span>
+<span class="font-body-md text-body-md">Tender</span>
+</a>
+<!-- Documents -->
+<a class="flex items-center gap-3 text-secondary px-4 py-2 rounded-lg hover:bg-surface-container-low transition-colors group" href="#">
+<span class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">description</span>
+<span class="font-body-md text-body-md">Documents</span>
+</a>
+<!-- Personnel -->
+<a class="flex items-center gap-3 text-secondary px-4 py-2 rounded-lg hover:bg-surface-container-low transition-colors group" href="#">
+<span class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">group</span>
+<span class="font-body-md text-body-md">Personnel</span>
+</a>
+<!-- Inventory (ACTIVE TAB) -->
+<a class="flex items-center gap-3 bg-secondary-container text-on-secondary-container rounded-lg px-4 py-2 opacity-90 transition-all duration-150" href="#">
+<span class="material-symbols-outlined filled text-[20px]">inventory_2</span>
+<span class="font-body-md text-body-md font-medium">Inventory</span>
+</a>
+<!-- Finance -->
+<a class="flex items-center gap-3 text-secondary px-4 py-2 rounded-lg hover:bg-surface-container-low transition-colors group" href="#">
+<span class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">payments</span>
+<span class="font-body-md text-body-md">Finance</span>
+</a>
+<!-- Vehicles -->
+<a class="flex items-center gap-3 text-secondary px-4 py-2 rounded-lg hover:bg-surface-container-low transition-colors group" href="#">
+<span class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">engineering</span>
+<span class="font-body-md text-body-md">Vehicles</span>
+</a>
+<!-- Settings -->
+<a class="flex items-center gap-3 text-secondary px-4 py-2 rounded-lg hover:bg-surface-container-low transition-colors group" href="#">
+<span class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">settings</span>
+<span class="font-body-md text-body-md">Settings</span>
+</a>
+</div>
+<!-- Footer Navigation -->
+<div class="p-4 border-t border-border-slate space-y-1">
+<a class="flex items-center gap-3 text-secondary px-4 py-2 rounded-lg hover:bg-surface-container-low transition-colors group" href="#">
+<span class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">help_outline</span>
+<span class="font-body-sm text-body-sm">Help Center</span>
+</a>
+<a class="flex items-center gap-3 text-secondary px-4 py-2 rounded-lg hover:bg-surface-container-low transition-colors group" href="#">
+<span class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">logout</span>
+<span class="font-body-sm text-body-sm">Log Out</span>
+</a>
+</div>
+</nav>
+<!-- Main Content Wrapper -->
+<div class="flex-1 ml-[260px] flex flex-col min-w-0 bg-background">
+<!-- TopNavBar (Shared Component) -->
+<header class="sticky top-0 w-full z-40 h-header-height bg-surface-white border-b border-border-slate flex justify-between items-center px-6">
+<!-- Left: Search (on_left configuration) -->
+<div class="flex-1 flex items-center">
+<div class="relative w-64">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-text-muted text-[20px]">search</span>
+<input class="w-full pl-10 pr-4 py-1.5 bg-surface-container-low border-transparent focus:border-primary focus:bg-surface-white rounded-lg font-body-sm text-body-sm text-on-surface placeholder-text-muted transition-all outline-none" placeholder="Search across NOA İnşaat..." type="text"/>
+</div>
+</div>
+<!-- Right: Actions & Profile -->
+<div class="flex items-center gap-4">
+<!-- Trailing Icon Actions -->
+<div class="flex items-center gap-1 border-r border-border-slate pr-4">
+<button class="p-2 text-secondary hover:text-primary hover:bg-surface-container-low rounded-full transition-colors flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px]">notifications</span>
+</button>
+<button class="p-2 text-secondary hover:text-primary hover:bg-surface-container-low rounded-full transition-colors flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px]">history</span>
+</button>
+<button class="p-2 text-secondary hover:text-primary hover:bg-surface-container-low rounded-full transition-colors flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px]">chat_bubble</span>
+</button>
+</div>
+<!-- Primary Action -->
+<button class="hidden md:flex items-center gap-2 bg-primary-container text-on-primary-container font-body-sm text-body-sm px-4 py-1.5 rounded-lg hover:bg-primary hover:text-on-primary transition-colors">
+<span class="material-symbols-outlined text-[18px]">add</span>
+                    Add Entry
+                </button>
+<!-- Profile Image -->
+<button class="w-8 h-8 rounded-full overflow-hidden border border-border-slate hover:ring-2 ring-primary ring-offset-2 transition-all">
+<img alt="User Profile" class="w-full h-full object-cover" data-alt="A professional headshot of a construction site manager. High resolution, bright studio lighting, white background. Corporate aesthetic, sharp focus." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCKY6GExBPhWDu45stFimXsyvrwXT4aP7ueXtTcuCi1SbkzGv_frcnekd6nhK7NUyiJ37bwKhO2P43WqsMZq8tQifWsnLN91bayQkH-bk1lW2MPwDCv08XTU8zF-wIBoT_y4eSSHValLqp3hyDo1B21Uq5Paa5QAMFb43ysaggAk4mUwrmsNtr5-B_ltnBeQvDLllI1OsDAdGpUiRkTDRKQZsH4J0v7oEHk5iSADO-2D8KmkIxhkiHV"/>
+</button>
+</div>
+</header>
+<!-- Page Content Canvas -->
+<main class="flex-1 overflow-y-auto p-6 space-y-container-gap">
+<!-- Page Header -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Inventory Management</h2>
+<p class="font-body-md text-body-md text-text-muted mt-1">Monitor central warehouses and active site material stock levels.</p>
+</div>
+<!-- Action Bar (Desktop) -->
+<div class="flex items-center gap-3">
+<button class="flex items-center gap-2 px-4 py-2 bg-surface-white border border-border-slate rounded-lg text-secondary hover:text-primary font-body-sm text-body-sm transition-colors shadow-sm">
+<span class="material-symbols-outlined text-[18px]">filter_list</span>
+                        Filter
+                    </button>
+<button class="flex items-center gap-2 px-4 py-2 bg-surface-white border border-border-slate rounded-lg text-success-emerald hover:bg-success-emerald hover:text-white font-body-sm text-body-sm transition-colors shadow-sm">
+<span class="material-symbols-outlined text-[18px]">download</span>
+                        Export Excel
+                    </button>
+<button class="flex items-center gap-2 px-4 py-2 bg-primary text-on-primary rounded-lg font-body-sm text-body-sm hover:bg-primary-fixed-variant transition-colors shadow-soft-indigo">
+<span class="material-symbols-outlined text-[18px]">add</span>
+                        New Entry
+                    </button>
+</div>
+</div>
+<!-- Summary Stats (Top Horizontal Band) -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+<!-- Stat Card 1 -->
+<div class="bg-surface-white p-5 rounded-xl border border-border-slate shadow-soft-indigo flex flex-col justify-between">
+<div class="flex justify-between items-start mb-4">
+<div class="w-10 h-10 rounded-lg bg-surface-container-low flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+</div>
+<span class="font-label-caps text-label-caps text-success-emerald bg-success-emerald/10 px-2 py-0.5 rounded flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px]">trending_up</span> +2.4%
+                        </span>
+</div>
+<div>
+<p class="font-body-sm text-body-sm text-text-muted mb-1">Total Stock Value</p>
+<h3 class="font-headline-md text-headline-md text-on-surface">₺ 4,250,000.00</h3>
+</div>
+</div>
+<!-- Stat Card 2 -->
+<div class="bg-surface-white p-5 rounded-xl border border-border-slate shadow-soft-indigo flex flex-col justify-between">
+<div class="flex justify-between items-start mb-4">
+<div class="w-10 h-10 rounded-lg bg-error-container/30 flex items-center justify-center text-danger-rose">
+<span class="material-symbols-outlined">warning</span>
+</div>
+</div>
+<div>
+<p class="font-body-sm text-body-sm text-text-muted mb-1">Low/Out of Stock</p>
+<h3 class="font-headline-md text-headline-md text-on-surface flex items-baseline gap-2">
+                            12 <span class="font-body-sm text-body-sm text-text-muted font-normal">Items</span>
+</h3>
+</div>
+</div>
+<!-- Stat Card 3 -->
+<div class="bg-surface-white p-5 rounded-xl border border-border-slate shadow-soft-indigo flex flex-col justify-between">
+<div class="flex justify-between items-start mb-4">
+<div class="w-10 h-10 rounded-lg bg-secondary-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">local_shipping</span>
+</div>
+</div>
+<div>
+<p class="font-body-sm text-body-sm text-text-muted mb-1">Incoming Shipments</p>
+<h3 class="font-headline-md text-headline-md text-on-surface flex items-baseline gap-2">
+                            8 <span class="font-body-sm text-body-sm text-text-muted font-normal">POs Active</span>
+</h3>
+</div>
+</div>
+<!-- Stat Card 4 -->
+<div class="bg-surface-white p-5 rounded-xl border border-border-slate shadow-soft-indigo flex flex-col justify-between">
+<div class="flex justify-between items-start mb-4">
+<div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center text-warning-amber">
+<span class="material-symbols-outlined">hourglass_empty</span>
+</div>
+</div>
+<div>
+<p class="font-body-sm text-body-sm text-text-muted mb-1">Expiring Materials</p>
+<h3 class="font-headline-md text-headline-md text-on-surface flex items-baseline gap-2">
+                            3 <span class="font-body-sm text-body-sm text-text-muted font-normal">Batches</span>
+</h3>
+</div>
+</div>
+</div>
+<!-- Data Table Section -->
+<div class="bg-surface-white border border-border-slate rounded-xl shadow-soft-indigo flex flex-col overflow-hidden">
+<!-- Table Header Actions -->
+<div class="p-4 border-b border-border-slate flex justify-between items-center bg-surface-white">
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Material Ledger</h3>
+<div class="relative w-72">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-text-muted text-[18px]">search</span>
+<input class="w-full pl-9 pr-3 py-1.5 bg-surface border border-border-slate focus:border-primary rounded-lg font-body-sm text-body-sm text-on-surface outline-none transition-colors" placeholder="Search code, name, warehouse..." type="text"/>
+</div>
+</div>
+<!-- Responsive Table Wrapper -->
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead class="bg-surface-container-low border-b border-border-slate sticky top-0 z-10">
+<tr>
+<th class="px-grid-cell-px py-3 font-label-caps text-label-caps text-secondary font-medium whitespace-nowrap">Code</th>
+<th class="px-grid-cell-px py-3 font-label-caps text-label-caps text-secondary font-medium whitespace-nowrap">Item Name</th>
+<th class="px-grid-cell-px py-3 font-label-caps text-label-caps text-secondary font-medium whitespace-nowrap">Category</th>
+<th class="px-grid-cell-px py-3 font-label-caps text-label-caps text-secondary font-medium whitespace-nowrap text-right">Qty</th>
+<th class="px-grid-cell-px py-3 font-label-caps text-label-caps text-secondary font-medium whitespace-nowrap">Unit</th>
+<th class="px-grid-cell-px py-3 font-label-caps text-label-caps text-secondary font-medium whitespace-nowrap">Warehouse</th>
+<th class="px-grid-cell-px py-3 font-label-caps text-label-caps text-secondary font-medium whitespace-nowrap text-center">Status</th>
+<th class="px-grid-cell-px py-3 font-label-caps text-label-caps text-secondary font-medium whitespace-nowrap text-right">Last Movement</th>
+<th class="px-grid-cell-px py-3 font-label-caps text-label-caps text-secondary font-medium whitespace-nowrap w-10"></th>
+</tr>
+</thead>
+<tbody class="divide-y divide-border-slate">
+<!-- Row 1: Healthy -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="px-grid-cell-px py-grid-cell-py font-data-mono text-data-mono text-secondary">STK-1042</td>
+<td class="px-grid-cell-px py-grid-cell-py font-body-sm text-body-sm text-on-surface font-medium">Portland Cement CEM I 42.5</td>
+<td class="px-grid-cell-px py-grid-cell-py">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-medium bg-surface-container text-on-surface-variant">Material</span>
+</td>
+<td class="px-grid-cell-px py-grid-cell-py font-data-mono text-data-mono text-right text-on-surface">450.00</td>
+<td class="px-grid-cell-px py-grid-cell-py font-body-sm text-body-sm text-text-muted">ton</td>
+<td class="px-grid-cell-px py-grid-cell-py font-body-sm text-body-sm text-on-surface">Central Whs.</td>
+<td class="px-grid-cell-px py-grid-cell-py text-center">
+<span class="inline-flex items-center gap-1 px-2 py-1 rounded bg-success-emerald/10 text-success-emerald font-label-caps text-label-caps">
+<span class="material-symbols-outlined text-[14px]">check_circle</span> Healthy
+                                    </span>
+</td>
+<td class="px-grid-cell-px py-grid-cell-py font-data-mono text-data-mono text-right text-text-muted">2023-10-24</td>
+<td class="px-grid-cell-px py-grid-cell-py text-right">
+<button class="text-text-muted hover:text-primary transition-colors opacity-0 group-hover:opacity-100">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 2: Warning (Below Min) -->
+<tr class="hover:bg-surface-container-low transition-colors group bg-error-container/5">
+<td class="px-grid-cell-px py-grid-cell-py font-data-mono text-data-mono text-secondary">STK-2811</td>
+<td class="px-grid-cell-px py-grid-cell-py font-body-sm text-body-sm text-on-surface font-medium">Steel Rebar 12mm S420</td>
+<td class="px-grid-cell-px py-grid-cell-py">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-medium bg-surface-container text-on-surface-variant">Material</span>
+</td>
+<td class="px-grid-cell-px py-grid-cell-py font-data-mono text-data-mono text-right text-danger-rose font-bold">12.50</td>
+<td class="px-grid-cell-px py-grid-cell-py font-body-sm text-body-sm text-text-muted">ton</td>
+<td class="px-grid-cell-px py-grid-cell-py font-body-sm text-body-sm text-on-surface">Site A - Kadıköy</td>
+<td class="px-grid-cell-px py-grid-cell-py text-center">
+<span class="inline-flex items-center gap-1 px-2 py-1 rounded bg-error-container text-on-error-container font-label-caps text-label-caps">
+<span class="material-symbols-outlined text-[14px]">warning</span> Low Stock (Min: 50)
+                                    </span>
+</td>
+<td class="px-grid-cell-px py-grid-cell-py font-data-mono text-data-mono text-right text-text-muted">2023-10-23</td>
+<td class="px-grid-cell-px py-grid-cell-py text-right">
+<button class="text-text-muted hover:text-primary transition-colors opacity-0 group-hover:opacity-100">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 3: Equipment -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="px-grid-cell-px py-grid-cell-py font-data-mono text-data-mono text-secondary">EQP-004</td>
+<td class="px-grid-cell-px py-grid-cell-py font-body-sm text-body-sm text-on-surface font-medium">Excavator CAT 320</td>
+<td class="px-grid-cell-px py-grid-cell-py">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-medium bg-primary-container/20 text-primary">Equipment</span>
+</td>
+<td class="px-grid-cell-px py-grid-cell-py font-data-mono text-data-mono text-right text-on-surface">3.00</td>
+<td class="px-grid-cell-px py-grid-cell-py font-body-sm text-body-sm text-text-muted">unit</td>
+<td class="px-grid-cell-px py-grid-cell-py font-body-sm text-body-sm text-on-surface">Central Whs.</td>
+<td class="px-grid-cell-px py-grid-cell-py text-center">
+<span class="inline-flex items-center gap-1 px-2 py-1 rounded bg-success-emerald/10 text-success-emerald font-label-caps text-label-caps">
+<span class="material-symbols-outlined text-[14px]">check_circle</span> Healthy
+                                    </span>
+</td>
+<td class="px-grid-cell-px py-grid-cell-py font-data-mono text-data-mono text-right text-text-muted">2023-10-20</td>
+<td class="px-grid-cell-px py-grid-cell-py text-right">
+<button class="text-text-muted hover:text-primary transition-colors opacity-0 group-hover:opacity-100">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 4: Warning (Out of Stock) -->
+<tr class="hover:bg-surface-container-low transition-colors group bg-error-container/10">
+<td class="px-grid-cell-px py-grid-cell-py font-data-mono text-data-mono text-secondary">STK-9021</td>
+<td class="px-grid-cell-px py-grid-cell-py font-body-sm text-body-sm text-on-surface font-medium">Safety Helmets Type B</td>
+<td class="px-grid-cell-px py-grid-cell-py">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-medium bg-surface-container text-on-surface-variant">Material</span>
+</td>
+<td class="px-grid-cell-px py-grid-cell-py font-data-mono text-data-mono text-right text-danger-rose font-bold">0.00</td>
+<td class="px-grid-cell-px py-grid-cell-py font-body-sm text-body-sm text-text-muted">unit</td>
+<td class="px-grid-cell-px py-grid-cell-py font-body-sm text-body-sm text-on-surface">Site B - Maltepe</td>
+<td class="px-grid-cell-px py-grid-cell-py text-center">
+<span class="inline-flex items-center gap-1 px-2 py-1 rounded bg-error text-on-error font-label-caps text-label-caps">
+<span class="material-symbols-outlined text-[14px]">block</span> Out of Stock
+                                    </span>
+</td>
+<td class="px-grid-cell-px py-grid-cell-py font-data-mono text-data-mono text-right text-text-muted">2023-10-25</td>
+<td class="px-grid-cell-px py-grid-cell-py text-right">
+<button class="text-text-muted hover:text-primary transition-colors opacity-0 group-hover:opacity-100">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 5: Healthy -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="px-grid-cell-px py-grid-cell-py font-data-mono text-data-mono text-secondary">STK-3392</td>
+<td class="px-grid-cell-px py-grid-cell-py font-body-sm text-body-sm text-on-surface font-medium">Ready Mix Concrete C30</td>
+<td class="px-grid-cell-px py-grid-cell-py">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-medium bg-surface-container text-on-surface-variant">Material</span>
+</td>
+<td class="px-grid-cell-px py-grid-cell-py font-data-mono text-data-mono text-right text-on-surface">120.00</td>
+<td class="px-grid-cell-px py-grid-cell-py font-body-sm text-body-sm text-text-muted">m3</td>
+<td class="px-grid-cell-px py-grid-cell-py font-body-sm text-body-sm text-on-surface">Site A - Kadıköy</td>
+<td class="px-grid-cell-px py-grid-cell-py text-center">
+<span class="inline-flex items-center gap-1 px-2 py-1 rounded bg-success-emerald/10 text-success-emerald font-label-caps text-label-caps">
+<span class="material-symbols-outlined text-[14px]">check_circle</span> Healthy
+                                    </span>
+</td>
+<td class="px-grid-cell-px py-grid-cell-py font-data-mono text-data-mono text-right text-text-muted">2023-10-26</td>
+<td class="px-grid-cell-px py-grid-cell-py text-right">
+<button class="text-text-muted hover:text-primary transition-colors opacity-0 group-hover:opacity-100">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination Footer -->
+<div class="p-4 border-t border-border-slate flex items-center justify-between bg-surface-white">
+<span class="font-body-sm text-body-sm text-text-muted">Showing 1 to 5 of 248 entries</span>
+<div class="flex items-center gap-1">
+<button class="w-8 h-8 rounded flex items-center justify-center text-secondary hover:bg-surface-container-low disabled:opacity-50" disabled="">
+<span class="material-symbols-outlined text-[20px]">chevron_left</span>
+</button>
+<button class="w-8 h-8 rounded flex items-center justify-center bg-primary text-on-primary font-body-sm text-body-sm">1</button>
+<button class="w-8 h-8 rounded flex items-center justify-center text-secondary hover:bg-surface-container-low font-body-sm text-body-sm">2</button>
+<button class="w-8 h-8 rounded flex items-center justify-center text-secondary hover:bg-surface-container-low font-body-sm text-body-sm">3</button>
+<span class="w-8 h-8 flex items-center justify-center text-secondary">...</span>
+<button class="w-8 h-8 rounded flex items-center justify-center text-secondary hover:bg-surface-container-low">
+<span class="material-symbols-outlined text-[20px]">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+
+<html class="light" lang="tr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>NOA İnşaat - Yeni Müşteri</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary-container": "#dae2fd",
+                        "on-tertiary": "#ffffff",
+                        "on-secondary-container": "#5c647a",
+                        "on-background": "#191c1e",
+                        "secondary-fixed-dim": "#bec6e0",
+                        "inverse-surface": "#2d3133",
+                        "secondary": "#565e74",
+                        "surface-container-low": "#f2f4f6",
+                        "surface-container": "#eceef0",
+                        "error": "#ba1a1a",
+                        "success-emerald": "#10B981",
+                        "on-secondary": "#ffffff",
+                        "on-tertiary-container": "#ffd2be",
+                        "inverse-primary": "#c3c0ff",
+                        "inverse-on-surface": "#eff1f3",
+                        "surface-bright": "#f7f9fb",
+                        "tertiary-fixed-dim": "#ffb695",
+                        "tertiary": "#7e3000",
+                        "surface-variant": "#e0e3e5",
+                        "secondary-fixed": "#dae2fd",
+                        "error-container": "#ffdad6",
+                        "surface-tint": "#4d44e3",
+                        "primary": "#3525cd",
+                        "tertiary-container": "#a44100",
+                        "primary-container": "#4f46e5",
+                        "danger-rose": "#E11D48",
+                        "on-error-container": "#93000a",
+                        "on-surface": "#191c1e",
+                        "on-secondary-fixed": "#131b2e",
+                        "surface-white": "#FFFFFF",
+                        "decorative-purple": "#800080",
+                        "text-muted": "#64748B",
+                        "on-error": "#ffffff",
+                        "warning-amber": "#F59E0B",
+                        "outline-variant": "#c7c4d8",
+                        "on-primary": "#ffffff",
+                        "tertiary-fixed": "#ffdbcc",
+                        "on-primary-fixed-variant": "#3323cc",
+                        "on-primary-container": "#dad7ff",
+                        "primary-fixed": "#e2dfff",
+                        "on-primary-fixed": "#0f0069",
+                        "surface-container-high": "#e6e8ea",
+                        "on-tertiary-fixed-variant": "#7b2f00",
+                        "decorative-navy": "#000080",
+                        "on-secondary-fixed-variant": "#3f465c",
+                        "outline": "#777587",
+                        "surface-container-lowest": "#ffffff",
+                        "primary-fixed-dim": "#c3c0ff",
+                        "border-slate": "#E2E8F0",
+                        "surface-container-highest": "#e0e3e5",
+                        "on-tertiary-fixed": "#351000",
+                        "background": "#f7f9fb",
+                        "surface": "#f7f9fb",
+                        "on-surface-variant": "#464555",
+                        "surface-dim": "#d8dadc"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-md": "1rem",
+                        "header-height": "64px",
+                        "grid-cell-px": "0.75rem",
+                        "stack-sm": "0.5rem",
+                        "grid-cell-py": "0.5rem",
+                        "container-gap": "1.5rem",
+                        "sidebar-width": "260px",
+                        "sidebar-collapsed": "80px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Inter"],
+                        "data-mono": ["JetBrains Mono"],
+                        "body-sm": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "body-md": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-sm": ["Inter"],
+                        "headline-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["30px", { "lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "data-mono": ["13px", { "lineHeight": "16px", "fontWeight": "500" }],
+                        "body-sm": ["13px", { "lineHeight": "18px", "fontWeight": "400" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "700" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .nav-item.active .material-symbols-outlined { font-variation-settings: 'FILL' 1; }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #c7c4d8; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #565e74; }
+
+        /* Focus Ring Utility */
+        .focus-ring { transition: box-shadow 0.2s ease, border-color 0.2s ease; }
+        .focus-ring:focus-within { border-color: #4f46e5; box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1); outline: none; }
+    </style>
+</head>
+<body class="bg-surface text-on-surface antialiased flex h-screen overflow-hidden">
+<!-- Sidebar Navigation Shell -->
+<!-- Suppressed: The prompt specifically asks for a "modal/overlay" form within the app layout. While a modal implies an overlay, we'll render the shell behind it to provide context. The active tab is undefined but "Project Finance" or "Tender Management" might relate to customers. We'll leave it as a dashboard context. -->
+<nav class="hidden md:flex flex-col h-full w-[260px] py-4 bg-surface-white border-r border-outline-variant shadow-md z-10 flex-shrink-0">
+<!-- Brand Header -->
+<div class="px-6 pb-6 flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-primary-container flex items-center justify-center text-on-primary-container shrink-0">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">domain</span>
+</div>
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm font-black text-primary">NOA İnşaat</span>
+<span class="font-label-caps text-label-caps tracking-wider text-on-surface-variant">Technical &amp; Rigorous</span>
+</div>
+</div>
+<!-- Navigation Links -->
+<div class="flex-1 overflow-y-auto px-2 space-y-1">
+<a class="nav-item flex items-center gap-3 px-4 py-2 rounded-lg text-secondary hover:bg-surface-container-low transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-body-md text-body-md font-medium">Dashboard</span>
+</a>
+<a class="nav-item flex items-center gap-3 px-4 py-2 rounded-lg text-secondary hover:bg-surface-container-low transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined">description</span>
+<span class="font-body-md text-body-md font-medium">Tender Management</span>
+</a>
+<a class="nav-item active flex items-center gap-3 px-4 py-2 rounded-lg bg-secondary-container text-on-secondary-container font-semibold transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined">payments</span>
+<span class="font-body-md text-body-md">Project Finance</span>
+</a>
+<a class="nav-item flex items-center gap-3 px-4 py-2 rounded-lg text-secondary hover:bg-surface-container-low transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined">groups</span>
+<span class="font-body-md text-body-md font-medium">Human Resources</span>
+</a>
+<a class="nav-item flex items-center gap-3 px-4 py-2 rounded-lg text-secondary hover:bg-surface-container-low transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="font-body-md text-body-md font-medium">Inventory</span>
+</a>
+<a class="nav-item flex items-center gap-3 px-4 py-2 rounded-lg text-secondary hover:bg-surface-container-low transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined">assessment</span>
+<span class="font-body-md text-body-md font-medium">Reports</span>
+</a>
+</div>
+<!-- Footer Links -->
+<div class="mt-auto px-2 pt-4 border-t border-surface-variant space-y-1">
+<a class="flex items-center gap-3 px-4 py-2 rounded-lg text-secondary hover:bg-surface-container-low transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined">help</span>
+<span class="font-body-md text-body-md font-medium">Help Center</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-2 rounded-lg text-secondary hover:bg-surface-container-low transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined">logout</span>
+<span class="font-body-md text-body-md font-medium">Logout</span>
+</a>
+</div>
+</nav>
+<!-- Main Content Area -->
+<main class="flex-1 flex flex-col min-w-0 relative">
+<!-- Top App Bar -->
+<header class="h-[64px] bg-surface-container-lowest shadow-sm flex items-center justify-between px-6 z-10 shrink-0">
+<!-- Mobile Menu Trigger -->
+<button class="md:hidden p-2 -ml-2 text-on-surface-variant hover:bg-surface-container rounded-full">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<div class="hidden md:flex items-center text-sm font-medium text-text-muted">
+<span>Project Finance</span>
+<span class="material-symbols-outlined mx-2 text-[18px]">chevron_right</span>
+<span>Müşteriler</span>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 text-on-surface-variant hover:bg-surface-container rounded-full transition-colors cursor-pointer active:scale-95 duration-150 relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-1.5 right-1.5 w-2 h-2 bg-danger-rose rounded-full border border-surface-container-lowest"></span>
+</button>
+<button class="p-2 text-on-surface-variant hover:bg-surface-container rounded-full transition-colors cursor-pointer active:scale-95 duration-150">
+<span class="material-symbols-outlined">settings</span>
+</button>
+<div class="w-8 h-8 rounded-full bg-surface-variant overflow-hidden border border-outline-variant cursor-pointer ml-2">
+<img alt="User profile" class="w-full h-full object-cover" data-alt="A professional headshot of a corporate construction manager in a modern office, bright natural lighting, looking confident." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDgffR_zB4VwQkeSpltg3tidBC2ZZlx2M9yFQmEkk2otson8mGhgZSEIAAeCCqY3UUcB7njAis4xa24uUFvt5Hjv3F6cth1mBFKG1eBMxjLCNEyx_bfSub6BgT3y8DE99KihkFieoaFzhhDJu30miQNjVODwq08wsygu6xTu1cNgk-azAKRqMr9nR32aXcQkYpdeic6cxhTaVugIiCVWHaSNXLTcjAntWeqWVo76a6x543L2xeH2Iyk"/>
+</div>
+</div>
+</header>
+<!-- Canvas Area (Background Content) -->
+<div class="flex-1 overflow-auto p-6 lg:p-8 bg-surface">
+<!-- Dashboard placeholder content to show under modal -->
+<div class="max-w-7xl mx-auto opacity-40 pointer-events-none">
+<div class="flex justify-between items-end mb-8">
+<div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface mb-2">Müşteri Yönetimi</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">Müşteri hesaplarını, projeleri ve finansal durumları yönetin.</p>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+<div class="bg-surface-white p-6 rounded-xl border border-border-slate shadow-sm">
+<div class="font-label-caps text-label-caps text-on-surface-variant mb-2">TOPLAM MÜŞTERİ</div>
+<div class="font-headline-lg text-headline-lg text-on-surface">142</div>
+</div>
+<div class="bg-surface-white p-6 rounded-xl border border-border-slate shadow-sm">
+<div class="font-label-caps text-label-caps text-on-surface-variant mb-2">AKTİF PROJELER</div>
+<div class="font-headline-lg text-headline-lg text-success-emerald">28</div>
+</div>
+<div class="bg-surface-white p-6 rounded-xl border border-border-slate shadow-sm">
+<div class="font-label-caps text-label-caps text-on-surface-variant mb-2">BEKLEYEN TAHSİLAT</div>
+<div class="font-headline-lg text-headline-lg text-warning-amber">₺4.2M</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Modal Overlay -->
+<div aria-modal="true" class="absolute inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-on-background/40 backdrop-blur-sm overflow-y-auto" role="dialog">
+<!-- Modal Card -->
+<div class="bg-surface-white rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-border-slate w-full max-w-3xl my-auto flex flex-col max-h-full">
+<!-- Modal Header -->
+<div class="flex items-center justify-between px-6 py-5 border-b border-border-slate shrink-0">
+<div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Yeni Müşteri</h2>
+<p class="font-body-sm text-body-sm text-text-muted mt-1">Sisteme yeni bir müşteri veya iş ortağı ekleyin.</p>
+</div>
+<button class="p-2 text-on-surface-variant hover:bg-surface-container rounded-full transition-colors cursor-pointer">
+<span class="material-symbols-outlined text-[20px]">close</span>
+</button>
+</div>
+<!-- Modal Body (Scrollable) -->
+<div class="px-6 py-6 overflow-y-auto custom-scrollbar flex-1">
+<form class="space-y-8">
+<!-- Section 1: Firma Bilgileri -->
+<div class="space-y-5">
+<div class="flex items-center gap-2 border-b border-surface-variant pb-2">
+<span class="material-symbols-outlined text-primary text-[20px]">corporate_fare</span>
+<h3 class="font-label-caps text-label-caps text-primary">FİRMA BİLGİLERİ</h3>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
+<div class="col-span-1 md:col-span-2">
+<label class="block font-label-caps text-label-caps text-on-surface mb-1.5" for="firmaAdi">Firma Adı <span class="text-danger-rose">*</span></label>
+<input class="w-full px-3 py-2 bg-surface-white border border-border-slate rounded-lg focus-ring font-body-md text-body-md text-on-surface placeholder:text-outline-variant" id="firmaAdi" name="firmaAdi" placeholder="Örn: ABC İnşaat A.Ş." required="" type="text"/>
+</div>
+<div class="col-span-1">
+<label class="block font-label-caps text-label-caps text-on-surface mb-1.5" for="yetkiliKisi">Yetkili Kişi</label>
+<input class="w-full px-3 py-2 bg-surface-white border border-border-slate rounded-lg focus-ring font-body-md text-body-md text-on-surface placeholder:text-outline-variant" id="yetkiliKisi" name="yetkiliKisi" placeholder="Ad Soyad" type="text"/>
+</div>
+<div class="col-span-1 flex flex-col justify-end">
+<label class="block font-label-caps text-label-caps text-on-surface mb-1.5">Durum</label>
+<div class="flex items-center h-[40px]">
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox" value=""/>
+<div class="w-11 h-6 bg-surface-variant peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+<span class="ml-3 font-body-sm text-body-sm font-medium text-on-surface">Aktif</span>
+</label>
+</div>
+</div>
+</div>
+</div>
+<!-- Section 2: İletişim Bilgileri -->
+<div class="space-y-5">
+<div class="flex items-center gap-2 border-b border-surface-variant pb-2">
+<span class="material-symbols-outlined text-primary text-[20px]">contact_mail</span>
+<h3 class="font-label-caps text-label-caps text-primary">İLETİŞİM BİLGİLERİ</h3>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
+<div class="col-span-1">
+<label class="block font-label-caps text-label-caps text-on-surface mb-1.5" for="telefon">Telefon</label>
+<input class="w-full px-3 py-2 bg-surface-white border border-border-slate rounded-lg focus-ring font-body-md text-body-md text-on-surface placeholder:text-outline-variant" id="telefon" name="telefon" placeholder="+90 (5XX) XXX XX XX" type="tel"/>
+</div>
+<div class="col-span-1">
+<label class="block font-label-caps text-label-caps text-on-surface mb-1.5" for="email">Email</label>
+<input class="w-full px-3 py-2 bg-surface-white border border-border-slate rounded-lg focus-ring font-body-md text-body-md text-on-surface placeholder:text-outline-variant" id="email" name="email" placeholder="ornek@firma.com" type="email"/>
+</div>
+<div class="col-span-1 md:col-span-2">
+<label class="block font-label-caps text-label-caps text-on-surface mb-1.5" for="adres">Adres</label>
+<textarea class="w-full px-3 py-2 bg-surface-white border border-border-slate rounded-lg focus-ring font-body-md text-body-md text-on-surface placeholder:text-outline-variant resize-none" id="adres" name="adres" placeholder="Açık adres bilgisi..." rows="3"></textarea>
+</div>
+<div class="col-span-1">
+<label class="block font-label-caps text-label-caps text-on-surface mb-1.5" for="sehir">Şehir</label>
+<div class="relative">
+<select class="w-full pl-3 pr-10 py-2 bg-surface-white border border-border-slate rounded-lg focus-ring font-body-md text-body-md text-on-surface appearance-none" id="sehir" name="sehir">
+<option disabled="" selected="" value="">Şehir Seçiniz</option>
+<option value="istanbul">İstanbul</option>
+<option value="ankara">Ankara</option>
+<option value="izmir">İzmir</option>
+<option value="bursa">Bursa</option>
+<option value="antalya">Antalya</option>
+</select>
+<div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none text-text-muted">
+<span class="material-symbols-outlined text-[20px]">expand_more</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Section 3: Vergi Bilgileri -->
+<div class="space-y-5">
+<div class="flex items-center gap-2 border-b border-surface-variant pb-2">
+<span class="material-symbols-outlined text-primary text-[20px]">receipt_long</span>
+<h3 class="font-label-caps text-label-caps text-primary">VERGİ BİLGİLERİ</h3>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
+<div class="col-span-1">
+<label class="block font-label-caps text-label-caps text-on-surface mb-1.5" for="vergiDairesi">Vergi Dairesi</label>
+<input class="w-full px-3 py-2 bg-surface-white border border-border-slate rounded-lg focus-ring font-body-md text-body-md text-on-surface placeholder:text-outline-variant" id="vergiDairesi" name="vergiDairesi" placeholder="Daire Adı" type="text"/>
+</div>
+<div class="col-span-1">
+<label class="block font-label-caps text-label-caps text-on-surface mb-1.5" for="vergiNumarasi">Vergi Numarası</label>
+<input class="w-full px-3 py-2 bg-surface-white border border-border-slate rounded-lg focus-ring font-data-mono text-data-mono text-on-surface tracking-wider placeholder:text-outline-variant placeholder:tracking-normal" id="vergiNumarasi" maxlength="10" name="vergiNumarasi" pattern="\d{10}" placeholder="10 Haneli Vergi No" type="text"/>
+</div>
+</div>
+</div>
+<!-- Section 4: Banka Bilgileri -->
+<div class="space-y-5">
+<div class="flex items-center gap-2 border-b border-surface-variant pb-2">
+<span class="material-symbols-outlined text-primary text-[20px]">account_balance</span>
+<h3 class="font-label-caps text-label-caps text-primary">BANKA BİLGİLERİ</h3>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
+<div class="col-span-1 md:col-span-2">
+<label class="block font-label-caps text-label-caps text-on-surface mb-1.5" for="iban">IBAN</label>
+<input class="w-full px-3 py-2 bg-surface-white border border-border-slate rounded-lg focus-ring font-data-mono text-data-mono text-on-surface tracking-wider placeholder:text-outline-variant placeholder:tracking-normal uppercase" id="iban" name="iban" placeholder="TR00 0000 0000 0000 0000 0000 00" type="text"/>
+</div>
+<div class="col-span-1">
+<label class="block font-label-caps text-label-caps text-on-surface mb-1.5" for="bankaAdi">Banka Adı</label>
+<input class="w-full px-3 py-2 bg-surface-white border border-border-slate rounded-lg focus-ring font-body-md text-body-md text-on-surface placeholder:text-outline-variant" id="bankaAdi" name="bankaAdi" placeholder="Banka Seçiniz/Yazınız" type="text"/>
+</div>
+<div class="col-span-1">
+<label class="block font-label-caps text-label-caps text-on-surface mb-1.5" for="sube">Şube</label>
+<input class="w-full px-3 py-2 bg-surface-white border border-border-slate rounded-lg focus-ring font-body-md text-body-md text-on-surface placeholder:text-outline-variant" id="sube" name="sube" placeholder="Şube Adı/Kodu" type="text"/>
+</div>
+</div>
+</div>
+</form>
+</div>
+<!-- Modal Footer Actions -->
+<div class="px-6 py-4 border-t border-border-slate bg-surface-bright flex items-center justify-end gap-3 rounded-b-xl shrink-0">
+<button class="px-4 py-2 bg-surface-white border border-border-slate text-on-surface font-body-md text-body-md font-medium rounded-lg hover:bg-surface-container-low transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1" type="button">
+                        Vazgeç
+                    </button>
+<button class="px-5 py-2 bg-primary text-on-primary font-body-md text-body-md font-medium rounded-lg hover:bg-primary-container transition-colors shadow-sm shadow-primary/20 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1" type="submit">
+                        Kaydet
+                    </button>
+</div>
+</div>
+</div>
+</main>
+<script>
+        // Optional: Simple IBAN formatting visualization
+        const ibanInput = document.getElementById('iban');
+        if(ibanInput) {
+            ibanInput.addEventListener('input', function (e) {
+                let val = this.value.replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
+                let formatted = '';
+                if(val.length > 0) {
+                    if(val.substring(0,2) !== 'TR' && val.length <= 2) {
+                        val = 'TR' + val;
+                    }
+                }
+                for (let i = 0; i < val.length; i++) {
+                    if (i > 0 && i % 4 === 0) {
+                        formatted += ' ';
+                    }
+                    formatted += val[i];
+                }
+                this.value = formatted.substring(0, 32); // TR + 24 digits + spaces
+            });
+        }
+    </script>
+</body></html>

@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+
+<html class="light" lang="tr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>API Yönetimi - NOA İnşaat</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary-fixed-dim": "#bec6e0",
+                        "outline": "#777587",
+                        "inverse-primary": "#c3c0ff",
+                        "on-tertiary-fixed": "#351000",
+                        "tertiary-fixed": "#ffdbcc",
+                        "secondary-container": "#dae2fd",
+                        "on-tertiary-fixed-variant": "#7b2f00",
+                        "success-emerald": "#10B981",
+                        "secondary-fixed": "#dae2fd",
+                        "on-secondary-container": "#5c647a",
+                        "surface-variant": "#e0e3e5",
+                        "on-surface-variant": "#464555",
+                        "border-slate": "#E2E8F0",
+                        "on-primary": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "surface-container-highest": "#e0e3e5",
+                        "tertiary": "#7e3000",
+                        "on-error": "#ffffff",
+                        "on-primary-fixed-variant": "#3323cc",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-high": "#e6e8ea",
+                        "secondary": "#565e74",
+                        "outline-variant": "#c7c4d8",
+                        "on-error-container": "#93000a",
+                        "primary-fixed-dim": "#c3c0ff",
+                        "danger-rose": "#E11D48",
+                        "on-primary-container": "#dad7ff",
+                        "inverse-on-surface": "#eff1f3",
+                        "decorative-navy": "#000080",
+                        "surface-bright": "#f7f9fb",
+                        "surface-tint": "#4d44e3",
+                        "warning-amber": "#F59E0B",
+                        "on-secondary-fixed-variant": "#3f465c",
+                        "surface-white": "#FFFFFF",
+                        "background": "#f7f9fb",
+                        "on-tertiary": "#ffffff",
+                        "primary-container": "#4f46e5",
+                        "surface-container-low": "#f2f4f6",
+                        "primary-fixed": "#e2dfff",
+                        "on-primary-fixed": "#0f0069",
+                        "tertiary-container": "#a44100",
+                        "on-tertiary-container": "#ffd2be",
+                        "on-secondary": "#ffffff",
+                        "inverse-surface": "#2d3133",
+                        "on-background": "#191c1e",
+                        "text-muted": "#64748B",
+                        "surface-container": "#eceef0",
+                        "on-surface": "#191c1e",
+                        "on-secondary-fixed": "#131b2e",
+                        "primary": "#3525cd",
+                        "error": "#ba1a1a",
+                        "surface": "#f7f9fb",
+                        "tertiary-fixed-dim": "#ffb695",
+                        "decorative-purple": "#800080",
+                        "surface-dim": "#d8dadc"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-sm": "0.5rem",
+                        "header-height": "64px",
+                        "grid-cell-px": "0.75rem",
+                        "container-gap": "1.5rem",
+                        "sidebar-collapsed": "80px",
+                        "stack-md": "1rem",
+                        "sidebar-width": "260px",
+                        "grid-cell-py": "0.5rem"
+                    },
+                    "fontFamily": {
+                        "headline-sm": ["Inter"],
+                        "body-md": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "data-mono": ["JetBrains Mono"],
+                        "headline-lg": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "body-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "700" }],
+                        "data-mono": ["13px", { "lineHeight": "16px", "fontWeight": "500" }],
+                        "headline-lg": ["30px", { "lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "body-sm": ["13px", { "lineHeight": "18px", "fontWeight": "400" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined.fill {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body-md antialiased min-h-screen overflow-x-hidden">
+<!-- TopNavBar -->
+<nav class="h-header-height fixed top-0 right-0 z-40 bg-surface-white/80 dark:bg-inverse-surface/80 backdrop-blur-md border-b border-outline-variant dark:border-outline flat no shadows flex justify-between items-center px-6 w-[calc(100%-theme(spacing.sidebar-width))] ml-sidebar-width hidden md:flex transition-all duration-200">
+<div class="flex-1 flex items-center">
+<!-- Search Bar (on_left as per JSON) -->
+<div class="relative w-64">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[20px]">search</span>
+<input class="w-full bg-surface-container-low border border-outline-variant rounded-lg pl-10 pr-4 py-2 text-body-sm font-body-sm text-on-surface focus:outline-none focus:border-primary transition-colors" placeholder="Ara..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors hover:bg-surface-container rounded-full relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-1.5 right-1.5 w-2 h-2 bg-danger-rose rounded-full"></span>
+</button>
+<div class="h-8 w-px bg-outline-variant mx-2"></div>
+<button class="flex items-center gap-2 hover:bg-surface-container rounded-lg p-1 transition-colors">
+<div class="w-8 h-8 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container font-headline-sm text-headline-sm">
+                    A
+                </div>
+</button>
+</div>
+</nav>
+<!-- SideNavBar -->
+<aside class="w-sidebar-width h-screen fixed left-0 top-0 bg-surface-white dark:bg-inverse-surface shadow-[0_1px_3px_rgba(79,70,229,0.08)] flex flex-col h-full border-r border-outline-variant dark:border-outline z-50 hidden md:flex">
+<!-- Brand -->
+<div class="h-header-height flex items-center px-6 border-b border-outline-variant dark:border-outline">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-surface-white" style="font-variation-settings: 'FILL' 1;">architecture</span>
+</div>
+<div>
+<h1 class="font-headline-sm text-headline-sm font-bold text-primary dark:text-inverse-primary">NOA İnşaat</h1>
+<p class="font-label-caps text-[10px] text-outline uppercase tracking-wider">Construction ERP</p>
+</div>
+</div>
+</div>
+<!-- Navigation Links -->
+<div class="flex-1 overflow-y-auto py-4 px-3 flex flex-col gap-1">
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-low transition-colors rounded-lg transition-all duration-200 active:scale-95 group" href="#">
+<span class="material-symbols-outlined text-[24px] group-hover:text-primary transition-colors">dashboard</span>
+<span class="font-body-md text-body-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-low transition-colors rounded-lg transition-all duration-200 active:scale-95 group" href="#">
+<span class="material-symbols-outlined text-[24px] group-hover:text-primary transition-colors">business</span>
+<span class="font-body-md text-body-md">Firms</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-low transition-colors rounded-lg transition-all duration-200 active:scale-95 group" href="#">
+<span class="material-symbols-outlined text-[24px] group-hover:text-primary transition-colors">gavel</span>
+<span class="font-body-md text-body-md">Tender Management</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-low transition-colors rounded-lg transition-all duration-200 active:scale-95 group" href="#">
+<span class="material-symbols-outlined text-[24px] group-hover:text-primary transition-colors">description</span>
+<span class="font-body-md text-body-md">Document Center</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-low transition-colors rounded-lg transition-all duration-200 active:scale-95 group" href="#">
+<span class="material-symbols-outlined text-[24px] group-hover:text-primary transition-colors">group</span>
+<span class="font-body-md text-body-md">Staff</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-low transition-colors rounded-lg transition-all duration-200 active:scale-95 group" href="#">
+<span class="material-symbols-outlined text-[24px] group-hover:text-primary transition-colors">inventory_2</span>
+<span class="font-body-md text-body-md">Inventory</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-low transition-colors rounded-lg transition-all duration-200 active:scale-95 group" href="#">
+<span class="material-symbols-outlined text-[24px] group-hover:text-primary transition-colors">directions_car</span>
+<span class="font-body-md text-body-md">Vehicles</span>
+</a>
+<!-- Settings is Active for API Management -->
+<a class="flex items-center gap-3 px-4 py-3 bg-secondary-container dark:bg-primary-container text-primary dark:text-on-primary-container rounded-lg font-semibold transition-all duration-200 active:scale-95" href="#">
+<span class="material-symbols-outlined text-[24px] fill">settings</span>
+<span class="font-body-md text-body-md">Settings</span>
+</a>
+</div>
+<!-- User Info Footer -->
+<div class="p-4 border-t border-outline-variant dark:border-outline">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-container-highest flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined">person</span>
+</div>
+<div class="flex-1 min-w-0">
+<p class="font-body-md text-body-md text-on-surface truncate font-medium">Admin User</p>
+<p class="font-body-sm text-body-sm text-outline truncate">admin@noa.com.tr</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Canvas -->
+<main class="md:ml-sidebar-width pt-header-height min-h-screen pb-12">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+<!-- Page Header -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">API Yönetimi</h2>
+<p class="font-body-md text-body-md text-text-muted mt-1">Sistem entegrasyonları için API anahtarlarını ve webhookları yönetin.</p>
+</div>
+<button class="bg-primary hover:bg-primary-container hover:text-primary text-surface-white font-body-md text-body-md font-medium py-2 px-4 rounded-lg shadow-[0_1px_3px_rgba(79,70,229,0.08)] transition-all flex items-center gap-2 w-fit">
+<span class="material-symbols-outlined text-[20px]">add</span>
+                    + Yeni API Anahtarı Oluştur
+                </button>
+</div>
+<!-- Stats Row (Bento Style) -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-container-gap mb-8">
+<!-- Stat 1 -->
+<div class="bg-surface-white rounded-xl p-6 shadow-[0_1px_3px_rgba(79,70,229,0.08)] border border-border-slate flex flex-col justify-between">
+<div class="flex items-start justify-between mb-4">
+<div class="w-10 h-10 rounded-lg bg-secondary-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">key</span>
+</div>
+<span class="flex items-center gap-1 text-success-emerald font-body-sm text-body-sm font-medium">
+<span class="material-symbols-outlined text-[16px]">trending_up</span> 2
+                        </span>
+</div>
+<div>
+<h3 class="font-label-caps text-label-caps text-outline mb-1">Aktif Anahtarlar</h3>
+<p class="font-headline-lg text-headline-lg text-on-surface">8</p>
+</div>
+</div>
+<!-- Stat 2 -->
+<div class="bg-surface-white rounded-xl p-6 shadow-[0_1px_3px_rgba(79,70,229,0.08)] border border-border-slate flex flex-col justify-between">
+<div class="flex items-start justify-between mb-4">
+<div class="w-10 h-10 rounded-lg bg-surface-container-high flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined">sync_alt</span>
+</div>
+<span class="flex items-center gap-1 text-text-muted font-body-sm text-body-sm font-medium">
+                            Sabit
+                        </span>
+</div>
+<div>
+<h3 class="font-label-caps text-label-caps text-outline mb-1">Toplam İstek (Son 24s)</h3>
+<p class="font-headline-lg text-headline-lg text-on-surface">14.2K</p>
+</div>
+</div>
+<!-- Stat 3 -->
+<div class="bg-surface-white rounded-xl p-6 shadow-[0_1px_3px_rgba(79,70,229,0.08)] border border-border-slate flex flex-col justify-between">
+<div class="flex items-start justify-between mb-4">
+<div class="w-10 h-10 rounded-lg bg-error-container flex items-center justify-center text-error">
+<span class="material-symbols-outlined">warning</span>
+</div>
+<span class="flex items-center gap-1 text-success-emerald font-body-sm text-body-sm font-medium">
+<span class="material-symbols-outlined text-[16px]">trending_down</span> 0.1%
+                        </span>
+</div>
+<div>
+<h3 class="font-label-caps text-label-caps text-outline mb-1">Hata Oranı</h3>
+<p class="font-headline-lg text-headline-lg text-on-surface">0.4%</p>
+</div>
+</div>
+<!-- Stat 4 -->
+<div class="bg-surface-white rounded-xl p-6 shadow-[0_1px_3px_rgba(79,70,229,0.08)] border border-border-slate flex flex-col justify-between">
+<div class="flex items-start justify-between mb-4">
+<div class="w-10 h-10 rounded-lg bg-tertiary-fixed flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined">api</span>
+</div>
+</div>
+<div>
+<h3 class="font-label-caps text-label-caps text-outline mb-1">Kullanılan Kapsamlar</h3>
+<div class="flex flex-wrap gap-1 mt-2">
+<span class="px-2 py-0.5 rounded text-[11px] font-medium bg-surface-container text-on-surface-variant">Finans</span>
+<span class="px-2 py-0.5 rounded text-[11px] font-medium bg-surface-container text-on-surface-variant">İK</span>
+<span class="px-2 py-0.5 rounded text-[11px] font-medium bg-surface-container text-on-surface-variant">+3</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Primary Table: API Keys -->
+<div class="bg-surface-white rounded-xl shadow-[0_1px_3px_rgba(79,70,229,0.08)] border border-border-slate mb-8 overflow-hidden">
+<div class="px-6 py-4 border-b border-border-slate flex justify-between items-center bg-surface-bright">
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Aktif API Anahtarları</h3>
+<button class="text-primary hover:text-primary-container transition-colors p-1 rounded-md hover:bg-secondary-container">
+<span class="material-symbols-outlined text-[20px]">filter_list</span>
+</button>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-lowest border-b border-border-slate">
+<th class="py-3 px-6 font-label-caps text-label-caps text-outline uppercase font-semibold">Anahtar Adı</th>
+<th class="py-3 px-6 font-label-caps text-label-caps text-outline uppercase font-semibold">Önek (Prefix)</th>
+<th class="py-3 px-6 font-label-caps text-label-caps text-outline uppercase font-semibold">Oluşturulma Tarihi</th>
+<th class="py-3 px-6 font-label-caps text-label-caps text-outline uppercase font-semibold">Son Kullanım</th>
+<th class="py-3 px-6 font-label-caps text-label-caps text-outline uppercase font-semibold">Kapsam (Scopes)</th>
+<th class="py-3 px-6 font-label-caps text-label-caps text-outline uppercase font-semibold text-right">İşlemler</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-border-slate">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-bright transition-colors group">
+<td class="py-3 px-6">
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-success-emerald"></div>
+<span class="font-body-md text-body-md text-on-surface font-medium">Muhasebe Entegrasyonu (Logo)</span>
+</div>
+</td>
+<td class="py-3 px-6">
+<code class="font-data-mono text-data-mono text-secondary bg-surface-container-low px-2 py-1 rounded border border-border-slate">noa_live_a7f9...</code>
+</td>
+<td class="py-3 px-6 font-body-sm text-body-sm text-text-muted">12 Eki 2023</td>
+<td class="py-3 px-6 font-body-sm text-body-sm text-text-muted">2 saat önce</td>
+<td class="py-3 px-6">
+<div class="flex flex-wrap gap-1">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">e-Fatura</span>
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-blue-50 text-blue-700 border border-blue-200">Cari</span>
+</div>
+</td>
+<td class="py-3 px-6 text-right">
+<div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1.5 text-text-muted hover:text-primary hover:bg-secondary-container rounded transition-colors" title="Kopyala">
+<span class="material-symbols-outlined text-[18px]">content_copy</span>
+</button>
+<button class="p-1.5 text-text-muted hover:text-danger-rose hover:bg-error-container rounded transition-colors" title="İptal Et">
+<span class="material-symbols-outlined text-[18px]">block</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surface-bright transition-colors group">
+<td class="py-3 px-6">
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-success-emerald"></div>
+<span class="font-body-md text-body-md text-on-surface font-medium">Şantiye Mobil App</span>
+</div>
+</td>
+<td class="py-3 px-6">
+<code class="font-data-mono text-data-mono text-secondary bg-surface-container-low px-2 py-1 rounded border border-border-slate">noa_live_b2x4...</code>
+</td>
+<td class="py-3 px-6 font-body-sm text-body-sm text-text-muted">05 Kas 2023</td>
+<td class="py-3 px-6 font-body-sm text-body-sm text-text-muted">15 dk önce</td>
+<td class="py-3 px-6">
+<div class="flex flex-wrap gap-1">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-amber-50 text-amber-700 border border-amber-200">Şantiye</span>
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-purple-50 text-purple-700 border border-purple-200">Stok</span>
+</div>
+</td>
+<td class="py-3 px-6 text-right">
+<div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1.5 text-text-muted hover:text-primary hover:bg-secondary-container rounded transition-colors" title="Kopyala">
+<span class="material-symbols-outlined text-[18px]">content_copy</span>
+</button>
+<button class="p-1.5 text-text-muted hover:text-danger-rose hover:bg-error-container rounded transition-colors" title="İptal Et">
+<span class="material-symbols-outlined text-[18px]">block</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 3 (Inactive/Revoked) -->
+<tr class="hover:bg-surface-bright transition-colors group opacity-60">
+<td class="py-3 px-6">
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-outline-variant"></div>
+<span class="font-body-md text-body-md text-on-surface font-medium line-through decoration-outline-variant">Eski İK Sistemi</span>
+</div>
+</td>
+<td class="py-3 px-6">
+<code class="font-data-mono text-data-mono text-secondary bg-surface-container-low px-2 py-1 rounded border border-border-slate">noa_live_x9k1...</code>
+</td>
+<td class="py-3 px-6 font-body-sm text-body-sm text-text-muted">10 Oca 2022</td>
+<td class="py-3 px-6 font-body-sm text-body-sm text-text-muted">İptal Edildi (1 Ara)</td>
+<td class="py-3 px-6">
+<div class="flex flex-wrap gap-1">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-surface-container text-on-surface-variant border border-border-slate">Personel</span>
+</div>
+</td>
+<td class="py-3 px-6 text-right">
+<div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1.5 text-text-muted hover:text-danger-rose hover:bg-error-container rounded transition-colors" title="Sil">
+<span class="material-symbols-outlined text-[18px]">delete</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Bottom Section Grid (Docs & Webhooks) -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-container-gap">
+<!-- Quick Docs Card -->
+<div class="lg:col-span-1 bg-gradient-to-br from-primary to-decorative-navy rounded-xl p-6 shadow-lg text-surface-white relative overflow-hidden">
+<!-- Abstract decorative element -->
+<div class="absolute -right-10 -top-10 w-40 h-40 bg-white opacity-10 rounded-full blur-2xl"></div>
+<div class="absolute -left-10 -bottom-10 w-32 h-32 bg-primary-fixed opacity-20 rounded-full blur-xl"></div>
+<div class="relative z-10">
+<div class="w-12 h-12 bg-white/20 rounded-xl backdrop-blur-sm flex items-center justify-center mb-6">
+<span class="material-symbols-outlined text-[28px]">menu_book</span>
+</div>
+<h3 class="font-headline-md text-headline-md font-bold mb-2">API Dokümantasyonu</h3>
+<p class="font-body-md text-body-md text-primary-fixed-dim mb-6 opacity-90">Geliştiriciler için detaylı endpoint referansları, kimlik doğrulama yöntemleri ve kod örnekleri.</p>
+<a class="inline-flex items-center gap-2 bg-surface-white text-primary font-body-md text-body-md font-medium px-4 py-2 rounded-lg hover:bg-surface-bright transition-colors w-full justify-center" href="#">
+                            Dokümanlara Git
+                            <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</a>
+</div>
+</div>
+<!-- Webhooks Table -->
+<div class="lg:col-span-2 bg-surface-white rounded-xl shadow-[0_1px_3px_rgba(79,70,229,0.08)] border border-border-slate flex flex-col">
+<div class="px-6 py-4 border-b border-border-slate flex justify-between items-center bg-surface-bright">
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Webhook Endpoints</h3>
+<p class="font-body-sm text-body-sm text-text-muted mt-0.5">Sistem olaylarını dinleyen kayıtlı URL'ler.</p>
+</div>
+<button class="text-primary hover:text-primary-container hover:bg-secondary-container transition-colors p-2 rounded-md flex items-center gap-1 font-body-sm text-body-sm font-medium">
+<span class="material-symbols-outlined text-[18px]">add</span>
+                            Yeni
+                        </button>
+</div>
+<div class="overflow-x-auto flex-1">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-lowest border-b border-border-slate">
+<th class="py-2 px-6 font-label-caps text-label-caps text-outline uppercase font-semibold">URL</th>
+<th class="py-2 px-6 font-label-caps text-label-caps text-outline uppercase font-semibold">Olaylar (Events)</th>
+<th class="py-2 px-6 font-label-caps text-label-caps text-outline uppercase font-semibold">Durum</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-border-slate">
+<tr>
+<td class="py-3 px-6">
+<div class="font-data-mono text-data-mono text-on-surface text-xs truncate max-w-[200px]">https://api.sirket.com/webhooks/invoice</div>
+</td>
+<td class="py-3 px-6">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-surface-container text-on-surface-variant">invoice.created</span>
+</td>
+<td class="py-3 px-6">
+<span class="inline-flex items-center gap-1 text-success-emerald font-body-sm text-body-sm text-xs">
+<div class="w-1.5 h-1.5 rounded-full bg-success-emerald"></div> Sağlıklı
+                                        </span>
+</td>
+</tr>
+<tr>
+<td class="py-3 px-6">
+<div class="font-data-mono text-data-mono text-on-surface text-xs truncate max-w-[200px]">https://app.mobil.com/sync/stock</div>
+</td>
+<td class="py-3 px-6">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-surface-container text-on-surface-variant">inventory.updated</span>
+</td>
+<td class="py-3 px-6">
+<span class="inline-flex items-center gap-1 text-warning-amber font-body-sm text-body-sm text-xs">
+<div class="w-1.5 h-1.5 rounded-full bg-warning-amber"></div> Gecikmeli
+                                        </span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

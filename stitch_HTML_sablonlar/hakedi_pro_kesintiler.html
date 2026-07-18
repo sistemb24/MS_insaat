@@ -1,0 +1,468 @@
+<!DOCTYPE html><html lang="tr"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kesintiler - Hakediş Pro</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet">
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary-fixed-dim": "#bec6e0",
+                        "secondary-fixed": "#dae2fd",
+                        "text-muted": "#64748B",
+                        "tertiary-fixed": "#ffdbcc",
+                        "error": "#ba1a1a",
+                        "surface-dim": "#d8dadc",
+                        "on-secondary": "#ffffff",
+                        "decorative-purple": "#800080",
+                        "on-primary-fixed-variant": "#3323cc",
+                        "inverse-primary": "#c3c0ff",
+                        "inverse-surface": "#2d3133",
+                        "surface-container": "#eceef0",
+                        "surface-container-high": "#e6e8ea",
+                        "success-emerald": "#10B981",
+                        "secondary-container": "#dae2fd",
+                        "on-primary-fixed": "#0f0069",
+                        "outline": "#777587",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-bright": "#f7f9fb",
+                        "surface": "#f7f9fb",
+                        "on-primary-container": "#dad7ff",
+                        "inverse-on-surface": "#eff1f3",
+                        "surface-container-low": "#f2f4f6",
+                        "tertiary-container": "#a44100",
+                        "on-secondary-container": "#5c647a",
+                        "outline-variant": "#c7c4d8",
+                        "on-secondary-fixed": "#131b2e",
+                        "danger-rose": "#E11D48",
+                        "on-secondary-fixed-variant": "#3f465c",
+                        "primary-fixed": "#e2dfff",
+                        "on-surface": "#191c1e",
+                        "decorative-navy": "#000080",
+                        "primary-fixed-dim": "#c3c0ff",
+                        "on-tertiary-fixed": "#351000",
+                        "on-background": "#191c1e",
+                        "secondary": "#565e74",
+                        "on-primary": "#ffffff",
+                        "surface-container-highest": "#e0e3e5",
+                        "tertiary-fixed-dim": "#ffb695",
+                        "surface-tint": "#4d44e3",
+                        "on-surface-variant": "#464555",
+                        "warning-amber": "#F59E0B",
+                        "on-error-container": "#93000a",
+                        "error-container": "#ffdad6",
+                        "border-slate": "#E2E8F0",
+                        "on-tertiary-container": "#ffd2be",
+                        "on-error": "#ffffff",
+                        "tertiary": "#7e3000",
+                        "surface-variant": "#e0e3e5",
+                        "on-tertiary": "#ffffff",
+                        "primary": "#3525cd",
+                        "on-tertiary-fixed-variant": "#7b2f00",
+                        "surface-white": "#FFFFFF",
+                        "background": "#f7f9fb",
+                        "primary-container": "#4f46e5"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "sidebar-collapsed": "80px",
+                        "stack-md": "1rem",
+                        "stack-sm": "0.5rem",
+                        "grid-cell-py": "0.5rem",
+                        "grid-cell-px": "0.75rem",
+                        "sidebar-width": "260px",
+                        "container-gap": "1.5rem",
+                        "header-height": "64px"
+                    },
+                    "fontFamily": {
+                        "headline-sm": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "body-md": ["Inter"],
+                        "data-mono": ["JetBrains Mono"],
+                        "headline-lg": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "body-sm": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "data-mono": ["13px", { "lineHeight": "16px", "fontWeight": "500" }],
+                        "headline-lg": ["30px", { "lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "700" }],
+                        "body-sm": ["13px", { "lineHeight": "18px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .data-font { font-family: 'JetBrains Mono', monospace; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen flex antialiased">
+
+    <!-- SideNavBar -->
+    <aside class="fixed left-0 top-0 h-screen w-sidebar-width bg-surface-white dark:bg-inverse-surface shadow-[0_1px_3px_rgba(79,70,229,0.08)] flex flex-col z-50 border-r border-border-slate dark:border-outline-variant">
+        <div class="p-6 flex items-center gap-3">
+            <div class="w-10 h-10 rounded-lg bg-primary-container flex items-center justify-center text-on-primary-container">
+                <span class="material-symbols-outlined">apartment</span>
+            </div>
+            <div>
+                <h1 class="font-headline-md text-headline-md font-bold text-primary dark:text-inverse-primary">Hakediş Pro</h1>
+                <p class="font-body-sm text-body-sm text-text-muted">İnşaat Yönetim Paneli</p>
+            </div>
+        </div>
+        
+        <nav class="flex-1 px-4 py-2 space-y-1 overflow-y-auto font-body-md text-body-md">
+            
+            <a href="#" class="flex items-center gap-3 px-3 py-2 text-secondary hover:bg-surface-container hover:text-on-surface transition-colors rounded-lg group hover:bg-primary-fixed-dim/10 active:scale-95 duration-150">
+                <span class="material-symbols-outlined group-hover:text-primary transition-colors">dashboard</span>
+                Dashboard
+            </a>
+            
+            <a href="#" class="flex items-center gap-3 px-3 py-2 text-secondary hover:bg-surface-container hover:text-on-surface transition-colors rounded-lg group hover:bg-primary-fixed-dim/10 active:scale-95 duration-150">
+                <span class="material-symbols-outlined group-hover:text-primary transition-colors">info</span>
+                Proje Bilgileri
+            </a>
+            
+            <a href="#" class="flex items-center gap-3 px-3 py-2 text-secondary hover:bg-surface-container hover:text-on-surface transition-colors rounded-lg group hover:bg-primary-fixed-dim/10 active:scale-95 duration-150">
+                <span class="material-symbols-outlined group-hover:text-primary transition-colors">architecture</span>
+                Genel Metraj
+            </a>
+            
+            <a href="#" class="flex items-center gap-3 px-3 py-2 text-secondary hover:bg-surface-container hover:text-on-surface transition-colors rounded-lg group hover:bg-primary-fixed-dim/10 active:scale-95 duration-150">
+                <span class="material-symbols-outlined group-hover:text-primary transition-colors">engineering</span>
+                Demir Metrajı
+            </a>
+            
+            <a href="#" class="flex items-center gap-3 px-3 py-2 text-secondary hover:bg-surface-container hover:text-on-surface transition-colors rounded-lg group hover:bg-primary-fixed-dim/10 active:scale-95 duration-150">
+                <span class="material-symbols-outlined group-hover:text-primary transition-colors">assignment</span>
+                Tutanaklı İşler
+            </a>
+            
+            <a href="#" class="flex items-center gap-3 px-3 py-2 text-secondary hover:bg-surface-container hover:text-on-surface transition-colors rounded-lg group hover:bg-primary-fixed-dim/10 active:scale-95 duration-150">
+                <span class="material-symbols-outlined group-hover:text-primary transition-colors">menu_book</span>
+                Yeşil Defter
+            </a>
+            
+            <a href="#" class="flex items-center gap-3 px-3 py-2 text-secondary hover:bg-surface-container hover:text-on-surface transition-colors rounded-lg group hover:bg-primary-fixed-dim/10 active:scale-95 duration-150">
+                <span class="material-symbols-outlined group-hover:text-primary transition-colors">table_rows</span>
+                İmalat Çarşafı
+            </a>
+            
+            <!-- Active Tab -->
+            <a href="#" class="flex items-center gap-3 px-3 py-2 bg-primary-container text-on-primary-container font-bold rounded-lg hover:bg-primary-fixed-dim/10 transition-all active:scale-95 duration-150">
+                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">money_off</span>
+                Kesintiler
+            </a>
+            
+            <a href="#" class="flex items-center gap-3 px-3 py-2 text-secondary hover:bg-surface-container hover:text-on-surface transition-colors rounded-lg group hover:bg-primary-fixed-dim/10 active:scale-95 duration-150">
+                <span class="material-symbols-outlined group-hover:text-primary transition-colors">calculate</span>
+                Hakediş Özeti
+            </a>
+            
+            <a href="#" class="flex items-center gap-3 px-3 py-2 text-secondary hover:bg-surface-container hover:text-on-surface transition-colors rounded-lg group hover:bg-primary-fixed-dim/10 active:scale-95 duration-150">
+                <span class="material-symbols-outlined group-hover:text-primary transition-colors">assessment</span>
+                Raporlar
+            </a>
+            
+        </nav>
+        
+        <div class="p-4 border-t border-border-slate dark:border-outline-variant">
+            <div class="flex items-center justify-between text-secondary">
+                <span class="font-label-caps text-label-caps text-text-muted">Sürüm v2.4.0</span>
+                <span class="material-symbols-outlined text-[18px]">settings</span>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content Wrapper -->
+    <div class="flex-1 ml-sidebar-width flex flex-col min-h-screen">
+        
+        <!-- TopNavBar -->
+        <header class="sticky top-0 right-0 z-40 h-header-height w-full bg-surface-white/80 dark:bg-inverse-surface/80 backdrop-blur-md border-b border-border-slate dark:border-outline-variant flex justify-between items-center px-6">
+            <div class="flex items-center gap-6">
+                <div class="font-headline-sm text-headline-sm font-extrabold text-primary dark:text-inverse-primary hidden md:block">
+                    Proje Yönetimi
+                </div>
+                
+                <nav class="hidden md:flex gap-6 font-label-caps text-label-caps">
+                    <a href="#" class="text-primary font-bold border-b-2 border-primary pb-[22px] pt-6 hover:bg-surface-container-low transition-all active:opacity-80 duration-100">Proje Seçiniz</a>
+                </nav>
+            </div>
+            
+            <div class="flex items-center gap-4">
+                <button class="bg-primary text-on-primary px-4 py-2 rounded-lg font-body-md text-body-md font-medium hover:bg-primary-container hover:text-primary shadow-[0_1px_3px_rgba(79,70,229,0.08)] transition-all active:scale-95">
+                    Yeni Hakediş Oluştur
+                </button>
+                <div class="flex items-center gap-2 text-on-surface-variant">
+                    <button class="p-2 rounded-full hover:bg-surface-container-low transition-colors"><span class="material-symbols-outlined">notifications</span></button>
+                    <button class="p-2 rounded-full hover:bg-surface-container-low transition-colors"><span class="material-symbols-outlined">account_circle</span></button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content Area -->
+        <main class="flex-1 p-6 bg-background">
+            <div class="max-w-6xl mx-auto space-y-container-gap">
+                
+                <!-- Header -->
+                <div class="flex justify-between items-end">
+                    <div>
+                        <h2 class="font-headline-lg text-headline-lg text-on-surface">Kesinti Kalemleri</h2>
+                        <p class="font-body-md text-body-md text-text-muted mt-1">Hakediş tutarından düşülecek kesintileri belirleyin ve oranlarını girin.</p>
+                    </div>
+                    <div class="flex gap-3">
+                        <button class="px-4 py-2 border border-border-slate text-secondary rounded-lg font-body-md text-body-md font-medium hover:bg-surface-container-low transition-colors flex items-center gap-2">
+                            <span class="material-symbols-outlined text-[18px]">history</span> Şablon Yükle
+                        </button>
+                        <button class="px-4 py-2 bg-primary text-on-primary rounded-lg font-body-md text-body-md font-medium hover:bg-primary-container hover:text-primary shadow-sm transition-colors flex items-center gap-2">
+                            <span class="material-symbols-outlined text-[18px]">save</span> Kaydet
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Content Grid -->
+                <div class="grid grid-cols-1 xl:grid-cols-12 gap-container-gap items-start">
+                    
+                    <!-- Form Area (Left) -->
+                    <div class="xl:col-span-8 space-y-4">
+                        
+                        <!-- Avans Kesintisi Card -->
+                        <div class="bg-surface-white rounded-xl p-5 shadow-[0_1px_3px_rgba(79,70,229,0.08)] border border-border-slate/50 relative overflow-hidden group hover:shadow-md hover:border-primary/30 transition-all duration-200">
+                            <div class="absolute left-0 top-0 bottom-0 w-1 bg-surface-variant group-hover:bg-primary transition-colors"></div>
+                            <div class="flex flex-col md:flex-row md:items-center gap-4">
+                                <div class="flex-1 flex items-start gap-3">
+                                    <div class="w-10 h-10 rounded-lg bg-surface-container-low flex items-center justify-center text-secondary">
+                                        <span class="material-symbols-outlined">account_balance_wallet</span>
+                                    </div>
+                                    <div>
+                                        <h3 class="font-headline-sm text-headline-sm text-on-surface text-[16px]">Avans Kesintisi</h3>
+                                        <p class="font-body-sm text-body-sm text-text-muted">Verilen avansın oransal mahsubu</p>
+                                    </div>
+                                </div>
+                                <div class="flex gap-4 flex-wrap">
+                                    <div class="w-24">
+                                        <label class="block font-label-caps text-label-caps text-text-muted mb-1">Yüzde (%)</label>
+                                        <div class="relative">
+                                            <input type="number" class="w-full h-10 pl-3 pr-8 rounded-lg border-border-slate focus:border-primary focus:ring-1 focus:ring-primary font-data-mono text-data-mono text-on-surface hover:border-primary/50" placeholder="0.00" value="10.00">
+                                            <span class="absolute right-3 top-1/2 -translate-y-1/2 text-text-muted">%</span>
+                                        </div>
+                                    </div>
+                                    <div class="w-36">
+                                        <label class="block font-label-caps text-label-caps text-text-muted mb-1">Tutar (₺)</label>
+                                        <input type="text" class="w-full h-10 px-3 rounded-lg border-border-slate focus:border-primary focus:ring-1 focus:ring-primary font-data-mono text-data-mono text-on-surface text-right bg-surface-container-lowest" placeholder="0.00" value="45,000.00" readonly="">
+                                    </div>
+                                    <div class="flex items-end">
+                                        <label class="flex items-center gap-2 cursor-pointer h-10">
+                                            <input type="checkbox" class="rounded border-border-slate text-primary focus:ring-primary w-5 h-5 accent-primary cursor-pointer" checked="">
+                                            <span class="font-body-md text-body-md text-text-muted">Aktif</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Gelir Vergisi Card -->
+                        <div class="bg-surface-white rounded-xl p-5 shadow-[0_1px_3px_rgba(79,70,229,0.08)] border border-border-slate/50 relative overflow-hidden group hover:shadow-md hover:border-primary/30 transition-all duration-200">
+                            <div class="absolute left-0 top-0 bottom-0 w-1 bg-surface-variant group-hover:bg-primary transition-colors"></div>
+                            <div class="flex flex-col md:flex-row md:items-center gap-4">
+                                <div class="flex-1 flex items-start gap-3">
+                                    <div class="w-10 h-10 rounded-lg bg-surface-container-low flex items-center justify-center text-secondary">
+                                        <span class="material-symbols-outlined">account_balance</span>
+                                    </div>
+                                    <div>
+                                        <h3 class="font-headline-sm text-headline-sm text-on-surface text-[16px]">Gelir Vergisi (Stopaj)</h3>
+                                        <p class="font-body-sm text-body-sm text-text-muted">Yasal kesinti oranı</p>
+                                    </div>
+                                </div>
+                                <div class="flex gap-4 flex-wrap">
+                                    <div class="w-24">
+                                        <label class="block font-label-caps text-label-caps text-text-muted mb-1">Yüzde (%)</label>
+                                        <div class="relative">
+                                            <input type="number" class="w-full h-10 pl-3 pr-8 rounded-lg border-border-slate focus:border-primary focus:ring-1 focus:ring-primary font-data-mono text-data-mono text-on-surface hover:border-primary/50" placeholder="0.00" value="3.00">
+                                            <span class="absolute right-3 top-1/2 -translate-y-1/2 text-text-muted">%</span>
+                                        </div>
+                                    </div>
+                                    <div class="w-36">
+                                        <label class="block font-label-caps text-label-caps text-text-muted mb-1">Tutar (₺)</label>
+                                        <input type="text" class="w-full h-10 px-3 rounded-lg border-border-slate focus:border-primary focus:ring-1 focus:ring-primary font-data-mono text-data-mono text-on-surface text-right bg-surface-container-lowest" placeholder="0.00" value="13,500.00" readonly="">
+                                    </div>
+                                    <div class="flex items-end">
+                                        <label class="flex items-center gap-2 cursor-pointer h-10">
+                                            <input type="checkbox" class="rounded border-border-slate text-primary focus:ring-primary w-5 h-5 accent-primary cursor-pointer" checked="">
+                                            <span class="font-body-md text-body-md text-text-muted">Aktif</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- SSK Kesintisi Card -->
+                        <div class="bg-surface-white rounded-xl p-5 shadow-[0_1px_3px_rgba(79,70,229,0.08)] border border-border-slate/50 relative overflow-hidden group hover:shadow-md hover:border-primary/30 transition-all duration-200">
+                            <div class="absolute left-0 top-0 bottom-0 w-1 bg-surface-variant group-hover:bg-primary transition-colors"></div>
+                            <div class="flex flex-col md:flex-row md:items-center gap-4">
+                                <div class="flex-1 flex items-start gap-3">
+                                    <div class="w-10 h-10 rounded-lg bg-surface-container-low flex items-center justify-center text-secondary">
+                                        <span class="material-symbols-outlined">health_and_safety</span>
+                                    </div>
+                                    <div>
+                                        <h3 class="font-headline-sm text-headline-sm text-on-surface text-[16px]">SSK Kesintisi</h3>
+                                        <p class="font-body-sm text-body-sm text-text-muted">Sosyal güvenlik primi asgari işçilik</p>
+                                    </div>
+                                </div>
+                                <div class="flex gap-4 flex-wrap">
+                                    <div class="w-24">
+                                        <label class="block font-label-caps text-label-caps text-text-muted mb-1">Yüzde (%)</label>
+                                        <div class="relative">
+                                            <input type="number" class="w-full h-10 pl-3 pr-8 rounded-lg border-border-slate focus:border-primary focus:ring-1 focus:ring-primary font-data-mono text-data-mono text-on-surface bg-surface-container-lowest text-text-muted" placeholder="0.00" value="0.00" disabled="">
+                                            <span class="absolute right-3 top-1/2 -translate-y-1/2 text-text-muted">%</span>
+                                        </div>
+                                    </div>
+                                    <div class="w-36">
+                                        <label class="block font-label-caps text-label-caps text-text-muted mb-1">Tutar (₺)</label>
+                                        <input type="text" class="w-full h-10 px-3 rounded-lg border-border-slate focus:border-primary focus:ring-1 focus:ring-primary font-data-mono text-data-mono text-on-surface text-right hover:border-primary/50" placeholder="0.00" value="8,250.00">
+                                    </div>
+                                    <div class="flex items-end">
+                                        <label class="flex items-center gap-2 cursor-pointer h-10">
+                                            <input type="checkbox" class="rounded border-border-slate text-primary focus:ring-primary w-5 h-5 accent-primary cursor-pointer" checked="">
+                                            <span class="font-body-md text-body-md text-text-muted">Aktif</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                         <!-- Teminat Kesintisi Card -->
+                         <div class="bg-surface-white rounded-xl p-5 shadow-[0_1px_3px_rgba(79,70,229,0.08)] border border-border-slate/50 relative overflow-hidden group hover:shadow-md hover:border-primary/30 transition-all duration-200">
+                            <div class="absolute left-0 top-0 bottom-0 w-1 bg-surface-variant group-hover:bg-primary transition-colors"></div>
+                            <div class="flex flex-col md:flex-row md:items-center gap-4">
+                                <div class="flex-1 flex items-start gap-3">
+                                    <div class="w-10 h-10 rounded-lg bg-surface-container-low flex items-center justify-center text-secondary">
+                                        <span class="material-symbols-outlined">security</span>
+                                    </div>
+                                    <div>
+                                        <h3 class="font-headline-sm text-headline-sm text-on-surface text-[16px]">Teminat Kesintisi</h3>
+                                        <p class="font-body-sm text-body-sm text-text-muted">İşin kesin kabulüne kadar tutulan bakiye</p>
+                                    </div>
+                                </div>
+                                <div class="flex gap-4 flex-wrap">
+                                    <div class="w-24">
+                                        <label class="block font-label-caps text-label-caps text-text-muted mb-1">Yüzde (%)</label>
+                                        <div class="relative">
+                                            <input type="number" class="w-full h-10 pl-3 pr-8 rounded-lg border-border-slate focus:border-primary focus:ring-1 focus:ring-primary font-data-mono text-data-mono text-on-surface hover:border-primary/50" placeholder="0.00" value="5.00">
+                                            <span class="absolute right-3 top-1/2 -translate-y-1/2 text-text-muted">%</span>
+                                        </div>
+                                    </div>
+                                    <div class="w-36">
+                                        <label class="block font-label-caps text-label-caps text-text-muted mb-1">Tutar (₺)</label>
+                                        <input type="text" class="w-full h-10 px-3 rounded-lg border-border-slate focus:border-primary focus:ring-1 focus:ring-primary font-data-mono text-data-mono text-on-surface text-right bg-surface-container-lowest" placeholder="0.00" value="22,500.00" readonly="">
+                                    </div>
+                                    <div class="flex items-end">
+                                        <label class="flex items-center gap-2 cursor-pointer h-10">
+                                            <input type="checkbox" class="rounded border-border-slate text-primary focus:ring-primary w-5 h-5 accent-primary cursor-pointer" checked="">
+                                            <span class="font-body-md text-body-md text-text-muted">Aktif</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Ceza / Nefaset Card -->
+                        <div class="bg-surface-white rounded-xl p-5 shadow-[0_1px_3px_rgba(79,70,229,0.08)] border border-border-slate/50 relative overflow-hidden group hover:shadow-md hover:border-primary/30 transition-all duration-200">
+                            <div class="absolute left-0 top-0 bottom-0 w-1 bg-surface-variant group-hover:bg-primary transition-colors"></div>
+                            <div class="flex flex-col md:flex-row md:items-center gap-4">
+                                <div class="flex-1 flex items-start gap-3">
+                                    <div class="w-10 h-10 rounded-lg bg-surface-container-low flex items-center justify-center text-secondary">
+                                        <span class="material-symbols-outlined">gavel</span>
+                                    </div>
+                                    <div>
+                                        <h3 class="font-headline-sm text-headline-sm text-on-surface text-[16px]">Ceza / Nefaset</h3>
+                                        <p class="font-body-sm text-body-sm text-text-muted">Kusurlu veya eksik iş bedelleri</p>
+                                    </div>
+                                </div>
+                                <div class="flex gap-4 flex-wrap">
+                                    <div class="w-24">
+                                        <label class="block font-label-caps text-label-caps text-text-muted mb-1">Yüzde (%)</label>
+                                        <div class="relative">
+                                            <input type="number" class="w-full h-10 pl-3 pr-8 rounded-lg border-border-slate focus:border-primary focus:ring-1 focus:ring-primary font-data-mono text-data-mono text-on-surface bg-surface-container-lowest text-text-muted" placeholder="0.00" value="0.00" disabled="">
+                                            <span class="absolute right-3 top-1/2 -translate-y-1/2 text-text-muted">%</span>
+                                        </div>
+                                    </div>
+                                    <div class="w-36">
+                                        <label class="block font-label-caps text-label-caps text-text-muted mb-1">Tutar (₺)</label>
+                                        <input type="text" class="w-full h-10 px-3 rounded-lg border-border-slate focus:border-primary focus:ring-1 focus:ring-primary font-data-mono text-data-mono text-on-surface text-right hover:border-primary/50" placeholder="0.00" value="0.00">
+                                    </div>
+                                    <div class="flex items-end">
+                                        <label class="flex items-center gap-2 cursor-pointer h-10">
+                                            <input type="checkbox" class="rounded border-border-slate text-primary focus:ring-primary w-5 h-5 accent-primary cursor-pointer">
+                                            <span class="font-body-md text-body-md text-text-muted">Aktif</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Add New Item Button -->
+                        <button class="w-full py-3 border-2 border-dashed border-border-slate rounded-xl text-secondary hover:text-primary hover:border-primary hover:bg-primary-fixed-dim/5 transition-all flex items-center justify-center gap-2 font-body-md text-body-md font-medium">
+                            <span class="material-symbols-outlined text-[20px]">add_circle</span> Yeni Kesinti Kalemi Ekle
+                        </button>
+
+                    </div>
+
+                    <!-- Summary Area (Right) -->
+                    <div class="xl:col-span-4 sticky top-[calc(var(--header-height)+1.5rem)]">
+                        <div class="bg-surface-white rounded-xl shadow-[0_1px_3px_rgba(79,70,229,0.08)] border border-border-slate/50 overflow-hidden">
+                            <div class="bg-primary/5 p-5 border-b border-border-slate/50">
+                                <h3 class="font-headline-md text-headline-md text-on-surface mb-1">Kesinti Özeti</h3>
+                                <p class="font-body-sm text-body-sm text-text-muted">Toplam hakediş tutarı üzerinden hesaplanır.</p>
+                            </div>
+                            
+                            <div class="p-5 space-y-4 font-body-md text-body-md">
+                                <div class="flex justify-between items-center pb-3 border-b border-border-slate/50">
+                                    <span class="text-secondary">Brüt Hakediş Tutarı</span>
+                                    <span class="font-data-mono text-data-mono font-bold text-on-surface">450,000.00 ₺</span>
+                                </div>
+                                
+                                <div class="space-y-3 pt-2">
+                                    <div class="flex justify-between items-center">
+                                        <span class="text-text-muted font-medium">Avans Kesintisi (%10)</span>
+                                        <span class="font-data-mono text-data-mono text-danger-rose">-45,000.00 ₺</span>
+                                    </div>
+                                    <div class="flex justify-between items-center">
+                                        <span class="text-text-muted font-medium">Gelir Vergisi (%3)</span>
+                                        <span class="font-data-mono text-data-mono text-danger-rose">-13,500.00 ₺</span>
+                                    </div>
+                                    <div class="flex justify-between items-center">
+                                        <span class="text-text-muted font-medium">SSK Kesintisi (Maktu)</span>
+                                        <span class="font-data-mono text-data-mono text-danger-rose">-8,250.00 ₺</span>
+                                    </div>
+                                    <div class="flex justify-between items-center">
+                                        <span class="text-text-muted font-medium">Teminat Kesintisi (%5)</span>
+                                        <span class="font-data-mono text-data-mono text-danger-rose">-22,500.00 ₺</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-surface-container-low p-5 border-t border-border-slate/50">
+                                <div class="flex justify-between items-center mb-2">
+                                    <span class="font-headline-sm text-headline-sm text-on-surface">Toplam Kesinti</span>
+                                    <span class="font-headline-md text-headline-md font-bold font-data-mono text-primary">-89,250.00 ₺</span>
+
+</div></div></div></div></div></div></main></div></body></html>

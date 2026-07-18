@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+
+<html class="light" lang="tr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Çek Yönetimi - NOA İnşaat</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                            "on-primary-fixed-variant": "#3323cc",
+                            "surface-variant": "#e0e3e5",
+                            "tertiary": "#7e3000",
+                            "on-primary-fixed": "#0f0069",
+                            "secondary-container": "#dae2fd",
+                            "on-primary": "#ffffff",
+                            "inverse-on-surface": "#eff1f3",
+                            "on-tertiary-fixed": "#351000",
+                            "secondary": "#565e74",
+                            "secondary-fixed-dim": "#bec6e0",
+                            "on-surface-variant": "#464555",
+                            "on-primary-container": "#dad7ff",
+                            "on-error": "#ffffff",
+                            "decorative-navy": "#000080",
+                            "text-muted": "#64748B",
+                            "tertiary-container": "#a44100",
+                            "danger-rose": "#E11D48",
+                            "surface-tint": "#4d44e3",
+                            "on-tertiary": "#ffffff",
+                            "surface-container-lowest": "#ffffff",
+                            "decorative-purple": "#800080",
+                            "tertiary-fixed": "#ffdbcc",
+                            "surface-bright": "#f7f9fb",
+                            "surface-container-high": "#e6e8ea",
+                            "on-error-container": "#93000a",
+                            "on-tertiary-container": "#ffd2be",
+                            "inverse-primary": "#c3c0ff",
+                            "inverse-surface": "#2d3133",
+                            "primary": "#3525cd",
+                            "surface-white": "#FFFFFF",
+                            "outline-variant": "#c7c4d8",
+                            "on-surface": "#191c1e",
+                            "surface-container-low": "#f2f4f6",
+                            "surface-dim": "#d8dadc",
+                            "on-background": "#191c1e",
+                            "on-secondary-fixed": "#131b2e",
+                            "on-tertiary-fixed-variant": "#7b2f00",
+                            "border-slate": "#E2E8F0",
+                            "surface-container-highest": "#e0e3e5",
+                            "background": "#f7f9fb",
+                            "error": "#ba1a1a",
+                            "secondary-fixed": "#dae2fd",
+                            "success-emerald": "#10B981",
+                            "surface-container": "#eceef0",
+                            "outline": "#777587",
+                            "on-secondary-fixed-variant": "#3f465c",
+                            "error-container": "#ffdad6",
+                            "surface": "#f7f9fb",
+                            "on-secondary-container": "#5c647a",
+                            "warning-amber": "#F59E0B",
+                            "primary-container": "#4f46e5",
+                            "primary-fixed-dim": "#c3c0ff",
+                            "primary-fixed": "#e2dfff",
+                            "tertiary-fixed-dim": "#ffb695",
+                            "on-secondary": "#ffffff"
+                    },
+                    "borderRadius": {
+                            "DEFAULT": "0.25rem",
+                            "lg": "0.5rem",
+                            "xl": "0.75rem",
+                            "full": "9999px"
+                    },
+                    "spacing": {
+                            "header-height": "64px",
+                            "stack-sm": "0.5rem",
+                            "sidebar-width": "260px",
+                            "stack-md": "1rem",
+                            "sidebar-collapsed": "80px",
+                            "grid-cell-py": "0.5rem",
+                            "grid-cell-px": "0.75rem",
+                            "container-gap": "1.5rem"
+                    },
+                    "fontFamily": {
+                            "headline-sm": ["Inter"],
+                            "headline-md": ["Inter"],
+                            "body-sm": ["Inter"],
+                            "label-caps": ["Inter"],
+                            "body-md": ["Inter"],
+                            "headline-lg-mobile": ["Inter"],
+                            "headline-lg": ["Inter"],
+                            "body-lg": ["Inter"],
+                            "data-mono": ["JetBrains Mono"]
+                    },
+                    "fontSize": {
+                            "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                            "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                            "body-sm": ["13px", { "lineHeight": "18px", "fontWeight": "400" }],
+                            "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                            "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                            "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "700" }],
+                            "headline-lg": ["30px", { "lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                            "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                            "data-mono": ["13px", { "lineHeight": "16px", "fontWeight": "500" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined.fill {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body-md antialiased min-h-screen">
+<!-- TopNavBar -->
+<header class="h-header-height fixed top-0 right-0 z-40 bg-surface-white/80 dark:bg-inverse-surface/80 backdrop-blur-md border-b border-outline-variant dark:border-outline flat no shadows flex justify-between items-center px-6 w-[calc(100%-theme(spacing.sidebar-width))] ml-sidebar-width hidden md:flex transition-all duration-200">
+<div class="flex items-center gap-4">
+<div class="hidden text-primary dark:text-primary-fixed-dim font-body-md text-body-md">NOA İnşaat</div>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant dark:text-surface-variant pointer-events-none">search</span>
+<input class="pl-10 pr-4 py-2 bg-surface-container-low dark:bg-inverse-on-surface border-none rounded-full text-body-sm focus:ring-2 focus:ring-primary focus:outline-none w-64 transition-all duration-200" placeholder="Çek ara..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-primary-fixed transition-colors rounded-full hover:bg-surface-container dark:hover:bg-surface-container-highest relative">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span class="absolute top-1.5 right-1.5 w-2 h-2 bg-danger-rose rounded-full border border-surface-white"></span>
+</button>
+<div class="w-8 h-8 rounded-full overflow-hidden border border-outline-variant">
+<img alt="User Profile Avatar" class="w-full h-full object-cover" data-alt="A professional headshot of a corporate user, neutral expression, clean corporate background, bright soft lighting, high key photography style, 8k resolution, photorealistic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCXZuYjTTKjdbiL6IhwqlHqnmdz1f4g7Fh_2QnwrIhPn87nDzGElMw8JR9Cf_vy68J4wt6RoJjqTIgY-_Z-P6rOkI6pJqN7WXWrGVImpT0XtdDOpe9Nge8jGiY7PcEfjwIGw6xQ6ZzEC5yI5sy0TaBLObpeq95npsmiibw4QF5jAcGTJrMiasz8cJiRlUvMjbcLpzf__eYd2ISNglTjYeFP4oHaML6YsIY7PfAh7WhnKWD1t28E3r6o"/>
+</div>
+</div>
+</header>
+<!-- SideNavBar -->
+<nav class="w-sidebar-width h-screen fixed left-0 top-0 bg-surface-white dark:bg-inverse-surface shadow-[0_1px_3px_rgba(79,70,229,0.08)] flex flex-col h-full border-r border-outline-variant dark:border-outline z-50 hidden md:flex">
+<div class="p-6 flex items-center gap-4">
+<div class="w-10 h-10 rounded bg-primary-container text-on-primary flex items-center justify-center font-bold text-lg">
+                N
+            </div>
+<div>
+<h1 class="font-headline-sm text-headline-sm font-bold text-primary dark:text-inverse-primary">NOA İnşaat</h1>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Construction ERP</p>
+</div>
+</div>
+<div class="flex-1 overflow-y-auto px-3 py-4 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-low transition-colors hover:bg-surface-container dark:hover:bg-surface-container-highest rounded-lg transition-all duration-200 active:scale-95 font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+                Dashboard
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-low transition-colors hover:bg-surface-container dark:hover:bg-surface-container-highest rounded-lg transition-all duration-200 active:scale-95 font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined" data-icon="business">business</span>
+                Firms
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-low transition-colors hover:bg-surface-container dark:hover:bg-surface-container-highest rounded-lg transition-all duration-200 active:scale-95 font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined" data-icon="gavel">gavel</span>
+                Tender Management
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-low transition-colors hover:bg-surface-container dark:hover:bg-surface-container-highest rounded-lg transition-all duration-200 active:scale-95 font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined" data-icon="description">description</span>
+                Document Center
+            </a>
+<!-- Using Settings as the active state for demonstration, though normally it would map to Finance/Cheques if that existed -->
+<a class="flex items-center gap-3 px-4 py-3 bg-secondary-container dark:bg-primary-container text-primary dark:text-on-primary-container rounded-lg font-semibold hover:bg-surface-container dark:hover:bg-surface-container-highest transition-all duration-200 active:scale-95 font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined" data-icon="account_balance_wallet">account_balance_wallet</span>
+                Finans
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-low transition-colors hover:bg-surface-container dark:hover:bg-surface-container-highest rounded-lg transition-all duration-200 active:scale-95 font-body-md text-body-md pl-12 border-l-2 border-primary text-primary font-medium" href="#">
+                Çek Yönetimi
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-low transition-colors hover:bg-surface-container dark:hover:bg-surface-container-highest rounded-lg transition-all duration-200 active:scale-95 font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+                Staff
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-low transition-colors hover:bg-surface-container dark:hover:bg-surface-container-highest rounded-lg transition-all duration-200 active:scale-95 font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
+                Inventory
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-low transition-colors hover:bg-surface-container dark:hover:bg-surface-container-highest rounded-lg transition-all duration-200 active:scale-95 font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined" data-icon="directions_car">directions_car</span>
+                Vehicles
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-low transition-colors hover:bg-surface-container dark:hover:bg-surface-container-highest rounded-lg transition-all duration-200 active:scale-95 font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+                Settings
+            </a>
+</div>
+</nav>
+<!-- Main Content -->
+<main class="md:ml-sidebar-width pt-header-height p-6 min-h-screen pb-24 md:pb-6">
+<div class="max-w-7xl mx-auto space-y-container-gap">
+<!-- Header Section -->
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Çek Yönetimi</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">Alınan ve verilen çeklerin vade ve durum takibini yapın.</p>
+</div>
+<div class="flex items-center gap-3">
+<button class="px-4 py-2 rounded-lg border border-border-slate text-on-surface-variant font-body-md text-body-md font-medium hover:bg-surface-container-low transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px]">download</span>
+                        Excel
+                    </button>
+<button class="px-4 py-2 rounded-lg bg-primary text-on-primary font-body-md text-body-md font-medium shadow-[0_1px_2px_rgba(79,70,229,0.2)] hover:bg-on-primary-fixed-variant transition-colors flex items-center gap-2 active:scale-95">
+<span class="material-symbols-outlined text-[20px]">add</span>
+                        Yeni Çek Ekle
+                    </button>
+</div>
+</div>
+<!-- Statistics Widgets -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- Çek Portföyü -->
+<div class="bg-surface-white rounded-xl p-6 shadow-[0_1px_3px_rgba(79,70,229,0.08)] border border-border-slate/50 relative overflow-hidden group">
+<div class="absolute top-0 right-0 w-24 h-24 bg-primary/5 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110"></div>
+<div class="flex items-center gap-4 mb-4">
+<div class="w-12 h-12 rounded-lg bg-secondary-container text-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-[24px]">account_balance_wallet</span>
+</div>
+<div>
+<p class="font-label-caps text-label-caps text-text-muted uppercase tracking-wider">Çek Portföyü</p>
+<h3 class="font-headline-md text-headline-md text-on-surface mt-1">₺ 1,245,000.00</h3>
+</div>
+</div>
+<div class="flex items-center gap-2 text-sm">
+<span class="inline-flex items-center text-success-emerald font-medium">
+<span class="material-symbols-outlined text-[16px]">trending_up</span>
+                            +12%
+                        </span>
+<span class="text-on-surface-variant">geçen aya göre</span>
+</div>
+</div>
+<!-- Ciro Edilenler -->
+<div class="bg-surface-white rounded-xl p-6 shadow-[0_1px_3px_rgba(79,70,229,0.08)] border border-border-slate/50 relative overflow-hidden group">
+<div class="absolute top-0 right-0 w-24 h-24 bg-decorative-purple/5 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110"></div>
+<div class="flex items-center gap-4 mb-4">
+<div class="w-12 h-12 rounded-lg bg-purple-100 text-decorative-purple flex items-center justify-center">
+<span class="material-symbols-outlined text-[24px]">swap_horiz</span>
+</div>
+<div>
+<p class="font-label-caps text-label-caps text-text-muted uppercase tracking-wider">Ciro Edilenler</p>
+<h3 class="font-headline-md text-headline-md text-on-surface mt-1">₺ 450,500.00</h3>
+</div>
+</div>
+<div class="flex items-center gap-2 text-sm">
+<span class="inline-flex items-center text-on-surface-variant font-medium">
+<span class="material-symbols-outlined text-[16px]">horizontal_rule</span>
+                            0%
+                        </span>
+<span class="text-on-surface-variant">geçen aya göre</span>
+</div>
+</div>
+<!-- Tahsil Edilenler -->
+<div class="bg-surface-white rounded-xl p-6 shadow-[0_1px_3px_rgba(79,70,229,0.08)] border border-border-slate/50 relative overflow-hidden group">
+<div class="absolute top-0 right-0 w-24 h-24 bg-success-emerald/5 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110"></div>
+<div class="flex items-center gap-4 mb-4">
+<div class="w-12 h-12 rounded-lg bg-emerald-100 text-success-emerald flex items-center justify-center">
+<span class="material-symbols-outlined text-[24px]">check_circle</span>
+</div>
+<div>
+<p class="font-label-caps text-label-caps text-text-muted uppercase tracking-wider">Tahsil Edilenler</p>
+<h3 class="font-headline-md text-headline-md text-on-surface mt-1">₺ 890,200.00</h3>
+</div>
+</div>
+<div class="flex items-center gap-2 text-sm">
+<span class="inline-flex items-center text-danger-rose font-medium">
+<span class="material-symbols-outlined text-[16px]">trending_down</span>
+                            -5%
+                        </span>
+<span class="text-on-surface-variant">geçen aya göre</span>
+</div>
+</div>
+</div>
+<!-- Cheque List (Main Card) -->
+<div class="bg-surface-white rounded-xl shadow-[0_1px_3px_rgba(79,70,229,0.08)] border border-border-slate overflow-hidden">
+<div class="p-5 border-b border-border-slate flex justify-between items-center bg-surface-bright/50">
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Yaklaşan Vadeler</h3>
+<div class="flex gap-2">
+<button class="p-1.5 rounded text-on-surface-variant hover:bg-surface-container-low transition-colors">
+<span class="material-symbols-outlined text-[20px]">filter_list</span>
+</button>
+<button class="p-1.5 rounded text-on-surface-variant hover:bg-surface-container-low transition-colors">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</button>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low/50 border-b border-border-slate sticky top-0">
+<th class="font-label-caps text-label-caps text-text-muted py-3 px-4 whitespace-nowrap">Banka</th>
+<th class="font-label-caps text-label-caps text-text-muted py-3 px-4 whitespace-nowrap">Çek No</th>
+<th class="font-label-caps text-label-caps text-text-muted py-3 px-4 whitespace-nowrap">Keşideci Cari</th>
+<th class="font-label-caps text-label-caps text-text-muted py-3 px-4 whitespace-nowrap">Vade Tarihi</th>
+<th class="font-label-caps text-label-caps text-text-muted py-3 px-4 whitespace-nowrap text-right">Tutar</th>
+<th class="font-label-caps text-label-caps text-text-muted py-3 px-4 whitespace-nowrap text-center">Durum</th>
+<th class="font-label-caps text-label-caps text-text-muted py-3 px-4 whitespace-nowrap"></th>
+</tr>
+</thead>
+<tbody class="divide-y divide-border-slate/50">
+<!-- Row 1: Urgent (Past Due or Today) -->
+<tr class="hover:bg-surface-bright transition-colors bg-danger-rose/5 group">
+<td class="py-grid-cell-py px-4 whitespace-nowrap">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-surface-white border border-border-slate flex items-center justify-center p-1">
+<img alt="Garanti Bank" class="w-full h-full object-contain" data-alt="A clean, minimalist abstract logo for a fictional bank 'Garanti', high contrast, corporate style, simple geometric shapes, white background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA4m38pKjLH6ypi4Nl2ZnyrOE48D15wFdjZsWgMUJSq6FexNR69yDyNbRt-PbphEaszG9iJKsQUDIiKtit8jSz-k4IPTSkOWUtIjkjSwFbBYGWmrlfSP2WDZ6wzuF7o45EUTRMR1vGEotwnOBOHcgmoRstrb8wgTTZdb0BA-FD_Nvd9Vb4qKmPwf5Y-tr9CI8eDETwB_y37N2eut2TjeBaMu2y3Dy05b4L2o8P8dOwEN34-e8WLwD4N"/>
+</div>
+<span class="font-body-md text-body-md font-medium text-on-surface">Garanti BBVA</span>
+</div>
+</td>
+<td class="py-grid-cell-py px-4 whitespace-nowrap">
+<span class="font-data-mono text-data-mono text-on-surface-variant">TR-8472-91</span>
+</td>
+<td class="py-grid-cell-py px-4 whitespace-nowrap">
+<span class="font-body-md text-body-md text-on-surface">Demirtaş Yapı Malz. A.Ş.</span>
+</td>
+<td class="py-grid-cell-py px-4 whitespace-nowrap">
+<div class="flex items-center gap-2">
+<span class="font-data-mono text-data-mono text-danger-rose font-bold">24 Eki 2023</span>
+<span class="relative flex h-3 w-3">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-danger-rose opacity-75"></span>
+<span class="relative inline-flex rounded-full h-3 w-3 bg-danger-rose border-2 border-surface-white"></span>
+</span>
+</div>
+</td>
+<td class="py-grid-cell-py px-4 whitespace-nowrap text-right">
+<span class="font-data-mono text-data-mono font-semibold text-on-surface">₺ 125,000.00</span>
+</td>
+<td class="py-grid-cell-py px-4 whitespace-nowrap text-center">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full font-label-caps text-[11px] font-bold bg-primary-container/10 text-primary-container border border-primary-container/20">
+                                        Portföyde
+                                    </span>
+</td>
+<td class="py-grid-cell-py px-4 whitespace-nowrap text-right">
+<button class="p-1.5 rounded text-on-surface-variant hover:text-primary transition-colors opacity-0 group-hover:opacity-100 focus:opacity-100">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+</button>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surface-bright transition-colors group">
+<td class="py-grid-cell-py px-4 whitespace-nowrap">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-surface-white border border-border-slate flex items-center justify-center p-1">
+<img alt="Akbank" class="w-full h-full object-contain" data-alt="A clean, minimalist abstract logo for a fictional bank 'Akbank', high contrast, corporate style, red accents, simple geometric shapes, white background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDMsRBFU101inz60cqhwqgBCFnC1ayMgI0d2QzN6TxH4vDLzVjLMMEHXtI00hUmn7x31xlLfX24yIunXu8YFfAxJ4-CO-6zZMaKjjeQm2c75yCFurnlxV7pRIVXNiVQdjOMYSz1kJGGsixKcxGzfLJx0wVGErUtPJGDnjgHeLAP352VFrm_Bm6m8vd-mINPV1_-q_oIUs-U6ygbPd9HV_t6330lLOT3fU2gXOEZ5fJowSdrWBS8b-Ii"/>
+</div>
+<span class="font-body-md text-body-md font-medium text-on-surface">Akbank</span>
+</div>
+</td>
+<td class="py-grid-cell-py px-4 whitespace-nowrap">
+<span class="font-data-mono text-data-mono text-on-surface-variant">AK-5521-04</span>
+</td>
+<td class="py-grid-cell-py px-4 whitespace-nowrap">
+<span class="font-body-md text-body-md text-on-surface">Yılmazlar Hafriyat Ltd.</span>
+</td>
+<td class="py-grid-cell-py px-4 whitespace-nowrap">
+<span class="font-data-mono text-data-mono text-on-surface-variant">28 Eki 2023</span>
+</td>
+<td class="py-grid-cell-py px-4 whitespace-nowrap text-right">
+<span class="font-data-mono text-data-mono font-semibold text-on-surface">₺ 75,500.00</span>
+</td>
+<td class="py-grid-cell-py px-4 whitespace-nowrap text-center">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full font-label-caps text-[11px] font-bold bg-decorative-purple/10 text-decorative-purple border border-decorative-purple/20">
+                                        Ciro Edildi
+                                    </span>
+</td>
+<td class="py-grid-cell-py px-4 whitespace-nowrap text-right">
+<button class="p-1.5 rounded text-on-surface-variant hover:text-primary transition-colors opacity-0 group-hover:opacity-100 focus:opacity-100">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+</button>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface-bright transition-colors group">
+<td class="py-grid-cell-py px-4 whitespace-nowrap">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-surface-white border border-border-slate flex items-center justify-center p-1">
+<img alt="İş Bankası" class="w-full h-full object-contain" data-alt="A clean, minimalist abstract logo for a fictional bank 'Is Bankasi', high contrast, corporate style, blue accents, simple geometric shapes, white background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCUnhWR7B7GSckA6zCl62nlTT1fZ3Yre3-yx6DUNrqFzISqDXpZ28Yn-4c50S_LbmkkIeOQENtwG7XH552ujTMuOcnBhhPD6T4HUfBXzr3m8WgE6_Cit4yQt_eU_9evvKVOCHCDO2OJAzCTlON03XWUXkg-zvM8zW_vxo-60uZxgTbPIFxZgByigzkcW22l1-BRFEbDQoWTXBwCB-9DlWYmMRhYGuG13w761wPzELDp0Dj6-EJXxe9B"/>
+</div>
+<span class="font-body-md text-body-md font-medium text-on-surface">İş Bankası</span>
+</div>
+</td>
+<td class="py-grid-cell-py px-4 whitespace-nowrap">
+<span class="font-data-mono text-data-mono text-on-surface-variant">IS-9932-11</span>
+</td>
+<td class="py-grid-cell-py px-4 whitespace-nowrap">
+<span class="font-body-md text-body-md text-on-surface">Özkan Mimarlık San.</span>
+</td>
+<td class="py-grid-cell-py px-4 whitespace-nowrap">
+<span class="font-data-mono text-data-mono text-on-surface-variant">05 Kas 2023</span>
+</td>
+<td class="py-grid-cell-py px-4 whitespace-nowrap text-right">
+<span class="font-data-mono text-data-mono font-semibold text-on-surface">₺ 320,000.00</span>
+</td>
+<td class="py-grid-cell-py px-4 whitespace-nowrap text-center">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full font-label-caps text-[11px] font-bold bg-success-emerald/10 text-success-emerald border border-success-emerald/20">
+                                        Tahsil Edildi
+                                    </span>
+</td>
+<td class="py-grid-cell-py px-4 whitespace-nowrap text-right">
+<button class="p-1.5 rounded text-on-surface-variant hover:text-primary transition-colors opacity-0 group-hover:opacity-100 focus:opacity-100">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+</button>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-surface-bright transition-colors group">
+<td class="py-grid-cell-py px-4 whitespace-nowrap">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-surface-white border border-border-slate flex items-center justify-center p-1">
+<img alt="Yapı Kredi" class="w-full h-full object-contain" data-alt="A clean, minimalist abstract logo for a fictional bank 'Yapi Kredi', high contrast, corporate style, blue and yellow accents, simple geometric shapes, white background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAwLwGPLakO7QZ5hkthpxkumQAYsf6naCzVnAPEOuDbWjlJCxQFieK_CUwdKxCMQdfJhWrV6yecCgFx61lYDmIjgt7Y4vbtLT9l5XJ_PqZG8dUrjI_q1XGrR7zKbhGjdmY-0RMehFbYi3dw3zcVv7JN77nq-s4e3YJnbMe5j-fyRMEw_uuH_5pwf1exEcFhc5RkkuxatRB0wzLMPAuMYMblx6LuRXlCwSA64Z5CI94GlKrTTgXq_9Yx"/>
+</div>
+<span class="font-body-md text-body-md font-medium text-on-surface">Yapı Kredi</span>
+</div>
+</td>
+<td class="py-grid-cell-py px-4 whitespace-nowrap">
+<span class="font-data-mono text-data-mono text-on-surface-variant">YK-1102-88</span>
+</td>
+<td class="py-grid-cell-py px-4 whitespace-nowrap">
+<span class="font-body-md text-body-md text-on-surface">Tekno Beton A.Ş.</span>
+</td>
+<td class="py-grid-cell-py px-4 whitespace-nowrap">
+<span class="font-data-mono text-data-mono text-on-surface-variant">12 Kas 2023</span>
+</td>
+<td class="py-grid-cell-py px-4 whitespace-nowrap text-right">
+<span class="font-data-mono text-data-mono font-semibold text-on-surface">₺ 45,000.00</span>
+</td>
+<td class="py-grid-cell-py px-4 whitespace-nowrap text-center">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full font-label-caps text-[11px] font-bold bg-primary-container/10 text-primary-container border border-primary-container/20">
+                                        Portföyde
+                                    </span>
+</td>
+<td class="py-grid-cell-py px-4 whitespace-nowrap text-right">
+<button class="p-1.5 rounded text-on-surface-variant hover:text-primary transition-colors opacity-0 group-hover:opacity-100 focus:opacity-100">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="p-4 border-t border-border-slate flex items-center justify-between text-body-sm text-on-surface-variant bg-surface-container-lowest">
+<span>Toplam 42 kayıt gösteriliyor</span>
+<div class="flex gap-1">
+<button class="w-8 h-8 flex items-center justify-center rounded border border-border-slate hover:bg-surface-container-low disabled:opacity-50" disabled="">
+<span class="material-symbols-outlined text-[18px]">chevron_left</span>
+</button>
+<button class="w-8 h-8 flex items-center justify-center rounded bg-primary text-on-primary font-medium">1</button>
+<button class="w-8 h-8 flex items-center justify-center rounded border border-border-slate hover:bg-surface-container-low font-medium">2</button>
+<button class="w-8 h-8 flex items-center justify-center rounded border border-border-slate hover:bg-surface-container-low font-medium">3</button>
+<button class="w-8 h-8 flex items-center justify-center rounded border border-border-slate hover:bg-surface-container-low">
+<span class="material-symbols-outlined text-[18px]">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Mobile Bottom NavBar (Visible only on small screens, though omitted from brief it's good practice for the shell if needed, but per rules, hide shell if task focused. We will hide it as requested by responsive pivot rule) -->
+<nav class="md:hidden fixed bottom-0 w-full bg-surface-white border-t border-outline-variant z-50 flex justify-around p-2 pb-safe shadow-[0_-1px_3px_rgba(0,0,0,0.05)]">
+<a class="flex flex-col items-center p-2 text-on-surface-variant" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="text-[10px] mt-1">Dash</span>
+</a>
+<a class="flex flex-col items-center p-2 text-primary" href="#">
+<span class="material-symbols-outlined fill" data-icon="account_balance_wallet">account_balance_wallet</span>
+<span class="text-[10px] mt-1 font-medium">Finans</span>
+</a>
+<a class="flex flex-col items-center p-2 text-on-surface-variant" href="#">
+<span class="material-symbols-outlined" data-icon="gavel">gavel</span>
+<span class="text-[10px] mt-1">İhale</span>
+</a>
+<a class="flex flex-col items-center p-2 text-on-surface-variant" href="#">
+<span class="material-symbols-outlined" data-icon="more_horiz">more_horiz</span>
+<span class="text-[10px] mt-1">Diğer</span>
+</a>
+</nav>
+</body></html>

@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+
+<html class="light" lang="tr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>İş Kalemleri ve Poz Listesi - Hakediş Pro</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary": "#3525cd",
+                        "success-emerald": "#10B981",
+                        "tertiary-fixed": "#ffdbcc",
+                        "secondary-fixed": "#dae2fd",
+                        "on-error": "#ffffff",
+                        "secondary-fixed-dim": "#bec6e0",
+                        "on-tertiary-fixed-variant": "#7b2f00",
+                        "on-primary": "#ffffff",
+                        "primary-fixed": "#e2dfff",
+                        "on-tertiary-container": "#ffd2be",
+                        "error-container": "#ffdad6",
+                        "surface-bright": "#f7f9fb",
+                        "surface-tint": "#4d44e3",
+                        "warning-amber": "#F59E0B",
+                        "primary-fixed-dim": "#c3c0ff",
+                        "surface-container-highest": "#e0e3e5",
+                        "tertiary": "#7e3000",
+                        "danger-rose": "#E11D48",
+                        "decorative-purple": "#800080",
+                        "inverse-on-surface": "#eff1f3",
+                        "on-secondary-fixed-variant": "#3f465c",
+                        "tertiary-fixed-dim": "#ffb695",
+                        "on-secondary": "#ffffff",
+                        "text-muted": "#64748B",
+                        "on-tertiary-fixed": "#351000",
+                        "on-background": "#191c1e",
+                        "outline-variant": "#c7c4d8",
+                        "error": "#ba1a1a",
+                        "surface-variant": "#e0e3e5",
+                        "surface": "#f7f9fb",
+                        "inverse-surface": "#2d3133",
+                        "primary-container": "#4f46e5",
+                        "surface-container-low": "#f2f4f6",
+                        "secondary": "#565e74",
+                        "on-primary-fixed-variant": "#3323cc",
+                        "on-surface": "#191c1e",
+                        "tertiary-container": "#a44100",
+                        "surface-white": "#FFFFFF",
+                        "secondary-container": "#dae2fd",
+                        "border-slate": "#E2E8F0",
+                        "background": "#f7f9fb",
+                        "outline": "#777587",
+                        "decorative-navy": "#000080",
+                        "on-secondary-fixed": "#131b2e",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary-container": "#5c647a",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-fixed": "#0f0069",
+                        "on-primary-container": "#dad7ff",
+                        "surface-container-high": "#e6e8ea",
+                        "surface-container": "#eceef0",
+                        "on-surface-variant": "#464555",
+                        "inverse-primary": "#c3c0ff",
+                        "on-error-container": "#93000a",
+                        "surface-dim": "#d8dadc"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "sidebar-collapsed": "80px",
+                        "header-height": "64px",
+                        "stack-md": "1rem",
+                        "grid-cell-py": "0.5rem",
+                        "container-gap": "1.5rem",
+                        "stack-sm": "0.5rem",
+                        "grid-cell-px": "0.75rem",
+                        "sidebar-width": "260px"
+                    },
+                    "fontFamily": {
+                        "label-caps": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "data-mono": ["JetBrains Mono"],
+                        "body-lg": ["Inter"],
+                        "headline-sm": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "headline-lg-mobile": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "data-mono": ["13px", { "lineHeight": "16px", "fontWeight": "500" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "headline-lg": ["30px", { "lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "body-sm": ["13px", { "lineHeight": "18px", "fontWeight": "400" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; background-color: #f7f9fb; }
+        .data-font { font-family: 'JetBrains Mono', monospace; }
+        /* Custom scrollbar for data tables */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #c1c1c1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #a8a8a8; }
+    </style>
+</head>
+<body class="bg-surface text-on-surface flex h-screen overflow-hidden">
+<!-- Sidebar Navigation -->
+<aside class="fixed left-0 top-0 h-full w-sidebar-width border-r border-border-slate shadow-sm bg-surface-white hidden md:flex flex-col z-50">
+<div class="h-header-height flex items-center px-6 border-b border-border-slate">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-primary flex items-center justify-center text-on-primary font-bold">HP</div>
+<div>
+<h1 class="font-headline-sm text-headline-sm font-bold text-primary">Hakediş Pro</h1>
+<p class="font-body-sm text-body-sm text-on-surface-variant">İnşaat Yönetim Sistemi</p>
+</div>
+</div>
+</div>
+<div class="p-4">
+<button class="w-full bg-primary text-on-primary font-body-md text-body-md font-medium py-2 px-4 rounded-lg flex items-center justify-center gap-2 hover:bg-primary-container hover:text-on-primary-container transition-colors shadow-sm">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">add</span>
+                Yeni Proje Ekle
+            </button>
+</div>
+<nav class="flex-1 overflow-y-auto py-2">
+<ul class="space-y-1">
+<li>
+<a class="flex items-center gap-3 text-on-surface-variant hover:bg-surface-container-low rounded-lg mx-2 my-1 px-4 py-2 transition-colors" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-body-md text-body-md">Dashboard</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 text-on-surface-variant hover:bg-surface-container-low rounded-lg mx-2 my-1 px-4 py-2 transition-colors" href="#">
+<span class="material-symbols-outlined">info</span>
+<span class="font-body-md text-body-md">Proje Bilgileri</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 bg-secondary-container text-on-secondary-container font-semibold rounded-lg mx-2 my-1 px-4 py-2" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">architecture</span>
+<span class="font-body-md text-body-md">Genel Metraj</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 text-on-surface-variant hover:bg-surface-container-low rounded-lg mx-2 my-1 px-4 py-2 transition-colors" href="#">
+<span class="material-symbols-outlined">reorder</span>
+<span class="font-body-md text-body-md">Demir Metrajı</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 text-on-surface-variant hover:bg-surface-container-low rounded-lg mx-2 my-1 px-4 py-2 transition-colors" href="#">
+<span class="material-symbols-outlined">description</span>
+<span class="font-body-md text-body-md">Tutanaklı İşler</span>
+</a>
+</li>
+</ul>
+</nav>
+<div class="p-4 border-t border-border-slate">
+<ul class="space-y-1">
+<li>
+<a class="flex items-center gap-3 text-on-surface-variant hover:bg-surface-container-low rounded-lg mx-2 my-1 px-4 py-2 transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-body-md text-body-md">Ayarlar</span>
+</a>
+</li>
+</ul>
+</div>
+</aside>
+<!-- Main Content Area -->
+<div class="flex-1 flex flex-col md:ml-sidebar-width h-screen overflow-hidden bg-background">
+<!-- Top Navigation Bar -->
+<header class="sticky top-0 w-full h-header-height z-40 bg-surface-white border-b border-border-slate shadow-sm flex justify-between items-center px-6">
+<div class="flex items-center gap-6">
+<button class="md:hidden text-on-surface">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<div class="hidden lg:flex gap-6 h-full items-center">
+<a class="font-body-md text-body-md text-secondary hover:text-primary transition-colors" href="#">Projeler</a>
+<a class="font-body-md text-body-md text-primary border-b-2 border-primary pb-1 font-semibold h-full flex items-center" href="#">Hakedişler</a>
+<a class="font-body-md text-body-md text-secondary hover:text-primary transition-colors" href="#">Sözleşmeler</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="w-8 h-8 rounded-full bg-surface-container overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of a construction manager in a clean, brightly lit office environment, wearing modern business casual attire. The image should be sharp, high-contrast, and suitable for a corporate SaaS user avatar." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBT6Cea5CZfDljHHgFrwRrHUKOp5QnuKXAYsRyKokfJ9zdNqSpoRWXEXRBxzL5ZTyAsTglho5BX3xX_JJbNWdLatUVqRzNQ05gnC2BWTBoxNezBBT36YBE8ZnJyrGq3u5D56-nuoeydLkDtypVmnvnnmkmLBpaJYZ7RvE6qlt0f9UBcwPrmPljO826_-fBwYU9dEHyMkx5MGp-NyJ3YUDOj72bVMjL31qbtlHsFXAOmPSR64kIzMDRh"/>
+</button>
+</div>
+</header>
+<!-- Main Scrollable Canvas -->
+<main class="flex-1 overflow-y-auto p-6 flex gap-6">
+<!-- Left Side Data Area -->
+<div class="flex-1 flex flex-col gap-6 max-w-7xl">
+<!-- Page Header -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+<div>
+<h2 class="font-headline-md text-headline-md text-on-surface">İş Kalemleri ve Poz Listesi</h2>
+<p class="font-body-sm text-body-sm text-text-muted mt-1">Proje BOQ yönetimi ve metraj takibi</p>
+</div>
+<div class="flex items-center gap-3">
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-text-muted text-sm">search</span>
+<input class="pl-9 pr-4 py-2 border border-border-slate rounded-lg text-sm focus:ring-1 focus:ring-primary focus:border-primary w-64 bg-surface-white font-body-sm text-body-sm" placeholder="Poz No veya Tanım Ara..." type="text"/>
+</div>
+<button class="flex items-center gap-2 px-4 py-2 border border-border-slate rounded-lg bg-surface-white text-on-surface font-body-sm text-body-sm hover:bg-surface-container-low transition-colors shadow-sm">
+<span class="material-symbols-outlined text-sm">download</span>
+                            Excel'den Aktar
+                        </button>
+<button class="flex items-center gap-2 px-4 py-2 bg-primary text-on-primary rounded-lg font-body-sm text-body-sm hover:bg-primary-container hover:text-on-primary-container transition-colors shadow-sm">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">add</span>
+                            Yeni Poz Ekle
+                        </button>
+</div>
+</div>
+<!-- KPI Cards (Bento-ish Top Row) -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+<div class="bg-surface-white rounded-xl p-5 border border-border-slate shadow-sm flex flex-col gap-2">
+<span class="font-label-caps text-label-caps text-text-muted">TOPLAM POZ SAYISI</span>
+<div class="flex items-baseline gap-2">
+<span class="font-headline-md text-headline-md text-on-surface">1,248</span>
+</div>
+</div>
+<div class="bg-surface-white rounded-xl p-5 border border-border-slate shadow-sm flex flex-col gap-2">
+<span class="font-label-caps text-label-caps text-text-muted">TOPLAM SÖZLEŞME TUTARI</span>
+<div class="flex items-baseline gap-2">
+<span class="font-headline-md text-headline-md text-on-surface data-font">₺ 45,250,000</span>
+</div>
+</div>
+<div class="bg-surface-white rounded-xl p-5 border border-border-slate shadow-sm flex flex-col gap-2">
+<span class="font-label-caps text-label-caps text-text-muted">ONAYLI POZLAR</span>
+<div class="flex items-baseline gap-2">
+<span class="font-headline-md text-headline-md text-success-emerald">1,120</span>
+<span class="font-body-sm text-body-sm text-text-muted">%89</span>
+</div>
+</div>
+<div class="bg-surface-white rounded-xl p-5 border border-border-slate shadow-sm flex flex-col gap-2">
+<span class="font-label-caps text-label-caps text-text-muted">REVİZE BEKLEYEN</span>
+<div class="flex items-baseline gap-2">
+<span class="font-headline-md text-headline-md text-warning-amber">24</span>
+</div>
+</div>
+</div>
+<!-- Data Table Container -->
+<div class="bg-surface-white rounded-xl border border-border-slate shadow-sm flex flex-col overflow-hidden flex-1">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low border-b border-border-slate">
+<th class="py-3 px-4 font-label-caps text-label-caps text-text-muted whitespace-nowrap">POZ NO</th>
+<th class="py-3 px-4 font-label-caps text-label-caps text-text-muted">İŞ KALEMİ TANIMI</th>
+<th class="py-3 px-4 font-label-caps text-label-caps text-text-muted">BİRİM</th>
+<th class="py-3 px-4 font-label-caps text-label-caps text-text-muted text-right">SÖZ. MİKTARI</th>
+<th class="py-3 px-4 font-label-caps text-label-caps text-text-muted text-right">BİRİM FİYAT (TL)</th>
+<th class="py-3 px-4 font-label-caps text-label-caps text-text-muted text-right">TOPLAM TUTAR (TL)</th>
+<th class="py-3 px-4 font-label-caps text-label-caps text-text-muted text-center">DURUM</th>
+<th class="py-3 px-4 font-label-caps text-label-caps text-text-muted text-center">İŞLEM</th>
+</tr>
+</thead>
+<tbody class="font-body-sm text-body-sm divide-y divide-border-slate">
+<tr class="hover:bg-surface-bright transition-colors group">
+<td class="py-2 px-4 font-data-mono text-data-mono text-primary font-medium">15.001/1</td>
+<td class="py-2 px-4 font-medium text-on-surface max-w-xs truncate" title="Makine ile her derinlik ve genişlikte yumuşak ve sert toprak kazılması">Makine ile her derinlik ve genişlikte yumuşak...</td>
+<td class="py-2 px-4 text-text-muted">m3</td>
+<td class="py-2 px-4 text-right font-data-mono text-data-mono text-on-surface">12,500.00</td>
+<td class="py-2 px-4 text-right font-data-mono text-data-mono text-on-surface">145.50</td>
+<td class="py-2 px-4 text-right font-data-mono text-data-mono font-medium text-on-surface">1,818,750.00</td>
+<td class="py-2 px-4 text-center">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-emerald-50 text-success-emerald border border-emerald-200">Onaylı</span>
+</td>
+<td class="py-2 px-4 text-center">
+<div class="flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="text-text-muted hover:text-primary"><span class="material-symbols-outlined text-[18px]">edit</span></button>
+<button class="text-text-muted hover:text-danger-rose"><span class="material-symbols-outlined text-[18px]">delete</span></button>
+</div>
+</td>
+</tr>
+<tr class="hover:bg-surface-bright transition-colors group bg-surface-bright">
+<td class="py-2 px-4 font-data-mono text-data-mono text-primary font-medium">16.059/1</td>
+<td class="py-2 px-4 font-medium text-on-surface max-w-xs truncate">Betonarme demirinin bükülmesi ve yerine konması</td>
+<td class="py-2 px-4 text-text-muted">ton</td>
+<td class="py-2 px-4 text-right font-data-mono text-data-mono text-on-surface">450.00</td>
+<td class="py-2 px-4 text-right font-data-mono text-data-mono text-on-surface">18,500.00</td>
+<td class="py-2 px-4 text-right font-data-mono text-data-mono font-medium text-on-surface">8,325,000.00</td>
+<td class="py-2 px-4 text-center">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-amber-50 text-warning-amber border border-amber-200">Revize</span>
+</td>
+<td class="py-2 px-4 text-center">
+<div class="flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="text-text-muted hover:text-primary"><span class="material-symbols-outlined text-[18px]">edit</span></button>
+<button class="text-text-muted hover:text-danger-rose"><span class="material-symbols-outlined text-[18px]">delete</span></button>
+</div>
+</td>
+</tr>
+<!-- Added a few more rows for density -->
+<tr class="hover:bg-surface-bright transition-colors group">
+<td class="py-2 px-4 font-data-mono text-data-mono text-primary font-medium">21.011</td>
+<td class="py-2 px-4 font-medium text-on-surface max-w-xs truncate">BS 20 (C 20/25) hazır beton dökülmesi</td>
+<td class="py-2 px-4 text-text-muted">m3</td>
+<td class="py-2 px-4 text-right font-data-mono text-data-mono text-on-surface">3,200.00</td>
+<td class="py-2 px-4 text-right font-data-mono text-data-mono text-on-surface">1,850.00</td>
+<td class="py-2 px-4 text-right font-data-mono text-data-mono font-medium text-on-surface">5,920,000.00</td>
+<td class="py-2 px-4 text-center">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-emerald-50 text-success-emerald border border-emerald-200">Onaylı</span>
+</td>
+<td class="py-2 px-4 text-center">
+<div class="flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="text-text-muted hover:text-primary"><span class="material-symbols-outlined text-[18px]">edit</span></button>
+<button class="text-text-muted hover:text-danger-rose"><span class="material-symbols-outlined text-[18px]">delete</span></button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<!-- Right Sidebar / Filters -->
+<div class="w-72 flex-shrink-0 flex flex-col gap-4">
+<div class="bg-surface-white rounded-xl border border-border-slate shadow-sm p-4">
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px]">filter_alt</span>
+                        Filtreler
+                    </h3>
+<div class="space-y-4">
+<div>
+<label class="font-label-caps text-label-caps text-text-muted block mb-2">İMALAT GRUBU</label>
+<div class="space-y-2">
+<label class="flex items-center gap-2 font-body-sm text-body-sm text-on-surface">
+<input checked="" class="rounded border-outline-variant text-primary focus:ring-primary h-4 w-4" type="checkbox"/>
+                                    Altyapı İşleri
+                                </label>
+<label class="flex items-center gap-2 font-body-sm text-body-sm text-on-surface">
+<input checked="" class="rounded border-outline-variant text-primary focus:ring-primary h-4 w-4" type="checkbox"/>
+                                    Üstyapı İşleri
+                                </label>
+<label class="flex items-center gap-2 font-body-sm text-body-sm text-on-surface">
+<input class="rounded border-outline-variant text-primary focus:ring-primary h-4 w-4" type="checkbox"/>
+                                    Peyzaj
+                                </label>
+</div>
+</div>
+<hr class="border-border-slate"/>
+<div>
+<label class="font-label-caps text-label-caps text-text-muted block mb-2">BİRİM TİPİ</label>
+<select class="w-full bg-surface-bright border border-border-slate rounded-lg px-3 py-2 font-body-sm text-body-sm text-on-surface focus:ring-1 focus:ring-primary focus:border-primary">
+<option>Tümü</option>
+<option>m2</option>
+<option>m3</option>
+<option>ton</option>
+<option>adet</option>
+</select>
+</div>
+<button class="w-full py-2 bg-surface-container-low text-on-surface-variant font-body-sm text-body-sm rounded-lg hover:bg-surface-container-high transition-colors mt-4">
+                            Filtreleri Temizle
+                        </button>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

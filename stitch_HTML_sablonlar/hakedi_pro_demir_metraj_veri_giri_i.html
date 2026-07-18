@@ -1,0 +1,374 @@
+<!DOCTYPE html><html lang="tr" class="light"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=block" rel="stylesheet"><script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script><script id="tailwind-config">try{
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                            "on-primary": "#ffffff",
+                            "error-container": "#ffdad6",
+                            "secondary-fixed": "#dae2fd",
+                            "on-secondary-container": "#5c647a",
+                            "surface-variant": "#e0e3e5",
+                            "on-surface-variant": "#464555",
+                            "border-slate": "#E2E8F0",
+                            "success-emerald": "#10B981",
+                            "secondary-container": "#dae2fd",
+                            "on-tertiary-fixed-variant": "#7b2f00",
+                            "tertiary-fixed": "#ffdbcc",
+                            "inverse-primary": "#c3c0ff",
+                            "on-tertiary-fixed": "#351000",
+                            "outline": "#777587",
+                            "secondary-fixed-dim": "#bec6e0",
+                            "surface-bright": "#f7f9fb",
+                            "surface-tint": "#4d44e3",
+                            "outline-variant": "#c7c4d8",
+                            "on-error-container": "#93000a",
+                            "primary-fixed-dim": "#c3c0ff",
+                            "danger-rose": "#E11D48",
+                            "on-primary-container": "#dad7ff",
+                            "inverse-on-surface": "#eff1f3",
+                            "decorative-navy": "#000080",
+                            "secondary": "#565e74",
+                            "on-primary-fixed-variant": "#3323cc",
+                            "surface-container-lowest": "#ffffff",
+                            "surface-container-high": "#e6e8ea",
+                            "tertiary": "#7e3000",
+                            "on-error": "#ffffff",
+                            "surface-container-highest": "#e0e3e5",
+                            "tertiary-container": "#a44100",
+                            "primary-fixed": "#e2dfff",
+                            "on-primary-fixed": "#0f0069",
+                            "surface-container-low": "#f2f4f6",
+                            "background": "#f7f9fb",
+                            "on-tertiary": "#ffffff",
+                            "primary-container": "#4f46e5",
+                            "surface-white": "#FFFFFF",
+                            "on-secondary-fixed-variant": "#3f465c",
+                            "warning-amber": "#F59E0B",
+                            "surface-dim": "#d8dadc",
+                            "surface": "#f7f9fb",
+                            "tertiary-fixed-dim": "#ffb695",
+                            "decorative-purple": "#800080",
+                            "error": "#ba1a1a",
+                            "primary": "#3525cd",
+                            "on-surface": "#191c1e",
+                            "on-secondary-fixed": "#131b2e",
+                            "inverse-surface": "#2d3133",
+                            "on-background": "#191c1e",
+                            "text-muted": "#64748B",
+                            "surface-container": "#eceef0",
+                            "on-tertiary-container": "#ffd2be",
+                            "on-secondary": "#ffffff"
+                    },
+                    "borderRadius": {
+                            "DEFAULT": "0.25rem",
+                            "lg": "0.5rem",
+                            "xl": "0.75rem",
+                            "full": "9999px"
+                    },
+                    "spacing": {
+                            "grid-cell-py": "0.5rem",
+                            "stack-md": "1rem",
+                            "sidebar-width": "260px",
+                            "sidebar-collapsed": "80px",
+                            "stack-sm": "0.5rem",
+                            "header-height": "64px",
+                            "grid-cell-px": "0.75rem",
+                            "container-gap": "1.5rem"
+                    },
+                    "fontFamily": {
+                            "headline-sm": ["Inter"],
+                            "body-md": ["Inter"],
+                            "headline-md": ["Inter"],
+                            "headline-lg-mobile": ["Inter"],
+                            "data-mono": ["JetBrains Mono"],
+                            "body-sm": ["Inter"],
+                            "body-lg": ["Inter"],
+                            "headline-lg": ["Inter"],
+                            "label-caps": ["Inter"]
+                    },
+                    "fontSize": {
+                            "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                            "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                            "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                            "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "700" }],
+                            "data-mono": ["13px", { "lineHeight": "16px", "fontWeight": "500" }],
+                            "body-sm": ["13px", { "lineHeight": "18px", "fontWeight": "400" }],
+                            "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                            "headline-lg": ["30px", { "lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                            "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    }catch(_e){}</script></head><body class="bg-background text-on-background font-body-md min-h-screen flex">
+
+    <!-- SideNavBar -->
+    <aside class="fixed left-0 top-0 bottom-0 w-sidebar-width flex flex-col h-full z-40 overflow-y-auto bg-surface-white dark:bg-inverse-surface border-r border-border-slate dark:border-outline hidden md:flex">
+        <div class="px-container-gap py-container-gap border-b border-border-slate">
+            <div class="flex items-center gap-stack-sm">
+                <div class="w-10 h-10 bg-primary-container rounded-lg flex items-center justify-center text-on-primary">
+                    <span class="material-symbols-outlined">domain</span>
+                </div>
+                <div>
+                    <h1 class="font-headline-sm text-headline-sm font-bold text-primary dark:text-inverse-primary">Hakediş Pro</h1>
+                    <p class="font-label-caps text-label-caps text-text-muted">İnşaat Yönetim Paneli</p>
+                </div>
+            </div>
+        </div>
+        
+        <nav class="flex-1 px-grid-cell-px py-stack-md flex flex-col gap-stack-sm overflow-y-auto">
+            <a href="#" class="flex items-center gap-stack-md text-text-muted dark:text-surface-variant px-grid-cell-px py-grid-cell-py hover:bg-surface-container-highest dark:hover:bg-on-secondary-fixed-variant transition-all rounded-lg font-label-caps text-label-caps">
+                <span class="material-symbols-outlined">dashboard</span>
+                Dashboard
+            </a>
+            <a href="#" class="flex items-center gap-stack-md text-text-muted dark:text-surface-variant px-grid-cell-px py-grid-cell-py hover:bg-surface-container-highest dark:hover:bg-on-secondary-fixed-variant transition-all rounded-lg font-label-caps text-label-caps">
+                <span class="material-symbols-outlined">info</span>
+                Proje Bilgileri
+            </a>
+            <a href="#" class="flex items-center gap-stack-md text-text-muted dark:text-surface-variant px-grid-cell-px py-grid-cell-py hover:bg-surface-container-highest dark:hover:bg-on-secondary-fixed-variant transition-all rounded-lg font-label-caps text-label-caps">
+                <span class="material-symbols-outlined">calculate</span>
+                Genel Metraj
+            </a>
+            <a href="#" class="flex items-center gap-stack-md bg-secondary-container text-on-secondary-container rounded-lg px-grid-cell-px py-grid-cell-py font-bold translate-x-1 transition-transform duration-200 font-label-caps text-label-caps">
+                <span class="material-symbols-outlined icon-fill text-primary">construction</span>
+                Demir Metrajı
+            </a>
+            <a href="#" class="flex items-center gap-stack-md text-text-muted dark:text-surface-variant px-grid-cell-px py-grid-cell-py hover:bg-surface-container-highest dark:hover:bg-on-secondary-fixed-variant transition-all rounded-lg font-label-caps text-label-caps">
+                <span class="material-symbols-outlined">description</span>
+                Tutanaklı İşler
+            </a>
+            <a href="#" class="flex items-center gap-stack-md text-text-muted dark:text-surface-variant px-grid-cell-px py-grid-cell-py hover:bg-surface-container-highest dark:hover:bg-on-secondary-fixed-variant transition-all rounded-lg font-label-caps text-label-caps">
+                <span class="material-symbols-outlined">grid_on</span>
+                Yeşil Defter
+            </a>
+            <a href="#" class="flex items-center gap-stack-md text-text-muted dark:text-surface-variant px-grid-cell-px py-grid-cell-py hover:bg-surface-container-highest dark:hover:bg-on-secondary-fixed-variant transition-all rounded-lg font-label-caps text-label-caps">
+                <span class="material-symbols-outlined">list_alt</span>
+                İmalat Çarşafı
+            </a>
+            <a href="#" class="flex items-center gap-stack-md text-text-muted dark:text-surface-variant px-grid-cell-px py-grid-cell-py hover:bg-surface-container-highest dark:hover:bg-on-secondary-fixed-variant transition-all rounded-lg font-label-caps text-label-caps">
+                <span class="material-symbols-outlined">account_balance_wallet</span>
+                Kesintiler
+            </a>
+            <a href="#" class="flex items-center gap-stack-md text-text-muted dark:text-surface-variant px-grid-cell-px py-grid-cell-py hover:bg-surface-container-highest dark:hover:bg-on-secondary-fixed-variant transition-all rounded-lg font-label-caps text-label-caps">
+                <span class="material-symbols-outlined">summarize</span>
+                Hakediş Özeti
+            </a>
+            <a href="#" class="flex items-center gap-stack-md text-text-muted dark:text-surface-variant px-grid-cell-px py-grid-cell-py hover:bg-surface-container-highest dark:hover:bg-on-secondary-fixed-variant transition-all rounded-lg font-label-caps text-label-caps">
+                <span class="material-symbols-outlined">assessment</span>
+                Raporlar
+            </a>
+        </nav>
+        
+        <div class="px-grid-cell-px py-stack-md border-t border-border-slate flex flex-col gap-stack-sm">
+            <a href="#" class="flex items-center gap-stack-md text-text-muted dark:text-surface-variant px-grid-cell-px py-grid-cell-py hover:bg-surface-container-highest dark:hover:bg-on-secondary-fixed-variant transition-all rounded-lg font-label-caps text-label-caps">
+                <span class="material-symbols-outlined">support_agent</span>
+                Destek
+            </a>
+            <a href="#" class="flex items-center gap-stack-md text-text-muted dark:text-surface-variant px-grid-cell-px py-grid-cell-py hover:bg-surface-container-highest dark:hover:bg-on-secondary-fixed-variant transition-all rounded-lg font-label-caps text-label-caps">
+                <span class="material-symbols-outlined">logout</span>
+                Çıkış
+            </a>
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <div class="flex-1 flex flex-col md:ml-[260px] min-h-screen overflow-hidden">
+        
+        <!-- TopNavBar (Mobile Only) -->
+        <header class="md:hidden sticky top-0 z-50 flex justify-between items-center h-header-height px-grid-cell-px w-full shadow-sm dark:shadow-none bg-surface-white dark:bg-inverse-surface border-b border-border-slate">
+            <div class="flex items-center gap-stack-sm">
+                <button class="text-text-muted hover:text-primary transition-colors">
+                    <span class="material-symbols-outlined">menu</span>
+                </button>
+                <span class="text-headline-md font-headline-md font-bold text-primary dark:text-inverse-primary">Hakediş Pro</span>
+            </div>
+            <div class="flex items-center gap-stack-sm text-text-muted">
+                <span class="material-symbols-outlined hover:bg-surface-container-low transition-colors rounded-full p-1 cursor-pointer">notifications</span>
+                <span class="material-symbols-outlined hover:bg-surface-container-low transition-colors rounded-full p-1 cursor-pointer">settings</span>
+            </div>
+        </header>
+
+        <!-- Page Content -->
+        <main class="flex-1 p-container-gap overflow-y-auto flex flex-col gap-container-gap h-full">
+            
+            <!-- Page Header -->
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-stack-md">
+                <div>
+                    <h2 class="font-headline-md text-headline-md text-on-surface">Demir Metrajı</h2>
+                    <p class="font-body-sm text-body-sm text-text-muted">A Blok - Zemin Kat Kolonları (Poz: 15.150.1005)</p>
+                </div>
+                <div class="flex items-center gap-stack-sm">
+                    <button class="px-4 py-2 border border-border-slate text-secondary font-label-caps text-label-caps rounded-DEFAULT hover:bg-surface-container-low transition-colors">Taslak Kaydet</button>
+                    <button class="px-4 py-2 border border-primary text-primary font-label-caps text-label-caps rounded-DEFAULT hover:bg-surface-container-low transition-colors">Hesapla</button>
+                    <button class="px-4 py-2 bg-primary text-on-primary font-label-caps text-label-caps rounded-DEFAULT hover:bg-surface-tint shadow-[0_1px_3px_rgba(79,70,229,0.2)] transition-colors flex items-center gap-1">
+                        <span class="material-symbols-outlined text-[16px]">check_circle</span>
+                        Onaya Gönder
+                    </button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 xl:grid-cols-12 gap-container-gap flex-1 h-full min-h-[600px]">
+                
+                <!-- Left Sidebar: Selection & Context -->
+                <div class="xl:col-span-3 flex flex-col gap-stack-md h-full">
+                    
+                    <!-- Search & Filter Card -->
+                    <div class="bg-surface-white rounded-xl border border-border-slate shadow-sm p-4 flex flex-col gap-stack-sm">
+                        <h3 class="font-headline-sm text-headline-sm text-on-surface">Poz Seçimi</h3>
+                        <div class="relative">
+                            <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-text-muted text-[20px]">search</span>
+                            <input type="text" placeholder="Poz No veya Tanım Ara..." class="w-full pl-10 pr-3 py-2 border border-border-slate rounded-DEFAULT font-body-sm text-body-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none">
+                        </div>
+                        <div class="flex flex-col gap-2 mt-2 h-[200px] overflow-y-auto pr-2">
+                            <div class="p-3 border border-border-slate rounded-DEFAULT hover:border-primary cursor-pointer transition-colors bg-surface-bright">
+                                <p class="font-label-caps text-label-caps text-text-muted">15.150.1004</p>
+                                <p class="font-body-sm text-body-sm font-medium">Ø8-Ø12 İnce Demir</p>
+                            </div>
+                            <div class="p-3 border border-primary rounded-DEFAULT bg-secondary-container cursor-pointer transition-colors">
+                                <p class="font-label-caps text-label-caps text-primary">15.150.1005</p>
+                                <p class="font-body-sm text-body-sm font-medium text-on-secondary-container">Ø14-Ø32 Kalın Demir</p>
+                            </div>
+                            <div class="p-3 border border-border-slate rounded-DEFAULT hover:border-primary cursor-pointer transition-colors bg-surface-bright">
+                                <p class="font-label-caps text-label-caps text-text-muted">15.150.1006</p>
+                                <p class="font-body-sm text-body-sm font-medium">Çelik Hasır</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Rebar Summary (İcmal) Card -->
+                    <div class="bg-surface-white rounded-xl border border-border-slate shadow-sm p-4 flex flex-col flex-1">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="font-headline-sm text-headline-sm text-on-surface">Demir İcmali</h3>
+                            <span class="material-symbols-outlined text-text-muted text-[20px]">pie_chart</span>
+                        </div>
+                        <div class="flex-1 flex flex-col gap-4">
+                            <div>
+                                <div class="flex justify-between font-label-caps text-label-caps text-text-muted mb-1">
+                                    <span class="">İnce Demir (Ø8-Ø12)</span>
+                                    <span class="">450.00 kg</span>
+                                </div>
+                                <div class="w-full bg-surface-container-high h-2 rounded-full overflow-hidden">
+                                    <div class="bg-primary h-full w-[30%]"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between font-label-caps text-label-caps text-text-muted mb-1">
+                                    <span class="">Kalın Demir (Ø14-Ø26)</span>
+                                    <span class="">1,245.50 kg</span>
+                                </div>
+                                <div class="w-full bg-surface-container-high h-2 rounded-full overflow-hidden">
+                                    <div class="bg-decorative-navy h-full w-[70%]"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-auto pt-4 border-t border-border-slate">
+                                <div class="flex justify-between items-center">
+                                    <span class="font-headline-sm text-headline-sm text-on-surface">Genel Toplam</span>
+                                    <span class="font-data-mono text-headline-sm text-primary">1,695.50 <span class="text-body-sm text-text-muted">kg</span></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Canvas: High Density Data Grid -->
+                <div class="xl:col-span-9 bg-surface-white rounded-xl border border-border-slate shadow-sm flex flex-col h-full overflow-hidden">
+                    
+                    <!-- Table Toolbar -->
+                    <div class="px-4 py-3 border-b border-border-slate flex justify-between items-center bg-surface-bright">
+                        <h3 class="font-headline-sm text-headline-sm text-on-surface flex items-center gap-2">
+                            <span class="material-symbols-outlined text-primary text-[20px]">table_view</span>
+                            Metraj Föyü
+                        </h3>
+                        <div class="flex items-center gap-2"><button class="p-1.5 text-primary hover:bg-primary-container/10 rounded-DEFAULT transition-colors flex items-center" title="Excel'den Aktar">
+<span class="material-symbols-outlined">upload_file</span>
+</button>
+                            <button class="p-1.5 text-text-muted hover:text-primary hover:bg-surface-container-low rounded-DEFAULT transition-colors" title="Satır Ekle">
+                                <span class="material-symbols-outlined">add</span>
+                            </button>
+                            <button class="p-1.5 text-text-muted hover:text-primary hover:bg-surface-container-low rounded-DEFAULT transition-colors" title="Excel'e Aktar">
+                                <span class="material-symbols-outlined">download</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Technical Grid -->
+                    <div class="flex-1 overflow-auto bg-surface-white relative">
+                        <table class="w-full text-left border-collapse min-w-[800px]">
+                            <thead class="sticky top-0 bg-surface-container-low z-10 font-label-caps text-label-caps text-text-muted shadow-sm">
+                                <tr>
+                                    <th class="p-2 border-b border-border-slate w-12 text-center">#</th>
+                                    <th class="p-2 border-b border-border-slate w-32">Konum/Eleman</th>
+                                    <th class="p-2 border-b border-border-slate w-24">Çap (Ø)</th>
+                                    <th class="p-2 border-b border-border-slate w-20 text-right">Adet</th>
+                                    <th class="p-2 border-b border-border-slate w-20 text-right">Benzer</th>
+                                    <th class="p-2 border-b border-border-slate w-24 text-right">Boy (m)</th>
+                                    <th class="p-2 border-b border-border-slate w-24 text-right bg-surface-bright">T. Uzunluk</th>
+                                    <th class="p-2 border-b border-border-slate w-24 text-right bg-surface-bright">B. Ağırlık</th>
+                                    <th class="p-2 border-b border-border-slate w-28 text-right bg-secondary-fixed-dim text-on-secondary-fixed">T. Ağırlık (kg)</th>
+                                    <th class="p-2 border-b border-border-slate w-12 text-center">İşlem</th>
+                                </tr>
+                            </thead>
+                            <tbody class="font-data-mono text-data-mono text-on-surface divide-y divide-border-slate">
+                                <!-- Row 1 -->
+                                <tr class="hover:bg-surface-container-lowest transition-colors group">
+                                    <td class="p-2 text-center text-text-muted font-body-sm">1</td>
+                                    <td class="p-2"><input type="text" value="K101 Boyuna" class="w-full bg-transparent border-none p-0 focus:ring-0 text-sm h-6"></td>
+                                    <td class="p-2">
+                                        <select class="w-full bg-transparent border border-transparent hover:border-border-slate rounded p-1 text-sm focus:border-primary focus:ring-1 outline-none h-7">
+                                            <option value="16" selected="">Ø16</option>
+                                            <option value="14">Ø14</option>
+                                            <option value="12">Ø12</option>
+                                        </select>
+                                    </td>
+                                    <td class="p-2"><input type="number" value="8" class="w-full bg-transparent border-none p-0 text-right focus:ring-0 text-sm h-6"></td>
+                                    <td class="p-2"><input type="number" value="4" class="w-full bg-transparent border-none p-0 text-right focus:ring-0 text-sm h-6"></td>
+                                    <td class="p-2"><input type="number" value="3.20" step="0.01" class="w-full bg-transparent border-none p-0 text-right focus:ring-0 text-sm h-6"></td>
+                                    <td class="p-2 text-right bg-surface-bright text-text-muted">102.40</td>
+                                    <td class="p-2 text-right bg-surface-bright text-text-muted">1.578</td>
+                                    <td class="p-2 text-right bg-surface-container-low font-bold text-primary">161.59</td>
+                                    <td class="p-2 text-center">
+                                        <span class="material-symbols-outlined text-text-muted hover:text-danger-rose cursor-pointer text-[18px] opacity-0 group-hover:opacity-100 transition-opacity">delete</span>
+                                    </td>
+                                </tr>
+                                <!-- Row 2-->
+                                <tr class="hover:bg-surface-container-lowest transition-colors group">
+                                    <td class="p-2 text-center text-text-muted font-body-sm">2</td>
+                                    <td class="p-2"><input type="text" value="K101 Etriye" class="w-full bg-transparent border-none p-0 focus:ring-0 text-sm h-6"></td>
+                                    <td class="p-2">
+                                        <select class="w-full bg-transparent border border-transparent hover:border-border-slate rounded p-1 text-sm focus:border-primary focus:ring-1 outline-none h-7">
+                                            <option value="8" selected="">Ø8</option>
+                                            <option value="10">Ø10</option>
+                                        </select>
+                                    </td>
+                                    <td class="p-2"><input type="number" value="24" class="w-full bg-transparent border-none p-0 text-right focus:ring-0 text-sm h-6"></td>
+                                    <td class="p-2"><input type="number" value="4" class="w-full bg-transparent border-none p-0 text-right focus:ring-0 text-sm h-6"></td>
+                                    <td class="p-2"><input type="number" value="1.45" step="0.01" class="w-full bg-transparent border-none p-0 text-right focus:ring-0 text-sm h-6"></td>
+                                    <td class="p-2 text-right bg-surface-bright text-text-muted">139.20</td>
+                                    <td class="p-2 text-right bg-surface-bright text-text-muted">0.395</td>
+                                    <td class="p-2 text-right bg-surface-container-low font-bold text-primary">54.98</td>
+                                    <td class="p-2 text-center">
+                                        <span class="material-symbols-outlined text-text-muted hover:text-danger-rose cursor-pointer text-[18px] opacity-0 group-hover:opacity-100 transition-opacity">delete</span>
+                                    </td>
+                                </tr>
+                                <!-- Row-->
+                                <tr class="bg-surface-bright border-t-2 border-border-slate">
+                                    <td class="p-2 text-center text-text-muted font-body-sm">*</td>
+                                    <td class="p-2"><input type="text" placeholder="Yeni Giriş..." class="w-full bg-white border border-border-slate rounded p-1 focus:border-primary focus:ring-1 outline-none text-sm h-7"></td>
+                                    <td class="p-2">
+                                        <select class="w-full bg-white border border-border-slate rounded p-1 text-sm focus:border-primary focus:ring-1 outline-none h-7">
+                                            <option value="" disabled="" selected="">Seç</option>
+                                            <option value="8">Ø8</option>
+                                            <option value="10">Ø10</option>
+                                            <option value="12">Ø12</option>
+                                            <option value="14">Ø14</option>
+                                            <option value="16" class="">Ø16</option>
+                                        </select>
+                                    </td>
+                                    <td class="p-2"><input type="number" placeholder="0" class="w-full bg-white border border-border-slate rounded p-1 text-right focus:border-primary focus:ring-1 outline-none text-sm h-7"></td>
+                                    <td class="p-2"><input type="number" placeholder="1" class="w-full bg-white border border-border-slate rounded p-1 text-right focus:border-primary focus:ring-1 outline-none text-sm h-7"></td>
+                                    <td class="p-2"><input type="number" placeholder="0.00" class="w-full bg-white border border-border-slate rounded p-1 text-right focus:border-primary focus:ring-1 outline-none text-sm h-7"></td>
+                                    <td class="p-2 text-right text-text-muted">-</td>
+                                    <td class="p-2 text-right text-text-muted">-</td>
+                                    </tr></tbody></table></div></div></div></main></div></body></html>

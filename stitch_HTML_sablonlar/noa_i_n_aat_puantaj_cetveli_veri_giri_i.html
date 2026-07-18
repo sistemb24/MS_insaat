@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+
+<html class="light" lang="tr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Puantaj Cetveli - NOA İnşaat ERP</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "warning-amber": "#F59E0B",
+                        "outline": "#777587",
+                        "on-secondary-container": "#5c647a",
+                        "surface-container-highest": "#e0e3e5",
+                        "surface-bright": "#f7f9fb",
+                        "on-error-container": "#93000a",
+                        "decorative-navy": "#000080",
+                        "on-primary-fixed": "#0f0069",
+                        "outline-variant": "#c7c4d8",
+                        "on-tertiary-fixed-variant": "#7b2f00",
+                        "inverse-surface": "#2d3133",
+                        "on-secondary-fixed-variant": "#3f465c",
+                        "secondary-fixed": "#dae2fd",
+                        "primary-container": "#4f46e5",
+                        "inverse-on-surface": "#eff1f3",
+                        "on-tertiary-container": "#ffd2be",
+                        "surface-container": "#eceef0",
+                        "surface": "#f7f9fb",
+                        "tertiary": "#7e3000",
+                        "tertiary-fixed": "#ffdbcc",
+                        "secondary-fixed-dim": "#bec6e0",
+                        "primary-fixed": "#e2dfff",
+                        "tertiary-container": "#a44100",
+                        "border-slate": "#E2E8F0",
+                        "on-error": "#ffffff",
+                        "surface-container-high": "#e6e8ea",
+                        "on-primary-container": "#dad7ff",
+                        "secondary-container": "#dae2fd",
+                        "decorative-purple": "#800080",
+                        "surface-variant": "#e0e3e5",
+                        "secondary": "#565e74",
+                        "surface-white": "#FFFFFF",
+                        "on-primary-fixed-variant": "#3323cc",
+                        "background": "#f7f9fb",
+                        "on-surface-variant": "#464555",
+                        "on-surface": "#191c1e",
+                        "primary-fixed-dim": "#c3c0ff",
+                        "surface-container-low": "#f2f4f6",
+                        "danger-rose": "#E11D48",
+                        "surface-dim": "#d8dadc",
+                        "on-tertiary-fixed": "#351000",
+                        "surface-tint": "#4d44e3",
+                        "on-secondary-fixed": "#131b2e",
+                        "on-primary": "#ffffff",
+                        "success-emerald": "#10B981",
+                        "on-secondary": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary": "#ffffff",
+                        "inverse-primary": "#c3c0ff",
+                        "tertiary-fixed-dim": "#ffb695",
+                        "primary": "#3525cd",
+                        "error-container": "#ffdad6",
+                        "on-background": "#191c1e",
+                        "error": "#ba1a1a",
+                        "text-muted": "#64748B"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "sidebar-width": "260px",
+                        "stack-sm": "0.5rem",
+                        "sidebar-collapsed": "80px",
+                        "header-height": "64px",
+                        "grid-cell-py": "0.5rem",
+                        "grid-cell-px": "0.75rem",
+                        "stack-md": "1rem",
+                        "container-gap": "1.5rem"
+                    },
+                    "fontFamily": {
+                        "headline-lg-mobile": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "body-md": ["Inter"],
+                        "headline-sm": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "data-mono": ["JetBrains Mono"],
+                        "headline-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "label-caps": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "700" }],
+                        "body-sm": ["13px", { "lineHeight": "18px", "fontWeight": "400" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "headline-lg": ["30px", { "lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "data-mono": ["13px", { "lineHeight": "16px", "fontWeight": "500" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .table-container::-webkit-scrollbar {
+            height: 8px;
+            width: 8px;
+        }
+        .table-container::-webkit-scrollbar-track {
+            background: #f7f9fb;
+        }
+        .table-container::-webkit-scrollbar-thumb {
+            background-color: #c7c4d8;
+            border-radius: 4px;
+        }
+        .sticky-col {
+            position: sticky;
+            left: 0;
+            z-index: 10;
+            background-color: white;
+            border-right: 1px solid #E2E8F0;
+        }
+        .sticky-header {
+            position: sticky;
+            top: 0;
+            z-index: 20;
+            background-color: #f7f9fb;
+        }
+        .sticky-col-header {
+            position: sticky;
+            top: 0;
+            left: 0;
+            z-index: 30;
+            background-color: #f7f9fb;
+            border-right: 1px solid #E2E8F0;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body-md antialiased flex h-screen overflow-hidden">
+<!-- SideNavBar (Semantic Map: Intent Fallback -> Panel as default active since Personel is the module but Panel is often root, but let's highlight Personel) -->
+<nav class="hidden lg:flex flex-col h-screen fixed left-0 top-0 border-r border-outline-variant dark:border-on-surface-variant bg-surface-white dark:bg-on-surface w-sidebar-width z-50 shadow-md dark:shadow-none transition-all duration-200 ease-in-out">
+<div class="flex items-center h-header-height px-grid-cell-px border-b border-outline-variant dark:border-on-surface-variant">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-primary flex items-center justify-center text-on-primary font-headline-sm text-headline-sm font-black">N</div>
+<div>
+<h1 class="font-headline-sm text-headline-sm font-black text-primary dark:text-primary-fixed-dim">NOA İnşaat</h1>
+<p class="font-label-caps text-label-caps text-on-surface-variant">ERP Sistemi</p>
+</div>
+</div>
+</div>
+<div class="px-4 py-6">
+<button class="w-full bg-primary text-on-primary font-body-md text-body-md font-semibold rounded-lg py-2.5 px-4 flex items-center justify-center gap-2 hover:bg-surface-tint transition-all shadow-sm">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">add</span>
+                Yeni Proje
+            </button>
+</div>
+<div class="flex-1 overflow-y-auto px-3 py-2 space-y-1">
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-secondary dark:text-secondary-fixed-dim hover:bg-surface-container-low dark:hover:bg-on-secondary-fixed-variant transition-all font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+                Panel
+            </a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-secondary dark:text-secondary-fixed-dim hover:bg-surface-container-low dark:hover:bg-on-secondary-fixed-variant transition-all font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined">business</span>
+                Firmalar
+            </a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-secondary dark:text-secondary-fixed-dim hover:bg-surface-container-low dark:hover:bg-on-secondary-fixed-variant transition-all font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined">request_quote</span>
+                Teklif Yönetimi
+            </a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-secondary dark:text-secondary-fixed-dim hover:bg-surface-container-low dark:hover:bg-on-secondary-fixed-variant transition-all font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined">folder_open</span>
+                Belge Merkezi
+            </a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-primary-container dark:bg-primary text-on-primary-container dark:text-on-primary font-semibold transition-all font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">groups</span>
+                Personel
+            </a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-secondary dark:text-secondary-fixed-dim hover:bg-surface-container-low dark:hover:bg-on-secondary-fixed-variant transition-all font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+                Envanter
+            </a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-secondary dark:text-secondary-fixed-dim hover:bg-surface-container-low dark:hover:bg-on-secondary-fixed-variant transition-all font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined">handyman</span>
+                Araçlar
+            </a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-secondary dark:text-secondary-fixed-dim hover:bg-surface-container-low dark:hover:bg-on-secondary-fixed-variant transition-all font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined">settings</span>
+                Ayarlar
+            </a>
+</div>
+<div class="p-3 border-t border-outline-variant dark:border-on-surface-variant">
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-secondary dark:text-secondary-fixed-dim hover:bg-surface-container-low dark:hover:bg-on-secondary-fixed-variant transition-all font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined">logout</span>
+                Çıkış Yap
+            </a>
+</div>
+</nav>
+<!-- Main Content Area -->
+<main class="flex-1 lg:ml-sidebar-width flex flex-col h-screen overflow-hidden">
+<!-- TopNavBar -->
+<header class="sticky top-0 w-full z-40 flex justify-between items-center h-header-height px-grid-cell-px bg-surface dark:bg-inverse-surface border-b border-outline-variant dark:border-on-surface-variant shadow-sm dark:shadow-none">
+<div class="flex items-center gap-4">
+<button class="lg:hidden p-2 text-on-surface-variant rounded-full hover:bg-surface-container">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<span class="font-headline-sm text-headline-sm md:font-headline-md md:text-headline-md font-bold text-primary dark:text-primary-fixed-dim hidden md:block">NOA İnşaat ERP</span>
+</div>
+<div class="flex-1 max-w-xl mx-8 hidden md:block">
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline group-focus-within:text-primary transition-colors">search</span>
+<input class="w-full bg-surface-white border border-border-slate rounded-full py-2 pl-10 pr-4 text-body-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all shadow-sm" placeholder="Ara..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<button class="p-2 text-on-surface-variant hover:bg-surface-container dark:hover:bg-on-surface-variant transition-colors rounded-full cursor-pointer active:scale-95 duration-150">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="p-2 text-on-surface-variant hover:bg-surface-container dark:hover:bg-on-surface-variant transition-colors rounded-full cursor-pointer active:scale-95 duration-150">
+<span class="material-symbols-outlined">apps</span>
+</button>
+<div class="h-6 w-px bg-border-slate mx-2"></div>
+<button class="text-body-md font-medium text-secondary hover:text-primary transition-colors cursor-pointer active:scale-95 duration-150">Yardım</button>
+<div class="ml-4 w-9 h-9 rounded-full bg-surface-container-high overflow-hidden border border-border-slate shadow-sm cursor-pointer hover:ring-2 ring-primary transition-all">
+<img alt="Kullanıcı Profili" class="w-full h-full object-cover" data-alt="Professional headshot portrait of a corporate employee in a brightly lit modern office setting. The person is looking slightly off-camera with a neutral expression. Clean light-mode aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCbsatRmDcs1YqdAV76h73TOn8VLDyhQP6T8wDDnnWbD7knL4NbyM0k8_dsRweZ_u7kSQIu5PEl4vaa0kgmDKcZo79mTOJf7dmB6fBCYtnPbTcBA2q8Ait0ORr-GAe7BwKYM8I9xa_7E6B4hE2iBtZo5Tjrg-xKZzwTOmXtb5-xqnI1r78v0OjyVhyAS1SJxcOhl3MDOnBjTPAdPMsr_xe1wRaQmod5OnIiDomqPGwjJMUsTNmapkQq"/>
+</div>
+</div>
+</header>
+<!-- Page Content -->
+<div class="flex-1 overflow-y-auto p-4 md:p-6 lg:px-8 flex flex-col gap-container-gap bg-surface-bright">
+<!-- Page Header & Actions -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+<div>
+<div class="flex items-center gap-2 mb-1">
+<span class="font-label-caps text-label-caps text-primary bg-primary-fixed px-2 py-0.5 rounded">PERSONEL YÖNETİMİ</span>
+</div>
+<h2 class="font-headline-lg text-headline-lg-mobile md:font-headline-lg md:text-headline-lg text-on-surface">Puantaj Cetveli</h2>
+<p class="font-body-md text-body-md text-secondary mt-1">Ekim 2023 dönemi için günlük çalışma kayıtları.</p>
+</div>
+<div class="flex flex-wrap items-center gap-2">
+<button class="flex items-center gap-2 px-4 py-2 bg-surface-white border border-border-slate rounded-lg text-secondary font-body-md text-body-md hover:bg-surface-container-low transition-colors shadow-sm cursor-pointer active:scale-95 duration-150">
+<span class="material-symbols-outlined text-[20px]">download</span>
+                        Excel'e Aktar
+                    </button>
+<button class="flex items-center gap-2 px-4 py-2 bg-primary text-on-primary rounded-lg font-body-md text-body-md font-medium hover:bg-surface-tint transition-colors shadow-sm cursor-pointer active:scale-95 duration-150">
+<span class="material-symbols-outlined text-[20px]">save</span>
+                        Kaydet ve Kesinleştir
+                    </button>
+</div>
+</div>
+<!-- Controls & Filters Card -->
+<div class="bg-surface-white rounded-xl border border-border-slate shadow-[0_1px_3px_rgba(79,70,229,0.08)] p-4">
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+<div class="flex flex-wrap items-center gap-4 flex-1">
+<div class="flex-1 min-w-[200px] max-w-xs relative">
+<label class="font-label-caps text-label-caps text-secondary absolute -top-2 left-3 bg-white px-1">PROJE</label>
+<select class="w-full bg-transparent border border-border-slate rounded-lg py-2.5 px-3 text-body-md focus:ring-2 focus:ring-primary focus:border-primary transition-colors appearance-none">
+<option>Ataşehir Finans Merkezi Şantiyesi</option>
+<option>Kadıköy Konut Projesi</option>
+<option>Merkez Ofis</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-outline pointer-events-none">expand_more</span>
+</div>
+<div class="flex-1 min-w-[150px] max-w-[200px] relative">
+<label class="font-label-caps text-label-caps text-secondary absolute -top-2 left-3 bg-white px-1">DÖNEM</label>
+<input class="w-full bg-transparent border border-border-slate rounded-lg py-2.5 px-3 text-body-md focus:ring-2 focus:ring-primary focus:border-primary transition-colors" type="month" value="2023-10"/>
+</div>
+</div>
+<!-- Legend -->
+<div class="flex flex-wrap items-center gap-3 p-2 bg-surface rounded-lg border border-border-slate/50">
+<div class="flex items-center gap-1.5 font-label-caps text-label-caps">
+<span class="w-6 h-6 rounded flex items-center justify-center bg-primary-container text-on-primary-container font-data-mono font-bold">X</span>
+<span class="text-secondary">Tam Gün</span>
+</div>
+<div class="flex items-center gap-1.5 font-label-caps text-label-caps">
+<span class="w-6 h-6 rounded flex items-center justify-center bg-warning-amber/20 text-warning-amber font-data-mono font-bold">Y</span>
+<span class="text-secondary">Yarım Gün</span>
+</div>
+<div class="flex items-center gap-1.5 font-label-caps text-label-caps">
+<span class="w-6 h-6 rounded flex items-center justify-center bg-danger-rose/20 text-danger-rose font-data-mono font-bold">R</span>
+<span class="text-secondary">Raporlu</span>
+</div>
+<div class="flex items-center gap-1.5 font-label-caps text-label-caps">
+<span class="w-6 h-6 rounded flex items-center justify-center bg-decorative-purple/20 text-decorative-purple font-data-mono font-bold">İ</span>
+<span class="text-secondary">İzinli</span>
+</div>
+<div class="flex items-center gap-1.5 font-label-caps text-label-caps">
+<span class="w-6 h-6 rounded flex items-center justify-center bg-success-emerald/20 text-success-emerald font-data-mono font-bold">H</span>
+<span class="text-secondary">Resmi Tatil</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Timesheet Grid Container -->
+<div class="bg-surface-white rounded-xl border border-border-slate shadow-[0_1px_3px_rgba(79,70,229,0.08)] flex flex-col overflow-hidden min-h-[400px]">
+<div class="overflow-x-auto table-container flex-1 relative">
+<table class="w-full text-left border-collapse min-w-max">
+<thead>
+<tr>
+<th class="sticky-col-header py-3 px-4 font-label-caps text-label-caps text-secondary uppercase tracking-wider min-w-[250px] shadow-[1px_0_0_#E2E8F0]">
+                                    Personel
+                                </th>
+<!-- Days 1-31 -->
+<!-- Generating days via HTML, normally dynamic. Keeping it concise but dense. -->
+<script>
+                                    for(let i=1; i<=31; i++) {
+                                        let isWeekend = (i%7===0 || i%7===6);
+                                        let bg = isWeekend ? 'bg-surface-container-low' : '';
+                                        let textCol = isWeekend ? 'text-danger-rose' : 'text-secondary';
+                                        document.write(`<th class="sticky-header py-3 px-1 text-center font-label-caps text-label-caps ${textCol} ${bg} border-b border-border-slate min-w-[36px]">${i}</th>`);
+                                    }
+                                </script>
+<th class="sticky-header py-3 px-4 font-label-caps text-label-caps text-secondary text-right border-b border-border-slate bg-surface-bright border-l shadow-[-1px_0_0_#E2E8F0]">
+                                    Top. Gün
+                                </th>
+</tr>
+</thead>
+<tbody class="font-data-mono text-data-mono divide-y divide-border-slate">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-bright transition-colors group">
+<td class="sticky-col py-2 px-4 shadow-[1px_0_0_#E2E8F0] group-hover:bg-surface-bright transition-colors">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-surface-container overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Close up professional portrait of a male construction site manager wearing a white hardhat and safety vest. Soft natural lighting. Corporate style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCbQSDhfZNw8jne4S6SGC237vxUE--9NuLWxVziHvb_OMCE7-yfAlLpKAicXoBEBq79X4ws-8giykYD2d3CO67fsNgfx6Zvm4FkDckpwHpvqE2IwfFwER9S9i9Rwmz-raU-N-97ae0u3KEzkJs6-EkqrunjmUKb7sTVAV5FP7DiUR4WtysLfHqwqdqXX8VDhUHbUcJ7lrbPbUik5ecFyrjml9RMiosKuZXq11h2zxvATS6-N0vqYOY5"/>
+</div>
+<div>
+<div class="font-body-md text-body-md font-medium text-on-surface">Ahmet Yılmaz</div>
+<div class="font-body-sm text-body-sm text-secondary">Şantiye Şefi</div>
+</div>
+</div>
+</td>
+<!-- Cells -->
+<script>
+                                    for(let i=1; i<=31; i++) {
+                                        let isWeekend = (i%7===0 || i%7===6);
+                                        let cellContent = '';
+                                        let cellClass = '';
+                                        
+                                        if(isWeekend && i !== 14) {
+                                            cellContent = 'H';
+                                            cellClass = 'bg-success-emerald/10 text-success-emerald';
+                                        } else if (i === 12 || i === 13) {
+                                            cellContent = 'R';
+                                            cellClass = 'bg-danger-rose/10 text-danger-rose';
+                                        } else {
+                                            cellContent = 'X';
+                                            cellClass = 'bg-primary-container/10 text-primary-container';
+                                        }
+
+                                        let bg = isWeekend ? 'bg-surface-container-low/50' : '';
+                                        document.write(`
+                                            <td class="py-1 px-1 text-center ${bg}">
+                                                <div class="w-7 h-7 mx-auto rounded flex items-center justify-center cursor-pointer hover:ring-1 ring-border-slate ${cellClass}">
+                                                    ${cellContent}
+                                                </div>
+                                            </td>
+                                        `);
+                                    }
+                                </script>
+<td class="py-2 px-4 text-right bg-surface-bright border-l border-border-slate font-medium">29</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surface-bright transition-colors group">
+<td class="sticky-col py-2 px-4 shadow-[1px_0_0_#E2E8F0] group-hover:bg-surface-bright transition-colors">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-surface-container overflow-hidden">
+<div class="w-full h-full bg-secondary-fixed flex items-center justify-center text-on-secondary-fixed font-headline-sm">M</div>
+</div>
+<div>
+<div class="font-body-md text-body-md font-medium text-on-surface">Mehmet Demir</div>
+<div class="font-body-sm text-body-sm text-secondary">Usta</div>
+</div>
+</div>
+</td>
+<!-- Cells -->
+<script>
+                                    for(let i=1; i<=31; i++) {
+                                        let isWeekend = (i%7===0 || i%7===6);
+                                        let cellContent = '';
+                                        let cellClass = '';
+                                        
+                                        if(isWeekend) {
+                                            cellContent = 'H';
+                                            cellClass = 'bg-success-emerald/10 text-success-emerald';
+                                        } else if (i >= 20 && i <= 24) {
+                                            cellContent = 'İ';
+                                            cellClass = 'bg-decorative-purple/10 text-decorative-purple';
+                                        } else if (i === 15) {
+                                            cellContent = 'Y';
+                                            cellClass = 'bg-warning-amber/10 text-warning-amber';
+                                        } else {
+                                            cellContent = 'X';
+                                            cellClass = 'bg-primary-container/10 text-primary-container';
+                                        }
+
+                                        let bg = isWeekend ? 'bg-surface-container-low/50' : '';
+                                        document.write(`
+                                            <td class="py-1 px-1 text-center ${bg}">
+                                                <div class="w-7 h-7 mx-auto rounded flex items-center justify-center cursor-pointer hover:ring-1 ring-border-slate ${cellClass}">
+                                                    ${cellContent}
+                                                </div>
+                                            </td>
+                                        `);
+                                    }
+                                </script>
+<td class="py-2 px-4 text-right bg-surface-bright border-l border-border-slate font-medium">25.5</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Footer Summary Bar -->
+<div class="bg-surface border-t border-border-slate p-4 flex flex-col sm:flex-row items-center justify-between gap-4 font-body-md text-body-md">
+<div class="flex gap-6 text-secondary">
+<div class="flex flex-col">
+<span class="font-label-caps text-label-caps text-outline">TOPLAM ÇALIŞMA SAATİ</span>
+<span class="font-data-mono text-on-surface font-semibold text-lg">1,240 <span class="text-sm font-normal text-secondary">saat</span></span>
+</div>
+<div class="w-px h-10 bg-border-slate"></div>
+<div class="flex flex-col">
+<span class="font-label-caps text-label-caps text-outline">TOPLAM GÜN (TÜM PERSONEL)</span>
+<span class="font-data-mono text-on-surface font-semibold text-lg">155 <span class="text-sm font-normal text-secondary">gün</span></span>
+</div>
+</div>
+<div class="flex flex-col items-end">
+<span class="font-label-caps text-label-caps text-outline">TAHMİNİ TAHAKKUK</span>
+<span class="font-data-mono text-success-emerald font-bold text-xl">₺ 345,600.00</span>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

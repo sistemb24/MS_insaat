@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Document Center - NOA İnşaat</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary": "#565e74",
+                        "on-surface": "#191c1e",
+                        "on-error": "#ffffff",
+                        "on-primary-fixed": "#0f0069",
+                        "inverse-primary": "#c3c0ff",
+                        "primary-container": "#4f46e5",
+                        "decorative-navy": "#000080",
+                        "primary": "#3525cd",
+                        "on-error-container": "#93000a",
+                        "primary-fixed": "#e2dfff",
+                        "surface-container-lowest": "#ffffff",
+                        "tertiary-fixed": "#ffdbcc",
+                        "surface-container-highest": "#e0e3e5",
+                        "secondary-fixed-dim": "#bec6e0",
+                        "on-secondary-fixed": "#131b2e",
+                        "primary-fixed-dim": "#c3c0ff",
+                        "on-background": "#191c1e",
+                        "on-primary-fixed-variant": "#3323cc",
+                        "inverse-on-surface": "#eff1f3",
+                        "warning-amber": "#F59E0B",
+                        "danger-rose": "#E11D48",
+                        "tertiary": "#7e3000",
+                        "on-tertiary-fixed": "#351000",
+                        "on-tertiary": "#ffffff",
+                        "on-secondary-fixed-variant": "#3f465c",
+                        "error-container": "#ffdad6",
+                        "surface-container-high": "#e6e8ea",
+                        "surface-white": "#FFFFFF",
+                        "tertiary-fixed-dim": "#ffb695",
+                        "secondary-container": "#dae2fd",
+                        "outline-variant": "#c7c4d8",
+                        "success-emerald": "#10B981",
+                        "on-secondary-container": "#5c647a",
+                        "surface-tint": "#4d44e3",
+                        "error": "#ba1a1a",
+                        "border-slate": "#E2E8F0",
+                        "on-tertiary-container": "#ffd2be",
+                        "background": "#f7f9fb",
+                        "outline": "#777587",
+                        "surface-dim": "#d8dadc",
+                        "surface-variant": "#e0e3e5",
+                        "on-secondary": "#ffffff",
+                        "on-primary-container": "#dad7ff",
+                        "secondary-fixed": "#dae2fd",
+                        "surface-container": "#eceef0",
+                        "on-tertiary-fixed-variant": "#7b2f00",
+                        "on-primary": "#ffffff",
+                        "decorative-purple": "#800080",
+                        "text-muted": "#64748B",
+                        "on-surface-variant": "#464555",
+                        "surface-container-low": "#f2f4f6",
+                        "surface": "#f7f9fb",
+                        "inverse-surface": "#2d3133",
+                        "surface-bright": "#f7f9fb",
+                        "tertiary-container": "#a44100"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-md": "1rem",
+                        "header-height": "64px",
+                        "sidebar-width": "260px",
+                        "container-gap": "1.5rem",
+                        "sidebar-collapsed": "80px",
+                        "grid-cell-px": "0.75rem",
+                        "stack-sm": "0.5rem",
+                        "grid-cell-py": "0.5rem"
+                    },
+                    "fontFamily": {
+                        "body-sm": ["Inter"],
+                        "headline-sm": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "body-md": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "data-mono": ["JetBrains Mono"],
+                        "headline-lg-mobile": ["Inter"]
+                    },
+                    "fontSize": {
+                        "body-sm": ["13px", { "lineHeight": "18px", "fontWeight": "400" }],
+                        "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "headline-lg": ["30px", { "lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "data-mono": ["13px", { "lineHeight": "16px", "fontWeight": "500" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+          font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md h-screen overflow-hidden flex">
+<!-- SideNavBar -->
+<nav class="hidden md:flex flex-col h-full border-r border-outline-variant dark:border-outline bg-surface-white dark:bg-inverse-surface shadow-sm w-sidebar-width fixed left-0 top-0 z-50">
+<div class="p-6">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded bg-primary-container flex items-center justify-center text-on-primary-container font-headline-sm font-bold">
+                    N
+                </div>
+<div>
+<h1 class="font-headline-sm text-headline-sm font-bold text-primary dark:text-inverse-primary">NOA İnşaat</h1>
+<p class="font-body-sm text-body-sm text-text-muted">Construction ERP</p>
+</div>
+</div>
+</div>
+<div class="flex-1 overflow-y-auto px-4 py-2 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container dark:hover:bg-surface-container-highest rounded-lg transition-all duration-200 active:scale-95" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span>Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container dark:hover:bg-surface-container-highest rounded-lg transition-all duration-200 active:scale-95" href="#">
+<span class="material-symbols-outlined">business</span>
+<span>Firms</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container dark:hover:bg-surface-container-highest rounded-lg transition-all duration-200 active:scale-95" href="#">
+<span class="material-symbols-outlined">gavel</span>
+<span>Tender Management</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 bg-secondary-container dark:bg-primary-container text-primary dark:text-on-primary-container rounded-lg font-semibold transition-all duration-200 active:scale-95" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">description</span>
+<span>Document Center</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container dark:hover:bg-surface-container-highest rounded-lg transition-all duration-200 active:scale-95" href="#">
+<span class="material-symbols-outlined">group</span>
+<span>Staff</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container dark:hover:bg-surface-container-highest rounded-lg transition-all duration-200 active:scale-95" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+<span>Inventory</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container dark:hover:bg-surface-container-highest rounded-lg transition-all duration-200 active:scale-95" href="#">
+<span class="material-symbols-outlined">directions_car</span>
+<span>Vehicles</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container dark:hover:bg-surface-container-highest rounded-lg transition-all duration-200 active:scale-95" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span>Settings</span>
+</a>
+</div>
+</nav>
+<!-- Main Content Area -->
+<div class="flex-1 ml-0 md:ml-sidebar-width flex flex-col h-full w-full">
+<!-- TopNavBar -->
+<header class="h-header-height flex justify-between items-center px-6 w-full bg-surface-white/80 dark:bg-inverse-surface/80 backdrop-blur-md border-b border-outline-variant dark:border-outline sticky top-0 z-40">
+<div class="flex items-center md:hidden">
+<button class="p-2 text-on-surface-variant hover:bg-surface-container-low rounded-lg mr-2">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<span class="font-headline-sm text-headline-sm font-bold text-primary">NOA İnşaat</span>
+</div>
+<div class="hidden md:flex flex-1 items-center max-w-md relative">
+<span class="material-symbols-outlined absolute left-3 text-text-muted pointer-events-none">search</span>
+<input class="w-full pl-10 pr-4 py-2 bg-surface-container-low border border-transparent focus:bg-surface-white focus:border-primary rounded-lg text-body-md font-body-md transition-colors outline-none focus:ring-2 focus:ring-primary/20" placeholder="Search everywhere..." type="text"/>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors hover:bg-surface-container-low rounded-full relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-1.5 right-1.5 w-2 h-2 bg-danger-rose rounded-full border border-surface-white"></span>
+</button>
+<button class="flex items-center gap-2">
+<img alt="User Profile Avatar" class="w-8 h-8 rounded-full object-cover border border-outline-variant" data-alt="A professional headshot of a construction manager in a well-lit office setting. The lighting is soft and bright, emphasizing a modern corporate aesthetic with subtle blue and grey undertones in the background. The mood is confident and reliable." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBXTupRlbiBwjA3O-t4qNn15tLfD2Zfe_RxXj9IbdoKorN7E7xEI3AYLzDsJ5XDL2-HYf768BgUkDmemv8qqYIrrsXUz0MTycr8s76Gjhqdy_qpBSRUMPGRG7DGNOIt-lSbVxCYKo8H6NTLJlGqm4u7D8S4UvB4LvHvgT_AheE7fD1Q5em_v2hfHkFZOCuUdCzmxmVMbi0vrHFNe90HcBxy9_ukUCT6-6yhuE5wcM4axxY-VO5tXK73"/>
+</button>
+</div>
+</header>
+<!-- Page Content -->
+<main class="flex-1 overflow-auto p-4 md:p-6 lg:p-container-gap bg-background">
+<div class="flex flex-col lg:flex-row gap-6 h-[calc(100vh-120px)]">
+<!-- Inner Sidebar: Folder Tree -->
+<div class="w-full lg:w-64 flex-shrink-0 flex flex-col gap-6 bg-surface-white rounded-xl shadow-[0_1px_3px_rgba(79,70,229,0.08)] p-5 border border-border-slate overflow-y-auto">
+<div>
+<h3 class="font-label-caps text-label-caps text-text-muted mb-3 uppercase tracking-wider">System Folders</h3>
+<ul class="space-y-1">
+<li>
+<button class="w-full flex items-center justify-between px-3 py-2 bg-surface-container-low text-primary rounded-lg text-left transition-colors font-medium text-sm">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[20px]" style="font-variation-settings: 'FILL' 1;">folder</span>
+<span>Contracts</span>
+</div>
+<span class="text-xs bg-surface-white px-1.5 py-0.5 rounded text-text-muted border border-border-slate">12</span>
+</button>
+</li>
+<li>
+<button class="w-full flex items-center justify-between px-3 py-2 text-on-surface-variant hover:bg-surface-container-low rounded-lg text-left transition-colors text-sm">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-warning-amber text-[20px]">folder</span>
+<span>Vehicles</span>
+</div>
+</button>
+</li>
+<li>
+<button class="w-full flex items-center justify-between px-3 py-2 text-on-surface-variant hover:bg-surface-container-low rounded-lg text-left transition-colors text-sm">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-success-emerald text-[20px]">folder</span>
+<span>Invoices</span>
+</div>
+</button>
+</li>
+<li>
+<button class="w-full flex items-center justify-between px-3 py-2 text-on-surface-variant hover:bg-surface-container-low rounded-lg text-left transition-colors text-sm">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[20px]">folder</span>
+<span>Staff</span>
+</div>
+</button>
+</li>
+<li>
+<button class="w-full flex items-center justify-between px-3 py-2 text-on-surface-variant hover:bg-surface-container-low rounded-lg text-left transition-colors text-sm">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-danger-rose text-[20px]">folder</span>
+<span>Expenses</span>
+</div>
+</button>
+</li>
+</ul>
+</div>
+<div class="mt-4">
+<div class="flex items-center justify-between mb-3">
+<h3 class="font-label-caps text-label-caps text-text-muted uppercase tracking-wider">Projects</h3>
+<button class="text-text-muted hover:text-primary transition-colors"><span class="material-symbols-outlined text-[18px]">add</span></button>
+</div>
+<ul class="space-y-1">
+<li>
+<button class="w-full flex items-center px-3 py-2 text-on-surface-variant hover:bg-surface-container-low rounded-lg text-left transition-colors text-sm">
+<span class="material-symbols-outlined text-text-muted text-[20px] mr-2">folder_open</span>
+<span>Marmaray Project</span>
+</button>
+</li>
+<li>
+<button class="w-full flex items-center px-3 py-2 text-on-surface-variant hover:bg-surface-container-low rounded-lg text-left transition-colors text-sm">
+<span class="material-symbols-outlined text-text-muted text-[20px] mr-2">folder_open</span>
+<span>Zeta Residence</span>
+</button>
+</li>
+</ul>
+</div>
+<div class="mt-4 flex-1">
+<h3 class="font-label-caps text-label-caps text-text-muted mb-3 uppercase tracking-wider">Quick Access</h3>
+<ul class="space-y-1">
+<li>
+<button class="w-full flex items-center px-3 py-2 text-on-surface-variant hover:bg-surface-container-low rounded-lg text-left transition-colors text-sm">
+<span class="material-symbols-outlined text-text-muted text-[20px] mr-2">group</span>
+<span>Shared with me</span>
+</button>
+</li>
+<li>
+<button class="w-full flex items-center px-3 py-2 text-on-surface-variant hover:bg-surface-container-low rounded-lg text-left transition-colors text-sm">
+<span class="material-symbols-outlined text-text-muted text-[20px] mr-2">star</span>
+<span>Starred</span>
+</button>
+</li>
+</ul>
+</div>
+<!-- Storage Indicator -->
+<div class="mt-auto pt-6 border-t border-border-slate">
+<div class="flex justify-between items-center mb-2">
+<span class="font-label-caps text-label-caps text-text-muted">STORAGE</span>
+<span class="font-body-sm text-body-sm text-primary font-medium">1.2 GB / 5 GB</span>
+</div>
+<div class="w-full bg-surface-container-high rounded-full h-1.5 mb-2 overflow-hidden">
+<div class="bg-primary h-1.5 rounded-full" style="width: 24%"></div>
+</div>
+<a class="font-body-sm text-body-sm text-primary hover:underline" href="#">Upgrade Plan</a>
+</div>
+</div>
+<!-- Document Grid Area -->
+<div class="flex-1 flex flex-col min-w-0 bg-surface-white rounded-xl shadow-[0_1px_3px_rgba(79,70,229,0.08)] border border-border-slate overflow-hidden">
+<!-- Toolbar -->
+<div class="p-4 border-b border-border-slate flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-surface-white">
+<div class="flex items-center gap-2">
+<h2 class="font-headline-sm text-headline-sm font-semibold text-on-surface">Contracts</h2>
+<span class="px-2 py-0.5 rounded text-xs font-medium bg-surface-container-low text-text-muted border border-border-slate">System</span>
+</div>
+<div class="flex items-center gap-3">
+<div class="relative hidden sm:block w-48 lg:w-64">
+<span class="material-symbols-outlined absolute left-2.5 top-2 text-text-muted text-[18px]">search</span>
+<input class="w-full pl-8 pr-3 py-1.5 bg-surface-container-low border border-transparent focus:bg-surface-white focus:border-primary rounded-md text-sm transition-colors outline-none focus:ring-1 focus:ring-primary/50" placeholder="Search in Contracts..." type="text"/>
+</div>
+<div class="flex items-center bg-surface-container-low rounded-md p-0.5 border border-border-slate">
+<button class="p-1.5 bg-surface-white shadow-sm rounded text-primary" title="Grid View">
+<span class="material-symbols-outlined text-[18px]">grid_view</span>
+</button>
+<button class="p-1.5 text-text-muted hover:text-on-surface-variant rounded transition-colors" title="List View">
+<span class="material-symbols-outlined text-[18px]">view_list</span>
+</button>
+</div>
+<button class="hidden sm:flex items-center gap-1.5 px-3 py-1.5 border border-border-slate text-on-surface hover:bg-surface-container-low rounded-md transition-colors text-sm font-medium">
+<span class="material-symbols-outlined text-[18px]">create_new_folder</span>
+                                New Folder
+                            </button>
+<button class="flex items-center gap-1.5 px-4 py-1.5 bg-primary hover:bg-primary/90 text-on-primary rounded-md transition-colors shadow-sm text-sm font-medium">
+<span class="material-symbols-outlined text-[18px]">upload_file</span>
+                                Upload
+                            </button>
+</div>
+</div>
+<!-- Grid Content -->
+<div class="p-6 overflow-y-auto bg-background/50 h-full">
+<!-- Folders Section -->
+<h4 class="font-label-caps text-label-caps text-text-muted mb-4 uppercase tracking-wider">Subfolders</h4>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mb-8">
+<!-- Folder Card -->
+<div class="bg-surface-white p-4 rounded-lg border border-border-slate shadow-sm hover:border-primary/30 hover:shadow-md transition-all cursor-pointer group flex items-start justify-between">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-md bg-secondary-container flex items-center justify-center text-primary group-hover:scale-105 transition-transform">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">folder</span>
+</div>
+<div>
+<h5 class="font-medium text-on-surface text-sm">2023 Contracts</h5>
+<p class="text-xs text-text-muted mt-0.5">14 Files</p>
+</div>
+</div>
+<button class="text-text-muted hover:text-on-surface opacity-0 group-hover:opacity-100 transition-opacity"><span class="material-symbols-outlined text-[20px]">more_vert</span></button>
+</div>
+<div class="bg-surface-white p-4 rounded-lg border border-border-slate shadow-sm hover:border-primary/30 hover:shadow-md transition-all cursor-pointer group flex items-start justify-between">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-md bg-secondary-container flex items-center justify-center text-primary group-hover:scale-105 transition-transform">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">folder</span>
+</div>
+<div>
+<h5 class="font-medium text-on-surface text-sm">2022 Contracts</h5>
+<p class="text-xs text-text-muted mt-0.5">42 Files</p>
+</div>
+</div>
+<button class="text-text-muted hover:text-on-surface opacity-0 group-hover:opacity-100 transition-opacity"><span class="material-symbols-outlined text-[20px]">more_vert</span></button>
+</div>
+<div class="bg-surface-white p-4 rounded-lg border border-border-slate shadow-sm hover:border-primary/30 hover:shadow-md transition-all cursor-pointer group flex items-start justify-between">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-md bg-surface-container flex items-center justify-center text-text-muted group-hover:scale-105 transition-transform border border-dashed border-outline-variant">
+<span class="material-symbols-outlined">add</span>
+</div>
+<div>
+<h5 class="font-medium text-text-muted text-sm">New Folder</h5>
+</div>
+</div>
+</div>
+</div>
+<!-- Files Section -->
+<h4 class="font-label-caps text-label-caps text-text-muted mb-4 uppercase tracking-wider">Recent Files</h4>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+<!-- File Card: PDF -->
+<div class="bg-surface-white p-4 rounded-lg border border-border-slate shadow-sm hover:border-primary/30 hover:shadow-md transition-all cursor-pointer group relative">
+<button class="absolute top-3 right-3 text-text-muted hover:text-on-surface opacity-0 group-hover:opacity-100 transition-opacity bg-surface-white/80 rounded"><span class="material-symbols-outlined text-[20px]">more_vert</span></button>
+<div class="w-12 h-12 rounded bg-danger-rose/10 text-danger-rose flex items-center justify-center mb-3">
+<span class="material-symbols-outlined text-[28px]">picture_as_pdf</span>
+</div>
+<h5 class="font-medium text-on-surface text-sm truncate mb-1" title="Subcontractor_Agreement_V2.pdf">Subcontractor_Agreement_V2.pdf</h5>
+<div class="flex items-center justify-between text-xs text-text-muted font-data-mono">
+<span>2.4 MB</span>
+<span>Oct 24, 2023</span>
+</div>
+</div>
+<!-- File Card: Excel -->
+<div class="bg-surface-white p-4 rounded-lg border border-border-slate shadow-sm hover:border-primary/30 hover:shadow-md transition-all cursor-pointer group relative">
+<button class="absolute top-3 right-3 text-text-muted hover:text-on-surface opacity-0 group-hover:opacity-100 transition-opacity bg-surface-white/80 rounded"><span class="material-symbols-outlined text-[20px]">more_vert</span></button>
+<div class="w-12 h-12 rounded bg-success-emerald/10 text-success-emerald flex items-center justify-center mb-3">
+<span class="material-symbols-outlined text-[28px]">description</span>
+</div>
+<h5 class="font-medium text-on-surface text-sm truncate mb-1" title="BOQ_Marmaray_Phase1.xlsx">BOQ_Marmaray_Phase1.xlsx</h5>
+<div class="flex items-center justify-between text-xs text-text-muted font-data-mono">
+<span>1.1 MB</span>
+<span>Oct 22, 2023</span>
+</div>
+</div>
+<!-- File Card: Image -->
+<div class="bg-surface-white p-4 rounded-lg border border-border-slate shadow-sm hover:border-primary/30 hover:shadow-md transition-all cursor-pointer group relative">
+<button class="absolute top-3 right-3 text-text-muted hover:text-on-surface opacity-0 group-hover:opacity-100 transition-opacity bg-surface-white/80 rounded"><span class="material-symbols-outlined text-[20px]">more_vert</span></button>
+<div class="w-12 h-12 rounded bg-warning-amber/10 text-warning-amber flex items-center justify-center mb-3 overflow-hidden">
+<span class="material-symbols-outlined text-[28px]">image</span>
+</div>
+<h5 class="font-medium text-on-surface text-sm truncate mb-1" title="Site_Inspection_Signed.jpg">Site_Inspection_Signed.jpg</h5>
+<div class="flex items-center justify-between text-xs text-text-muted font-data-mono">
+<span>4.8 MB</span>
+<span>Oct 20, 2023</span>
+</div>
+</div>
+<!-- File Card: PDF -->
+<div class="bg-surface-white p-4 rounded-lg border border-border-slate shadow-sm hover:border-primary/30 hover:shadow-md transition-all cursor-pointer group relative">
+<button class="absolute top-3 right-3 text-text-muted hover:text-on-surface opacity-0 group-hover:opacity-100 transition-opacity bg-surface-white/80 rounded"><span class="material-symbols-outlined text-[20px]">more_vert</span></button>
+<div class="w-12 h-12 rounded bg-danger-rose/10 text-danger-rose flex items-center justify-center mb-3">
+<span class="material-symbols-outlined text-[28px]">picture_as_pdf</span>
+</div>
+<h5 class="font-medium text-on-surface text-sm truncate mb-1" title="NDA_Consultant.pdf">NDA_Consultant.pdf</h5>
+<div class="flex items-center justify-between text-xs text-text-muted font-data-mono">
+<span>850 KB</span>
+<span>Oct 15, 2023</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

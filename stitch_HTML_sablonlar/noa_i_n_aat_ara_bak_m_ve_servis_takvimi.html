@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+
+<html lang="tr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>NOA İnşaat - Araç Bakım ve Servis Takvimi</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary-fixed": "#351000",
+                        "on-surface-variant": "#464555",
+                        "secondary-fixed-dim": "#bec6e0",
+                        "secondary": "#565e74",
+                        "on-primary-container": "#dad7ff",
+                        "on-error": "#ffffff",
+                        "text-muted": "#64748B",
+                        "decorative-navy": "#000080",
+                        "danger-rose": "#E11D48",
+                        "tertiary-container": "#a44100",
+                        "on-tertiary": "#ffffff",
+                        "surface-tint": "#4d44e3",
+                        "surface-container-lowest": "#ffffff",
+                        "decorative-purple": "#800080",
+                        "on-primary-fixed-variant": "#3323cc",
+                        "surface-variant": "#e0e3e5",
+                        "tertiary": "#7e3000",
+                        "on-primary-fixed": "#0f0069",
+                        "on-primary": "#ffffff",
+                        "secondary-container": "#dae2fd",
+                        "inverse-on-surface": "#eff1f3",
+                        "on-secondary-fixed": "#131b2e",
+                        "on-background": "#191c1e",
+                        "surface-dim": "#d8dadc",
+                        "error": "#ba1a1a",
+                        "surface-container-highest": "#e0e3e5",
+                        "background": "#f7f9fb",
+                        "on-tertiary-fixed-variant": "#7b2f00",
+                        "border-slate": "#E2E8F0",
+                        "secondary-fixed": "#dae2fd",
+                        "success-emerald": "#10B981",
+                        "error-container": "#ffdad6",
+                        "on-secondary-fixed-variant": "#3f465c",
+                        "surface-container": "#eceef0",
+                        "outline": "#777587",
+                        "primary-fixed-dim": "#c3c0ff",
+                        "primary-fixed": "#e2dfff",
+                        "warning-amber": "#F59E0B",
+                        "primary-container": "#4f46e5",
+                        "surface": "#f7f9fb",
+                        "on-secondary-container": "#5c647a",
+                        "tertiary-fixed-dim": "#ffb695",
+                        "on-secondary": "#ffffff",
+                        "tertiary-fixed": "#ffdbcc",
+                        "surface-bright": "#f7f9fb",
+                        "on-error-container": "#93000a",
+                        "surface-container-high": "#e6e8ea",
+                        "inverse-surface": "#2d3133",
+                        "inverse-primary": "#c3c0ff",
+                        "on-tertiary-container": "#ffd2be",
+                        "surface-white": "#FFFFFF",
+                        "primary": "#3525cd",
+                        "on-surface": "#191c1e",
+                        "outline-variant": "#c7c4d8",
+                        "surface-container-low": "#f2f4f6"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-md": "1rem",
+                        "sidebar-collapsed": "80px",
+                        "grid-cell-py": "0.5rem",
+                        "grid-cell-px": "0.75rem",
+                        "container-gap": "1.5rem",
+                        "header-height": "64px",
+                        "stack-sm": "0.5rem",
+                        "sidebar-width": "260px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "data-mono": ["JetBrains Mono"],
+                        "body-lg": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "headline-sm": ["Inter"],
+                        "body-md": ["Inter"],
+                        "label-caps": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["30px", {"lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                        "data-mono": ["13px", {"lineHeight": "16px", "fontWeight": "500"}],
+                        "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "body-sm": ["13px", {"lineHeight": "18px", "fontWeight": "400"}],
+                        "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700"}]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-background text-on-surface font-body-md min-h-screen flex antialiased">
+<!-- SideNavBar -->
+<nav class="bg-surface-white dark:bg-inverse-surface shadow-sm fixed left-0 top-0 h-screen w-sidebar flex flex-col border-r border-border-slate dark:border-outline-variant z-50 hidden md:flex">
+<!-- Header -->
+<div class="p-6 border-b border-border-slate dark:border-outline-variant flex items-center gap-4">
+<div class="w-10 h-10 rounded bg-primary flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-white" style="font-variation-settings: 'FILL' 1;">business</span>
+</div>
+<div>
+<h1 class="font-headline-sm text-headline-sm font-bold text-primary dark:text-primary-fixed">NOA ERP</h1>
+<p class="font-body-sm text-body-sm text-on-surface-variant dark:text-surface-variant">İnşaat Yönetim Sistemi</p>
+</div>
+</div>
+<!-- CTA -->
+<div class="px-6 py-4">
+<button class="w-full bg-primary hover:bg-primary-fixed-dim text-on-primary font-body-md py-2 px-4 rounded-lg flex items-center justify-center gap-2 transition-colors duration-200 shadow-sm active:scale-[0.98]">
+<span class="material-symbols-outlined">add</span>
+                Yeni Proje Ekle
+            </button>
+</div>
+<!-- Navigation Tabs -->
+<div class="flex-1 overflow-y-auto px-4 py-2 flex flex-col gap-1">
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-primary-fixed hover:bg-surface-container-low dark:hover:bg-on-secondary-fixed-variant transition-colors duration-200 active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-body-md text-body-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-primary-fixed hover:bg-surface-container-low dark:hover:bg-on-secondary-fixed-variant transition-colors duration-200 active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined">construction</span>
+<span class="font-body-md text-body-md">Şantiyeler</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-primary-fixed hover:bg-surface-container-low dark:hover:bg-on-secondary-fixed-variant transition-colors duration-200 active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined">payments</span>
+<span class="font-body-md text-body-md">Finans</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-primary-fixed hover:bg-surface-container-low dark:hover:bg-on-secondary-fixed-variant transition-colors duration-200 active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined">group</span>
+<span class="font-body-md text-body-md">İnsan Kaynakları</span>
+</a>
+<!-- Active Tab: Tedarik Zinciri (Mapped from intent: Araçlar/Filo) -->
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg bg-secondary-container dark:bg-on-secondary-fixed-variant text-primary dark:text-primary-fixed-dim font-semibold active:scale-[0.98] transition-transform" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">local_shipping</span>
+<span class="font-body-md text-body-md">Tedarik Zinciri</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-primary-fixed hover:bg-surface-container-low dark:hover:bg-on-secondary-fixed-variant transition-colors duration-200 active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined">analytics</span>
+<span class="font-body-md text-body-md">Raporlar</span>
+</a>
+</div>
+<!-- Footer Tabs -->
+<div class="p-4 border-t border-border-slate dark:border-outline-variant flex flex-col gap-1">
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-primary-fixed hover:bg-surface-container-low dark:hover:bg-on-secondary-fixed-variant transition-colors duration-200 active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-body-md text-body-md">Ayarlar</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-primary-fixed hover:bg-surface-container-low dark:hover:bg-on-secondary-fixed-variant transition-colors duration-200 active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined">help</span>
+<span class="font-body-md text-body-md">Yardım</span>
+</a>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<main class="flex-1 md:ml-sidebar flex flex-col min-h-screen">
+<!-- TopNavBar -->
+<header class="bg-surface-white/80 dark:bg-inverse-surface/80 backdrop-blur-md sticky top-0 z-40 w-full h-header-height border-b border-border-slate dark:border-outline-variant flex justify-between items-center px-6 transition-colors">
+<div class="flex items-center gap-6">
+<!-- Mobile Menu Button -->
+<button class="md:hidden text-on-surface-variant p-2 -ml-2">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<div class="font-headline-md text-headline-md font-extrabold text-primary dark:text-primary-fixed hidden md:block">
+                    NOA İnşaat ERP
+                </div>
+</div>
+<!-- Navigation Links -->
+<nav class="hidden lg:flex items-center gap-8 h-full">
+<a class="h-full flex items-center font-label-caps text-label-caps text-on-surface-variant dark:text-surface-variant hover:text-on-surface dark:hover:text-inverse-on-surface transition-colors" href="#">Genel Bakış</a>
+<a class="h-full flex items-center font-label-caps text-label-caps text-on-surface-variant dark:text-surface-variant hover:text-on-surface dark:hover:text-inverse-on-surface transition-colors" href="#">Hakedişler</a>
+<a class="h-full flex items-center font-label-caps text-label-caps text-on-surface-variant dark:text-surface-variant hover:text-on-surface dark:hover:text-inverse-on-surface transition-colors" href="#">Bütçe Analizi</a>
+</nav>
+<!-- Trailing Actions -->
+<div class="flex items-center gap-4">
+<button class="hidden sm:flex bg-secondary-container hover:bg-primary-fixed-dim text-primary font-label-caps text-label-caps py-2 px-4 rounded-lg items-center gap-2 transition-colors opacity-100 active:opacity-80">
+<span class="material-symbols-outlined text-[18px]">bolt</span>
+                    Hızlı İşlem
+                </button>
+<div class="flex items-center gap-2 text-on-surface-variant">
+<button class="p-2 hover:bg-surface-container-low rounded-full transition-colors"><span class="material-symbols-outlined">notifications</span></button>
+<button class="p-2 hover:bg-surface-container-low rounded-full transition-colors"><span class="material-symbols-outlined">apps</span></button>
+<button class="p-2 hover:bg-surface-container-low rounded-full transition-colors">
+<img class="w-8 h-8 rounded-full object-cover border border-border-slate" data-alt="A professional headshot of a construction site manager in a bright office environment, wearing a high-vis vest and hard hat resting on the desk behind him. The lighting is modern and high-key, reinforcing a clean corporate aesthetic with white and indigo tones. The image is cropped to a perfect circle for a user profile avatar." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB9OXhJ-suDPs334mmZeES3DZ-MV92u_Tl3KM-qz1Az0rxH7tB71624H-_L15ZiVs0jlRxcV-ye_qZnktycetLA49CVxryNL-M4X08VFBC8YCE6z87085CZspLzCCEV-DFoDWrdGCgwqivE4ttLHm6usYl-HqZiY4BVattUtT35NAD9tzqPeqAWlOlP5XCkNNqUPQWHJ9CrhRMUYIk9kESYoqj6XurlaauMOLYPWAAxkstO1VxLrMUl"/>
+</button>
+</div>
+</div>
+</header>
+<!-- Page Content -->
+<div class="p-6 md:p-8 lg:p-10 max-w-7xl mx-auto w-full flex-1 flex flex-col gap-6">
+<!-- Page Header & Actions -->
+<div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-2">
+<div>
+<div class="flex items-center gap-2 text-text-muted mb-1">
+<span class="font-label-caps text-label-caps">Tedarik Zinciri</span>
+<span class="material-symbols-outlined text-[16px]">chevron_right</span>
+<span class="font-label-caps text-label-caps text-primary">Filo Yönetimi</span>
+</div>
+<h2 class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface">Araç Bakım &amp; Servis Takvimi</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">Araç filosunun periyodik bakım, muayene ve sigorta durumları.</p>
+</div>
+<div class="flex flex-wrap items-center gap-3 w-full md:w-auto">
+<!-- View Toggle -->
+<div class="bg-surface-container-low p-1 rounded-lg flex items-center mr-2">
+<button class="p-2 rounded-md bg-surface-white shadow-sm text-primary flex items-center justify-center transition-all">
+<span class="material-symbols-outlined text-[20px]">calendar_view_month</span>
+</button>
+<button class="p-2 rounded-md text-on-surface-variant hover:text-primary flex items-center justify-center transition-all">
+<span class="material-symbols-outlined text-[20px]">view_list</span>
+</button>
+</div>
+<button class="bg-surface-white border border-border-slate hover:bg-surface-container-low text-on-surface font-body-sm text-body-sm py-2 px-4 rounded-lg flex items-center gap-2 transition-colors shadow-sm">
+<span class="material-symbols-outlined text-[18px]">filter_list</span>
+                        Filtrele
+                    </button>
+<button class="bg-primary hover:bg-on-primary-fixed-variant text-white font-body-sm text-body-sm py-2 px-4 rounded-lg flex items-center gap-2 transition-colors shadow-sm">
+<span class="material-symbols-outlined text-[18px]">add</span>
+                        Kayıt Ekle
+                    </button>
+</div>
+</div>
+<!-- Dashboard Overview Cards -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- Critical Card -->
+<div class="bg-error-container/20 border border-error-container p-5 rounded-xl shadow-sm flex items-start gap-4">
+<div class="w-12 h-12 rounded-full bg-danger-rose/10 flex items-center justify-center text-danger-rose shrink-0">
+<span class="material-symbols-outlined text-[24px]">warning</span>
+</div>
+<div>
+<p class="font-label-caps text-label-caps text-on-surface-variant mb-1">Gecikmiş Bakımlar</p>
+<div class="font-headline-md text-headline-md text-danger-rose">3 Araç</div>
+<p class="font-body-sm text-body-sm text-text-muted mt-1">Acil müdahale gerektiriyor</p>
+</div>
+</div>
+<!-- Warning Card -->
+<div class="bg-warning-amber/5 border border-warning-amber/20 p-5 rounded-xl shadow-sm flex items-start gap-4">
+<div class="w-12 h-12 rounded-full bg-warning-amber/10 flex items-center justify-center text-warning-amber shrink-0">
+<span class="material-symbols-outlined text-[24px]">schedule</span>
+</div>
+<div>
+<p class="font-label-caps text-label-caps text-on-surface-variant mb-1">Yaklaşan (7 Gün)</p>
+<div class="font-headline-md text-headline-md text-warning-amber">8 Araç</div>
+<p class="font-body-sm text-body-sm text-text-muted mt-1">Muayene ve periyodik</p>
+</div>
+</div>
+<!-- Healthy Card -->
+<div class="bg-success-emerald/5 border border-success-emerald/20 p-5 rounded-xl shadow-sm flex items-start gap-4">
+<div class="w-12 h-12 rounded-full bg-success-emerald/10 flex items-center justify-center text-success-emerald shrink-0">
+<span class="material-symbols-outlined text-[24px]">verified_user</span>
+</div>
+<div>
+<p class="font-label-caps text-label-caps text-on-surface-variant mb-1">Aktif &amp; Sağlıklı Filo</p>
+<div class="font-headline-md text-headline-md text-success-emerald">42 Araç</div>
+<p class="font-body-sm text-body-sm text-text-muted mt-1">%82 operasyonel durum</p>
+</div>
+</div>
+</div>
+<!-- Main Data Canvas - Bento Grid Style List -->
+<div class="bg-surface-white rounded-xl shadow-sm border border-border-slate overflow-hidden mt-2">
+<!-- Table Header -->
+<div class="bg-surface-container-low px-6 py-4 border-b border-border-slate grid grid-cols-12 gap-4 hidden md:grid">
+<div class="col-span-3 font-label-caps text-label-caps text-text-muted">Araç &amp; Plaka</div>
+<div class="col-span-3 font-label-caps text-label-caps text-text-muted">Bakım Türü</div>
+<div class="col-span-2 font-label-caps text-label-caps text-text-muted">Sonraki Tarih</div>
+<div class="col-span-2 font-label-caps text-label-caps text-text-muted">Durum</div>
+<div class="col-span-2 font-label-caps text-label-caps text-text-muted text-right">Aksiyonlar</div>
+</div>
+<!-- Data Rows -->
+<div class="divide-y divide-border-slate">
+<!-- Row 1: Overdue / Critical -->
+<div class="p-4 md:px-6 md:py-4 hover:bg-surface-container-low/50 transition-colors grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
+<div class="col-span-1 md:col-span-3 flex items-center gap-3">
+<div class="w-10 h-10 rounded bg-surface-container-highest flex items-center justify-center text-on-surface-variant shrink-0 border border-border-slate">
+<span class="material-symbols-outlined">local_shipping</span>
+</div>
+<div>
+<div class="font-data-mono text-data-mono text-on-surface bg-border-slate/30 px-2 py-0.5 rounded border border-border-slate/50 inline-block mb-1">34 NOA 102</div>
+<div class="font-body-sm text-body-sm text-text-muted">Ford Trucks 3542</div>
+</div>
+</div>
+<div class="col-span-1 md:col-span-3 flex flex-col gap-1">
+<div class="font-body-md text-body-md text-on-surface flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-danger-rose"></span>
+                                TÜVTÜRK Muayene
+                            </div>
+<div class="font-body-sm text-body-sm text-text-muted">Şantiye C - Ankara</div>
+</div>
+<div class="col-span-1 md:col-span-2">
+<div class="font-data-mono text-data-mono text-danger-rose">12 Eki 2023</div>
+<div class="font-body-sm text-body-sm text-text-muted">Geçen Hafta</div>
+</div>
+<div class="col-span-1 md:col-span-2">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-danger-rose/10 text-danger-rose font-label-caps text-[10px] tracking-wider font-bold">
+<span class="material-symbols-outlined text-[14px]">error</span>
+                                4 GÜN GECİKTİ
+                            </span>
+</div>
+<div class="col-span-1 md:col-span-2 flex items-center justify-end gap-2">
+<button class="p-2 text-primary hover:bg-secondary-container rounded transition-colors" title="Servis Formu Yükle">
+<span class="material-symbols-outlined text-[20px]">upload_file</span>
+</button>
+<button class="p-2 text-text-muted hover:text-on-surface hover:bg-surface-container-highest rounded transition-colors">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</button>
+</div>
+</div>
+<!-- Row 2: Warning / Upcoming -->
+<div class="p-4 md:px-6 md:py-4 hover:bg-surface-container-low/50 transition-colors grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
+<div class="col-span-1 md:col-span-3 flex items-center gap-3">
+<div class="w-10 h-10 rounded bg-surface-container-highest flex items-center justify-center text-on-surface-variant shrink-0 border border-border-slate">
+<span class="material-symbols-outlined">directions_car</span>
+</div>
+<div>
+<div class="font-data-mono text-data-mono text-on-surface bg-border-slate/30 px-2 py-0.5 rounded border border-border-slate/50 inline-block mb-1">06 NOA 001</div>
+<div class="font-body-sm text-body-sm text-text-muted">Toyota Hilux 4x4</div>
+</div>
+</div>
+<div class="col-span-1 md:col-span-3 flex flex-col gap-1">
+<div class="font-body-md text-body-md text-on-surface flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-warning-amber"></span>
+                                60.000 KM Periyodik
+                            </div>
+<div class="font-body-sm text-body-sm text-text-muted">Merkez Ofis - İst</div>
+</div>
+<div class="col-span-1 md:col-span-2">
+<div class="font-data-mono text-data-mono text-on-surface">24 Eki 2023</div>
+<div class="font-body-sm text-body-sm text-text-muted">Mevcut KM: 59.850</div>
+</div>
+<div class="col-span-1 md:col-span-2">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-warning-amber/10 text-warning-amber font-label-caps text-[10px] tracking-wider font-bold">
+<span class="material-symbols-outlined text-[14px]">notifications_active</span>
+                                YAKLAŞIYOR
+                            </span>
+</div>
+<div class="col-span-1 md:col-span-2 flex items-center justify-end gap-2">
+<button class="p-2 text-primary hover:bg-secondary-container rounded transition-colors" title="Hatırlatıcı Kur">
+<span class="material-symbols-outlined text-[20px]">alarm_add</span>
+</button>
+<button class="p-2 text-text-muted hover:text-on-surface hover:bg-surface-container-highest rounded transition-colors">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</button>
+</div>
+</div>
+<!-- Row 3: Healthy -->
+<div class="p-4 md:px-6 md:py-4 hover:bg-surface-container-low/50 transition-colors grid grid-cols-1 md:grid-cols-12 gap-4 items-center opacity-80">
+<div class="col-span-1 md:col-span-3 flex items-center gap-3">
+<div class="w-10 h-10 rounded bg-surface-container-highest flex items-center justify-center text-on-surface-variant shrink-0 border border-border-slate">
+<span class="material-symbols-outlined">precision_manufacturing</span>
+</div>
+<div>
+<div class="font-data-mono text-data-mono text-on-surface bg-border-slate/30 px-2 py-0.5 rounded border border-border-slate/50 inline-block mb-1">NOA-EXC-04</div>
+<div class="font-body-sm text-body-sm text-text-muted">CAT 320 Ekskavatör</div>
+</div>
+</div>
+<div class="col-span-1 md:col-span-3 flex flex-col gap-1">
+<div class="font-body-md text-body-md text-on-surface flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-primary"></span>
+                                Trafik &amp; Kasko Sigortası
+                            </div>
+<div class="font-body-sm text-body-sm text-text-muted">Şantiye B - İzmir</div>
+</div>
+<div class="col-span-1 md:col-span-2">
+<div class="font-data-mono text-data-mono text-on-surface">15 Oca 2024</div>
+<div class="font-body-sm text-body-sm text-text-muted">3 Ay Var</div>
+</div>
+<div class="col-span-1 md:col-span-2">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-success-emerald/10 text-success-emerald font-label-caps text-[10px] tracking-wider font-bold">
+<span class="material-symbols-outlined text-[14px]">check_circle</span>
+                                SORUNSUZ
+                            </span>
+</div>
+<div class="col-span-1 md:col-span-2 flex items-center justify-end gap-2">
+<button class="p-2 text-text-muted hover:text-on-surface hover:bg-surface-container-highest rounded transition-colors">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Pagination (Placeholder) -->
+<div class="flex justify-between items-center mt-4">
+<span class="font-body-sm text-body-sm text-text-muted">Toplam 53 araç, 1-10 arası gösteriliyor.</span>
+<div class="flex items-center gap-1">
+<button class="p-1 rounded bg-surface-white border border-border-slate text-text-muted shadow-sm" disabled=""><span class="material-symbols-outlined">chevron_left</span></button>
+<button class="p-1 px-3 rounded bg-primary text-white font-body-sm text-body-sm shadow-sm">1</button>
+<button class="p-1 px-3 rounded bg-surface-white border border-border-slate text-on-surface hover:bg-surface-container-low font-body-sm text-body-sm shadow-sm">2</button>
+<button class="p-1 px-3 rounded bg-surface-white border border-border-slate text-on-surface hover:bg-surface-container-low font-body-sm text-body-sm shadow-sm">3</button>
+<button class="p-1 rounded bg-surface-white border border-border-slate text-on-surface hover:bg-surface-container-low shadow-sm"><span class="material-symbols-outlined">chevron_right</span></button>
+</div>
+</div>
+</div>
+</main>
+</body></html>

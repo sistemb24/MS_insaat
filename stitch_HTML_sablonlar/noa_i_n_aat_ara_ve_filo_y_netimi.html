@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Vehicles - NOA İnşaat</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-error-container": "#93000a",
+                        "on-tertiary-container": "#ffd2be",
+                        "on-tertiary": "#ffffff",
+                        "on-secondary-container": "#5c647a",
+                        "outline": "#777587",
+                        "inverse-primary": "#c3c0ff",
+                        "inverse-surface": "#2d3133",
+                        "surface-dim": "#d8dadc",
+                        "on-secondary-fixed": "#131b2e",
+                        "on-error": "#ffffff",
+                        "surface-variant": "#e0e3e5",
+                        "primary-fixed": "#e2dfff",
+                        "success-emerald": "#10B981",
+                        "tertiary-container": "#a44100",
+                        "border-slate": "#E2E8F0",
+                        "on-primary-fixed-variant": "#3323cc",
+                        "primary": "#3525cd",
+                        "on-secondary-fixed-variant": "#3f465c",
+                        "error-container": "#ffdad6",
+                        "surface-container-highest": "#e0e3e5",
+                        "warning-amber": "#F59E0B",
+                        "on-surface-variant": "#464555",
+                        "primary-fixed-dim": "#c3c0ff",
+                        "surface-container-high": "#e6e8ea",
+                        "on-tertiary-fixed-variant": "#7b2f00",
+                        "tertiary-fixed-dim": "#ffb695",
+                        "surface-bright": "#f7f9fb",
+                        "secondary-fixed-dim": "#bec6e0",
+                        "on-primary-container": "#dad7ff",
+                        "surface-tint": "#4d44e3",
+                        "tertiary": "#7e3000",
+                        "on-primary-fixed": "#0f0069",
+                        "danger-rose": "#E11D48",
+                        "surface-container": "#eceef0",
+                        "on-background": "#191c1e",
+                        "primary-container": "#4f46e5",
+                        "text-muted": "#64748B",
+                        "surface": "#f7f9fb",
+                        "outline-variant": "#c7c4d8",
+                        "tertiary-fixed": "#ffdbcc",
+                        "on-tertiary-fixed": "#351000",
+                        "on-secondary": "#ffffff",
+                        "secondary-fixed": "#dae2fd",
+                        "decorative-purple": "#800080",
+                        "inverse-on-surface": "#eff1f3",
+                        "surface-container-lowest": "#ffffff",
+                        "error": "#ba1a1a",
+                        "on-surface": "#191c1e",
+                        "background": "#f7f9fb",
+                        "on-primary": "#ffffff",
+                        "secondary": "#565e74",
+                        "decorative-navy": "#000080",
+                        "surface-container-low": "#f2f4f6",
+                        "secondary-container": "#dae2fd",
+                        "surface-white": "#FFFFFF"
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    spacing: {
+                        "sidebar-collapsed": "80px",
+                        "grid-cell-py": "0.5rem",
+                        "header-height": "64px",
+                        "stack-md": "1rem",
+                        "stack-sm": "0.5rem",
+                        "grid-cell-px": "0.75rem",
+                        "container-gap": "1.5rem",
+                        "sidebar-width": "260px"
+                    },
+                    fontFamily: {
+                        "headline-lg-mobile": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "data-mono": ["JetBrains Mono"],
+                        "body-md": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "headline-sm": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "body-sm": ["Inter"]
+                    },
+                    fontSize: {
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "700" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "data-mono": ["13px", { "lineHeight": "16px", "fontWeight": "500" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "headline-lg": ["30px", { "lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "body-sm": ["13px", { "lineHeight": "18px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-background text-on-surface font-body-md min-h-screen">
+<!-- TopNavBar -->
+<nav class="bg-surface-white/80 dark:bg-inverse-surface/80 backdrop-blur-md h-header-height fixed top-0 right-0 z-40 bg-surface-white dark:bg-inverse-surface border-b border-outline-variant dark:border-outline flat no shadows flex justify-between items-center px-6 w-[calc(100%-theme(spacing.sidebar-width))] ml-sidebar-width hidden md:flex">
+<div class="flex items-center gap-4">
+<!-- Search bar location: on_left -->
+<div class="relative w-64">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant font-label-caps" data-icon="search">search</span>
+<input class="w-full pl-10 pr-4 py-2 bg-surface-container-low border border-border-slate rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent font-body-sm text-on-surface transition-all duration-200" placeholder="Search..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-primary-fixed transition-colors transition-all duration-200">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<div class="w-8 h-8 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-headline-sm font-bold overflow-hidden cursor-pointer hover:ring-2 ring-primary transition-all duration-200">
+<img alt="User Profile Avatar" class="w-full h-full object-cover" data-alt="A professional headshot of a corporate user, wearing a clean suit against a solid neutral background, well-lit with soft studio lighting, representing a modern SaaS user profile avatar. Bright and clean aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD0_Y3-w9_k0TdsyvNLWnNnK6B8odJa5Uab9dmn4WKBEF9asLM5PevNsAS6qUfqH47ipB891hNkZyIZXkUn79jGFkXoU-xqZIRLpydDF20D2Zsndo4P73tC3gtXF2_H07dNpOmGqUxhjggxv_obd_bsOxowfJmCkcF8s8sBxhcd44V89ttv8zEck0IrxMRkFvqSPkvA3LbT0LsrQAoVwF1Gn0ZlQqT0PiKCvu6Z98N2i2ZHHzZnfA6S"/>
+</div>
+</div>
+</nav>
+<!-- SideNavBar -->
+<nav class="bg-surface-white dark:bg-inverse-surface w-sidebar-width h-screen fixed left-0 top-0 bg-surface-white dark:bg-inverse-surface shadow-sm shadow-[0_1px_3px_rgba(79,70,229,0.08)] flex flex-col h-full border-r border-outline-variant dark:border-outline hidden md:flex z-50">
+<div class="p-6">
+<h1 class="font-headline-sm text-headline-sm font-bold text-primary dark:text-inverse-primary tracking-tight">NOA İnşaat</h1>
+<p class="text-on-surface-variant font-body-sm mt-1">Construction ERP</p>
+</div>
+<div class="flex-1 overflow-y-auto px-4 py-2 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-low transition-colors transition-all duration-200 active:scale-95 font-body-md text-body-md rounded-lg" href="#">
+<span class="material-symbols-outlined text-lg" data-icon="dashboard">dashboard</span>
+<span>Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-low transition-colors transition-all duration-200 active:scale-95 font-body-md text-body-md rounded-lg" href="#">
+<span class="material-symbols-outlined text-lg" data-icon="business">business</span>
+<span>Firms</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-low transition-colors transition-all duration-200 active:scale-95 font-body-md text-body-md rounded-lg" href="#">
+<span class="material-symbols-outlined text-lg" data-icon="gavel">gavel</span>
+<span>Tender Management</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-low transition-colors transition-all duration-200 active:scale-95 font-body-md text-body-md rounded-lg" href="#">
+<span class="material-symbols-outlined text-lg" data-icon="description">description</span>
+<span>Document Center</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-low transition-colors transition-all duration-200 active:scale-95 font-body-md text-body-md rounded-lg" href="#">
+<span class="material-symbols-outlined text-lg" data-icon="group">group</span>
+<span>Staff</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-low transition-colors transition-all duration-200 active:scale-95 font-body-md text-body-md rounded-lg" href="#">
+<span class="material-symbols-outlined text-lg" data-icon="inventory_2">inventory_2</span>
+<span>Inventory</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 bg-secondary-container dark:bg-primary-container text-primary dark:text-on-primary-container rounded-lg font-semibold transition-all duration-200 active:scale-95 font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined text-lg" data-icon="directions_car">directions_car</span>
+<span>Vehicles</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-low transition-colors transition-all duration-200 active:scale-95 font-body-md text-body-md rounded-lg" href="#">
+<span class="material-symbols-outlined text-lg" data-icon="settings">settings</span>
+<span>Settings</span>
+</a>
+</div>
+<div class="p-4 border-t border-outline-variant mt-auto">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-container-high overflow-hidden border border-border-slate">
+<img alt="NOA İnşaat Logo" class="w-full h-full object-cover" data-alt="Logo for NOA İnşaat, modern minimal construction firm branding, featuring geometric architectural elements in indigo and dark slate colors, clean white background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCNLsPCfJ3ozSDqQtRwDio56y2gqYUbCg307quFgbA0WdhP6vuayi--zOmYks1ADMrWqyEpA8PClD1ZnHyf07NYeTeCLazBQvgU_C6d3zxpzuom_-mYCSdi07GnsX1UMiDzU13xYZj5KD8NTRmSBrcW20-5ILxOSOW5dtGts1YXD1sc5V8Eyq2CrNJ-F9cG2f8VcMKAPqSQJKCrjkzw91r1RSlQvW6dw4P8bPpGoQa8CwbzNgsVwvEP"/>
+</div>
+<div class="flex-1 min-w-0">
+<p class="font-body-sm text-body-sm text-on-surface font-semibold truncate">NOA İnşaat</p>
+<p class="font-label-caps text-label-caps text-on-surface-variant truncate">Admin</p>
+</div>
+</div>
+</div>
+</nav>
+<!-- Main Content Area -->
+<main class="md:ml-sidebar-width pt-header-height min-h-screen p-6 pb-24 md:pb-6">
+<div class="max-w-[1600px] mx-auto space-y-6">
+<!-- Page Header -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface hidden md:block">Vehicles</h2>
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface md:hidden">Vehicles</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">Fleet management and asset tracking.</p>
+</div>
+<div class="flex items-center gap-3">
+<button class="px-4 py-2 bg-surface-white border border-primary text-primary font-label-caps text-label-caps rounded-lg hover:bg-surface-container-low transition-colors shadow-sm">
+                        Export List
+                    </button>
+<button class="px-4 py-2 bg-primary text-on-primary font-label-caps text-label-caps rounded-lg hover:bg-primary-fixed-variant transition-colors shadow-[0_1px_3px_rgba(79,70,229,0.2)] flex items-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="add">add</span>
+                        New Vehicle
+                    </button>
+</div>
+</div>
+<!-- Stats Widgets - Bento Grid -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- Stat Card 1 -->
+<div class="bg-surface-white rounded-xl p-5 shadow-[0_1px_3px_rgba(79,70,229,0.08)] border border-border-slate flex items-center justify-between relative overflow-hidden">
+<div class="z-10">
+<p class="font-label-caps text-label-caps text-on-surface-variant mb-1 uppercase tracking-wider">Total Vehicles</p>
+<p class="font-headline-md text-headline-md text-on-surface">142</p>
+</div>
+<div class="relative w-16 h-16 flex items-center justify-center z-10">
+<!-- Simple CSS Donut representation -->
+<div class="absolute inset-0 rounded-full border-4 border-surface-container-highest"></div>
+<div class="absolute inset-0 rounded-full border-4 border-primary border-t-transparent border-r-transparent transform -rotate-45"></div>
+<span class="material-symbols-outlined text-primary" data-icon="directions_car">directions_car</span>
+</div>
+<!-- Decorative background element -->
+<div class="absolute -right-4 -bottom-4 w-24 h-24 bg-primary-container/20 rounded-full blur-xl"></div>
+</div>
+<!-- Stat Card 2 -->
+<div class="bg-surface-white rounded-xl p-5 shadow-[0_1px_3px_rgba(79,70,229,0.08)] border border-border-slate flex items-center justify-between relative overflow-hidden">
+<div class="z-10">
+<p class="font-label-caps text-label-caps text-on-surface-variant mb-1 uppercase tracking-wider">Active in Field</p>
+<p class="font-headline-md text-headline-md text-on-surface">118</p>
+</div>
+<div class="relative w-16 h-16 flex items-center justify-center z-10">
+<div class="absolute inset-0 rounded-full border-4 border-surface-container-highest"></div>
+<div class="absolute inset-0 rounded-full border-4 border-success-emerald border-l-transparent transform rotate-45"></div>
+<span class="material-symbols-outlined text-success-emerald" data-icon="share_location">share_location</span>
+</div>
+<div class="absolute -right-4 -bottom-4 w-24 h-24 bg-success-emerald/10 rounded-full blur-xl"></div>
+</div>
+<!-- Stat Card 3 -->
+<div class="bg-surface-white rounded-xl p-5 shadow-[0_1px_3px_rgba(79,70,229,0.08)] border border-border-slate flex items-center justify-between relative overflow-hidden">
+<div class="z-10">
+<p class="font-label-caps text-label-caps text-on-surface-variant mb-1 uppercase tracking-wider">In Maintenance</p>
+<p class="font-headline-md text-headline-md text-on-surface">24</p>
+</div>
+<div class="relative w-16 h-16 flex items-center justify-center z-10">
+<div class="absolute inset-0 rounded-full border-4 border-surface-container-highest"></div>
+<div class="absolute inset-0 rounded-full border-4 border-warning-amber border-b-transparent border-l-transparent transform rotate-180"></div>
+<span class="material-symbols-outlined text-warning-amber" data-icon="build">build</span>
+</div>
+<div class="absolute -right-4 -bottom-4 w-24 h-24 bg-warning-amber/10 rounded-full blur-xl"></div>
+</div>
+</div>
+<!-- Main Data Table Card -->
+<div class="bg-surface-white rounded-xl shadow-[0_1px_3px_rgba(79,70,229,0.08)] border border-border-slate overflow-hidden flex flex-col">
+<!-- Table Toolbar -->
+<div class="p-4 border-b border-border-slate flex flex-col sm:flex-row gap-4 justify-between items-center bg-surface-bright">
+<div class="relative w-full sm:w-72">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm" data-icon="search">search</span>
+<input class="w-full pl-9 pr-4 py-2 bg-surface-white border border-border-slate rounded-lg focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary font-body-sm text-on-surface shadow-sm" placeholder="Search plate or code..." type="text"/>
+</div>
+<div class="flex gap-2 w-full sm:w-auto">
+<button class="flex-1 sm:flex-none px-3 py-2 bg-surface-white border border-border-slate text-on-surface-variant font-label-caps text-label-caps rounded-lg hover:bg-surface-container-low transition-colors shadow-sm flex items-center justify-center gap-1">
+<span class="material-symbols-outlined text-sm" data-icon="filter_list">filter_list</span>
+                            Filters
+                        </button>
+<button class="flex-1 sm:flex-none px-3 py-2 bg-surface-white border border-border-slate text-on-surface-variant font-label-caps text-label-caps rounded-lg hover:bg-surface-container-low transition-colors shadow-sm flex items-center justify-center gap-1">
+<span class="material-symbols-outlined text-sm" data-icon="view_column">view_column</span>
+                            Columns
+                        </button>
+</div>
+</div>
+<!-- Table Container -->
+<div class="overflow-x-auto w-full">
+<table class="w-full text-left border-collapse min-w-[800px]">
+<thead class="bg-surface sticky top-0 z-10">
+<tr>
+<th class="py-3 px-4 font-label-caps text-label-caps text-on-surface-variant border-b border-border-slate uppercase">Plate / Code</th>
+<th class="py-3 px-4 font-label-caps text-label-caps text-on-surface-variant border-b border-border-slate uppercase">Model</th>
+<th class="py-3 px-4 font-label-caps text-label-caps text-on-surface-variant border-b border-border-slate uppercase">Assigned Project</th>
+<th class="py-3 px-4 font-label-caps text-label-caps text-on-surface-variant border-b border-border-slate uppercase text-center">GPS</th>
+<th class="py-3 px-4 font-label-caps text-label-caps text-on-surface-variant border-b border-border-slate uppercase">Next Maintenance</th>
+<th class="py-3 px-4 font-label-caps text-label-caps text-on-surface-variant border-b border-border-slate uppercase">Inspection Expiry</th>
+<th class="py-3 px-4 font-label-caps text-label-caps text-on-surface-variant border-b border-border-slate uppercase text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="font-body-sm text-body-sm text-on-surface divide-y divide-border-slate">
+<!-- Row 1: Good Status -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="py-grid-cell-py px-grid-cell-px font-data-mono text-data-mono font-bold text-primary">34 ABC 123</td>
+<td class="py-grid-cell-py px-grid-cell-px">Ford Transit Custom <span class="text-on-surface-variant text-xs block">2021 | Van</span></td>
+<td class="py-grid-cell-py px-grid-cell-px">Maslak Office Tower</td>
+<td class="py-grid-cell-py px-grid-cell-px text-center">
+<span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-success-emerald/10 text-success-emerald" title="Connected">
+<div class="w-2 h-2 rounded-full bg-success-emerald animate-pulse"></div>
+</span>
+</td>
+<td class="py-grid-cell-py px-grid-cell-px">15 Oct 2024</td>
+<td class="py-grid-cell-py px-grid-cell-px">20 Dec 2024</td>
+<td class="py-grid-cell-py px-grid-cell-px text-right">
+<button class="p-1 text-on-surface-variant hover:text-primary transition-colors opacity-0 group-hover:opacity-100">
+<span class="material-symbols-outlined text-sm" data-icon="more_vert">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 2: Warning Status (Maintenance) -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="py-grid-cell-py px-grid-cell-px font-data-mono text-data-mono font-bold text-primary">34 XYZ 987</td>
+<td class="py-grid-cell-py px-grid-cell-px">Mercedes-Benz Actros <span class="text-on-surface-variant text-xs block">2019 | Heavy Truck</span></td>
+<td class="py-grid-cell-py px-grid-cell-px">Bosphorus Tunnel Phase 2</td>
+<td class="py-grid-cell-py px-grid-cell-px text-center">
+<span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-success-emerald/10 text-success-emerald" title="Connected">
+<div class="w-2 h-2 rounded-full bg-success-emerald"></div>
+</span>
+</td>
+<td class="py-grid-cell-py px-grid-cell-px">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-warning-amber/10 text-warning-amber font-data-mono text-[11px] font-bold">
+<span class="material-symbols-outlined text-[12px]" data-icon="warning">warning</span>
+                                        Tomorrow
+                                    </span>
+</td>
+<td class="py-grid-cell-py px-grid-cell-px">05 Jan 2025</td>
+<td class="py-grid-cell-py px-grid-cell-px text-right">
+<button class="p-1 text-on-surface-variant hover:text-primary transition-colors opacity-0 group-hover:opacity-100">
+<span class="material-symbols-outlined text-sm" data-icon="more_vert">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 3: Critical Status (GPS Lost & Expired Inspection) -->
+<tr class="hover:bg-surface-container-low transition-colors group bg-error-container/20">
+<td class="py-grid-cell-py px-grid-cell-px font-data-mono text-data-mono font-bold text-primary">06 DEF 456</td>
+<td class="py-grid-cell-py px-grid-cell-px">Caterpillar 320 <span class="text-on-surface-variant text-xs block">2018 | Excavator</span></td>
+<td class="py-grid-cell-py px-grid-cell-px text-on-surface-variant italic">Unassigned (Yard)</td>
+<td class="py-grid-cell-py px-grid-cell-px text-center">
+<span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-danger-rose/10 text-danger-rose" title="Signal Lost">
+<div class="w-2 h-2 rounded-full bg-danger-rose"></div>
+</span>
+</td>
+<td class="py-grid-cell-py px-grid-cell-px">12 Nov 2024</td>
+<td class="py-grid-cell-py px-grid-cell-px">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-danger-rose/10 text-danger-rose font-data-mono text-[11px] font-bold">
+<span class="material-symbols-outlined text-[12px]" data-icon="error">error</span>
+                                        Expired
+                                    </span>
+</td>
+<td class="py-grid-cell-py px-grid-cell-px text-right">
+<button class="p-1 text-on-surface-variant hover:text-primary transition-colors opacity-0 group-hover:opacity-100">
+<span class="material-symbols-outlined text-sm" data-icon="more_vert">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 4: Good Status -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="py-grid-cell-py px-grid-cell-px font-data-mono text-data-mono font-bold text-primary">35 IZM 001</td>
+<td class="py-grid-cell-py px-grid-cell-px">Toyota Hilux <span class="text-on-surface-variant text-xs block">2022 | Pickup</span></td>
+<td class="py-grid-cell-py px-grid-cell-px">Izmir Port Expansion</td>
+<td class="py-grid-cell-py px-grid-cell-px text-center">
+<span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-success-emerald/10 text-success-emerald" title="Connected">
+<div class="w-2 h-2 rounded-full bg-success-emerald"></div>
+</span>
+</td>
+<td class="py-grid-cell-py px-grid-cell-px">28 Feb 2025</td>
+<td class="py-grid-cell-py px-grid-cell-px">15 Mar 2025</td>
+<td class="py-grid-cell-py px-grid-cell-px text-right">
+<button class="p-1 text-on-surface-variant hover:text-primary transition-colors opacity-0 group-hover:opacity-100">
+<span class="material-symbols-outlined text-sm" data-icon="more_vert">more_vert</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Table Footer / Pagination -->
+<div class="p-4 border-t border-border-slate flex items-center justify-between bg-surface-bright">
+<span class="font-body-sm text-body-sm text-on-surface-variant">Showing 1-4 of 142 vehicles</span>
+<div class="flex gap-1">
+<button class="p-1 text-on-surface-variant hover:text-primary disabled:opacity-50" disabled="">
+<span class="material-symbols-outlined" data-icon="chevron_left">chevron_left</span>
+</button>
+<button class="p-1 text-on-surface hover:text-primary">
+<span class="material-symbols-outlined" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

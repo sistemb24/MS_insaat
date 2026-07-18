@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+
+<html class="light" lang="tr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Kasa ve Banka Yönetimi - NOA İnşaat ERP</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                            "primary": "#3525cd",
+                            "on-tertiary-fixed-variant": "#7b2f00",
+                            "primary-container": "#4f46e5",
+                            "surface-white": "#FFFFFF",
+                            "background": "#f7f9fb",
+                            "error-container": "#ffdad6",
+                            "border-slate": "#E2E8F0",
+                            "on-tertiary": "#ffffff",
+                            "tertiary": "#7e3000",
+                            "surface-variant": "#e0e3e5",
+                            "on-error": "#ffffff",
+                            "on-tertiary-container": "#ffd2be",
+                            "warning-amber": "#F59E0B",
+                            "on-surface-variant": "#464555",
+                            "tertiary-fixed-dim": "#ffb695",
+                            "surface-tint": "#4d44e3",
+                            "surface-container-highest": "#e0e3e5",
+                            "on-error-container": "#93000a",
+                            "secondary": "#565e74",
+                            "on-primary": "#ffffff",
+                            "on-background": "#191c1e",
+                            "primary-fixed-dim": "#c3c0ff",
+                            "on-tertiary-fixed": "#351000",
+                            "on-secondary-fixed-variant": "#3f465c",
+                            "outline-variant": "#c7c4d8",
+                            "on-secondary-fixed": "#131b2e",
+                            "danger-rose": "#E11D48",
+                            "on-surface": "#191c1e",
+                            "decorative-navy": "#000080",
+                            "primary-fixed": "#e2dfff",
+                            "surface": "#f7f9fb",
+                            "surface-bright": "#f7f9fb",
+                            "tertiary-container": "#a44100",
+                            "on-secondary-container": "#5c647a",
+                            "surface-container-low": "#f2f4f6",
+                            "inverse-on-surface": "#eff1f3",
+                            "on-primary-container": "#dad7ff",
+                            "inverse-surface": "#2d3133",
+                            "surface-container-lowest": "#ffffff",
+                            "outline": "#777587",
+                            "surface-container-high": "#e6e8ea",
+                            "success-emerald": "#10B981",
+                            "secondary-container": "#dae2fd",
+                            "on-primary-fixed": "#0f0069",
+                            "surface-container": "#eceef0",
+                            "surface-dim": "#d8dadc",
+                            "on-secondary": "#ffffff",
+                            "tertiary-fixed": "#ffdbcc",
+                            "error": "#ba1a1a",
+                            "text-muted": "#64748B",
+                            "secondary-fixed-dim": "#bec6e0",
+                            "secondary-fixed": "#dae2fd",
+                            "inverse-primary": "#c3c0ff",
+                            "on-primary-fixed-variant": "#3323cc",
+                            "decorative-purple": "#800080"
+                    },
+                    "borderRadius": {
+                            "DEFAULT": "0.25rem",
+                            "lg": "0.5rem",
+                            "xl": "0.75rem",
+                            "full": "9999px"
+                    },
+                    "spacing": {
+                            "sidebar-width": "260px",
+                            "container-gap": "1.5rem",
+                            "header-height": "64px",
+                            "grid-cell-px": "0.75rem",
+                            "stack-sm": "0.5rem",
+                            "grid-cell-py": "0.5rem",
+                            "sidebar-collapsed": "80px",
+                            "stack-md": "1rem"
+                    },
+                    "fontFamily": {
+                            "body-sm": ["Inter"],
+                            "headline-lg": ["Inter"],
+                            "body-lg": ["Inter"],
+                            "label-caps": ["Inter"],
+                            "headline-lg-mobile": ["Inter"],
+                            "headline-md": ["Inter"],
+                            "body-md": ["Inter"],
+                            "data-mono": ["JetBrains Mono"],
+                            "headline-sm": ["Inter"]
+                    },
+                    "fontSize": {
+                            "body-sm": ["13px", {"lineHeight": "18px", "fontWeight": "400"}],
+                            "headline-lg": ["30px", {"lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                            "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                            "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                            "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                            "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                            "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                            "data-mono": ["13px", {"lineHeight": "16px", "fontWeight": "500"}],
+                            "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}]
+                    }
+            },
+        }
+    };
+    </script>
+</head>
+<body class="bg-background text-on-surface font-body-md h-screen overflow-hidden flex">
+<!-- SideNavBar -->
+<aside class="w-sidebar-width h-screen fixed left-0 top-0 bg-surface-white dark:bg-inverse-surface shadow-[0_1px_3px_rgba(79,70,229,0.08)] flex flex-col h-full border-r border-outline-variant dark:border-outline z-50">
+<div class="h-header-height flex items-center px-6 border-b border-outline-variant">
+<div class="flex items-center gap-3">
+<img class="w-8 h-8 object-contain rounded" data-alt="A minimalist and highly professional corporate logo for a construction ERP system, featuring geometric shapes in a vibrant indigo blue color, set against a clean white background. High contrast and crisp edges." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBI9X9-1Pwr4RsWYNQggEOaym3gmZWNEUaR3DTF07wEtqdAckrt5PJNs3fcYZP0kiCD19Mgh6EKXFegWrvS-4wgEtJ9BReD_hjy-TPq5VAYnN46Gqc-PWCogsXBHi9msrg9kYWYQjhpp1LXgd37GGCPNtghJZ3sP7mW7wTm531WI2q9tK2cRTHX2885RCsilN1n1FmuOU_jnqMez6wyDBVuZW__QMLpAP6plT4cmpNJAlXqfa8whC9T"/>
+<div>
+<h1 class="font-headline-sm text-headline-sm font-bold text-primary dark:text-inverse-primary">NOA İnşaat</h1>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Construction ERP</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 overflow-y-auto py-4 px-3 flex flex-col gap-1">
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-low transition-colors hover:bg-surface-container dark:hover:bg-surface-container-highest transition-all duration-200 active:scale-95 rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span>Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-low transition-colors hover:bg-surface-container dark:hover:bg-surface-container-highest transition-all duration-200 active:scale-95 rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="business">business</span>
+<span>Firms</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-low transition-colors hover:bg-surface-container dark:hover:bg-surface-container-highest transition-all duration-200 active:scale-95 rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="gavel">gavel</span>
+<span>Tender Management</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-low transition-colors hover:bg-surface-container dark:hover:bg-surface-container-highest transition-all duration-200 active:scale-95 rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="description">description</span>
+<span>Document Center</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-low transition-colors hover:bg-surface-container dark:hover:bg-surface-container-highest transition-all duration-200 active:scale-95 rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span>Staff</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-low transition-colors hover:bg-surface-container dark:hover:bg-surface-container-highest transition-all duration-200 active:scale-95 rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
+<span>Inventory</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-low transition-colors hover:bg-surface-container dark:hover:bg-surface-container-highest transition-all duration-200 active:scale-95 rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="directions_car">directions_car</span>
+<span>Vehicles</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 bg-secondary-container dark:bg-primary-container text-primary dark:text-on-primary-container rounded-lg font-semibold hover:bg-surface-container dark:hover:bg-surface-container-highest transition-all duration-200 active:scale-95 rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span>Settings</span>
+</a>
+</nav>
+</aside>
+<!-- TopNavBar -->
+<header class="h-header-height fixed top-0 right-0 z-40 bg-surface-white/80 dark:bg-inverse-surface/80 backdrop-blur-md border-b border-outline-variant dark:border-outline flex justify-between items-center px-6 w-[calc(100%-theme(spacing.sidebar-width))] ml-sidebar-width transition-all duration-200">
+<div class="flex-1 flex items-center max-w-md">
+<div class="relative w-full">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+<input class="w-full bg-surface-container-low border border-border-slate rounded-lg py-2 pl-10 pr-4 text-body-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors" placeholder="Ara..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="w-10 h-10 rounded-full flex items-center justify-center text-on-surface-variant hover:bg-surface-container-low hover:text-primary transition-colors relative">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-danger-rose rounded-full"></span>
+</button>
+<div class="w-8 h-8 rounded-full overflow-hidden border border-border-slate cursor-pointer">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of a corporate user, brightly lit, plain light grey background, high resolution, soft realistic lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCyyystpRxNBLkCdvId-igC1LVYOdTbQojFUz0orEGEshrzhja8Pr-CV07rVGYNUKp0wwdw5tQR2H84YPc27dZ7AlKFVJnERxNQii_DEscSxXUFUDAF_Q4Ez43HjjfPimEj2UoK-54GDJu9lULV2ycAaHjGjJuCD83SbKga8btvJ7rFlQPhc-Qm_cAqwdK6ushs-lfn7GtTs7aHFS0gukeaPQDeX4VeEBdfruwB10JlXTqDNUI7qu0x"/>
+</div>
+</div>
+</header>
+<!-- Main Content -->
+<main class="flex-1 ml-sidebar-width mt-header-height h-[calc(100vh-theme(spacing.header-height))] overflow-y-auto p-container-gap">
+<div class="max-w-7xl mx-auto flex flex-col gap-container-gap">
+<!-- Page Header -->
+<div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Kasa ve Banka Yönetimi</h2>
+<p class="font-body-md text-body-md text-text-muted mt-1">Şirket hesapları, nakit durumu ve kredi borçlarının merkezi yönetimi.</p>
+</div>
+<div class="flex gap-3">
+<button class="px-4 py-2 border border-primary text-primary rounded-lg font-body-sm font-semibold hover:bg-primary-fixed transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">sync_alt</span>
+                        Para Transferi (Virman)
+                    </button>
+<button class="px-4 py-2 bg-primary text-on-primary rounded-lg font-body-sm font-semibold hover:bg-surface-tint shadow-[0_1px_3px_rgba(79,70,229,0.08)] transition-all active:scale-95 flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">add</span>
+                        Yeni Hareket Ekle
+                    </button>
+</div>
+</div>
+<!-- Summary Cards -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- Toplam Nakit -->
+<div class="bg-surface-white rounded-xl p-6 shadow-[0_1px_3px_rgba(79,70,229,0.08)] border border-border-slate flex flex-col gap-2 relative overflow-hidden">
+<div class="absolute top-0 right-0 w-24 h-24 bg-primary/5 rounded-bl-full -z-0"></div>
+<div class="flex justify-between items-center z-10">
+<span class="font-body-sm text-body-sm text-text-muted font-medium uppercase tracking-wider">Toplam Nakit</span>
+<div class="w-8 h-8 rounded-full bg-primary-container/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[20px]">account_balance_wallet</span>
+</div>
+</div>
+<div class="font-headline-lg text-headline-lg text-on-surface z-10 mt-2 font-data-mono">845.200,00 TL</div>
+<div class="flex items-center gap-1 text-success-emerald font-body-sm text-body-sm z-10">
+<span class="material-symbols-outlined text-[16px]">trending_up</span>
+<span>+2.4% bu ay</span>
+</div>
+</div>
+<!-- Bankadaki Mevduat -->
+<div class="bg-surface-white rounded-xl p-6 shadow-[0_1px_3px_rgba(79,70,229,0.08)] border border-border-slate flex flex-col gap-2 relative overflow-hidden">
+<div class="absolute top-0 right-0 w-24 h-24 bg-secondary/5 rounded-bl-full -z-0"></div>
+<div class="flex justify-between items-center z-10">
+<span class="font-body-sm text-body-sm text-text-muted font-medium uppercase tracking-wider">Bankadaki Mevduat</span>
+<div class="w-8 h-8 rounded-full bg-secondary-container flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-[20px]">account_balance</span>
+</div>
+</div>
+<div class="font-headline-lg text-headline-lg text-on-surface z-10 mt-2 font-data-mono">12.450.000,00 TL</div>
+<div class="flex items-center gap-1 text-success-emerald font-body-sm text-body-sm z-10">
+<span class="material-symbols-outlined text-[16px]">trending_up</span>
+<span>+1.1% bu ay</span>
+</div>
+</div>
+<!-- Kredi Borçları -->
+<div class="bg-surface-white rounded-xl p-6 shadow-[0_1px_3px_rgba(79,70,229,0.08)] border border-border-slate flex flex-col gap-2 relative overflow-hidden">
+<div class="absolute top-0 right-0 w-24 h-24 bg-warning-amber/5 rounded-bl-full -z-0"></div>
+<div class="flex justify-between items-center z-10">
+<span class="font-body-sm text-body-sm text-text-muted font-medium uppercase tracking-wider">Kredi Borçları</span>
+<div class="w-8 h-8 rounded-full bg-warning-amber/10 flex items-center justify-center text-warning-amber">
+<span class="material-symbols-outlined text-[20px]">credit_card</span>
+</div>
+</div>
+<div class="font-headline-lg text-headline-lg text-on-surface z-10 mt-2 font-data-mono">3.120.000,00 TL</div>
+<div class="flex items-center gap-1 text-danger-rose font-body-sm text-body-sm z-10">
+<span class="material-symbols-outlined text-[16px]">trending_down</span>
+<span>-5.0% bu ay</span>
+</div>
+</div>
+</div>
+<!-- Account List Section -->
+<div class="bg-surface-white rounded-xl shadow-[0_1px_3px_rgba(79,70,229,0.08)] border border-border-slate overflow-hidden flex flex-col">
+<div class="p-4 border-b border-border-slate flex justify-between items-center bg-surface-white sticky top-0 z-20">
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Hesaplar</h3>
+<div class="flex gap-2">
+<button class="p-2 text-on-surface-variant hover:bg-surface-container-low rounded transition-colors" title="Filtrele">
+<span class="material-symbols-outlined">filter_list</span>
+</button>
+<button class="p-2 text-on-surface-variant hover:bg-surface-container-low rounded transition-colors" title="Dışa Aktar">
+<span class="material-symbols-outlined">download</span>
+</button>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead class="bg-surface-container-low text-on-surface-variant font-label-caps text-label-caps border-b border-border-slate">
+<tr>
+<th class="py-3 px-4 font-semibold uppercase tracking-wider">Hesap Adı</th>
+<th class="py-3 px-4 font-semibold uppercase tracking-wider">Hesap No / IBAN</th>
+<th class="py-3 px-4 font-semibold uppercase tracking-wider">Tür</th>
+<th class="py-3 px-4 font-semibold uppercase tracking-wider text-right">Güncel Bakiye</th>
+<th class="py-3 px-4 font-semibold uppercase tracking-wider text-center">Durum</th>
+<th class="py-3 px-4 font-semibold uppercase tracking-wider text-center">İşlem</th>
+</tr>
+</thead>
+<tbody class="font-body-sm text-body-sm divide-y divide-border-slate">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-bright transition-colors group">
+<td class="py-3 px-4 flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-surface-container-high flex items-center justify-center text-primary border border-border-slate">
+<span class="material-symbols-outlined text-[18px]">account_balance</span>
+</div>
+<span class="font-medium text-on-surface">Garanti BBVA Ana Hesap</span>
+</td>
+<td class="py-3 px-4 font-data-mono text-data-mono text-text-muted">TR29 0006 2000 0001 2345 6789 01</td>
+<td class="py-3 px-4 text-text-muted">Vadesiz</td>
+<td class="py-3 px-4 text-right font-data-mono font-bold text-primary">8.500.000,00 TL</td>
+<td class="py-3 px-4 text-center">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-success-emerald/10 text-success-emerald">Aktif</span>
+</td>
+<td class="py-3 px-4 text-center">
+<button class="text-text-muted hover:text-primary transition-colors opacity-0 group-hover:opacity-100"><span class="material-symbols-outlined text-[20px]">more_vert</span></button>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surface-bright transition-colors group bg-surface-white">
+<td class="py-3 px-4 flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-surface-container-high flex items-center justify-center text-primary border border-border-slate">
+<span class="material-symbols-outlined text-[18px]">account_balance</span>
+</div>
+<span class="font-medium text-on-surface">Akbank Yatırım</span>
+</td>
+<td class="py-3 px-4 font-data-mono text-data-mono text-text-muted">TR45 0004 6000 0009 8765 4321 00</td>
+<td class="py-3 px-4 text-text-muted">Vadeli</td>
+<td class="py-3 px-4 text-right font-data-mono font-bold text-primary">3.950.000,00 TL</td>
+<td class="py-3 px-4 text-center">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-success-emerald/10 text-success-emerald">Aktif</span>
+</td>
+<td class="py-3 px-4 text-center">
+<button class="text-text-muted hover:text-primary transition-colors opacity-0 group-hover:opacity-100"><span class="material-symbols-outlined text-[20px]">more_vert</span></button>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface-bright transition-colors group">
+<td class="py-3 px-4 flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-surface-container-high flex items-center justify-center text-warning-amber border border-border-slate">
+<span class="material-symbols-outlined text-[18px]">credit_card</span>
+</div>
+<span class="font-medium text-on-surface">Yapı Kredi Taşıt Kredisi</span>
+</td>
+<td class="py-3 px-4 font-data-mono text-data-mono text-text-muted">TR12 0006 7000 0005 5555 4444 33</td>
+<td class="py-3 px-4 text-text-muted">Kredi</td>
+<td class="py-3 px-4 text-right font-data-mono font-bold text-danger-rose">-3.120.000,00 TL</td>
+<td class="py-3 px-4 text-center">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-warning-amber/10 text-warning-amber">Ödeme Bekliyor</span>
+</td>
+<td class="py-3 px-4 text-center">
+<button class="text-text-muted hover:text-primary transition-colors opacity-0 group-hover:opacity-100"><span class="material-symbols-outlined text-[20px]">more_vert</span></button>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-surface-bright transition-colors group bg-surface-white">
+<td class="py-3 px-4 flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-surface-container-high flex items-center justify-center text-success-emerald border border-border-slate">
+<span class="material-symbols-outlined text-[18px]">payments</span>
+</div>
+<span class="font-medium text-on-surface">Merkez Kasa</span>
+</td>
+<td class="py-3 px-4 font-data-mono text-data-mono text-text-muted">-</td>
+<td class="py-3 px-4 text-text-muted">Nakit Kasa</td>
+<td class="py-3 px-4 text-right font-data-mono font-bold text-primary">625.000,00 TL</td>
+<td class="py-3 px-4 text-center">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-success-emerald/10 text-success-emerald">Aktif</span>
+</td>
+<td class="py-3 px-4 text-center">
+<button class="text-text-muted hover:text-primary transition-colors opacity-0 group-hover:opacity-100"><span class="material-symbols-outlined text-[20px]">more_vert</span></button>
+</td>
+</tr>
+<!-- Row 5 -->
+<tr class="hover:bg-surface-bright transition-colors group">
+<td class="py-3 px-4 flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-surface-container-high flex items-center justify-center text-success-emerald border border-border-slate">
+<span class="material-symbols-outlined text-[18px]">engineering</span>
+</div>
+<span class="font-medium text-on-surface">Şantiye A Kasası</span>
+</td>
+<td class="py-3 px-4 font-data-mono text-data-mono text-text-muted">-</td>
+<td class="py-3 px-4 text-text-muted">Nakit Kasa</td>
+<td class="py-3 px-4 text-right font-data-mono font-bold text-primary">220.200,00 TL</td>
+<td class="py-3 px-4 text-center">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-success-emerald/10 text-success-emerald">Aktif</span>
+</td>
+<td class="py-3 px-4 text-center">
+<button class="text-text-muted hover:text-primary transition-colors opacity-0 group-hover:opacity-100"><span class="material-symbols-outlined text-[20px]">more_vert</span></button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</main>
+</body></html>

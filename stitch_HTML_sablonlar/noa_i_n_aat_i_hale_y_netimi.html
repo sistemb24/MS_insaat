@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+
+<html class="light" lang="tr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>İhale Yönetimi - NOA İnşaat</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "tertiary": "#7e3000",
+                        "error-container": "#ffdad6",
+                        "surface-variant": "#e0e3e5",
+                        "secondary-fixed": "#dae2fd",
+                        "surface-bright": "#f7f9fb",
+                        "tertiary-fixed-dim": "#ffb695",
+                        "success-emerald": "#10B981",
+                        "on-secondary": "#ffffff",
+                        "inverse-on-surface": "#eff1f3",
+                        "on-tertiary-container": "#ffd2be",
+                        "inverse-primary": "#c3c0ff",
+                        "on-background": "#191c1e",
+                        "secondary-container": "#dae2fd",
+                        "on-tertiary": "#ffffff",
+                        "on-secondary-container": "#5c647a",
+                        "surface-container-low": "#f2f4f6",
+                        "surface-container": "#eceef0",
+                        "error": "#ba1a1a",
+                        "secondary-fixed-dim": "#bec6e0",
+                        "inverse-surface": "#2d3133",
+                        "secondary": "#565e74",
+                        "decorative-purple": "#800080",
+                        "surface-white": "#FFFFFF",
+                        "on-surface": "#191c1e",
+                        "on-secondary-fixed": "#131b2e",
+                        "surface-tint": "#4d44e3",
+                        "primary": "#3525cd",
+                        "on-error-container": "#93000a",
+                        "tertiary-container": "#a44100",
+                        "primary-container": "#4f46e5",
+                        "danger-rose": "#E11D48",
+                        "surface-container-high": "#e6e8ea",
+                        "on-tertiary-fixed-variant": "#7b2f00",
+                        "on-primary-fixed": "#0f0069",
+                        "on-primary-container": "#dad7ff",
+                        "primary-fixed": "#e2dfff",
+                        "warning-amber": "#F59E0B",
+                        "text-muted": "#64748B",
+                        "on-error": "#ffffff",
+                        "on-primary": "#ffffff",
+                        "tertiary-fixed": "#ffdbcc",
+                        "on-primary-fixed-variant": "#3323cc",
+                        "outline-variant": "#c7c4d8",
+                        "surface": "#f7f9fb",
+                        "surface-dim": "#d8dadc",
+                        "on-surface-variant": "#464555",
+                        "border-slate": "#E2E8F0",
+                        "on-tertiary-fixed": "#351000",
+                        "background": "#f7f9fb",
+                        "surface-container-highest": "#e0e3e5",
+                        "outline": "#777587",
+                        "surface-container-lowest": "#ffffff",
+                        "primary-fixed-dim": "#c3c0ff",
+                        "on-secondary-fixed-variant": "#3f465c",
+                        "decorative-navy": "#000080"
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    spacing: {
+                        "grid-cell-px": "0.75rem",
+                        "header-height": "64px",
+                        "stack-md": "1rem",
+                        "sidebar-collapsed": "80px",
+                        "sidebar-width": "260px",
+                        "stack-sm": "0.5rem",
+                        "grid-cell-py": "0.5rem",
+                        "container-gap": "1.5rem"
+                    },
+                    fontFamily: {
+                        "headline-sm": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "body-md": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "data-mono": ["JetBrains Mono"],
+                        "body-sm": ["Inter"]
+                    },
+                    fontSize: {
+                        "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "700" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "headline-lg": ["30px", { "lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "data-mono": ["13px", { "lineHeight": "16px", "fontWeight": "500" }],
+                        "body-sm": ["13px", { "lineHeight": "18px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        /* Kanban specific styles to ensure smooth scrolling */
+        .kanban-board {
+            display: flex;
+            gap: 1.5rem;
+            overflow-x: auto;
+            padding-bottom: 1rem;
+            min-height: calc(100vh - 180px); /* Adjust based on header heights */
+        }
+        .kanban-board::-webkit-scrollbar {
+            height: 8px;
+        }
+        .kanban-board::-webkit-scrollbar-track {
+            background: #f7f9fb;
+            border-radius: 4px;
+        }
+        .kanban-board::-webkit-scrollbar-thumb {
+            background: #c7c4d8;
+            border-radius: 4px;
+        }
+        .kanban-board::-webkit-scrollbar-thumb:hover {
+            background: #777587;
+        }
+        .kanban-column {
+            min-width: 320px;
+            max-width: 320px;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        /* Drag and drop cursor hints */
+        .kanban-card {
+            cursor: grab;
+        }
+        .kanban-card:active {
+            cursor: grabbing;
+        }
+        
+        /* Ensure sidebar and topbar play nice */
+        body {
+            background-color: #f7f9fb; /* surface */
+            margin: 0;
+            overflow-x: hidden;
+        }
+    </style>
+</head>
+<body class="font-sans antialiased text-on-surface bg-surface">
+<!-- SideNavBar -->
+<aside class="w-sidebar-width h-screen fixed left-0 top-0 bg-surface-white shadow-[0_1px_3px_rgba(79,70,229,0.08)] flex flex-col border-r border-outline-variant z-50">
+<!-- Brand Header -->
+<div class="h-header-height flex items-center px-6 border-b border-outline-variant">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 bg-primary rounded flex items-center justify-center">
+<span class="material-symbols-outlined text-white" style="font-variation-settings: 'FILL' 1;">business</span>
+</div>
+<div>
+<h1 class="font-headline-sm text-headline-sm font-bold text-primary leading-tight">NOA İnşaat</h1>
+<p class="font-label-caps text-label-caps text-on-surface-variant uppercase">Construction ERP</p>
+</div>
+</div>
+</div>
+<!-- Navigation Links -->
+<nav class="flex-1 overflow-y-auto py-4 px-3 flex flex-col gap-1">
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-low transition-colors rounded-lg font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined text-[24px]">dashboard</span>
+                Dashboard
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-low transition-colors rounded-lg font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined text-[24px]">business</span>
+                Firms
+            </a>
+<!-- Active State -->
+<a class="flex items-center gap-3 px-4 py-3 bg-secondary-container text-primary rounded-lg font-semibold font-body-md text-body-md transition-all duration-200 active:scale-95" href="#">
+<span class="material-symbols-outlined text-[24px]">gavel</span>
+                Tender Management
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-low transition-colors rounded-lg font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined text-[24px]">description</span>
+                Document Center
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-low transition-colors rounded-lg font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined text-[24px]">group</span>
+                Staff
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-low transition-colors rounded-lg font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined text-[24px]">inventory_2</span>
+                Inventory
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-low transition-colors rounded-lg font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined text-[24px]">directions_car</span>
+                Vehicles
+            </a>
+</nav>
+<!-- Bottom Settings -->
+<div class="p-3 border-t border-outline-variant mt-auto">
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-low transition-colors rounded-lg font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined text-[24px]">settings</span>
+                Settings
+            </a>
+</div>
+</aside>
+<!-- Main Content Wrapper -->
+<div class="ml-sidebar-width flex flex-col min-h-screen">
+<!-- TopNavBar -->
+<header class="h-header-height fixed top-0 right-0 z-40 bg-surface-white/80 backdrop-blur-md border-b border-outline-variant flex justify-between items-center px-6 w-[calc(100%-theme(spacing.sidebar-width))]">
+<!-- Left: Search (from JSON, search_bar: "on_left") -->
+<div class="flex items-center">
+<div class="relative hidden md:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[20px]">search</span>
+<input class="pl-10 pr-4 py-2 bg-surface-container-low border border-border-slate rounded-lg focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary font-body-md text-body-md text-on-surface w-64 transition-all" placeholder="Search..." type="text"/>
+</div>
+</div>
+<!-- Right: Actions & Profile -->
+<div class="flex items-center gap-4">
+<button aria-label="Notifications" class="p-2 text-on-surface-variant hover:text-primary transition-colors rounded-full hover:bg-surface-container-low">
+<span class="material-symbols-outlined text-[24px]">notifications</span>
+</button>
+<div class="h-6 w-px bg-outline-variant mx-2"></div>
+<button aria-label="User Profile" class="flex items-center gap-2">
+<img class="w-8 h-8 rounded-full object-cover border border-border-slate" data-alt="A professional headshot of a middle-aged male construction executive wearing a crisp white shirt and a dark navy blazer, set against a bright, modern office background with subtle depth of field. High-key lighting emphasizing a clean, corporate light-mode aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCylAlTL9vTNGWTTEIgpO-l9vK32bg726U0OH5M3QipqbhmOFQIUxFCyzqe2Y0zOcdhsOWVBCuX9h8eZZA9WFLTJf9fmIH2AzRRb3rX9VC1uq7-R8lLFh1LWTVkcECFAVqN-qNaVjvecCqgRohh7EWfn5Kvb09yIrjNybVcbaoKD7LyT-EHIBwPf0M6rvV-Gpt6uz5q6cvWJtu1yT_ETWpWfi_MgIoJxrZKOjt7kZUpq3Fv1-sRKPmA"/>
+</button>
+</div>
+</header>
+<!-- Page Content Canvas -->
+<main class="flex-1 pt-header-height p-6 overflow-hidden flex flex-col">
+<!-- Top Action Bar -->
+<div class="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4 shrink-0">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">İhale Yönetimi</h2>
+<p class="font-body-md text-body-md text-text-muted mt-1">Sürecin tüm aşamalarındaki ihaleleri yönetin.</p>
+</div>
+<div class="flex items-center gap-3">
+<!-- View Toggle -->
+<div class="flex bg-surface-container-low rounded-lg p-1 border border-border-slate">
+<button class="px-3 py-1.5 bg-surface-white text-primary rounded shadow-sm font-body-sm text-body-sm flex items-center gap-1 font-medium">
+<span class="material-symbols-outlined text-[18px]">view_kanban</span>
+                            Kanban
+                        </button>
+<button class="px-3 py-1.5 text-on-surface-variant hover:text-primary rounded font-body-sm text-body-sm flex items-center gap-1 transition-colors">
+<span class="material-symbols-outlined text-[18px]">format_list_bulleted</span>
+                            Liste
+                        </button>
+</div>
+<!-- Search within module -->
+<div class="relative hidden lg:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[18px]">search</span>
+<input class="pl-9 pr-3 py-2 h-10 bg-surface-white border border-border-slate rounded-lg focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary font-body-md text-body-md text-on-surface w-48" placeholder="İhale ara..." type="text"/>
+</div>
+<!-- Primary Action -->
+<button class="h-10 px-4 bg-primary text-white rounded-lg font-body-md text-body-md font-medium hover:bg-primary-container transition-colors shadow-sm flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px]">add</span>
+                        Yeni İhale
+                    </button>
+</div>
+</div>
+<!-- Kanban Board Area -->
+<div class="kanban-board flex-1">
+<!-- Column 1: Yeni İlanlar -->
+<div class="kanban-column">
+<div class="flex items-center justify-between mb-2 px-1">
+<h3 class="font-headline-sm text-headline-sm text-on-surface flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-blue-500"></div>
+                            Yeni İlanlar
+                        </h3>
+<span class="bg-surface-container text-on-surface-variant font-label-caps text-label-caps px-2 py-1 rounded-full">2</span>
+</div>
+<div class="flex flex-col gap-3">
+<!-- Card 1 -->
+<div class="kanban-card bg-surface-white rounded-xl p-4 shadow-[0_1px_3px_rgba(79,70,229,0.08)] border border-border-slate hover:shadow-md transition-shadow relative group">
+<button class="absolute top-3 right-3 text-outline hover:text-on-surface opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-[20px]">more_horiz</span>
+</button>
+<div class="mb-3 pr-6">
+<h4 class="font-headline-sm text-[16px] leading-snug font-semibold text-on-surface mb-1">Ankara Yüksek Hızlı Tren Garı Ek Bina</h4>
+<p class="font-body-sm text-body-sm text-text-muted flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">account_balance</span>
+                                    TCDD
+                                </p>
+</div>
+<div class="bg-surface-bright rounded border border-border-slate p-2 mb-3">
+<div class="flex justify-between items-center mb-1">
+<span class="font-body-sm text-body-sm text-text-muted">Tahmini Bütçe</span>
+<span class="font-data-mono text-data-mono text-on-surface">₺150.000.000</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="font-body-sm text-body-sm text-text-muted">Son Tarih</span>
+<span class="font-body-sm text-body-sm font-medium text-on-surface">15 Ekim 2026</span>
+</div>
+</div>
+<div class="flex justify-between items-center mt-auto">
+<span class="inline-flex items-center gap-1 bg-surface-container-high text-on-surface font-label-caps text-[10px] px-2 py-1 rounded">
+<span class="material-symbols-outlined text-[14px]">schedule</span>
+                                    45 Gün Kaldı
+                                </span>
+<div class="flex -space-x-2">
+<img class="w-6 h-6 rounded-full border-2 border-white object-cover" data-alt="A portrait of a young female project manager in a bright, modern corporate office. She is wearing a light grey blazer. Professional, clean lighting, representing a light-mode corporate design aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDbg7CtxTqrbCDKrt-Sd1fE4f7k0gqhDPQDj1UrDN5R5cN4BbCZTUYYsHC34ewBSAkVHalpuJVKueuUuWJRNnAxbax2n2jd4pF2gy8tkUZ1PSL1mOPGC5mUEzAH3NzgMBxyxDgowvWxXkNgL-fd81HFH0Rai00Xg-Riee0NQjrDVUiULYKoGOewD54qn-VOG1ui-V8rLhY7ZW4cYrptsHKDp7NjA10dSYfnZULkRdLud5mrp-eY5BKG" title="Zeynep Yılmaz"/>
+</div>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="kanban-card bg-surface-white rounded-xl p-4 shadow-[0_1px_3px_rgba(79,70,229,0.08)] border border-border-slate hover:shadow-md transition-shadow relative group">
+<button class="absolute top-3 right-3 text-outline hover:text-on-surface opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-[20px]">more_horiz</span>
+</button>
+<div class="mb-3 pr-6">
+<h4 class="font-headline-sm text-[16px] leading-snug font-semibold text-on-surface mb-1">İzmir Limanı Rehabilitasyon İhalesi</h4>
+<p class="font-body-sm text-body-sm text-text-muted flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">account_balance</span>
+                                    Denizcilik Genel Müd.
+                                </p>
+</div>
+<div class="bg-surface-bright rounded border border-border-slate p-2 mb-3">
+<div class="flex justify-between items-center mb-1">
+<span class="font-body-sm text-body-sm text-text-muted">Tahmini Bütçe</span>
+<span class="font-data-mono text-data-mono text-on-surface">₺85.000.000</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="font-body-sm text-body-sm text-text-muted">Son Tarih</span>
+<span class="font-body-sm text-body-sm font-medium text-on-surface">22 Kasım 2026</span>
+</div>
+</div>
+<div class="flex justify-between items-center mt-auto">
+<span class="inline-flex items-center gap-1 bg-surface-container-high text-on-surface font-label-caps text-[10px] px-2 py-1 rounded">
+<span class="material-symbols-outlined text-[14px]">schedule</span>
+                                    80 Gün Kaldı
+                                </span>
+<div class="flex -space-x-2">
+<img class="w-6 h-6 rounded-full border-2 border-white object-cover" data-alt="A portrait of a male engineer in a white shirt and dark tie, shot in a well-lit modern office environment. Professional corporate photography style, high key, matching a light-mode UI aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAtm3BbQr7_ooH2XUAsb1LdLxVgS7aQV8ASleYTl2fEhekNSI2FZDhjUMkfvoxjRmPeqQcYnlgxFK6Jq73Z-6cZYXrC5AoQqkHY8ajmijrS99pjJzHWWyJtKKJJKPMR9yZMXPPYQx29I6PUIX56PBI2QERuQRTnp4SbtF0m9Gh0IvEHNwpJnbFDHlWSHdGhFLxc179nXDY6XhMaV1Lry18x6rXYbAqUTY-StuXFTukzijpE249D94c2" title="Burak Kaya"/>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Column 2: Teklif Hazırlananlar -->
+<div class="kanban-column">
+<div class="flex items-center justify-between mb-2 px-1">
+<h3 class="font-headline-sm text-headline-sm text-on-surface flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-warning-amber"></div>
+                            Teklif Hazırlananlar
+                        </h3>
+<span class="bg-surface-container text-on-surface-variant font-label-caps text-label-caps px-2 py-1 rounded-full">1</span>
+</div>
+<div class="flex flex-col gap-3">
+<!-- Card 3 -->
+<div class="kanban-card bg-surface-white rounded-xl p-4 shadow-[0_1px_3px_rgba(79,70,229,0.08)] border border-border-slate border-l-4 border-l-warning-amber hover:shadow-md transition-shadow relative group">
+<button class="absolute top-3 right-3 text-outline hover:text-on-surface opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-[20px]">more_horiz</span>
+</button>
+<div class="mb-3 pr-6">
+<h4 class="font-headline-sm text-[16px] leading-snug font-semibold text-on-surface mb-1">Metro Hattı Genişletme Projesi</h4>
+<p class="font-body-sm text-body-sm text-text-muted flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">account_balance</span>
+                                    Ulaştırma Bakanlığı
+                                </p>
+</div>
+<div class="bg-surface-bright rounded border border-border-slate p-2 mb-3">
+<div class="flex justify-between items-center mb-1">
+<span class="font-body-sm text-body-sm text-text-muted">Tahmini Bütçe</span>
+<span class="font-data-mono text-data-mono text-on-surface">₺120.000.000</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="font-body-sm text-body-sm text-text-muted">Son Tarih</span>
+<span class="font-body-sm text-body-sm font-medium text-warning-amber">15 Ağustos 2026</span>
+</div>
+</div>
+<div class="w-full bg-surface-container-high rounded-full h-1.5 mb-3">
+<div class="bg-warning-amber h-1.5 rounded-full" style="width: 75%"></div>
+</div>
+<div class="flex justify-between items-center mt-auto">
+<span class="inline-flex items-center gap-1 bg-orange-50 text-warning-amber border border-orange-100 font-label-caps text-[10px] px-2 py-1 rounded">
+<span class="material-symbols-outlined text-[14px]">error_outline</span>
+                                    12 Gün Kaldı
+                                </span>
+<div class="flex -space-x-2">
+<img class="w-6 h-6 rounded-full border-2 border-white object-cover" data-alt="A portrait of a male project lead reviewing documents. He is wearing a light blue dress shirt. Photographed in a sleek, modern office setting with bright, diffuse lighting suitable for a professional corporate UI." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBbdi89euzWdGSegmjIpyXClEzs8amDDTg_gjcwf0HDdZ9qLDNf095THLgzE4XAkQahy92oizvE-atbVVfTOtiatrGeNSAYh8RgMJUR8QfZE_cidAupKO7BucBtwfZeIz3Ps4n3JioUDD49WPlYoqR00XFDlXBNyhEnraCFNv-KcaranDRhY4owCfJruxsgXGcqTfyaAjKlikktCJ5Ia1hqPLEfC3ha_j2BWUaJLc_5wyW1BMXYIbuB" title="Ahmet Yılmaz"/>
+<div class="w-6 h-6 rounded-full border-2 border-white bg-surface-container-high flex items-center justify-center text-[10px] font-medium text-on-surface-variant">+2</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Column 3: Değerlendirmede -->
+<div class="kanban-column">
+<div class="flex items-center justify-between mb-2 px-1">
+<h3 class="font-headline-sm text-headline-sm text-on-surface flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-purple-500"></div>
+                            Değerlendirmede
+                        </h3>
+<span class="bg-surface-container text-on-surface-variant font-label-caps text-label-caps px-2 py-1 rounded-full">1</span>
+</div>
+<div class="flex flex-col gap-3">
+<!-- Card 4 -->
+<div class="kanban-card bg-surface-white rounded-xl p-4 shadow-[0_1px_3px_rgba(79,70,229,0.08)] border border-border-slate hover:shadow-md transition-shadow relative group">
+<button class="absolute top-3 right-3 text-outline hover:text-on-surface opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-[20px]">more_horiz</span>
+</button>
+<div class="mb-3 pr-6">
+<h4 class="font-headline-sm text-[16px] leading-snug font-semibold text-on-surface mb-1">Şehir Hastanesi Otopark Kompleksi</h4>
+<p class="font-body-sm text-body-sm text-text-muted flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">account_balance</span>
+                                    Sağlık Bakanlığı
+                                </p>
+</div>
+<div class="bg-surface-bright rounded border border-border-slate p-2 mb-3">
+<div class="flex justify-between items-center mb-1">
+<span class="font-body-sm text-body-sm text-text-muted">Teklifimiz</span>
+<span class="font-data-mono text-data-mono text-on-surface font-semibold">₺42.500.000</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="font-body-sm text-body-sm text-text-muted">Sunum Tarihi</span>
+<span class="font-body-sm text-body-sm font-medium text-on-surface">10 Haziran 2026</span>
+</div>
+</div>
+<div class="flex justify-between items-center mt-auto">
+<span class="inline-flex items-center gap-1 bg-purple-50 text-purple-700 border border-purple-100 font-label-caps text-[10px] px-2 py-1 rounded">
+<span class="material-symbols-outlined text-[14px]">hourglass_top</span>
+                                    Sonuç Bekleniyor
+                                </span>
+<div class="flex -space-x-2">
+<img class="w-6 h-6 rounded-full border-2 border-white object-cover" data-alt="A portrait of a female financial analyst in a modern office, wearing a dark navy blouse. High-quality corporate headshot with soft, bright lighting complementing a clean, light-mode UI design." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB0s6SC6BlAbhjJ3A0IaTjJtMG-PZmHiLOznI2Ng2vK4cWqtEl31tuIedvSccLwqBCPuaItjp6KS9czg8MgvVzznQqcMvSO3dWig_M4zrzNl5ytJIMwykyQwInJGtgSMMrUlswplq84s5y58ySpjcUiIrJsGxwlwDKZtCIY392EB2o1Kza_iEyfsKNPpLq9bz-fx1dV8e1er1r9T2lWr6yosUCsdY-WLKJ99TAKDQqfBrlux0_mHDNP" title="Ayşe Demir"/>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Column 4: Kazanılanlar -->
+<div class="kanban-column">
+<div class="flex items-center justify-between mb-2 px-1">
+<h3 class="font-headline-sm text-headline-sm text-on-surface flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-success-emerald"></div>
+                            Kazanılanlar
+                        </h3>
+<span class="bg-surface-container text-on-surface-variant font-label-caps text-label-caps px-2 py-1 rounded-full">1</span>
+</div>
+<div class="flex flex-col gap-3">
+<!-- Card 5 -->
+<div class="kanban-card bg-surface-white rounded-xl p-4 shadow-[0_1px_3px_rgba(79,70,229,0.08)] border border-border-slate border-l-4 border-l-success-emerald hover:shadow-md transition-shadow relative group">
+<div class="absolute top-3 right-3 text-success-emerald">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<div class="mb-3 pr-6">
+<h4 class="font-headline-sm text-[16px] leading-snug font-semibold text-on-surface mb-1">Ege Bölgesi Karayolu İyileştirmesi</h4>
+<p class="font-body-sm text-body-sm text-text-muted flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">account_balance</span>
+                                    Karayolları Genel Müd.
+                                </p>
+</div>
+<div class="bg-emerald-50/50 rounded border border-emerald-100 p-2 mb-3">
+<div class="flex justify-between items-center mb-1">
+<span class="font-body-sm text-body-sm text-text-muted">Kazanılan Tutar</span>
+<span class="font-data-mono text-data-mono text-success-emerald font-bold">₺210.000.000</span>
+</div>
+</div>
+<div class="flex justify-between items-center mt-auto pt-2 border-t border-border-slate">
+<button class="text-primary font-body-sm text-body-sm font-medium hover:underline">Projeye Dönüştür</button>
+<div class="flex -space-x-2">
+<img class="w-6 h-6 rounded-full border-2 border-white object-cover" data-alt="Portrait of a smiling male executive in a corporate setting, wearing a grey suit. Lit with bright, natural light typical of modern corporate headquarters, suitable for a professional ERP system interface." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBcBL4pU-bVzgSWrCuHELzT4ZYQVk6ou0ep91Sq3WEirb5tVsBH3MZ6qCEgs8_kWLg-NnY3jkcy64fWmOnCPHFnjkJ0_xGCYCtVXdc8lFg4DgFK6xr0RObeDzTndSW48j065XFwk_s6UAtf8faXB1iTVgu_ltGkw5VwnqKXuHEX6LYCAwTJ4Wevr52cJ9y3aZtTkcVxAWBDdrT1yFTC0HSMkyfwtes2tIpqJ9-1Jvr0uDgAwHL_PYrG" title="Ahmet Yılmaz"/>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Column 5: Kaybedilenler -->
+<div class="kanban-column">
+<div class="flex items-center justify-between mb-2 px-1">
+<h3 class="font-headline-sm text-headline-sm text-on-surface flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-danger-rose"></div>
+                            Kaybedilenler
+                        </h3>
+<span class="bg-surface-container text-on-surface-variant font-label-caps text-label-caps px-2 py-1 rounded-full">1</span>
+</div>
+<div class="flex flex-col gap-3">
+<!-- Card 6 -->
+<div class="kanban-card bg-surface-white rounded-xl p-4 shadow-[0_1px_3px_rgba(79,70,229,0.08)] border border-border-slate opacity-75 hover:opacity-100 transition-opacity relative group">
+<div class="absolute top-3 right-3 text-text-muted">
+<span class="material-symbols-outlined text-[20px]">cancel</span>
+</div>
+<div class="mb-3 pr-6">
+<h4 class="font-headline-sm text-[16px] leading-snug font-medium text-on-surface mb-1 line-through decoration-outline">Yeni Üniversite Kampüsü</h4>
+<p class="font-body-sm text-body-sm text-text-muted flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">account_balance</span>
+                                    Milli Eğitim Bakanlığı
+                                </p>
+</div>
+<div class="bg-surface-bright rounded border border-border-slate p-2 mb-3">
+<div class="flex justify-between items-center">
+<span class="font-body-sm text-body-sm text-text-muted">Neden</span>
+<span class="font-body-sm text-body-sm text-on-surface font-medium">Fiyat Yüksekliği</span>
+</div>
+</div>
+<div class="flex justify-between items-center mt-auto">
+<span class="inline-flex items-center gap-1 bg-red-50 text-danger-rose border border-red-100 font-label-caps text-[10px] px-2 py-1 rounded">
+<span class="material-symbols-outlined text-[14px]">warning</span>
+                                    Kaybedildi
+                                </span>
+</div>
+</div>
+</div>
+</div>
+</div> <!-- End Kanban Board -->
+</main>
+</div>
+</body></html>

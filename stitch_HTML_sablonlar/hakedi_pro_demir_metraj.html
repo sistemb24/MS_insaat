@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+
+<html class="light" lang="tr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Hakediş Pro - Demir Metrajı</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary-fixed-dim": "#bec6e0",
+                        "secondary-fixed": "#dae2fd",
+                        "text-muted": "#64748B",
+                        "tertiary-fixed": "#ffdbcc",
+                        "error": "#ba1a1a",
+                        "surface-dim": "#d8dadc",
+                        "on-secondary": "#ffffff",
+                        "decorative-purple": "#800080",
+                        "on-primary-fixed-variant": "#3323cc",
+                        "inverse-primary": "#c3c0ff",
+                        "inverse-surface": "#2d3133",
+                        "surface-container": "#eceef0",
+                        "surface-container-high": "#e6e8ea",
+                        "success-emerald": "#10B981",
+                        "secondary-container": "#dae2fd",
+                        "on-primary-fixed": "#0f0069",
+                        "outline": "#777587",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-bright": "#f7f9fb",
+                        "surface": "#f7f9fb",
+                        "on-primary-container": "#dad7ff",
+                        "inverse-on-surface": "#eff1f3",
+                        "surface-container-low": "#f2f4f6",
+                        "tertiary-container": "#a44100",
+                        "on-secondary-container": "#5c647a",
+                        "outline-variant": "#c7c4d8",
+                        "on-secondary-fixed": "#131b2e",
+                        "danger-rose": "#E11D48",
+                        "on-secondary-fixed-variant": "#3f465c",
+                        "primary-fixed": "#e2dfff",
+                        "on-surface": "#191c1e",
+                        "decorative-navy": "#000080",
+                        "primary-fixed-dim": "#c3c0ff",
+                        "on-tertiary-fixed": "#351000",
+                        "on-background": "#191c1e",
+                        "secondary": "#565e74",
+                        "on-primary": "#ffffff",
+                        "surface-container-highest": "#e0e3e5",
+                        "tertiary-fixed-dim": "#ffb695",
+                        "surface-tint": "#4d44e3",
+                        "on-surface-variant": "#464555",
+                        "warning-amber": "#F59E0B",
+                        "on-error-container": "#93000a",
+                        "error-container": "#ffdad6",
+                        "border-slate": "#E2E8F0",
+                        "on-tertiary-container": "#ffd2be",
+                        "on-error": "#ffffff",
+                        "tertiary": "#7e3000",
+                        "surface-variant": "#e0e3e5",
+                        "on-tertiary": "#ffffff",
+                        "primary": "#3525cd",
+                        "on-tertiary-fixed-variant": "#7b2f00",
+                        "surface-white": "#FFFFFF",
+                        "background": "#f7f9fb",
+                        "primary-container": "#4f46e5"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "sidebar-collapsed": "80px",
+                        "stack-md": "1rem",
+                        "stack-sm": "0.5rem",
+                        "grid-cell-py": "0.5rem",
+                        "grid-cell-px": "0.75rem",
+                        "sidebar-width": "260px",
+                        "container-gap": "1.5rem",
+                        "header-height": "64px"
+                    },
+                    "fontFamily": {
+                        "headline-sm": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "body-md": ["Inter"],
+                        "data-mono": ["JetBrains Mono"],
+                        "headline-lg": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "body-sm": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "data-mono": ["13px", { "lineHeight": "16px", "fontWeight": "500" }],
+                        "headline-lg": ["30px", { "lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "700" }],
+                        "body-sm": ["13px", { "lineHeight": "18px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .table-striped tbody tr:nth-child(even) {
+            background-color: #f7f9fb; /* surface */
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md text-body-md h-screen overflow-hidden flex">
+<!-- SideNavBar -->
+<aside class="fixed left-0 top-0 h-screen w-sidebar-width bg-surface-white dark:bg-inverse-surface shadow-[0_1px_3px_rgba(79,70,229,0.08)] flex flex-col h-full border-r border-border-slate dark:border-outline-variant z-50 hidden md:flex font-body-md text-body-md">
+<div class="p-6 flex items-center gap-3 border-b border-border-slate dark:border-outline-variant">
+<div class="w-8 h-8 rounded bg-primary flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined text-[20px]">architecture</span>
+</div>
+<div>
+<h1 class="font-headline-md text-headline-md font-bold text-primary dark:text-inverse-primary">Hakediş Pro</h1>
+<p class="font-label-caps text-label-caps text-text-muted mt-0.5">İnşaat Yönetim Paneli</p>
+</div>
+</div>
+<nav class="flex-1 overflow-y-auto py-4 px-3 space-y-1">
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-secondary hover:bg-surface-container hover:text-on-surface transition-colors hover:bg-primary-fixed-dim/10 transition-all active:scale-95 duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span>Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-secondary hover:bg-surface-container hover:text-on-surface transition-colors hover:bg-primary-fixed-dim/10 transition-all active:scale-95 duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="info">info</span>
+<span>Proje Bilgileri</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-secondary hover:bg-surface-container hover:text-on-surface transition-colors hover:bg-primary-fixed-dim/10 transition-all active:scale-95 duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="architecture">architecture</span>
+<span>Genel Metraj</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 bg-primary-container text-on-primary-container font-bold rounded-lg hover:bg-primary-fixed-dim/10 transition-all active:scale-95 duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="engineering" data-weight="fill" style="font-variation-settings: 'FILL' 1;">engineering</span>
+<span>Demir Metrajı</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-secondary hover:bg-surface-container hover:text-on-surface transition-colors hover:bg-primary-fixed-dim/10 transition-all active:scale-95 duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="assignment">assignment</span>
+<span>Tutanaklı İşler</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-secondary hover:bg-surface-container hover:text-on-surface transition-colors hover:bg-primary-fixed-dim/10 transition-all active:scale-95 duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="menu_book">menu_book</span>
+<span>Yeşil Defter</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-secondary hover:bg-surface-container hover:text-on-surface transition-colors hover:bg-primary-fixed-dim/10 transition-all active:scale-95 duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="table_rows">table_rows</span>
+<span>İmalat Çarşafı</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-secondary hover:bg-surface-container hover:text-on-surface transition-colors hover:bg-primary-fixed-dim/10 transition-all active:scale-95 duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="money_off">money_off</span>
+<span>Kesintiler</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-secondary hover:bg-surface-container hover:text-on-surface transition-colors hover:bg-primary-fixed-dim/10 transition-all active:scale-95 duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="calculate">calculate</span>
+<span>Hakediş Özeti</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-secondary hover:bg-surface-container hover:text-on-surface transition-colors hover:bg-primary-fixed-dim/10 transition-all active:scale-95 duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="assessment">assessment</span>
+<span>Raporlar</span>
+</a>
+</nav>
+<div class="p-4 border-t border-border-slate dark:border-outline-variant mt-auto">
+<div class="text-center">
+<span class="font-body-sm text-body-sm text-text-muted">Sürüm v2.4.0</span>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<div class="flex-1 flex flex-col ml-0 md:ml-sidebar-width h-screen overflow-hidden">
+<!-- TopNavBar -->
+<header class="sticky top-0 right-0 z-40 h-header-height w-full bg-surface-white/80 dark:bg-inverse-surface/80 backdrop-blur-md border-b border-border-slate dark:border-outline-variant flex justify-between items-center px-6 font-label-caps text-label-caps text-primary dark:text-inverse-primary">
+<div class="flex items-center gap-4">
+<!-- Mobile menu button -->
+<button class="md:hidden p-2 text-on-surface-variant hover:bg-surface-container-low transition-all rounded-full">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<div class="font-headline-sm text-headline-sm font-extrabold text-primary dark:text-inverse-primary">
+                    Proje Yönetimi
+                </div>
+<div class="hidden lg:flex items-center gap-6 ml-8">
+<a class="text-on-surface-variant hover:text-primary transition-colors hover:bg-surface-container-low transition-all active:opacity-80 duration-100 px-2 py-1" href="#">Proje Seçiniz</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative hidden sm:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-text-muted text-[18px]">search</span>
+<input class="pl-9 pr-4 py-1.5 bg-surface-container-lowest border border-border-slate rounded-full font-body-sm text-body-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary w-48 transition-all" placeholder="Ara..." type="text"/>
+</div>
+<button class="bg-primary hover:bg-primary-container text-on-primary font-label-caps text-label-caps px-4 py-2 rounded-lg transition-colors flex items-center gap-2 active:scale-95 duration-150">
+<span class="material-symbols-outlined text-[18px]">add</span>
+<span class="hidden sm:inline">Yeni Hakediş Oluştur</span>
+</button>
+<div class="flex items-center gap-2 ml-2 border-l border-border-slate pl-4">
+<button class="p-2 text-on-surface-variant hover:bg-surface-container-low rounded-full transition-all relative">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span class="absolute top-1.5 right-1.5 w-2 h-2 bg-danger-rose rounded-full"></span>
+</button>
+<button class="p-2 text-on-surface-variant hover:bg-surface-container-low rounded-full transition-all">
+<span class="material-symbols-outlined" data-icon="account_circle">account_circle</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Page Canvas -->
+<main class="flex-1 overflow-y-auto p-6 bg-background">
+<div class="max-w-[1600px] mx-auto h-full flex flex-col">
+<!-- Page Header -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-on-background mb-1">Demir Metrajı</h2>
+<p class="font-body-md text-body-md text-text-muted">A Blok Zemin Kat Kolonları - Kesit 1</p>
+</div>
+<div class="flex flex-wrap items-center gap-3">
+<button class="px-4 py-2 bg-surface-white border border-border-slate rounded-lg text-secondary hover:bg-surface-container-low transition-colors flex items-center gap-2 font-label-caps text-label-caps shadow-[0_1px_3px_rgba(79,70,229,0.04)]">
+<span class="material-symbols-outlined text-[18px]">upload</span>
+                            İçe Aktar
+                        </button>
+<div class="h-6 w-px bg-border-slate mx-1"></div>
+<button class="px-4 py-2 bg-surface-white border border-border-slate rounded-lg text-secondary hover:bg-surface-container-low transition-colors flex items-center gap-2 font-label-caps text-label-caps shadow-[0_1px_3px_rgba(79,70,229,0.04)]">
+<span class="material-symbols-outlined text-[18px]">download</span>
+                            Excel
+                        </button>
+<button class="px-4 py-2 bg-surface-white border border-border-slate rounded-lg text-secondary hover:bg-surface-container-low transition-colors flex items-center gap-2 font-label-caps text-label-caps shadow-[0_1px_3px_rgba(79,70,229,0.04)]">
+<span class="material-symbols-outlined text-[18px]">print</span>
+                            Yazdır
+                        </button>
+</div>
+</div>
+<!-- Table Container -->
+<div class="flex-1 flex flex-col bg-surface-white rounded-xl shadow-[0_1px_3px_rgba(79,70,229,0.08)] border border-border-slate overflow-hidden min-h-[500px]">
+<!-- Table Toolbar -->
+<div class="px-6 py-4 border-b border-border-slate flex flex-wrap items-center justify-between gap-4 bg-surface-white">
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2 bg-surface-container-low rounded-lg p-1">
+<button class="px-3 py-1.5 bg-surface-white text-primary rounded shadow-sm font-label-caps text-label-caps">Tümü</button>
+<button class="px-3 py-1.5 text-secondary hover:bg-surface-white/50 rounded font-label-caps text-label-caps transition-colors">Ø8 - Ø12 (İnce)</button>
+<button class="px-3 py-1.5 text-secondary hover:bg-surface-white/50 rounded font-label-caps text-label-caps transition-colors">Ø14+ (Kalın)</button>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<span class="font-body-sm text-body-sm text-text-muted">Filtrele:</span>
+<select class="bg-surface-white border border-border-slate text-on-surface text-body-sm rounded-lg focus:ring-primary focus:border-primary px-3 py-1.5">
+<option>Tüm Pozlar</option>
+<option>S1 Kolonu</option>
+<option>S2 Kolonu</option>
+</select>
+</div>
+</div>
+<!-- Scrollable Table -->
+<div class="flex-1 overflow-auto bg-surface-white">
+<table class="w-full text-left border-collapse table-striped font-data-mono text-data-mono whitespace-nowrap">
+<thead class="sticky top-0 bg-surface-container-lowest z-10 shadow-[0_1px_0_0_#E2E8F0]">
+<tr>
+<th class="py-3 px-4 font-label-caps text-label-caps text-text-muted border-b border-border-slate w-16">No</th>
+<th class="py-3 px-4 font-label-caps text-label-caps text-text-muted border-b border-border-slate">Poz No</th>
+<th class="py-3 px-4 font-label-caps text-label-caps text-text-muted border-b border-border-slate text-center w-24">Çap (Ø)</th>
+<th class="py-3 px-4 font-label-caps text-label-caps text-text-muted border-b border-border-slate text-right w-28">Benzer Adet</th>
+<th class="py-3 px-4 font-label-caps text-label-caps text-text-muted border-b border-border-slate text-right w-24">Boy (m)</th>
+<th class="py-3 px-4 font-label-caps text-label-caps text-text-muted border-b border-border-slate text-right w-24">Adet</th>
+<th class="py-3 px-4 font-label-caps text-label-caps text-text-muted border-b border-border-slate text-right w-28">Top. Boy (m)</th>
+<th class="py-3 px-4 font-label-caps text-label-caps text-text-muted border-b border-border-slate text-right w-32">Br. Ağırlık (kg/m)</th>
+<th class="py-3 px-4 font-label-caps text-label-caps text-primary border-b border-border-slate text-right w-36 bg-primary-fixed/10">Top. Ağırlık (kg)</th>
+</tr>
+</thead>
+<tbody class="text-on-surface">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="py-grid-cell-py px-4 text-text-muted border-b border-border-slate/50">1</td>
+<td class="py-grid-cell-py px-4 font-medium border-b border-border-slate/50">PZ-101</td>
+<td class="py-grid-cell-py px-4 text-center border-b border-border-slate/50">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-bold bg-surface-variant text-on-surface-variant">14</span>
+</td>
+<td class="py-grid-cell-py px-4 text-right border-b border-border-slate/50">4</td>
+<td class="py-grid-cell-py px-4 text-right border-b border-border-slate/50">3.20</td>
+<td class="py-grid-cell-py px-4 text-right border-b border-border-slate/50">8</td>
+<td class="py-grid-cell-py px-4 text-right border-b border-border-slate/50">102.40</td>
+<td class="py-grid-cell-py px-4 text-right text-text-muted border-b border-border-slate/50">1.208</td>
+<td class="py-grid-cell-py px-4 text-right font-bold text-primary bg-primary-fixed/5 border-b border-border-slate/50 group-hover:bg-primary-fixed/20">123.70</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="py-grid-cell-py px-4 text-text-muted border-b border-border-slate/50">2</td>
+<td class="py-grid-cell-py px-4 font-medium border-b border-border-slate/50">PZ-102</td>
+<td class="py-grid-cell-py px-4 text-center border-b border-border-slate/50">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-bold bg-surface-variant text-on-surface-variant">8</span>
+</td>
+<td class="py-grid-cell-py px-4 text-right border-b border-border-slate/50">4</td>
+<td class="py-grid-cell-py px-4 text-right border-b border-border-slate/50">1.45</td>
+<td class="py-grid-cell-py px-4 text-right border-b border-border-slate/50">22</td>
+<td class="py-grid-cell-py px-4 text-right border-b border-border-slate/50">127.60</td>
+<td class="py-grid-cell-py px-4 text-right text-text-muted border-b border-border-slate/50">0.395</td>
+<td class="py-grid-cell-py px-4 text-right font-bold text-primary bg-primary-fixed/5 border-b border-border-slate/50 group-hover:bg-primary-fixed/20">50.40</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="py-grid-cell-py px-4 text-text-muted border-b border-border-slate/50">3</td>
+<td class="py-grid-cell-py px-4 font-medium border-b border-border-slate/50">PZ-103</td>
+<td class="py-grid-cell-py px-4 text-center border-b border-border-slate/50">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-bold bg-secondary-fixed text-on-secondary-fixed">16</span>
+</td>
+<td class="py-grid-cell-py px-4 text-right border-b border-border-slate/50">2</td>
+<td class="py-grid-cell-py px-4 text-right border-b border-border-slate/50">4.50</td>
+<td class="py-grid-cell-py px-4 text-right border-b border-border-slate/50">12</td>
+<td class="py-grid-cell-py px-4 text-right border-b border-border-slate/50">108.00</td>
+<td class="py-grid-cell-py px-4 text-right text-text-muted border-b border-border-slate/50">1.578</td>
+<td class="py-grid-cell-py px-4 text-right font-bold text-primary bg-primary-fixed/5 border-b border-border-slate/50 group-hover:bg-primary-fixed/20">170.42</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="py-grid-cell-py px-4 text-text-muted border-b border-border-slate/50">4</td>
+<td class="py-grid-cell-py px-4 font-medium border-b border-border-slate/50">PZ-104</td>
+<td class="py-grid-cell-py px-4 text-center border-b border-border-slate/50">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-bold bg-surface-variant text-on-surface-variant">14</span>
+</td>
+<td class="py-grid-cell-py px-4 text-right border-b border-border-slate/50">6</td>
+<td class="py-grid-cell-py px-4 text-right border-b border-border-slate/50">2.80</td>
+<td class="py-grid-cell-py px-4 text-right border-b border-border-slate/50">10</td>
+<td class="py-grid-cell-py px-4 text-right border-b border-border-slate/50">168.00</td>
+<td class="py-grid-cell-py px-4 text-right text-text-muted border-b border-border-slate/50">1.208</td>
+<td class="py-grid-cell-py px-4 text-right font-bold text-primary bg-primary-fixed/5 border-b border-border-slate/50 group-hover:bg-primary-fixed/20">202.94</td>
+</tr>
+<!-- Row 5 -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="py-grid-cell-py px-4 text-text-muted border-b border-border-slate/50">5</td>
+<td class="py-grid-cell-py px-4 font-medium border-b border-border-slate/50">PZ-105</td>
+<td class="py-grid-cell-py px-4 text-center border-b border-border-slate/50">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-bold bg-surface-variant text-on-surface-variant">8</span>
+</td>
+<td class="py-grid-cell-py px-4 text-right border-b border-border-slate/50">6</td>
+<td class="py-grid-cell-py px-4 text-right border-b border-border-slate/50">1.60</td>
+<td class="py-grid-cell-py px-4 text-right border-b border-border-slate/50">28</td>
+<td class="py-grid-cell-py px-4 text-right border-b border-border-slate/50">268.80</td>
+<td class="py-grid-cell-py px-4 text-right text-text-muted border-b border-border-slate/50">0.395</td>
+<td class="py-grid-cell-py px-4 text-right font-bold text-primary bg-primary-fixed/5 border-b border-border-slate/50 group-hover:bg-primary-fixed/20">106.18</td>
+</tr>
+<!-- Input Row -->
+<tr class="bg-surface-bright border-b border-border-slate">
+<td class="py-grid-cell-py px-2 text-center text-text-muted">*</td>
+<td class="py-grid-cell-py px-2"><input class="w-full bg-surface-white border border-border-slate rounded px-2 py-1 text-[13px] focus:ring-1 focus:ring-primary focus:border-primary outline-none" placeholder="Poz No" type="text"/></td>
+<td class="py-grid-cell-py px-2"><input class="w-full bg-surface-white border border-border-slate rounded px-2 py-1 text-[13px] text-center focus:ring-1 focus:ring-primary focus:border-primary outline-none" placeholder="Ø" type="number"/></td>
+<td class="py-grid-cell-py px-2"><input class="w-full bg-surface-white border border-border-slate rounded px-2 py-1 text-[13px] text-right focus:ring-1 focus:ring-primary focus:border-primary outline-none" placeholder="0" type="number"/></td>
+<td class="py-grid-cell-py px-2"><input class="w-full bg-surface-white border border-border-slate rounded px-2 py-1 text-[13px] text-right focus:ring-1 focus:ring-primary focus:border-primary outline-none" placeholder="0.00" type="number"/></td>
+<td class="py-grid-cell-py px-2"><input class="w-full bg-surface-white border border-border-slate rounded px-2 py-1 text-[13px] text-right focus:ring-1 focus:ring-primary focus:border-primary outline-none" placeholder="0" type="number"/></td>
+<td class="py-grid-cell-py px-2 text-right text-text-muted bg-surface-container-low">-</td>
+<td class="py-grid-cell-py px-2 text-right text-text-muted bg-surface-container-low">-</td>
+<td class="py-grid-cell-py px-2 text-right text-text-muted bg-surface-container-low">-</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Summary Bar -->
+<div class="bg-primary-fixed border-t border-primary/20 p-4 sm:px-6 shrink-0 z-20 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
+<div class="flex flex-col sm:flex-row justify-between items-center gap-4">
+<div class="flex gap-6 text-on-primary-fixed">
+<div>
+<span class="font-label-caps text-label-caps opacity-70 block mb-0.5">İnce Demir (Ø8-12)</span>
+<span class="font-data-mono text-[15px] font-bold">156.58 kg</span>
+</div>
+<div>
+<span class="font-label-caps text-label-caps opacity-70 block mb-0.5">Kalın Demir (Ø14+)</span>
+<span class="font-data-mono text-[15px] font-bold">497.06 kg</span>
+</div>
+</div>
+<div class="bg-primary text-on-primary px-6 py-3 rounded-lg shadow-sm flex items-center gap-4">
+<span class="font-label-caps text-label-caps uppercase tracking-wider opacity-90">Toplam Tonaj</span>
+<div class="h-6 w-px bg-on-primary/20"></div>
+<span class="font-data-mono text-[24px] font-bold">0.654 Ton</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

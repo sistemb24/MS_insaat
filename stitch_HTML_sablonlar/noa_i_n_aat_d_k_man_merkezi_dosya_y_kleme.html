@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+
+<html lang="tr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Dosya Yükle - NOA İnşaat ERP</title>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Google Fonts: Inter & JetBrains Mono -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary-fixed-dim": "#bec6e0",
+                        "on-error": "#ffffff",
+                        "secondary-fixed": "#dae2fd",
+                        "tertiary-fixed": "#ffdbcc",
+                        "success-emerald": "#10B981",
+                        "primary": "#3525cd",
+                        "surface-tint": "#4d44e3",
+                        "surface-bright": "#f7f9fb",
+                        "warning-amber": "#F59E0B",
+                        "primary-fixed": "#e2dfff",
+                        "on-tertiary-container": "#ffd2be",
+                        "error-container": "#ffdad6",
+                        "on-tertiary-fixed-variant": "#7b2f00",
+                        "on-primary": "#ffffff",
+                        "decorative-purple": "#800080",
+                        "inverse-on-surface": "#eff1f3",
+                        "danger-rose": "#E11D48",
+                        "primary-fixed-dim": "#c3c0ff",
+                        "tertiary": "#7e3000",
+                        "surface-container-highest": "#e0e3e5",
+                        "outline-variant": "#c7c4d8",
+                        "on-tertiary-fixed": "#351000",
+                        "on-background": "#191c1e",
+                        "surface-variant": "#e0e3e5",
+                        "error": "#ba1a1a",
+                        "text-muted": "#64748B",
+                        "on-secondary": "#ffffff",
+                        "on-secondary-fixed-variant": "#3f465c",
+                        "tertiary-fixed-dim": "#ffb695",
+                        "on-surface": "#191c1e",
+                        "tertiary-container": "#a44100",
+                        "on-primary-fixed-variant": "#3323cc",
+                        "secondary": "#565e74",
+                        "surface-container-low": "#f2f4f6",
+                        "surface": "#f7f9fb",
+                        "inverse-surface": "#2d3133",
+                        "primary-container": "#4f46e5",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary-container": "#5c647a",
+                        "decorative-navy": "#000080",
+                        "outline": "#777587",
+                        "on-secondary-fixed": "#131b2e",
+                        "border-slate": "#E2E8F0",
+                        "background": "#f7f9fb",
+                        "secondary-container": "#dae2fd",
+                        "surface-white": "#FFFFFF",
+                        "surface-container-high": "#e6e8ea",
+                        "surface-container": "#eceef0",
+                        "on-surface-variant": "#464555",
+                        "on-primary-container": "#dad7ff",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-fixed": "#0f0069",
+                        "on-error-container": "#93000a",
+                        "surface-dim": "#d8dadc",
+                        "inverse-primary": "#c3c0ff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-md": "1rem",
+                        "grid-cell-py": "0.5rem",
+                        "container-gap": "1.5rem",
+                        "header-height": "64px",
+                        "sidebar-collapsed": "80px",
+                        "sidebar-width": "260px",
+                        "stack-sm": "0.5rem",
+                        "grid-cell-px": "0.75rem"
+                    },
+                    "fontFamily": {
+                        "headline-sm": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "data-mono": ["JetBrains Mono"]
+                    },
+                    "fontSize": {
+                        "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "headline-lg": ["30px", { "lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "700" }],
+                        "body-sm": ["13px", { "lineHeight": "18px", "fontWeight": "400" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "data-mono": ["13px", { "lineHeight": "16px", "fontWeight": "500" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md antialiased overflow-hidden flex h-screen">
+<!-- Modal Overlay Backdrop (Placed first to sit behind modal but over content) -->
+<div class="fixed inset-0 bg-inverse-surface/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+<!-- File Upload Modal Panel -->
+<div class="bg-surface-white w-full max-w-[600px] rounded-xl shadow-lg flex flex-col overflow-hidden animate-fade-in-up" style="animation: fadeInUp 0.3s ease-out forwards;">
+<!-- Modal Header -->
+<div class="flex items-center justify-between px-6 py-5 border-b border-border-slate bg-surface-white">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary text-[28px]" style="font-variation-settings: 'FILL' 1;">cloud_upload</span>
+<h2 class="font-headline-sm text-headline-sm text-on-surface m-0">Dosya Yükle</h2>
+</div>
+<button aria-label="Kapat" class="text-text-muted hover:text-on-surface transition-colors p-1 rounded-full hover:bg-surface-container-low">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<!-- Modal Body -->
+<div class="p-6 flex flex-col gap-6">
+<!-- Target Folder Selection -->
+<div class="flex flex-col gap-2">
+<label class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider" for="folder-select">Hedef Klasör</label>
+<div class="relative">
+<select class="w-full appearance-none bg-surface-white border border-border-slate rounded-lg py-2.5 px-3 pr-10 font-body-md text-body-md text-on-surface focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-shadow" id="folder-select">
+<option value="">Klasör Seçin...</option>
+<option selected="" value="irsaliyeler">İrsaliyeler</option>
+<option value="sozlesmeler">Sözleşmeler</option>
+<option value="faturalar">Faturalar</option>
+<option value="projeler">Proje Belgeleri</option>
+</select>
+<div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-text-muted">
+<span class="material-symbols-outlined">expand_more</span>
+</div>
+</div>
+</div>
+<!-- Drag & Drop Zone -->
+<div class="relative w-full rounded-xl border-2 border-dashed border-outline-variant bg-surface-bright hover:bg-surface-container-low hover:border-primary/50 transition-all duration-200 group cursor-pointer overflow-hidden flex flex-col items-center justify-center py-10 px-6 text-center">
+<input class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" multiple="" type="file"/>
+<div class="bg-primary-container/10 text-primary p-3 rounded-full mb-4 group-hover:scale-110 transition-transform duration-300">
+<span class="material-symbols-outlined text-[32px]">note_add</span>
+</div>
+<p class="font-headline-sm text-body-lg text-on-surface mb-1">Dosyaları buraya sürükleyin</p>
+<p class="font-body-md text-body-md text-text-muted mb-4">veya bilgisayarınızdan seçmek için tıklayın</p>
+<!-- File Limits Info -->
+<div class="flex items-center gap-4 text-text-muted font-body-sm text-body-sm">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">picture_as_pdf</span>
+<span>PDF, DOCX, JPG, PNG</span>
+</div>
+<div class="flex items-center gap-1 text-warning-amber/80">
+<span class="material-symbols-outlined text-[16px]">info</span>
+<span>Maksimum 5MB limit</span>
+</div>
+</div>
+</div>
+<!-- Upload Progress Area -->
+<div class="flex flex-col gap-3 mt-2">
+<h3 class="font-label-caps text-label-caps text-on-surface-variant uppercase">Yükleme Durumu (2 Dosya)</h3>
+<!-- File Item 1: Uploading -->
+<div class="bg-surface-white border border-border-slate rounded-lg p-3 flex items-center gap-4 shadow-sm relative overflow-hidden">
+<!-- Progress Background fill -->
+<div class="absolute left-0 top-0 bottom-0 bg-primary-fixed/30 w-[65%] z-0 transition-all duration-500"></div>
+<div class="z-10 bg-error-container text-error p-2 rounded shrink-0">
+<span class="material-symbols-outlined">picture_as_pdf</span>
+</div>
+<div class="z-10 flex-grow min-w-0 flex flex-col justify-center">
+<div class="flex justify-between items-end mb-1">
+<span class="font-body-md text-body-md text-on-surface font-medium truncate pr-2">Cimento_Irsaliye_No_4829.pdf</span>
+<span class="font-data-mono text-data-mono text-text-muted text-[11px]">%65</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="font-body-sm text-body-sm text-text-muted">1.2 MB / 2.4 MB</span>
+</div>
+<!-- Thin Progress Bar (Alternative to background fill) -->
+<div class="w-full h-1 bg-surface-container mt-2 rounded-full overflow-hidden">
+<div class="h-full bg-primary rounded-full transition-all duration-500" style="width: 65%;"></div>
+</div>
+</div>
+<button class="z-10 text-text-muted hover:text-danger-rose p-1 transition-colors shrink-0">
+<span class="material-symbols-outlined text-[20px]">cancel</span>
+</button>
+</div>
+<!-- File Item 2: Success -->
+<div class="bg-surface-white border border-success-emerald/30 rounded-lg p-3 flex items-center gap-4 shadow-sm relative">
+<div class="bg-surface-bright text-text-muted p-2 rounded shrink-0">
+<span class="material-symbols-outlined">image</span>
+</div>
+<div class="flex-grow min-w-0 flex flex-col justify-center">
+<span class="font-body-md text-body-md text-on-surface font-medium truncate">Saha_Fotografi_Blok_A.jpg</span>
+<span class="font-body-sm text-body-sm text-text-muted">840 KB</span>
+</div>
+<div class="text-success-emerald shrink-0 flex items-center gap-1 bg-success-emerald/10 px-2 py-1 rounded-md">
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="font-body-sm text-[12px] font-medium">Tamamlandı</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Modal Footer Actions -->
+<div class="px-6 py-4 bg-surface-container-lowest border-t border-border-slate flex justify-end gap-3">
+<button class="px-4 py-2 rounded-lg font-body-md text-body-md font-medium text-text-muted hover:bg-surface-container hover:text-on-surface transition-colors border border-transparent">
+                    İptal
+                </button>
+<button class="px-5 py-2 rounded-lg font-body-md text-body-md font-medium bg-primary text-on-primary hover:bg-surface-tint hover:shadow-sm transition-all flex items-center gap-2">
+<span>Yüklemeyi Başlat</span>
+<span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+<style>
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translate3d(0, 20px, 0) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translate3d(0, 0, 0) scale(1);
+            }
+        }
+    </style>
+</body></html>

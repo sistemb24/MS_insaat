@@ -1,0 +1,1781 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Tenant {
+  id                         String                      @id
+  name                       String
+  createdAt                  DateTime                    @default(now())
+  updatedAt                  DateTime                    @updatedAt
+  companies                  Company[]
+  sessions                   AppSession[]
+  userScopeAccesses          AppUserScopeAccess[]
+  users                      AppUser[]
+  records                    EntityRecord[]
+  purchaseInvoices           PurchaseInvoice[]
+  salesInvoices              SalesInvoice[]
+  deliveryNotes              DeliveryNote[]
+  personnelAssets            PersonnelAssetAssignment[]
+  stockMovements             StockMovement[]
+  progressPayments           ProgressPayment[]
+  constructionProjects      ConstructionProject[]
+  constructionContractItems ConstructionContractItem[]
+  constructionProgressPayments ConstructionProgressPayment[]
+  constructionMeasurementLines ConstructionMeasurementLine[]
+  constructionSnapshots     ConstructionPaymentItemSnapshot[]
+  constructionApprovalEvents ConstructionApprovalEvent[]
+  constructionAccountingLinks ConstructionAccountingLink[]
+  constructionMeasurementSheets ConstructionMeasurementSheet[]
+  constructionExtraWorks ConstructionExtraWork[]
+  constructionDeductionMovements ConstructionDeductionMovement[]
+  constructionFinancialMovements ConstructionFinancialMovement[]
+  constructionPriceRevisions ConstructionContractItemPriceRevision[]
+  expenses                   Expense[]
+  timesheets                 Timesheet[]
+  payrollAccruals            PayrollAccrual[]
+  cheques                    Cheque[]
+  cashBankMovements          CashBankMovement[]
+  tenders                    Tender[]
+  documentFolders            DocumentFolder[]
+  documentFiles              DocumentFile[]
+  notifications              Notification[]
+  notificationPreferences    NotificationPreference[]
+  stockMinimumSettings       StockMinimumSetting[]
+  userInvitations            UserInvitation[]
+  emailOutboxMessages        EmailOutbox[]
+  tenantSubscriptions        TenantSubscription[]
+  subscriptionInvoices       SubscriptionInvoice[]
+  subscriptionPaymentWebhookEvents SubscriptionPaymentWebhookEvent[]
+  eFaturaWebhookEvents      EFaturaWebhookEvent[]
+  tenantSubscriptionAddons   TenantSubscriptionAddon[]
+  bankIntegrationConnections BankIntegrationConnection[]
+  bankTransactions           BankTransaction[]
+  bankLedgerEntries          BankLedgerEntry[]
+  ledgerEntries              LedgerEntry[]
+  ledgerLines                LedgerLine[]
+  vehicles                   Vehicle[]
+  apiKeys                    ApiKey[]
+  webhookEndpoints           WebhookEndpoint[]
+  auditLogs                  AuditLog[]
+}
+
+model Company {
+  id                         String                      @id
+  tenantId                   String
+  name                       String
+  createdAt                  DateTime                    @default(now())
+  updatedAt                  DateTime                    @updatedAt
+  tenant                     Tenant                      @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  periods                    Period[]
+  sessions                   AppSession[]
+  userScopeAccesses          AppUserScopeAccess[]
+  records                    EntityRecord[]
+  purchaseInvoices           PurchaseInvoice[]
+  salesInvoices              SalesInvoice[]
+  deliveryNotes              DeliveryNote[]
+  personnelAssets            PersonnelAssetAssignment[]
+  stockMovements             StockMovement[]
+  progressPayments           ProgressPayment[]
+  constructionProjects      ConstructionProject[]
+  constructionContractItems ConstructionContractItem[]
+  constructionProgressPayments ConstructionProgressPayment[]
+  constructionMeasurementLines ConstructionMeasurementLine[]
+  constructionSnapshots     ConstructionPaymentItemSnapshot[]
+  constructionApprovalEvents ConstructionApprovalEvent[]
+  constructionAccountingLinks ConstructionAccountingLink[]
+  constructionMeasurementSheets ConstructionMeasurementSheet[]
+  constructionExtraWorks ConstructionExtraWork[]
+  constructionDeductionMovements ConstructionDeductionMovement[]
+  constructionFinancialMovements ConstructionFinancialMovement[]
+  constructionPriceRevisions ConstructionContractItemPriceRevision[]
+  expenses                   Expense[]
+  timesheets                 Timesheet[]
+  payrollAccruals            PayrollAccrual[]
+  cheques                    Cheque[]
+  cashBankMovements          CashBankMovement[]
+  tenders                    Tender[]
+  documentFolders            DocumentFolder[]
+  documentFiles              DocumentFile[]
+  notifications              Notification[]
+  stockMinimumSettings       StockMinimumSetting[]
+  userInvitations            UserInvitation[]
+  emailOutboxMessages        EmailOutbox[]
+  tenantSubscriptions        TenantSubscription[]
+  subscriptionInvoices       SubscriptionInvoice[]
+  subscriptionPaymentWebhookEvents SubscriptionPaymentWebhookEvent[]
+  eFaturaWebhookEvents      EFaturaWebhookEvent[]
+  tenantSubscriptionAddons   TenantSubscriptionAddon[]
+  bankIntegrationConnections BankIntegrationConnection[]
+  bankTransactions           BankTransaction[]
+  bankLedgerEntries          BankLedgerEntry[]
+  ledgerEntries              LedgerEntry[]
+  ledgerLines                LedgerLine[]
+  vehicles                   Vehicle[]
+  apiKeys                    ApiKey[]
+  webhookEndpoints           WebhookEndpoint[]
+  auditLogs                  AuditLog[]
+
+  @@index([tenantId])
+}
+
+model Period {
+  id                         String                      @id
+  tenantId                   String
+  companyId                  String
+  label                      String
+  startsAt                   DateTime?
+  endsAt                     DateTime?
+  createdAt                  DateTime                    @default(now())
+  updatedAt                  DateTime                    @updatedAt
+  isClosed                    Boolean                     @default(false)
+  company                    Company                     @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  sessions                   AppSession[]
+  userScopeAccesses          AppUserScopeAccess[]
+  records                    EntityRecord[]
+  purchaseInvoices           PurchaseInvoice[]
+  salesInvoices              SalesInvoice[]
+  deliveryNotes              DeliveryNote[]
+  personnelAssets            PersonnelAssetAssignment[]
+  stockMovements             StockMovement[]
+  progressPayments           ProgressPayment[]
+  constructionProjects      ConstructionProject[]
+  constructionContractItems ConstructionContractItem[]
+  constructionProgressPayments ConstructionProgressPayment[]
+  constructionMeasurementLines ConstructionMeasurementLine[]
+  constructionSnapshots     ConstructionPaymentItemSnapshot[]
+  constructionApprovalEvents ConstructionApprovalEvent[]
+  constructionAccountingLinks ConstructionAccountingLink[]
+  constructionMeasurementSheets ConstructionMeasurementSheet[]
+  constructionExtraWorks ConstructionExtraWork[]
+  constructionDeductionMovements ConstructionDeductionMovement[]
+  constructionFinancialMovements ConstructionFinancialMovement[]
+  constructionPriceRevisions ConstructionContractItemPriceRevision[]
+  expenses                   Expense[]
+  timesheets                 Timesheet[]
+  payrollAccruals            PayrollAccrual[]
+  cheques                    Cheque[]
+  cashBankMovements          CashBankMovement[]
+  tenders                    Tender[]
+  documentFolders            DocumentFolder[]
+  documentFiles              DocumentFile[]
+  notifications              Notification[]
+  stockMinimumSettings       StockMinimumSetting[]
+  userInvitations            UserInvitation[]
+  emailOutboxMessages        EmailOutbox[]
+  tenantSubscriptions        TenantSubscription[]
+  subscriptionInvoices       SubscriptionInvoice[]
+  subscriptionPaymentWebhookEvents SubscriptionPaymentWebhookEvent[]
+  eFaturaWebhookEvents      EFaturaWebhookEvent[]
+  tenantSubscriptionAddons   TenantSubscriptionAddon[]
+  bankIntegrationConnections BankIntegrationConnection[]
+  bankTransactions           BankTransaction[]
+  bankLedgerEntries          BankLedgerEntry[]
+  ledgerEntries              LedgerEntry[]
+  ledgerLines                LedgerLine[]
+  vehicles                   Vehicle[]
+  apiKeys                    ApiKey[]
+  webhookEndpoints           WebhookEndpoint[]
+  auditLogs                  AuditLog[]
+
+  @@index([tenantId, companyId])
+}
+
+model AppUser {
+  id                      String                   @id
+  tenantId                String
+  name                    String
+  email                   String?
+  createdAt               DateTime                 @default(now())
+  updatedAt               DateTime                 @updatedAt
+  tenant                  Tenant                   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  credential              AppCredential?
+  sessions                AppSession[]
+  userScopeAccesses       AppUserScopeAccess[]
+  notifications           Notification[]
+  notificationPreferences NotificationPreference[]
+
+  @@index([tenantId])
+}
+
+model AppCredential {
+  id               String     @id @default(cuid())
+  tenantId         String
+  userId           String     @unique
+  email            String     @unique
+  passwordHash     String
+  defaultSessionId String
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
+  user             AppUser    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  defaultSession   AppSession @relation(fields: [defaultSessionId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId])
+}
+
+model AppSession {
+  id           String          @id
+  tenantId     String
+  companyId    String
+  periodId     String
+  userId       String
+  role         String
+  licenseLabel String
+  expiresAt    DateTime?
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+  tenant       Tenant          @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company      Company         @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  period       Period          @relation(fields: [periodId], references: [id], onDelete: Cascade)
+  user         AppUser         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  credentials  AppCredential[]
+
+  @@index([tenantId, userId])
+  @@index([tenantId, companyId, periodId])
+}
+
+model AppUserScopeAccess {
+  id           String   @id
+  tenantId     String
+  companyId    String
+  periodId     String
+  userId       String
+  role         String
+  licenseLabel String
+  isDefault    Boolean  @default(false)
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  tenant       Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company      Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  period       Period   @relation(fields: [periodId], references: [id], onDelete: Cascade)
+  user         AppUser  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, companyId, periodId])
+  @@index([tenantId, userId, isActive])
+  @@index([tenantId, companyId, periodId])
+}
+
+model EntityRecord {
+  id        String   @id @default(cuid())
+  tenantId  String
+  companyId String
+  periodId  String
+  slug      String
+  code      String
+  data      Json
+  createdBy String
+  updatedBy String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  tenant    Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company   Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  period    Period   @relation(fields: [periodId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, companyId, periodId, slug, code])
+  @@index([tenantId, companyId, periodId, slug])
+}
+
+model AuditLog {
+  id          String   @id @default(cuid())
+  tenantId    String
+  companyId   String
+  periodId    String
+  actorUserId String
+  action      String
+  entityType  String
+  entityId    String
+  entityLabel String
+  metadata    Json
+  occurredAt  DateTime
+  createdAt   DateTime @default(now())
+  tenant      Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company     Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  period      Period   @relation(fields: [periodId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId, companyId, periodId, occurredAt])
+  @@index([tenantId, entityType, entityId])
+  @@index([tenantId, actorUserId, occurredAt])
+}
+
+model Notification {
+  id          String    @id
+  tenantId    String
+  companyId   String
+  periodId    String
+  userId      String
+  category    String
+  title       String
+  body        String
+  priority    String
+  readAt      DateTime?
+  targetHref  String
+  targetLabel String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  tenant      Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company     Company   @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  period      Period    @relation(fields: [periodId], references: [id], onDelete: Cascade)
+  user        AppUser   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId, companyId, periodId, userId, createdAt])
+  @@index([tenantId, companyId, periodId, userId, readAt])
+  @@index([tenantId, companyId, periodId, userId, category])
+}
+
+model NotificationPreference {
+  id           String   @id
+  tenantId     String
+  userId       String
+  category     String
+  inAppEnabled Boolean  @default(true)
+  emailEnabled Boolean  @default(false)
+  pushEnabled  Boolean  @default(false)
+  updatedBy    String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  tenant       Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  user         AppUser  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, userId, category])
+  @@index([tenantId, userId])
+}
+
+model StockMinimumSetting {
+  id              String   @id
+  tenantId        String
+  companyId       String
+  periodId        String
+  warehouse       String
+  stockCode       String?
+  stockName       String?
+  unit            String
+  minimumQuantity Decimal  @db.Decimal(18, 4)
+  isActive        Boolean  @default(true)
+  updatedBy       String
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  tenant          Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company         Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  period          Period   @relation(fields: [periodId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId, companyId, periodId, isActive])
+  @@index([tenantId, companyId, periodId, warehouse])
+}
+
+model UserInvitation {
+  id         String    @id
+  tenantId   String
+  companyId  String
+  periodId   String
+  email      String
+  role       String
+  status     String
+  tokenHash  String    @unique
+  invitedBy  String
+  expiresAt  DateTime
+  acceptedAt DateTime?
+  revokedAt  DateTime?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  tenant     Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company    Company   @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  period     Period    @relation(fields: [periodId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId, companyId, periodId, status])
+  @@index([tenantId, companyId, periodId, email])
+  @@index([tenantId, tokenHash])
+}
+
+model EmailOutbox {
+  id             String    @id
+  tenantId       String
+  companyId      String
+  periodId       String
+  channel        String
+  recipientEmail String
+  subject        String
+  bodyText       String
+  template       String
+  status         String
+  metadata       Json
+  createdAt      DateTime  @default(now())
+  sentAt         DateTime?
+  failedAt       DateTime?
+  lastError      String?
+  tenant         Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company        Company   @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  period         Period    @relation(fields: [periodId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId, companyId, periodId, status, createdAt])
+  @@index([tenantId, recipientEmail, createdAt])
+}
+
+model SubscriptionPlan {
+  id              String               @id
+  name            String
+  description     String
+  monthlyPrice    Decimal              @db.Decimal(18, 2)
+  includedModules Json
+  userLimit       Int
+  storageLimitGb  Int
+  sortOrder       Int
+  isActive        Boolean              @default(true)
+  createdAt       DateTime             @default(now())
+  updatedAt       DateTime             @updatedAt
+  subscriptions   TenantSubscription[]
+
+  @@index([isActive, sortOrder])
+}
+
+model SubscriptionAddon {
+  id             String                    @id
+  name           String
+  description    String
+  monthlyPrice   Decimal                   @db.Decimal(18, 2)
+  isActive       Boolean                   @default(true)
+  createdAt      DateTime                  @default(now())
+  updatedAt      DateTime                  @updatedAt
+  subscriptions  TenantSubscriptionAddon[]
+
+  @@index([isActive, name])
+}
+
+model TenantSubscription {
+  id              String                     @id
+  tenantId        String
+  companyId       String
+  periodId        String
+  planId          String
+  billingCycle    String
+  startsAt        DateTime
+  endsAt          DateTime
+  renewalAmount   Decimal                    @db.Decimal(18, 2)
+  autoRenew       Boolean                    @default(true)
+  userLimit       Int
+  storageLimitGb  Int
+  status          String
+  createdBy       String
+  updatedBy       String
+  createdAt       DateTime                   @default(now())
+  updatedAt       DateTime                   @updatedAt
+  tenant          Tenant                     @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company         Company                    @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  period          Period                     @relation(fields: [periodId], references: [id], onDelete: Cascade)
+  plan            SubscriptionPlan           @relation(fields: [planId], references: [id])
+  invoices        SubscriptionInvoice[]
+  addons          TenantSubscriptionAddon[]
+
+  @@index([tenantId, companyId, periodId, status])
+  @@index([tenantId, planId])
+}
+
+model SubscriptionInvoice {
+  id             String             @id
+  tenantId       String
+  companyId      String
+  periodId       String
+  subscriptionId String
+  invoiceNo      String
+  invoiceDate    DateTime
+  amount         Decimal            @db.Decimal(18, 2)
+  currency       String
+  status         String
+  method         String
+  providerRef    String?
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
+  tenant         Tenant             @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company        Company            @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  period         Period             @relation(fields: [periodId], references: [id], onDelete: Cascade)
+  subscription   TenantSubscription @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, companyId, periodId, invoiceNo])
+  @@index([tenantId, companyId, periodId, invoiceDate])
+  @@index([tenantId, companyId, periodId, subscriptionId])
+}
+
+model SubscriptionPaymentWebhookEvent {
+  id           String    @id @default(cuid())
+  tenantId     String
+  companyId    String
+  periodId     String
+  eventId      String
+  eventType    String
+  invoiceNo    String
+  providerRef  String
+  status       String
+  resultStatus String?
+  errorMessage String?
+  receivedAt   DateTime
+  processedAt  DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  tenant       Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company      Company   @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  period       Period    @relation(fields: [periodId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, eventId])
+  @@index([tenantId, companyId, periodId, status], map: "SubscriptionPaymentWebhookEvent_scope_status_idx")
+  @@index([tenantId, companyId, periodId, invoiceNo], map: "SubscriptionPaymentWebhookEvent_scope_invoiceNo_idx")
+  @@index([tenantId, providerRef])
+}
+
+model EFaturaWebhookEvent {
+  id             String   @id @default(cuid())
+  tenantId       String
+  companyId      String
+  periodId       String
+  eventId        String
+  eventType      String
+  invoiceNo      String
+  providerRef    String
+  providerStatus String
+  receivedAt     DateTime
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  tenant         Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company        Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  period         Period   @relation(fields: [periodId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, eventId])
+  @@index([tenantId, companyId, periodId, receivedAt], map: "EFaturaWebhookEvent_scope_receivedAt_idx")
+  @@index([tenantId, companyId, periodId, invoiceNo], map: "EFaturaWebhookEvent_scope_invoiceNo_idx")
+}
+
+model TenantSubscriptionAddon {
+  id             String             @id
+  tenantId       String
+  companyId      String
+  periodId       String
+  subscriptionId String
+  addonId        String
+  status         String
+  startsAt       DateTime
+  endsAt         DateTime?
+  monthlyPrice   Decimal            @db.Decimal(18, 2)
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
+  tenant         Tenant             @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company        Company            @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  period         Period             @relation(fields: [periodId], references: [id], onDelete: Cascade)
+  subscription   TenantSubscription @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
+  addon          SubscriptionAddon  @relation(fields: [addonId], references: [id])
+
+  @@unique([tenantId, companyId, periodId, subscriptionId, addonId])
+  @@index([tenantId, companyId, periodId, status])
+  @@index([tenantId, addonId])
+}
+
+model BankIntegrationConnection {
+  id              String            @id
+  tenantId        String
+  companyId       String
+  periodId        String
+  bankCode        String
+  bankName        String
+  environment     String
+  consentId       String
+  status          String
+  lastTestStatus  String
+  lastTestMessage String
+  lastTestedAt    DateTime
+  createdBy       String
+  updatedBy       String
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  tenant          Tenant            @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company         Company           @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  period          Period            @relation(fields: [periodId], references: [id], onDelete: Cascade)
+  transactions    BankTransaction[]
+
+  @@unique([tenantId, companyId, periodId, bankCode, environment])
+  @@index([tenantId, companyId, periodId, status])
+  @@index([tenantId, companyId, periodId, bankCode])
+}
+
+model BankTransaction {
+  id               String                    @id
+  tenantId         String
+  companyId        String
+  periodId         String
+  bankConnectionId String
+  bankName         String
+  externalId       String
+  occurredAt       DateTime
+  description      String
+  direction        String
+  amount           Decimal                   @db.Decimal(18, 2)
+  currency         String
+  status           String
+  updatedAt        DateTime                  @updatedAt
+  tenant           Tenant                    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company          Company                   @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  period           Period                    @relation(fields: [periodId], references: [id], onDelete: Cascade)
+  connection       BankIntegrationConnection @relation(fields: [bankConnectionId], references: [id], onDelete: Cascade)
+  ledgerEntries    BankLedgerEntry[]
+
+  @@unique([tenantId, companyId, periodId, bankConnectionId, externalId])
+  @@index([tenantId, companyId, periodId, occurredAt])
+  @@index([tenantId, companyId, periodId, status])
+  @@index([bankConnectionId, occurredAt])
+}
+
+model BankLedgerEntry {
+  id                  String           @id
+  tenantId            String
+  companyId           String
+  periodId            String
+  bankTransactionId   String
+  cashBankMovementId  String
+  entryDate           DateTime
+  documentNo          String
+  description         String
+  cashBankAccountCode String
+  cashBankAccountName String
+  ledgerDirection     String
+  amount              Decimal          @db.Decimal(18, 2)
+  currency            String
+  status              String
+  createdBy           String
+  updatedBy           String
+  createdAt           DateTime         @default(now())
+  updatedAt           DateTime         @updatedAt
+  tenant              Tenant           @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company             Company          @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  period              Period           @relation(fields: [periodId], references: [id], onDelete: Cascade)
+  bankTransaction     BankTransaction  @relation(fields: [bankTransactionId], references: [id], onDelete: Cascade)
+  cashBankMovement    CashBankMovement @relation(fields: [cashBankMovementId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, companyId, periodId, bankTransactionId, cashBankMovementId])
+  @@index([tenantId, companyId, periodId, entryDate])
+  @@index([tenantId, companyId, periodId, status])
+  @@index([tenantId, companyId, periodId, cashBankMovementId, status])
+}
+
+model LedgerEntry {
+  id          String       @id
+  tenantId    String
+  companyId   String
+  periodId    String
+  sourceType  String?
+  sourceId    String?
+  entryDate   DateTime     @db.Date
+  documentNo  String
+  description String
+  currency    String
+  status      String
+  debitTotal  Decimal      @db.Decimal(18, 2)
+  creditTotal Decimal      @db.Decimal(18, 2)
+  createdBy   String
+  updatedBy   String
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  tenant      Tenant       @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company     Company      @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  period      Period       @relation(fields: [periodId], references: [id], onDelete: Cascade)
+  lines       LedgerLine[]
+
+  @@unique([tenantId, companyId, periodId, documentNo])
+  @@unique([tenantId, companyId, periodId, sourceType, sourceId])
+  @@index([tenantId, companyId, periodId, entryDate])
+  @@index([tenantId, companyId, periodId, status])
+}
+
+model LedgerLine {
+  id          String      @id
+  tenantId    String
+  companyId   String
+  periodId    String
+  entryId     String
+  lineNo      Int
+  accountCode String
+  accountName String
+  debit       Decimal     @db.Decimal(18, 2)
+  credit      Decimal     @db.Decimal(18, 2)
+  description String?
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  tenant      Tenant      @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company     Company     @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  period      Period      @relation(fields: [periodId], references: [id], onDelete: Cascade)
+  entry       LedgerEntry @relation(fields: [entryId], references: [id], onDelete: Cascade)
+
+  @@unique([entryId, lineNo])
+  @@index([tenantId, companyId, periodId, accountCode])
+  @@index([entryId])
+}
+
+model Vehicle {
+  id              String   @id
+  tenantId        String
+  companyId       String
+  periodId        String
+  plate           String
+  vehicleType     String
+  brand           String?
+  modelName       String?
+  modelYear       Int?
+  fuelType        String?
+  chassisNumber   String?
+  engineNumber    String?
+  entryOdometerKm Int?
+  acquisitionDate DateTime? @db.Date
+  dispositionDate DateTime? @db.Date
+  insuranceEndDate DateTime? @db.Date
+  inspectionEndDate DateTime? @db.Date
+  maintenanceDueDate DateTime? @db.Date
+  registrationDate DateTime? @db.Date
+  siteCode        String?
+  siteName        String
+  driverName      String?
+  arventoDeviceId String?
+  status          String
+  createdBy       String
+  updatedBy       String
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  tenant          Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company         Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  period          Period   @relation(fields: [periodId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, companyId, periodId, plate])
+  @@unique([tenantId, companyId, periodId, arventoDeviceId])
+  @@unique([tenantId, companyId, periodId, chassisNumber])
+  @@index([tenantId, companyId, periodId, status])
+  @@index([tenantId, companyId, periodId, siteCode])
+  @@index([tenantId, arventoDeviceId])
+}
+
+model ApiKey {
+  id                 String    @id
+  tenantId           String
+  companyId          String
+  periodId           String
+  name               String
+  keyPrefix          String
+  keyHash            String    @unique
+  scopes             Json
+  rateLimitPerSecond Int
+  rateLimitWindowStartedAt DateTime?
+  rateLimitWindowCount Int       @default(0)
+  expiresAt          DateTime? @db.Date
+  lastUsedAt         DateTime?
+  revokedAt          DateTime?
+  revokedBy          String?
+  createdBy          String
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+  tenant             Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company            Company   @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  period             Period    @relation(fields: [periodId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, companyId, periodId, name])
+  @@index([tenantId, companyId, periodId, revokedAt])
+  @@index([tenantId, companyId, periodId, expiresAt])
+}
+
+model WebhookEndpoint {
+  id                 String   @id
+  tenantId           String
+  companyId          String
+  periodId           String
+  name               String
+  url                String
+  secretHash         String
+  secretPrefix       String
+  eventTypes         Json
+  isActive           Boolean  @default(true)
+  createdBy          String
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+  tenant             Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company            Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  period             Period   @relation(fields: [periodId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, companyId, periodId, name])
+  @@index([tenantId, companyId, periodId, isActive])
+}
+
+model Cheque {
+  id          String   @id
+  tenantId    String
+  companyId   String
+  periodId    String
+  direction   String
+  documentNo  String
+  checkNo     String
+  bankName    String
+  branchName  String?
+  drawerName  String
+  issueDate   DateTime
+  dueDate     DateTime
+  amount      Decimal  @db.Decimal(18, 2)
+  currency    String
+  status      String
+  description String?
+  createdBy   String
+  updatedBy   String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  tenant      Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company     Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  period      Period   @relation(fields: [periodId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, companyId, periodId, documentNo])
+  @@unique([tenantId, companyId, periodId, checkNo])
+  @@index([tenantId, companyId, periodId, dueDate])
+  @@index([tenantId, companyId, periodId, status])
+}
+
+model Expense {
+  id               String   @id
+  tenantId         String
+  companyId        String
+  periodId         String
+  documentNo       String
+  expenseDate      DateTime
+  siteCode         String
+  siteName         String
+  movementGroup    String
+  accountCode      String
+  accountName      String
+  counterpartyName String
+  amount           Decimal  @db.Decimal(18, 2)
+  vatRate          Decimal  @db.Decimal(5, 2)
+  vatTotal         Decimal  @db.Decimal(18, 2)
+  grandTotal       Decimal  @db.Decimal(18, 2)
+  currency         String
+  status           String
+  description      String?
+  createdBy        String
+  updatedBy        String
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  tenant           Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company          Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  period           Period   @relation(fields: [periodId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, companyId, periodId, documentNo])
+  @@index([tenantId, companyId, periodId, expenseDate])
+  @@index([tenantId, companyId, periodId, movementGroup])
+  @@index([tenantId, companyId, periodId, siteCode])
+}
+
+model Tender {
+  id                     String          @id
+  tenantId               String
+  companyId              String
+  periodId               String
+  tenderNo               String
+  ikn                    String
+  title                  String
+  authorityName          String
+  procedure              String
+  status                 String
+  city                   String?
+  noticeDate             DateTime?
+  specPurchaseDeadline   DateTime?
+  questionAnswerDeadline DateTime?
+  submissionDeadline     DateTime
+  sessionDate            DateTime?
+  contractSignDate       DateTime?
+  currency               String
+  estimatedValue         Decimal         @db.Decimal(18, 2)
+  overheadRate           Decimal         @db.Decimal(5, 2)
+  profitMargin           Decimal         @db.Decimal(5, 2)
+  bidValue               Decimal         @db.Decimal(18, 2)
+  thresholdValue         Decimal         @db.Decimal(18, 2)
+  contractValue          Decimal         @db.Decimal(18, 2)
+  convertedSiteCode      String?
+  convertedSiteName      String?
+  convertedToSiteAt      DateTime?
+  description            String?
+  createdBy              String
+  updatedBy              String
+  createdAt              DateTime        @default(now())
+  updatedAt              DateTime        @updatedAt
+  tenant                 Tenant          @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company                Company         @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  period                 Period          @relation(fields: [periodId], references: [id], onDelete: Cascade)
+  lines                  TenderBoqLine[]
+
+  @@unique([tenantId, companyId, periodId, tenderNo])
+  @@index([tenantId, companyId, periodId, submissionDeadline])
+  @@index([tenantId, companyId, periodId, status])
+}
+
+model TenderBoqLine {
+  id                String  @id @default(cuid())
+  tenderId          String
+  lineNo            Int
+  pozNo             String
+  description       String
+  unit              String
+  quantity          Decimal @db.Decimal(18, 4)
+  materialCost      Decimal @db.Decimal(18, 2)
+  laborCost         Decimal @db.Decimal(18, 2)
+  equipmentCost     Decimal @db.Decimal(18, 2)
+  subcontractorCost Decimal @db.Decimal(18, 2)
+  shippingCost      Decimal @db.Decimal(18, 2)
+  unitCost          Decimal @db.Decimal(18, 2)
+  lineCostTotal     Decimal @db.Decimal(18, 2)
+  unitBid           Decimal @db.Decimal(18, 2)
+  lineBidTotal      Decimal @db.Decimal(18, 2)
+  tender            Tender  @relation(fields: [tenderId], references: [id], onDelete: Cascade)
+
+  @@unique([tenderId, lineNo])
+  @@index([tenderId])
+}
+
+model DocumentFolder {
+  id          String         @id
+  tenantId    String
+  companyId   String
+  periodId    String
+  name        String
+  purpose     String
+  isSystem    Boolean        @default(false)
+  systemKey   String?
+  color       String
+  accessLevel String
+  isStarred   Boolean        @default(false)
+  canDelete   Boolean        @default(true)
+  canRename   Boolean        @default(true)
+  fileCount   Int            @default(0)
+  sizeBytes   BigInt         @default(0)
+  createdBy   String
+  updatedBy   String
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  deletedAt   DateTime?
+  tenant      Tenant         @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company     Company        @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  period      Period         @relation(fields: [periodId], references: [id], onDelete: Cascade)
+  files       DocumentFile[]
+
+  @@unique([tenantId, companyId, periodId, systemKey])
+  @@index([tenantId, companyId, periodId, deletedAt])
+  @@index([tenantId, companyId, periodId, isSystem])
+}
+
+model DocumentFile {
+  id                String         @id
+  tenantId          String
+  companyId         String
+  periodId          String
+  folderId          String
+  name              String
+  fileType          String
+  mimeType          String
+  extension         String
+  sizeBytes         BigInt
+  storageKey        String
+  lastModified      DateTime
+  linkedModule      String?
+  linkedRecordId    String?
+  linkedRecordLabel String?
+  isStarred         Boolean        @default(false)
+  createdBy         String
+  updatedBy         String
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+  deletedAt         DateTime?
+  tenant            Tenant         @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company           Company        @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  period            Period         @relation(fields: [periodId], references: [id], onDelete: Cascade)
+  folder            DocumentFolder @relation(fields: [folderId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId, companyId, periodId, deletedAt])
+  @@index([tenantId, companyId, periodId, fileType])
+  @@index([tenantId, companyId, periodId, linkedModule, linkedRecordId])
+  @@index([folderId, deletedAt])
+}
+
+model CashBankMovement {
+  id                String            @id
+  tenantId          String
+  companyId         String
+  periodId          String
+  accountCode       String
+  accountName       String
+  movementDate      DateTime
+  movementType      String
+  direction         String
+  documentNo        String
+  counterpartyName  String
+  amount            Decimal           @db.Decimal(18, 2)
+  currency          String
+  description       String?
+  sourceType        String
+  sourceId          String
+  sourceLabel       String
+  createdBy         String
+  updatedBy         String
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+  tenant            Tenant            @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company           Company           @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  period            Period            @relation(fields: [periodId], references: [id], onDelete: Cascade)
+  bankLedgerEntries BankLedgerEntry[]
+
+  @@unique([tenantId, companyId, periodId, sourceType, sourceId, movementType, documentNo])
+  @@index([tenantId, companyId, periodId, movementDate])
+  @@index([tenantId, companyId, periodId, accountCode])
+  @@index([tenantId, sourceType, sourceId])
+}
+
+model PurchaseInvoice {
+  id               String                @id
+  tenantId         String
+  companyId        String
+  periodId         String
+  documentNo       String
+  invoiceDate      DateTime
+  dueDate          DateTime?
+  counterpartyCode String
+  counterpartyName String
+  siteCode         String
+  siteName         String
+  currency         String
+  exchangeRate     Decimal               @db.Decimal(18, 4)
+  movementGroup    String?
+  isOfficial       Boolean               @default(false)
+  description      String?
+  status           String
+  subtotal         Decimal               @db.Decimal(18, 2)
+  discountTotal    Decimal               @db.Decimal(18, 2)
+  netTotal         Decimal               @db.Decimal(18, 2)
+  vatTotal         Decimal               @db.Decimal(18, 2)
+  withholdingTotal Decimal               @db.Decimal(18, 2)
+  grandTotal       Decimal               @db.Decimal(18, 2)
+  lineCount        Int
+  createdBy        String
+  updatedBy        String
+  createdAt        DateTime              @default(now())
+  updatedAt        DateTime              @updatedAt
+  tenant           Tenant                @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company          Company               @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  period           Period                @relation(fields: [periodId], references: [id], onDelete: Cascade)
+  lines            PurchaseInvoiceLine[]
+
+  @@unique([tenantId, companyId, periodId, documentNo])
+  @@index([tenantId, companyId, periodId, invoiceDate])
+}
+
+model PurchaseInvoiceLine {
+  id                String          @id @default(cuid())
+  purchaseInvoiceId String
+  lineNo            Int
+  stockCode         String?
+  stockName         String
+  siteName          String?
+  unit              String
+  description       String?
+  warehouse         String?
+  quantity          Decimal         @db.Decimal(18, 4)
+  unitPrice         Decimal         @db.Decimal(18, 4)
+  discountRate1     Decimal         @db.Decimal(5, 2)
+  discountRate2     Decimal         @db.Decimal(5, 2)
+  vatRate           Decimal         @db.Decimal(5, 2)
+  grossTotal        Decimal         @db.Decimal(18, 2)
+  discountTotal     Decimal         @db.Decimal(18, 2)
+  netTotal          Decimal         @db.Decimal(18, 2)
+  vatTotal          Decimal         @db.Decimal(18, 2)
+  grandTotal        Decimal         @db.Decimal(18, 2)
+  invoice           PurchaseInvoice @relation(fields: [purchaseInvoiceId], references: [id], onDelete: Cascade)
+
+  @@unique([purchaseInvoiceId, lineNo])
+  @@index([purchaseInvoiceId])
+}
+
+model SalesInvoice {
+  id               String             @id
+  tenantId         String
+  companyId        String
+  periodId         String
+  documentNo       String
+  invoiceDate      DateTime
+  dueDate          DateTime?
+  counterpartyCode String
+  counterpartyName String
+  siteCode         String
+  siteName         String
+  currency         String
+  exchangeRate     Decimal            @db.Decimal(18, 4)
+  movementGroup    String?
+  isOfficial       Boolean            @default(false)
+  description      String?
+  status           String
+  subtotal         Decimal            @db.Decimal(18, 2)
+  discountTotal    Decimal            @db.Decimal(18, 2)
+  netTotal         Decimal            @db.Decimal(18, 2)
+  vatTotal         Decimal            @db.Decimal(18, 2)
+  withholdingTotal Decimal            @db.Decimal(18, 2)
+  grandTotal       Decimal            @db.Decimal(18, 2)
+  lineCount        Int
+  createdBy        String
+  updatedBy        String
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+  tenant           Tenant             @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company          Company            @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  period           Period             @relation(fields: [periodId], references: [id], onDelete: Cascade)
+  lines            SalesInvoiceLine[]
+
+  @@unique([tenantId, companyId, periodId, documentNo])
+  @@index([tenantId, companyId, periodId, invoiceDate])
+}
+
+model SalesInvoiceLine {
+  id             String       @id @default(cuid())
+  salesInvoiceId String
+  lineNo         Int
+  stockCode      String?
+  stockName      String
+  siteName       String?
+  unit           String
+  description    String?
+  warehouse      String?
+  quantity       Decimal      @db.Decimal(18, 4)
+  unitPrice      Decimal      @db.Decimal(18, 4)
+  discountRate1  Decimal      @db.Decimal(5, 2)
+  discountRate2  Decimal      @db.Decimal(5, 2)
+  vatRate        Decimal      @db.Decimal(5, 2)
+  grossTotal     Decimal      @db.Decimal(18, 2)
+  discountTotal  Decimal      @db.Decimal(18, 2)
+  netTotal       Decimal      @db.Decimal(18, 2)
+  vatTotal       Decimal      @db.Decimal(18, 2)
+  grandTotal     Decimal      @db.Decimal(18, 2)
+  invoice        SalesInvoice @relation(fields: [salesInvoiceId], references: [id], onDelete: Cascade)
+
+  @@unique([salesInvoiceId, lineNo])
+  @@index([salesInvoiceId])
+}
+
+model DeliveryNote {
+  id                              String             @id
+  tenantId                        String
+  companyId                       String
+  periodId                        String
+  documentNo                      String
+  deliveryDate                    DateTime
+  supplierCode                    String
+  supplierName                    String
+  siteCode                        String
+  siteName                        String
+  linkedPurchaseInvoiceId         String?
+  linkedPurchaseInvoiceDocumentNo String?
+  description                     String?
+  status                          String
+  lineCount                       Int
+  totalQuantity                   Decimal            @db.Decimal(18, 4)
+  createdBy                       String
+  updatedBy                       String
+  createdAt                       DateTime           @default(now())
+  updatedAt                       DateTime           @updatedAt
+  tenant                          Tenant             @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company                         Company            @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  period                          Period             @relation(fields: [periodId], references: [id], onDelete: Cascade)
+  lines                           DeliveryNoteLine[]
+
+  @@unique([tenantId, companyId, periodId, documentNo])
+  @@index([tenantId, companyId, periodId, deliveryDate])
+  @@index([tenantId, companyId, periodId, linkedPurchaseInvoiceId])
+}
+
+model DeliveryNoteLine {
+  id             String       @id @default(cuid())
+  deliveryNoteId String
+  lineNo         Int
+  stockCode      String?
+  stockName      String
+  unit           String
+  warehouse      String
+  quantity       Decimal      @db.Decimal(18, 4)
+  deliveryNote   DeliveryNote @relation(fields: [deliveryNoteId], references: [id], onDelete: Cascade)
+
+  @@unique([deliveryNoteId, lineNo])
+  @@index([deliveryNoteId])
+}
+
+model PersonnelAssetAssignment {
+  id              String   @id
+  tenantId        String
+  companyId       String
+  periodId        String
+  personnelCode   String
+  personnelName   String
+  siteCode        String?
+  siteName        String?
+  assetCategory   String
+  assetCode       String
+  assetName       String
+  serialNo        String?
+  quantity        Decimal  @db.Decimal(18, 4)
+  assignedAt      DateTime
+  dueAt           DateTime?
+  returnedAt      DateTime?
+  status          String
+  notes           String?
+  createdBy       String
+  updatedBy       String
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  tenant          Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company         Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  period          Period   @relation(fields: [periodId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId, companyId, periodId, personnelCode])
+  @@index([tenantId, companyId, periodId, status])
+  @@index([tenantId, companyId, periodId, assetCode, serialNo])
+}
+
+model StockMovement {
+  id              String   @id
+  tenantId        String
+  companyId       String
+  periodId        String
+  documentNo      String
+  movementDate    DateTime
+  movementType    String
+  stockCode       String
+  stockName       String
+  unit            String
+  quantity        Decimal  @db.Decimal(18, 4)
+  unitCost        Decimal  @db.Decimal(18, 4)
+  sourceWarehouse String
+  targetWarehouse String?
+  siteCode        String?
+  siteName        String?
+  description     String?
+  status          String
+  createdBy       String
+  updatedBy       String
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  tenant          Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company         Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  period          Period   @relation(fields: [periodId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, companyId, periodId, documentNo])
+  @@index([tenantId, companyId, periodId, movementDate])
+  @@index([tenantId, companyId, periodId, stockCode, sourceWarehouse])
+  @@index([tenantId, companyId, periodId, status])
+}
+
+model ProgressPayment {
+  id               String                @id
+  tenantId         String
+  companyId        String
+  periodId         String
+  documentNo       String
+  issueDate        DateTime
+  paymentType      String
+  counterpartyCode String
+  counterpartyName String
+  siteCode         String
+  siteName         String
+  currency         String
+  description      String?
+  retentionRate    Decimal               @db.Decimal(5, 2)
+  status           String
+  grossTotal       Decimal               @db.Decimal(18, 2)
+  retentionTotal   Decimal               @db.Decimal(18, 2)
+  netTotal         Decimal               @db.Decimal(18, 2)
+  vatTotal         Decimal               @db.Decimal(18, 2)
+  grandTotal       Decimal               @db.Decimal(18, 2)
+  lineCount        Int
+  createdBy        String
+  updatedBy        String
+  createdAt        DateTime              @default(now())
+  updatedAt        DateTime              @updatedAt
+  tenant           Tenant                @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company          Company               @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  period           Period                @relation(fields: [periodId], references: [id], onDelete: Cascade)
+  lines            ProgressPaymentLine[]
+  constructionAccountingLinks ConstructionAccountingLink[]
+
+  @@unique([tenantId, companyId, periodId, documentNo])
+  @@index([tenantId, companyId, periodId, issueDate])
+  @@index([tenantId, companyId, periodId, status])
+}
+
+model ConstructionProject {
+  id              String   @id @default(cuid())
+  tenantId        String
+  companyId       String
+  periodId        String
+  code            String
+  name            String
+  siteCode        String
+  siteName        String
+  contractNo      String?
+  contractAmount  Decimal  @db.Decimal(18, 2)
+  paymentType     String   @default("Taşeron Hakedişi")
+  counterpartyCode String?
+  counterpartyName String?
+  retentionRate   Decimal  @db.Decimal(5, 2) @default(0)
+  status          String   @default("OPEN")
+  createdBy       String
+  updatedBy       String
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  tenant          Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company         Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  period          Period   @relation(fields: [periodId], references: [id], onDelete: Cascade)
+  contractItems   ConstructionContractItem[]
+  progressPayments ConstructionProgressPayment[]
+
+  @@unique([tenantId, companyId, periodId, code])
+  @@index([tenantId, companyId, periodId, status])
+}
+
+model ConstructionContractItem {
+  id              String   @id @default(cuid())
+  tenantId        String
+  companyId       String
+  periodId        String
+  projectId       String
+  itemCode        String
+  description     String
+  unit            String
+  contractQuantity Decimal @db.Decimal(18, 4)
+  unitPrice       Decimal  @db.Decimal(18, 4)
+  vatRate         Decimal  @db.Decimal(5, 2)
+  revisionNo      Int      @default(1)
+  isActive        Boolean  @default(true)
+  createdBy       String
+  updatedBy       String
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  tenant          Tenant  @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company         Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  period          Period  @relation(fields: [periodId], references: [id], onDelete: Cascade)
+  project         ConstructionProject @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  measurementLines ConstructionMeasurementLine[]
+  snapshots       ConstructionPaymentItemSnapshot[]
+  priceRevisions  ConstructionContractItemPriceRevision[]
+
+  @@unique([projectId, itemCode, revisionNo])
+  @@index([tenantId, companyId, periodId, projectId])
+}
+
+model ConstructionProgressPayment {
+  id                    String   @id @default(cuid())
+  tenantId              String
+  companyId             String
+  periodId              String
+  projectId             String
+  previousProgressPaymentId String?
+  sequenceNo            Int
+  kind                  String   @default("INTERIM")
+  status                String   @default("DRAFT")
+  periodStart           DateTime
+  periodEnd             DateTime
+  paymentDate           DateTime?
+  documentNo            String
+  description           String?
+  currency              String   @default("TL")
+  periodGrossTotal      Decimal  @db.Decimal(18, 2) @default(0)
+  periodVatTotal        Decimal  @db.Decimal(18, 2) @default(0)
+  periodNetTotal        Decimal  @db.Decimal(18, 2) @default(0)
+  cumulativeGrossTotal  Decimal  @db.Decimal(18, 2) @default(0)
+  cumulativeVatTotal    Decimal  @db.Decimal(18, 2) @default(0)
+  cumulativeNetTotal    Decimal  @db.Decimal(18, 2) @default(0)
+  periodExtraWorkTotal  Decimal  @db.Decimal(18, 2) @default(0)
+  periodAdditionTotal   Decimal  @db.Decimal(18, 2) @default(0)
+  periodDeductionTotal  Decimal  @db.Decimal(18, 2) @default(0)
+  periodPayableTotal    Decimal  @db.Decimal(18, 2) @default(0)
+  cumulativeExtraWorkTotal Decimal @db.Decimal(18, 2) @default(0)
+  cumulativeAdditionTotal Decimal @db.Decimal(18, 2) @default(0)
+  cumulativeDeductionTotal Decimal @db.Decimal(18, 2) @default(0)
+  cumulativePayableTotal Decimal @db.Decimal(18, 2) @default(0)
+  createdBy             String
+  updatedBy             String
+  submittedBy           String?
+  approvedBy            String?
+  finalizedBy           String?
+  submittedAt           DateTime?
+  approvedAt            DateTime?
+  finalizedAt           DateTime?
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+  tenant                Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company               Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  period                Period   @relation(fields: [periodId], references: [id], onDelete: Cascade)
+  project               ConstructionProject @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  previousProgressPayment ConstructionProgressPayment? @relation("ConstructionProgressPaymentChain", fields: [previousProgressPaymentId], references: [id])
+  nextProgressPayments  ConstructionProgressPayment[] @relation("ConstructionProgressPaymentChain")
+  measurementLines      ConstructionMeasurementLine[]
+  snapshots             ConstructionPaymentItemSnapshot[]
+  approvals             ConstructionApprovalEvent[]
+  accountingLink        ConstructionAccountingLink?
+  measurementSheets     ConstructionMeasurementSheet[]
+  extraWorks            ConstructionExtraWork[]
+  deductionMovements    ConstructionDeductionMovement[]
+  financialMovements    ConstructionFinancialMovement[]
+
+  @@unique([projectId, sequenceNo])
+  @@unique([tenantId, companyId, periodId, documentNo])
+  @@index([tenantId, companyId, periodId, projectId, status])
+  @@index([previousProgressPaymentId])
+}
+
+model ConstructionMeasurementLine {
+  id                String   @id @default(cuid())
+  tenantId          String
+  companyId         String
+  periodId          String
+  progressPaymentId String
+  measurementSheetId String?
+  contractItemId    String
+  lineNo            Int
+  measurementType   String   @default("GENERAL")
+  description       String
+  unit              String
+  quantity          Decimal  @db.Decimal(18, 4)
+  length            Decimal? @db.Decimal(18, 4)
+  width             Decimal? @db.Decimal(18, 4)
+  height            Decimal? @db.Decimal(18, 4)
+  multiplier        Decimal  @db.Decimal(18, 4) @default(1)
+  createdBy         String
+  updatedBy         String
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  tenant            Tenant  @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company           Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  period            Period  @relation(fields: [periodId], references: [id], onDelete: Cascade)
+  progressPayment   ConstructionProgressPayment @relation(fields: [progressPaymentId], references: [id], onDelete: Cascade)
+  contractItem      ConstructionContractItem @relation(fields: [contractItemId], references: [id], onDelete: Cascade)
+  measurementSheet  ConstructionMeasurementSheet? @relation(fields: [measurementSheetId], references: [id], onDelete: Cascade)
+
+  @@unique([progressPaymentId, measurementSheetId, lineNo])
+  @@index([tenantId, companyId, periodId, progressPaymentId])
+  @@index([contractItemId])
+  @@index([measurementSheetId])
+}
+
+model ConstructionMeasurementSheet {
+  id                String   @id @default(cuid())
+  tenantId          String
+  companyId         String
+  periodId          String
+  progressPaymentId String
+  sheetNo           String
+  sheetType         String   @default("GENERAL")
+  title             String
+  status            String   @default("DRAFT")
+  createdBy         String
+  updatedBy         String
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  tenant            Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company           Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  period            Period   @relation(fields: [periodId], references: [id], onDelete: Cascade)
+  progressPayment   ConstructionProgressPayment @relation(fields: [progressPaymentId], references: [id], onDelete: Cascade)
+  lines             ConstructionMeasurementLine[]
+
+  @@unique([progressPaymentId, sheetNo])
+  @@index([tenantId, companyId, periodId, progressPaymentId, sheetType])
+}
+
+model ConstructionExtraWork {
+  id                String   @id @default(cuid())
+  tenantId          String
+  companyId         String
+  periodId          String
+  progressPaymentId String
+  documentNo        String
+  workDate          DateTime
+  description       String
+  unit              String
+  quantity          Decimal  @db.Decimal(18, 4)
+  unitPrice         Decimal  @db.Decimal(18, 4)
+  vatRate           Decimal  @db.Decimal(5, 2) @default(0)
+  periodAmount      Decimal  @db.Decimal(18, 2)
+  status            String   @default("DRAFT")
+  createdBy         String
+  updatedBy         String
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  tenant            Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company           Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  period            Period   @relation(fields: [periodId], references: [id], onDelete: Cascade)
+  progressPayment   ConstructionProgressPayment @relation(fields: [progressPaymentId], references: [id], onDelete: Cascade)
+
+  @@unique([progressPaymentId, documentNo])
+  @@index([tenantId, companyId, periodId, progressPaymentId, status])
+}
+
+model ConstructionDeductionMovement {
+  id                String   @id @default(cuid())
+  tenantId          String
+  companyId         String
+  periodId          String
+  progressPaymentId String
+  category          String
+  documentNo        String?
+  movementDate      DateTime
+  description       String
+  amount            Decimal  @db.Decimal(18, 2)
+  vatAmount         Decimal  @db.Decimal(18, 2) @default(0)
+  totalAmount       Decimal  @db.Decimal(18, 2)
+  createdBy         String
+  updatedBy         String
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  tenant            Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company           Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  period            Period   @relation(fields: [periodId], references: [id], onDelete: Cascade)
+  progressPayment   ConstructionProgressPayment @relation(fields: [progressPaymentId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId, companyId, periodId, progressPaymentId, category])
+}
+
+model ConstructionFinancialMovement {
+  id                String   @id @default(cuid())
+  tenantId          String
+  companyId         String
+  periodId          String
+  progressPaymentId String
+  movementType      String
+  direction         String   @default("DEDUCTION")
+  movementDate      DateTime
+  description       String
+  amount            Decimal  @db.Decimal(18, 2)
+  createdBy         String
+  updatedBy         String
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  tenant            Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company           Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  period            Period   @relation(fields: [periodId], references: [id], onDelete: Cascade)
+  progressPayment   ConstructionProgressPayment @relation(fields: [progressPaymentId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId, companyId, periodId, progressPaymentId, movementType])
+}
+
+model ConstructionContractItemPriceRevision {
+  id                String   @id @default(cuid())
+  tenantId          String
+  companyId         String
+  periodId          String
+  contractItemId    String
+  revisionNo        Int
+  effectiveFrom     DateTime
+  unitPrice         Decimal  @db.Decimal(18, 4)
+  reason            String
+  createdBy         String
+  createdAt         DateTime @default(now())
+  tenant            Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company           Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  period            Period   @relation(fields: [periodId], references: [id], onDelete: Cascade)
+  contractItem      ConstructionContractItem @relation(fields: [contractItemId], references: [id], onDelete: Cascade)
+
+  @@unique([contractItemId, revisionNo])
+  @@index([tenantId, companyId, periodId, contractItemId, effectiveFrom])
+}
+
+model ConstructionPaymentItemSnapshot {
+  id                 String   @id @default(cuid())
+  tenantId           String
+  companyId          String
+  periodId           String
+  progressPaymentId  String
+  contractItemId     String
+  previousQuantity   Decimal  @db.Decimal(18, 4) @default(0)
+  periodQuantity     Decimal  @db.Decimal(18, 4) @default(0)
+  cumulativeQuantity Decimal  @db.Decimal(18, 4) @default(0)
+  unitPrice          Decimal  @db.Decimal(18, 4) @default(0)
+  vatRate            Decimal  @db.Decimal(5, 2) @default(0)
+  previousAmount     Decimal  @db.Decimal(18, 2) @default(0)
+  periodAmount       Decimal  @db.Decimal(18, 2) @default(0)
+  cumulativeAmount   Decimal  @db.Decimal(18, 2) @default(0)
+  previousVatAmount  Decimal  @db.Decimal(18, 2) @default(0)
+  periodVatAmount    Decimal  @db.Decimal(18, 2) @default(0)
+  cumulativeVatAmount Decimal @db.Decimal(18, 2) @default(0)
+  contractQuantity   Decimal  @db.Decimal(18, 4) @default(0)
+  exceededContract   Boolean  @default(false)
+  calculationVersion String   @default("construction-v1")
+  createdAt          DateTime @default(now())
+  tenant             Tenant  @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company            Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  period             Period  @relation(fields: [periodId], references: [id], onDelete: Cascade)
+  progressPayment    ConstructionProgressPayment @relation(fields: [progressPaymentId], references: [id], onDelete: Cascade)
+  contractItem       ConstructionContractItem @relation(fields: [contractItemId], references: [id], onDelete: Cascade)
+
+  @@unique([progressPaymentId, contractItemId])
+  @@index([tenantId, companyId, periodId, progressPaymentId])
+}
+
+model ConstructionApprovalEvent {
+  id                 String   @id @default(cuid())
+  tenantId           String
+  companyId          String
+  periodId           String
+  progressPaymentId  String
+  statusFrom         String?
+  statusTo           String
+  actorUserId        String
+  reason             String?
+  metadata           Json?
+  createdAt          DateTime @default(now())
+  tenant             Tenant  @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company            Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  period             Period  @relation(fields: [periodId], references: [id], onDelete: Cascade)
+  progressPayment    ConstructionProgressPayment @relation(fields: [progressPaymentId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId, companyId, periodId, progressPaymentId, createdAt])
+}
+
+model ConstructionAccountingLink {
+  id                 String   @id @default(cuid())
+  tenantId           String
+  companyId          String
+  periodId           String
+  constructionPaymentId String @unique
+  progressPaymentId  String   @unique
+  createdAt          DateTime @default(now())
+  tenant             Tenant  @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company            Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  period             Period  @relation(fields: [periodId], references: [id], onDelete: Cascade)
+  constructionPayment ConstructionProgressPayment @relation(fields: [constructionPaymentId], references: [id], onDelete: Cascade)
+  progressPayment    ProgressPayment @relation(fields: [progressPaymentId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId, companyId, periodId])
+}
+
+model ProgressPaymentLine {
+  id                String          @id @default(cuid())
+  progressPaymentId String
+  lineNo            Int
+  description       String
+  unit              String
+  quantity          Decimal         @db.Decimal(18, 4)
+  unitPrice         Decimal         @db.Decimal(18, 4)
+  vatRate           Decimal         @db.Decimal(5, 2)
+  grossTotal        Decimal         @db.Decimal(18, 2)
+  vatTotal          Decimal         @db.Decimal(18, 2)
+  payment           ProgressPayment @relation(fields: [progressPaymentId], references: [id], onDelete: Cascade)
+
+  @@unique([progressPaymentId, lineNo])
+  @@index([progressPaymentId])
+}
+
+model Timesheet {
+  id                 String          @id
+  tenantId           String
+  companyId          String
+  periodId           String
+  documentNo         String
+  year               Int
+  month              Int
+  contractorCode     String?
+  contractorName     String?
+  siteCode           String
+  siteName           String
+  description        String?
+  status             String
+  totalWorkedDays    Decimal         @db.Decimal(18, 2)
+  totalOvertimeHours Decimal         @db.Decimal(18, 2)
+  grossTotal         Decimal         @db.Decimal(18, 2)
+  deductionTotal     Decimal         @db.Decimal(18, 2)
+  netTotal           Decimal         @db.Decimal(18, 2)
+  lineCount          Int
+  createdBy          String
+  updatedBy          String
+  createdAt          DateTime        @default(now())
+  updatedAt          DateTime        @updatedAt
+  tenant             Tenant          @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company            Company         @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  period             Period          @relation(fields: [periodId], references: [id], onDelete: Cascade)
+  lines              TimesheetLine[]
+
+  @@unique([tenantId, companyId, periodId, documentNo])
+  @@index([tenantId, companyId, periodId, year, month])
+  @@index([tenantId, companyId, periodId, status])
+}
+
+model TimesheetLine {
+  id                 String    @id @default(cuid())
+  timesheetId        String
+  lineNo             Int
+  personCode         String
+  personName         String
+  workedDays         Decimal   @db.Decimal(18, 2)
+  overtimeHours      Decimal   @db.Decimal(18, 2)
+  dailyWage          Decimal   @db.Decimal(18, 2)
+  overtimeHourlyRate Decimal   @db.Decimal(18, 2)
+  advanceDeduction   Decimal   @db.Decimal(18, 2)
+  debtDeduction      Decimal   @db.Decimal(18, 2)
+  regularTotal       Decimal   @db.Decimal(18, 2)
+  overtimeTotal      Decimal   @db.Decimal(18, 2)
+  grossTotal         Decimal   @db.Decimal(18, 2)
+  deductionTotal     Decimal   @db.Decimal(18, 2)
+  netTotal           Decimal   @db.Decimal(18, 2)
+  timesheet          Timesheet @relation(fields: [timesheetId], references: [id], onDelete: Cascade)
+
+  @@unique([timesheetId, lineNo])
+  @@unique([timesheetId, personCode])
+  @@index([timesheetId])
+  @@index([personCode])
+}
+
+model PayrollAccrual {
+  id                String               @id
+  tenantId          String
+  companyId         String
+  periodId          String
+  documentNo        String
+  sourceTimesheetId String
+  sourceTimesheetNo String
+  year              Int
+  month             Int
+  siteCode          String
+  siteName          String
+  contractorCode    String?
+  contractorName    String?
+  status            String
+  grossTotal        Decimal              @db.Decimal(18, 2)
+  deductionTotal    Decimal              @db.Decimal(18, 2)
+  netTotal          Decimal              @db.Decimal(18, 2)
+  lineCount         Int
+  createdBy         String
+  updatedBy         String
+  createdAt         DateTime             @default(now())
+  updatedAt         DateTime             @updatedAt
+  tenant            Tenant               @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company           Company              @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  period            Period               @relation(fields: [periodId], references: [id], onDelete: Cascade)
+  lines             PayrollAccrualLine[]
+
+  @@unique([tenantId, companyId, periodId, documentNo])
+  @@unique([tenantId, companyId, periodId, sourceTimesheetId])
+  @@index([tenantId, companyId, periodId, year, month])
+  @@index([tenantId, companyId, periodId, status])
+}
+
+model PayrollAccrualLine {
+  id                String         @id @default(cuid())
+  payrollAccrualId  String
+  lineNo            Int
+  personCode        String
+  personName        String
+  regularWorkedDays Decimal        @db.Decimal(18, 2)
+  overtimeHours     Decimal        @db.Decimal(18, 2)
+  grossTotal        Decimal        @db.Decimal(18, 2)
+  advanceDeduction  Decimal        @db.Decimal(18, 2)
+  debtDeduction     Decimal        @db.Decimal(18, 2)
+  deductionTotal    Decimal        @db.Decimal(18, 2)
+  netTotal          Decimal        @db.Decimal(18, 2)
+  accrual           PayrollAccrual @relation(fields: [payrollAccrualId], references: [id], onDelete: Cascade)
+
+  @@unique([payrollAccrualId, lineNo])
+  @@unique([payrollAccrualId, personCode])
+  @@index([payrollAccrualId])
+  @@index([personCode])
+}

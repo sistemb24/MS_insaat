@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+
+<html lang="tr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Banka Hareketleri Manuel Eşleştirme - NOA ERP</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        /* Custom scrollbar for data-heavy panels */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background-color: #c7c4d8; border-radius: 20px; }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-tertiary-fixed": "#351000", "on-surface-variant": "#464555", "secondary-fixed-dim": "#bec6e0", "secondary": "#565e74", "on-primary-container": "#dad7ff", "on-error": "#ffffff", "text-muted": "#64748B", "decorative-navy": "#000080", "danger-rose": "#E11D48", "tertiary-container": "#a44100", "on-tertiary": "#ffffff", "surface-tint": "#4d44e3", "surface-container-lowest": "#ffffff", "decorative-purple": "#800080", "on-primary-fixed-variant": "#3323cc", "surface-variant": "#e0e3e5", "tertiary": "#7e3000", "on-primary-fixed": "#0f0069", "on-primary": "#ffffff", "secondary-container": "#dae2fd", "inverse-on-surface": "#eff1f3", "on-secondary-fixed": "#131b2e", "on-background": "#191c1e", "surface-dim": "#d8dadc", "error": "#ba1a1a", "surface-container-highest": "#e0e3e5", "background": "#f7f9fb", "on-tertiary-fixed-variant": "#7b2f00", "border-slate": "#E2E8F0", "secondary-fixed": "#dae2fd", "success-emerald": "#10B981", "error-container": "#ffdad6", "on-secondary-fixed-variant": "#3f465c", "surface-container": "#eceef0", "outline": "#777587", "primary-fixed-dim": "#c3c0ff", "primary-fixed": "#e2dfff", "warning-amber": "#F59E0B", "primary-container": "#4f46e5", "surface": "#f7f9fb", "on-secondary-container": "#5c647a", "tertiary-fixed-dim": "#ffb695", "on-secondary": "#ffffff", "tertiary-fixed": "#ffdbcc", "surface-bright": "#f7f9fb", "on-error-container": "#93000a", "surface-container-high": "#e6e8ea", "inverse-surface": "#2d3133", "inverse-primary": "#c3c0ff", "on-tertiary-container": "#ffd2be", "surface-white": "#FFFFFF", "primary": "#3525cd", "on-surface": "#191c1e", "outline-variant": "#c7c4d8", "surface-container-low": "#f2f4f6"
+                    },
+                    borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+                    spacing: { "stack-md": "1rem", "sidebar-collapsed": "80px", "grid-cell-py": "0.5rem", "grid-cell-px": "0.75rem", "container-gap": "1.5rem", "header-height": "64px", "stack-sm": "0.5rem", "sidebar-width": "260px" },
+                    fontFamily: { "headline-lg": ["Inter"], "headline-lg-mobile": ["Inter"], "data-mono": ["JetBrains Mono"], "body-lg": ["Inter"], "headline-md": ["Inter"], "body-sm": ["Inter"], "headline-sm": ["Inter"], "body-md": ["Inter"], "label-caps": ["Inter"] },
+                    fontSize: {
+                        "headline-lg": ["30px", { lineHeight: "38px", letterSpacing: "-0.02em", fontWeight: "700" }],
+                        "headline-lg-mobile": ["24px", { lineHeight: "32px", fontWeight: "700" }],
+                        "data-mono": ["13px", { lineHeight: "16px", fontWeight: "500" }],
+                        "body-lg": ["16px", { lineHeight: "24px", fontWeight: "400" }],
+                        "headline-md": ["24px", { lineHeight: "32px", letterSpacing: "-0.01em", fontWeight: "600" }],
+                        "body-sm": ["13px", { lineHeight: "18px", fontWeight: "400" }],
+                        "headline-sm": ["20px", { lineHeight: "28px", fontWeight: "600" }],
+                        "body-md": ["14px", { lineHeight: "20px", fontWeight: "400" }],
+                        "label-caps": ["12px", { lineHeight: "16px", letterSpacing: "0.05em", fontWeight: "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-background text-on-surface font-body-md h-screen overflow-hidden flex antialiased">
+<!-- SideNavBar -->
+<nav class="fixed left-0 top-0 h-screen w-sidebar bg-surface-white dark:bg-inverse-surface shadow-sm flex flex-col border-r border-border-slate dark:border-outline-variant z-50 hidden md:flex">
+<!-- Brand Header -->
+<div class="h-header-height flex items-center px-6 border-b border-border-slate dark:border-outline-variant">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-primary flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined text-[20px]">apartment</span>
+</div>
+<div>
+<h1 class="font-headline-sm text-headline-sm font-bold text-primary dark:text-primary-fixed">NOA ERP</h1>
+<p class="font-label-caps text-[10px] text-on-surface-variant">İnşaat Yönetim Sistemi</p>
+</div>
+</div>
+</div>
+<!-- Main Navigation -->
+<div class="flex-1 overflow-y-auto py-4 px-4 flex flex-col gap-1">
+<button class="w-full text-left flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-primary-fixed hover:bg-surface-container-low dark:hover:bg-on-secondary-fixed-variant transition-colors duration-200">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-body-md text-body-md">Dashboard</span>
+</button>
+<button class="w-full text-left flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-primary-fixed hover:bg-surface-container-low dark:hover:bg-on-secondary-fixed-variant transition-colors duration-200">
+<span class="material-symbols-outlined">construction</span>
+<span class="font-body-md text-body-md">Şantiyeler</span>
+</button>
+<button class="w-full text-left flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-primary-fixed hover:bg-surface-container-low dark:hover:bg-on-secondary-fixed-variant transition-colors duration-200">
+<span class="material-symbols-outlined">payments</span>
+<span class="font-body-md text-body-md">Finans</span>
+</button>
+<button class="w-full text-left flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-primary-fixed hover:bg-surface-container-low dark:hover:bg-on-secondary-fixed-variant transition-colors duration-200">
+<span class="material-symbols-outlined">group</span>
+<span class="font-body-md text-body-md">İnsan Kaynakları</span>
+</button>
+<button class="w-full text-left flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-primary-fixed hover:bg-surface-container-low dark:hover:bg-on-secondary-fixed-variant transition-colors duration-200">
+<span class="material-symbols-outlined">local_shipping</span>
+<span class="font-body-md text-body-md">Tedarik Zinciri</span>
+</button>
+<button class="w-full text-left flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-primary-fixed hover:bg-surface-container-low dark:hover:bg-on-secondary-fixed-variant transition-colors duration-200">
+<span class="material-symbols-outlined">analytics</span>
+<span class="font-body-md text-body-md">Raporlar</span>
+</button>
+</div>
+<!-- CTA -->
+<div class="p-4 border-t border-border-slate dark:border-outline-variant">
+<button class="w-full bg-primary text-on-primary rounded-lg py-2.5 px-4 font-body-md font-medium hover:bg-on-primary-fixed-variant transition-colors flex items-center justify-center gap-2 shadow-sm">
+<span class="material-symbols-outlined text-[18px]">add</span>
+                Yeni Proje Ekle
+            </button>
+</div>
+<!-- Footer Navigation (Ayarlar is Active based on prompt path) -->
+<div class="p-4 flex flex-col gap-1 border-t border-border-slate dark:border-outline-variant">
+<button class="w-full text-left flex items-center gap-3 px-3 py-2.5 bg-secondary-container dark:bg-on-secondary-fixed-variant text-primary dark:text-primary-fixed-dim font-semibold rounded-lg scale-[0.98] transition-transform">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">settings</span>
+<span class="font-body-md text-body-md">Ayarlar</span>
+</button>
+<button class="w-full text-left flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant dark:text-surface-variant hover:text-primary dark:hover:text-primary-fixed hover:bg-surface-container-low dark:hover:bg-on-secondary-fixed-variant transition-colors duration-200">
+<span class="material-symbols-outlined">help</span>
+<span class="font-body-md text-body-md">Yardım</span>
+</button>
+</div>
+</nav>
+<!-- Main Content Wrapper -->
+<div class="flex-1 flex flex-col md:ml-sidebar-width min-w-0">
+<!-- TopNavBar -->
+<header class="sticky top-0 z-40 w-full h-header-height bg-surface-white/80 dark:bg-inverse-surface/80 backdrop-blur-md border-b border-border-slate dark:border-outline-variant flex justify-between items-center px-6">
+<div class="flex items-center gap-6 flex-1">
+<!-- Mobile Menu Button -->
+<button class="md:hidden text-on-surface-variant">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<!-- Search Bar -->
+<div class="hidden lg:flex items-center bg-surface-container-low rounded-lg px-3 py-1.5 w-64 border border-transparent focus-within:border-primary focus-within:bg-surface-white transition-all">
+<span class="material-symbols-outlined text-on-surface-variant text-[20px]">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-body-md text-on-surface w-full py-1 px-2 placeholder:text-text-muted" placeholder="Banka, işlem veya tutar ara..." type="text"/>
+</div>
+<!-- Navigation Links -->
+<nav class="hidden md:flex items-center gap-6 ml-4">
+<a class="font-label-caps text-label-caps text-on-surface-variant dark:text-surface-variant hover:text-on-surface dark:hover:text-inverse-on-surface transition-colors py-2" href="#">Genel Bakış</a>
+<a class="font-label-caps text-label-caps text-on-surface-variant dark:text-surface-variant hover:text-on-surface dark:hover:text-inverse-on-surface transition-colors py-2" href="#">Hakedişler</a>
+<a class="font-label-caps text-label-caps text-on-surface-variant dark:text-surface-variant hover:text-on-surface dark:hover:text-inverse-on-surface transition-colors py-2" href="#">Bütçe Analizi</a>
+</nav>
+</div>
+<!-- Trailing Actions -->
+<div class="flex items-center gap-4">
+<button class="text-on-surface-variant hover:text-primary transition-colors hover:opacity-80 relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-0 right-0 w-2 h-2 bg-danger-rose rounded-full"></span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors hover:opacity-80">
+<span class="material-symbols-outlined">apps</span>
+</button>
+<div class="h-6 w-px bg-border-slate mx-1"></div>
+<button class="flex items-center gap-2 hover:opacity-80 transition-opacity">
+<img alt="Kullanıcı Profili" class="w-8 h-8 rounded-full object-cover border border-border-slate" data-alt="A small, professional portrait of a corporate user, facing forward with a neutral expression, well-lit studio lighting, isolated on a light gray background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDljsznVKv4UaYhyNYLzWyHXRbPnqau6NAagQJRjKvZ_EtTF6ZIxtFrDXa8Wh3oz8PApFXRTSyjBR1u9OJG5t7b9uA7UF9kzTIxtncsmBpEEvzLiNFwHCSs9rHEpdODgYehDy409Gi6qRu3_BCD9jE1Tyr48fXs1FekyXB5pVRTVYDRh8sLiMLeYC8hoEZZCSYgxwklKd2Hrfb2JLF4YQnPkKXsRUHItbBRxvounwGQ_LfgN0GVew2_"/>
+<span class="hidden lg:block font-body-sm text-body-sm font-medium text-on-surface">Ahmet Y.</span>
+</button>
+</div>
+</header>
+<!-- Main Canvas -->
+<main class="flex-1 overflow-y-auto bg-surface p-6 lg:p-8">
+<!-- Page Header -->
+<div class="mb-container-gap flex flex-col md:flex-row md:items-end justify-between gap-4">
+<div>
+<nav class="flex items-center gap-2 text-body-sm font-body-sm text-text-muted mb-2">
+<a class="hover:text-primary transition-colors" href="#">Ayarlar</a>
+<span class="material-symbols-outlined text-[16px]">chevron_right</span>
+<a class="hover:text-primary transition-colors" href="#">Banka Entegrasyonu</a>
+<span class="material-symbols-outlined text-[16px]">chevron_right</span>
+<span class="text-on-surface font-medium">Manuel Eşleştirme</span>
+</nav>
+<h2 class="font-headline-lg text-headline-lg-mobile lg:text-headline-lg text-on-surface">Banka Hareketleri Eşleştirme</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">Senkronize edilen banka hareketlerini mevcut ERP kayıtlarınızla eşleştirin.</p>
+</div>
+<div class="flex gap-3">
+<button class="bg-surface-white border border-border-slate text-on-surface hover:bg-surface-container-low rounded-lg px-4 py-2 font-body-md font-medium transition-colors shadow-sm flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">arrow_back</span>
+                        Listeye Dön
+                    </button>
+</div>
+</div>
+<!-- Content Grid Layout -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-container-gap items-start">
+<!-- LEFT PANEL: Selected Bank Transaction -->
+<div class="lg:col-span-4 flex flex-col gap-4">
+<div class="bg-surface-white rounded-xl shadow-sm border border-border-slate overflow-hidden">
+<div class="px-5 py-4 border-b border-border-slate bg-surface-bright flex justify-between items-center">
+<h3 class="font-headline-sm text-headline-sm text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">account_balance</span>
+                                Banka Hareketi
+                            </h3>
+<span class="bg-warning-amber/10 text-warning-amber font-label-caps text-label-caps px-2 py-1 rounded border border-warning-amber/20">
+                                Eşleşme Bekliyor
+                            </span>
+</div>
+<div class="p-5 flex flex-col gap-6">
+<!-- Amount & Date Hero -->
+<div class="flex flex-col items-center justify-center py-6 bg-surface-container-low rounded-lg border border-border-slate border-dashed">
+<span class="font-label-caps text-label-caps text-text-muted mb-1">Gelen Havale/EFT</span>
+<div class="font-data-mono text-[32px] font-medium text-success-emerald leading-tight">
+                                    +125.000,00 <span class="text-[20px]">₺</span>
+</div>
+<div class="flex items-center gap-1 text-on-surface-variant font-body-sm mt-2">
+<span class="material-symbols-outlined text-[16px]">calendar_today</span>
+                                    24 Eki 2023, 14:32
+                                </div>
+</div>
+<!-- Transaction Details -->
+<div class="flex flex-col gap-4">
+<div>
+<label class="font-label-caps text-label-caps text-text-muted block mb-1">Banka &amp; Hesap</label>
+<div class="font-body-md text-on-surface flex items-center gap-2">
+<div class="w-6 h-6 rounded bg-decorative-navy text-white flex items-center justify-center font-bold text-[10px]">G</div>
+                                        Garanti BBVA - TR76 0006 2000...
+                                    </div>
+</div>
+<div>
+<label class="font-label-caps text-label-caps text-text-muted block mb-1">Karşı Taraf</label>
+<div class="font-body-md text-on-surface font-medium">
+                                        ÇELİKSAN DEMİR ÇELİK SAN. TİC. A.Ş.
+                                    </div>
+</div>
+<div>
+<label class="font-label-caps text-label-caps text-text-muted block mb-1">Banka Açıklaması</label>
+<div class="font-body-md text-on-surface-variant bg-surface p-3 rounded border border-border-slate break-words">
+                                        INV-2023-1045 NOLU FATURA ODEMESI A BLOK INSAAT DEMIR ALIMI
+                                    </div>
+</div>
+<div>
+<label class="font-label-caps text-label-caps text-text-muted block mb-1">Referans / Fiş No</label>
+<div class="font-data-mono text-body-sm text-on-surface">
+                                        REF9982347101
+                                    </div>
+</div>
+</div>
+</div>
+</div>
+<!-- Informational Box -->
+<div class="bg-primary-container/10 border border-primary-container/20 rounded-xl p-4 flex gap-3 text-on-surface">
+<span class="material-symbols-outlined text-primary mt-0.5">info</span>
+<div class="font-body-sm text-body-sm">
+<p class="font-medium text-primary mb-1">Yapay Zeka Önerisi</p>
+<p class="text-on-surface-variant">Açıklamadaki "INV-2023-1045" ve tutar baz alınarak sağ taraftaki kayıtlar eşleşme ihtimaline göre sıralanmıştır.</p>
+</div>
+</div>
+</div>
+<!-- RIGHT PANEL: Candidate Records & Search -->
+<div class="lg:col-span-8 flex flex-col gap-4">
+<div class="bg-surface-white rounded-xl shadow-sm border border-border-slate flex flex-col h-[calc(100vh-180px)] min-h-[600px]">
+<!-- Panel Header & Filter -->
+<div class="px-5 py-4 border-b border-border-slate">
+<div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-semibold">
+                                    ERP Kayıtlarında Ara
+                                </h3>
+<div class="flex items-center gap-2">
+<button class="text-body-sm font-medium text-primary hover:text-on-primary-fixed-variant transition-colors flex items-center gap-1">
+<span class="material-symbols-outlined text-[18px]">filter_list</span>
+                                        Gelişmiş Filtre
+                                    </button>
+</div>
+</div>
+<div class="flex gap-2">
+<div class="relative flex-1">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-text-muted">search</span>
+<input class="w-full pl-10 pr-3 py-2 bg-surface border border-border-slate rounded-lg font-body-md text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" placeholder="Belge No, Cari Adı veya Tutar girin..." type="text" value="INV-2023-1045"/>
+</div>
+<select class="bg-surface border border-border-slate rounded-lg px-3 py-2 font-body-md text-on-surface outline-none focus:border-primary">
+<option>Satış Faturaları</option>
+<option>Alış Faturaları</option>
+<option>Cari Hareketler</option>
+</select>
+</div>
+</div>
+<!-- Table Area -->
+<div class="flex-1 overflow-auto">
+<table class="w-full text-left border-collapse">
+<thead class="sticky top-0 bg-surface-container-low border-b border-border-slate z-10 shadow-sm">
+<tr>
+<th class="py-3 px-4 font-label-caps text-label-caps text-text-muted w-10 text-center">Seç</th>
+<th class="py-3 px-4 font-label-caps text-label-caps text-text-muted">Belge No / Tür</th>
+<th class="py-3 px-4 font-label-caps text-label-caps text-text-muted">Cari Adı</th>
+<th class="py-3 px-4 font-label-caps text-label-caps text-text-muted">Tarih</th>
+<th class="py-3 px-4 font-label-caps text-label-caps text-text-muted text-right">Tutar (₺)</th>
+<th class="py-3 px-4 font-label-caps text-label-caps text-text-muted text-right">Fark (₺)</th>
+</tr>
+</thead>
+<tbody class="font-body-md divide-y divide-border-slate/50">
+<!-- Suggested Match Row (Highlighted) -->
+<tr class="bg-success-emerald/5 hover:bg-success-emerald/10 transition-colors group cursor-pointer">
+<td class="py-grid-cell-py px-grid-cell-px text-center">
+<input checked="" class="w-4 h-4 text-primary focus:ring-primary border-outline-variant cursor-pointer" name="match_record" type="radio"/>
+</td>
+<td class="py-grid-cell-py px-grid-cell-px">
+<div class="flex flex-col">
+<span class="font-medium text-on-surface">INV-2023-1045</span>
+<span class="text-[11px] text-success-emerald font-medium flex items-center gap-1 mt-0.5">
+<span class="material-symbols-outlined text-[12px]">verified</span> Önerilen
+                                                </span>
+</div>
+</td>
+<td class="py-grid-cell-py px-grid-cell-px text-on-surface truncate max-w-[180px]">Çeliksancılar Demir Çelik</td>
+<td class="py-grid-cell-py px-grid-cell-px text-on-surface-variant text-sm">20 Eki 2023</td>
+<td class="py-grid-cell-py px-grid-cell-px font-data-mono text-right text-on-surface font-medium">125.000,00</td>
+<td class="py-grid-cell-py px-grid-cell-px font-data-mono text-right">
+<span class="bg-success-emerald/10 text-success-emerald px-2 py-0.5 rounded text-xs font-semibold">0,00</span>
+</td>
+</tr>
+<!-- Other Row 1 -->
+<tr class="hover:bg-surface-container-low transition-colors group cursor-pointer">
+<td class="py-grid-cell-py px-grid-cell-px text-center">
+<input class="w-4 h-4 text-primary focus:ring-primary border-outline-variant cursor-pointer" name="match_record" type="radio"/>
+</td>
+<td class="py-grid-cell-py px-grid-cell-px">
+<div class="flex flex-col">
+<span class="text-on-surface">INV-2023-1042</span>
+<span class="text-[11px] text-text-muted mt-0.5">Satış Faturası</span>
+</div>
+</td>
+<td class="py-grid-cell-py px-grid-cell-px text-on-surface truncate max-w-[180px]">Çeliksancılar Demir Çelik</td>
+<td class="py-grid-cell-py px-grid-cell-px text-on-surface-variant text-sm">18 Eki 2023</td>
+<td class="py-grid-cell-py px-grid-cell-px font-data-mono text-right text-on-surface">120.000,00</td>
+<td class="py-grid-cell-py px-grid-cell-px font-data-mono text-right">
+<span class="text-warning-amber">-5.000,00</span>
+</td>
+</tr>
+<!-- Other Row 2 -->
+<tr class="hover:bg-surface-container-low transition-colors group cursor-pointer">
+<td class="py-grid-cell-py px-grid-cell-px text-center">
+<input class="w-4 h-4 text-primary focus:ring-primary border-outline-variant cursor-pointer" name="match_record" type="radio"/>
+</td>
+<td class="py-grid-cell-py px-grid-cell-px">
+<div class="flex flex-col">
+<span class="text-on-surface">CARI-HAR-992</span>
+<span class="text-[11px] text-text-muted mt-0.5">Cari Tahsilat</span>
+</div>
+</td>
+<td class="py-grid-cell-py px-grid-cell-px text-on-surface truncate max-w-[180px]">Özçelik Yapı Malz.</td>
+<td class="py-grid-cell-py px-grid-cell-px text-on-surface-variant text-sm">24 Eki 2023</td>
+<td class="py-grid-cell-py px-grid-cell-px font-data-mono text-right text-on-surface">125.000,00</td>
+<td class="py-grid-cell-py px-grid-cell-px font-data-mono text-right">
+<span class="text-text-muted">0,00</span>
+</td>
+</tr>
+<!-- Other Row 3 -->
+<tr class="hover:bg-surface-container-low transition-colors group cursor-pointer">
+<td class="py-grid-cell-py px-grid-cell-px text-center">
+<input class="w-4 h-4 text-primary focus:ring-primary border-outline-variant cursor-pointer" name="match_record" type="radio"/>
+</td>
+<td class="py-grid-cell-py px-grid-cell-px">
+<div class="flex flex-col">
+<span class="text-on-surface">INV-2023-1088</span>
+<span class="text-[11px] text-text-muted mt-0.5">Satış Faturası</span>
+</div>
+</td>
+<td class="py-grid-cell-py px-grid-cell-px text-on-surface truncate max-w-[180px]">Çeliksancılar Demir Çelik</td>
+<td class="py-grid-cell-py px-grid-cell-px text-on-surface-variant text-sm">26 Eki 2023</td>
+<td class="py-grid-cell-py px-grid-cell-px font-data-mono text-right text-on-surface">250.000,00</td>
+<td class="py-grid-cell-py px-grid-cell-px font-data-mono text-right">
+<span class="text-danger-rose">+125.000,00</span>
+</td>
+</tr>
+<!-- Filler rows to show scroll -->
+<tr class="hover:bg-surface-container-low transition-colors group cursor-pointer">
+<td class="py-grid-cell-py px-grid-cell-px text-center">
+<input class="w-4 h-4 text-primary focus:ring-primary border-outline-variant cursor-pointer" name="match_record" type="radio"/>
+</td>
+<td class="py-grid-cell-py px-grid-cell-px">
+<div class="flex flex-col"><span class="text-on-surface">INV-2023-0941</span><span class="text-[11px] text-text-muted mt-0.5">Satış Faturası</span></div>
+</td>
+<td class="py-grid-cell-py px-grid-cell-px text-on-surface truncate max-w-[180px]">Demirören A.Ş.</td>
+<td class="py-grid-cell-py px-grid-cell-px text-on-surface-variant text-sm">10 Eki 2023</td>
+<td class="py-grid-cell-py px-grid-cell-px font-data-mono text-right text-on-surface">12.500,00</td>
+<td class="py-grid-cell-py px-grid-cell-px font-data-mono text-right"><span class="text-danger-rose">-112.500,00</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Action Footer -->
+<div class="p-5 border-t border-border-slate bg-surface-bright rounded-b-xl flex flex-col sm:flex-row justify-between items-center gap-4">
+<div class="text-body-sm text-on-surface-variant flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">rule</span>
+                                Seçili kayıtla <span class="font-bold text-on-surface">0,00 ₺</span> fark bulunuyor.
+                            </div>
+<div class="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+<button class="px-5 py-2.5 rounded-lg border border-border-slate text-on-surface font-body-md font-medium hover:bg-surface-container-low transition-colors shadow-sm">
+                                    Yeni Kayıt Olarak İşle
+                                </button>
+<button class="px-5 py-2.5 rounded-lg bg-primary text-on-primary font-body-md font-medium hover:bg-on-primary-fixed-variant transition-colors shadow-sm flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[18px]">link</span>
+                                    Seçili Kayıtla Eşleştir
+                                </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+<!-- Script for simple row selection interaction -->
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const rows = document.querySelectorAll('tbody tr');
+            rows.forEach(row => {
+                row.addEventListener('click', () => {
+                    // Find the radio button inside this row
+                    const radio = row.querySelector('input[type="radio"]');
+                    if(radio) radio.checked = true;
+                });
+            });
+        });
+    </script>
+</body></html>

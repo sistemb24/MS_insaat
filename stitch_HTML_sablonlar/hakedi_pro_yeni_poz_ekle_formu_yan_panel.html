@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+
+<html lang="tr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Yeni Poz Ekle - Hakediş Pro</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary": "#ffffff",
+                        "tertiary-fixed": "#ffdbcc",
+                        "on-primary-fixed-variant": "#3323cc",
+                        "outline-variant": "#c7c4d8",
+                        "warning-amber": "#F59E0B",
+                        "text-muted": "#64748B",
+                        "on-error": "#ffffff",
+                        "primary-fixed": "#e2dfff",
+                        "on-primary-container": "#dad7ff",
+                        "on-primary-fixed": "#0f0069",
+                        "surface-container-high": "#e6e8ea",
+                        "on-tertiary-fixed-variant": "#7b2f00",
+                        "on-secondary-fixed-variant": "#3f465c",
+                        "decorative-navy": "#000080",
+                        "surface-container-lowest": "#ffffff",
+                        "primary-fixed-dim": "#c3c0ff",
+                        "outline": "#777587",
+                        "on-tertiary-fixed": "#351000",
+                        "background": "#f7f9fb",
+                        "surface-container-highest": "#e0e3e5",
+                        "border-slate": "#E2E8F0",
+                        "surface-dim": "#d8dadc",
+                        "on-surface-variant": "#464555",
+                        "surface": "#f7f9fb",
+                        "surface-container-low": "#f2f4f6",
+                        "surface-container": "#eceef0",
+                        "error": "#ba1a1a",
+                        "secondary-fixed-dim": "#bec6e0",
+                        "inverse-surface": "#2d3133",
+                        "secondary": "#565e74",
+                        "on-background": "#191c1e",
+                        "secondary-container": "#dae2fd",
+                        "on-tertiary": "#ffffff",
+                        "on-secondary-container": "#5c647a",
+                        "inverse-on-surface": "#eff1f3",
+                        "on-tertiary-container": "#ffd2be",
+                        "inverse-primary": "#c3c0ff",
+                        "success-emerald": "#10B981",
+                        "on-secondary": "#ffffff",
+                        "tertiary-fixed-dim": "#ffb695",
+                        "surface-bright": "#f7f9fb",
+                        "error-container": "#ffdad6",
+                        "surface-variant": "#e0e3e5",
+                        "secondary-fixed": "#dae2fd",
+                        "tertiary": "#7e3000",
+                        "on-error-container": "#93000a",
+                        "tertiary-container": "#a44100",
+                        "primary-container": "#4f46e5",
+                        "danger-rose": "#E11D48",
+                        "surface-tint": "#4d44e3",
+                        "primary": "#3525cd",
+                        "surface-white": "#FFFFFF",
+                        "on-surface": "#191c1e",
+                        "on-secondary-fixed": "#131b2e",
+                        "decorative-purple": "#800080"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "grid-cell-px": "0.75rem",
+                        "header-height": "64px",
+                        "stack-md": "1rem",
+                        "sidebar-collapsed": "80px",
+                        "sidebar-width": "260px",
+                        "stack-sm": "0.5rem",
+                        "grid-cell-py": "0.5rem",
+                        "container-gap": "1.5rem"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Inter"],
+                        "data-mono": ["JetBrains Mono"],
+                        "body-sm": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "body-md": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-sm": ["Inter"],
+                        "headline-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["30px", { "lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "data-mono": ["13px", { "lineHeight": "16px", "fontWeight": "500" }],
+                        "body-sm": ["13px", { "lineHeight": "18px", "fontWeight": "400" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "700" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .icon-fill {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md text-body-md overflow-hidden antialiased">
+<!-- Background Context: List Page (Dimmed) -->
+<div class="fixed inset-0 flex">
+<!-- Sidebar Shell (Hidden on Mobile) -->
+<aside class="hidden md:flex w-sidebar-width h-full flex-col py-6 px-4 gap-stack-md bg-surface-white border-r border-border-slate shadow-sm z-10">
+<div class="flex items-center gap-3 px-4 pb-4 border-b border-border-slate">
+<div class="w-8 h-8 rounded-lg bg-primary-container text-on-primary-container flex items-center justify-center font-bold">N</div>
+<div>
+<div class="font-headline-md text-headline-md font-bold text-primary">NOA Structural</div>
+<div class="text-secondary font-body-sm text-body-sm">Intelligence</div>
+</div>
+</div>
+<nav class="flex-1 space-y-1 mt-4">
+<a class="flex items-center gap-3 px-4 py-3 text-secondary hover:bg-surface-container transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-label-caps text-label-caps">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-secondary hover:bg-surface-container transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="info">info</span>
+<span class="font-label-caps text-label-caps">Project Info</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-secondary hover:bg-surface-container transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="architecture">architecture</span>
+<span class="font-label-caps text-label-caps">Architecture</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 bg-primary-fixed text-on-primary-fixed rounded-lg font-bold scale-95 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined icon-fill" data-icon="reorder">reorder</span>
+<span class="font-label-caps text-label-caps">BOQ Reorder</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-secondary hover:bg-surface-container transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="assignment">assignment</span>
+<span class="font-label-caps text-label-caps">Assignments</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-secondary hover:bg-surface-container transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="calculate">calculate</span>
+<span class="font-label-caps text-label-caps">Calculations</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-secondary hover:bg-surface-container transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="assessment">assessment</span>
+<span class="font-label-caps text-label-caps">Assessment</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-secondary hover:bg-surface-container transition-colors rounded-lg mt-auto" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-label-caps text-label-caps">Settings</span>
+</a>
+</nav>
+</aside>
+<!-- Main Content Area (Dimmed underneath overlay) -->
+<main class="flex-1 flex flex-col h-full w-full relative">
+<!-- Top App Bar -->
+<header class="flex justify-between items-center px-container-gap bg-surface-white/80 backdrop-blur-md h-header-height border-b border-border-slate shadow-sm z-10 w-full">
+<div class="flex items-center gap-4">
+<span class="md:hidden material-symbols-outlined cursor-pointer text-primary" data-icon="menu">menu</span>
+<div class="font-headline-md text-headline-md font-bold text-primary">Hakediş Pro</div>
+</div>
+<div class="flex-1 max-w-md mx-8 hidden lg:block">
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" data-icon="search">search</span>
+<input class="w-full pl-10 pr-4 py-2 bg-surface-container-low border border-border-slate rounded-lg focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary text-body-sm font-body-sm transition-colors" placeholder="Poz, iş kalemi veya sözleşme ara..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-secondary hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="text-secondary hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="help_outline">help_outline</span>
+</button>
+<div class="w-8 h-8 rounded-full bg-surface-container-high overflow-hidden border border-border-slate cursor-pointer">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of an engineer in a hard hat, soft bright lighting, clean corporate background, realistic style, highly detailed." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD0LMA12qwdTG0mqdhYRA8jfwzf2kb1YYTSFywUYNuDKYnkVm5srsPM-jMPRrXDk456D4qjp6EtXgDs7UhkyZJ-laaKcPK0L4sSs743jov720iSRnM7UDLdrmrXCC370pB9qrkNloplO4YpiALbPXNFvgmtvsZY8HgR160LGPW9i23df75yo072PgfY5K46UMCT8K0FvcR9A3KzfN45chzph_LyWSqNPIPfE4-fglo7mNnUqqWqpT5i"/>
+</div>
+</div>
+</header>
+<!-- Page Content (Blurred/Dimmed for Slide-over focus) -->
+<div class="flex-1 overflow-auto p-container-gap bg-background opacity-40 blur-[1px] pointer-events-none">
+<div class="flex justify-between items-center mb-6">
+<div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface">İş Kalemleri ve Poz Listesi</h1>
+<p class="text-secondary mt-1">Ana Sözleşme - Blok A Kaba İnşaat İşleri</p>
+</div>
+<div class="flex gap-3">
+<button class="flex items-center gap-2 px-4 py-2 border border-border-slate text-secondary rounded-lg hover:bg-surface-container-low transition-colors bg-surface-white font-label-caps text-label-caps">
+<span class="material-symbols-outlined text-[20px]" data-icon="download">download</span>
+                            EXCEL
+                        </button>
+<button class="flex items-center gap-2 px-4 py-2 bg-primary text-on-primary rounded-lg shadow-[0_1px_3px_rgba(79,70,229,0.08)] hover:bg-surface-tint transition-colors font-label-caps text-label-caps">
+<span class="material-symbols-outlined text-[20px]" data-icon="add">add</span>
+                            YENİ POZ EKLE
+                        </button>
+</div>
+</div>
+<!-- Fake Table Content -->
+<div class="bg-surface-white rounded-xl shadow-[0_1px_3px_rgba(79,70,229,0.08)] border border-border-slate overflow-hidden">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low border-b border-border-slate font-label-caps text-label-caps text-secondary">
+<th class="py-3 px-4 font-bold">POZ NO</th>
+<th class="py-3 px-4 font-bold">İŞ KALEMİ TANIMI</th>
+<th class="py-3 px-4 font-bold">BİRİM</th>
+<th class="py-3 px-4 font-bold text-right">MİKTAR</th>
+<th class="py-3 px-4 font-bold text-right">BİRİM FİYAT</th>
+<th class="py-3 px-4 font-bold text-right">TOPLAM TUTAR</th>
+<th class="py-3 px-4 font-bold text-center">DURUM</th>
+</tr>
+</thead>
+<tbody class="font-body-md text-body-md divide-y divide-border-slate">
+<tr class="hover:bg-surface-bright transition-colors">
+<td class="py-grid-cell-py px-4 font-data-mono text-data-mono text-primary">15.120.1001</td>
+<td class="py-grid-cell-py px-4 font-medium text-on-surface">Makine ile her derinlik ve genişlikte yumuşak ve sert toprak kazılması</td>
+<td class="py-grid-cell-py px-4 text-secondary">m³</td>
+<td class="py-grid-cell-py px-4 font-data-mono text-data-mono text-right">1,250.00</td>
+<td class="py-grid-cell-py px-4 font-data-mono text-data-mono text-right">185.00 ₺</td>
+<td class="py-grid-cell-py px-4 font-data-mono text-data-mono text-right font-bold">231,250.00 ₺</td>
+<td class="py-grid-cell-py px-4 text-center">
+<span class="inline-flex items-center px-2 py-1 rounded-full bg-emerald-50 text-success-emerald font-label-caps text-[10px]">ONAYLI</span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</main>
+</div>
+<!-- Overlay & Slide-over Panel -->
+<div aria-hidden="true" class="fixed inset-0 bg-on-surface/20 backdrop-blur-sm z-40 transition-opacity"></div>
+<div class="fixed inset-y-0 right-0 z-50 flex w-full max-w-md transform transition-transform duration-300 ease-in-out shadow-2xl">
+<div class="flex flex-col h-full w-full bg-surface-white border-l border-border-slate shadow-[-4px_0_24px_rgba(0,0,0,0.05)]">
+<!-- Panel Header -->
+<div class="flex items-center justify-between px-6 py-5 border-b border-border-slate bg-surface-white shrink-0">
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Yeni Poz Ekle</h2>
+<button class="p-2 text-secondary hover:bg-surface-container-low rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-primary/20">
+<span class="material-symbols-outlined" data-icon="close">close</span>
+</button>
+</div>
+<!-- Panel Body (Scrollable Form) -->
+<div class="flex-1 overflow-y-auto px-6 py-6 scrollbar-thin scrollbar-thumb-border-slate scrollbar-track-transparent">
+<form class="space-y-6">
+<!-- Poz No Field -->
+<div class="space-y-1.5">
+<label class="block font-label-caps text-label-caps text-on-surface-variant" for="poz_no">POZ NO</label>
+<div class="relative">
+<input class="block w-full rounded-lg border-border-slate shadow-sm focus:border-primary focus:ring-primary sm:text-sm font-data-mono text-data-mono bg-surface-white py-2.5 px-3 transition-colors hover:border-outline" id="poz_no" name="poz_no" placeholder="Örn: 15.100.1001" type="text"/>
+<div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+<span class="material-symbols-outlined text-text-muted text-[18px]" data-icon="tag">tag</span>
+</div>
+</div>
+<p class="text-[11px] text-text-muted mt-1">Bakanlık poz numarası veya özel poz kodu giriniz.</p>
+</div>
+<!-- İş Kalemi Tanımı Field -->
+<div class="space-y-1.5">
+<label class="block font-label-caps text-label-caps text-on-surface-variant" for="is_kalemi">İŞ KALEMİ TANIMI <span class="text-danger-rose">*</span></label>
+<div class="relative">
+<textarea class="block w-full rounded-lg border-border-slate shadow-sm focus:border-primary focus:ring-primary sm:text-sm font-body-md text-body-md bg-surface-white py-2.5 px-3 transition-colors hover:border-outline resize-none" id="is_kalemi" name="is_kalemi" placeholder="İş kaleminin detaylı teknik açıklamasını giriniz..." rows="4"></textarea>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<!-- Birim Field -->
+<div class="space-y-1.5 col-span-2 sm:col-span-1">
+<label class="block font-label-caps text-label-caps text-on-surface-variant" for="birim">BİRİM <span class="text-danger-rose">*</span></label>
+<div class="relative">
+<select class="block w-full rounded-lg border-border-slate shadow-sm focus:border-primary focus:ring-primary sm:text-sm font-body-md text-body-md bg-surface-white py-2.5 pl-3 pr-10 transition-colors hover:border-outline appearance-none" id="birim" name="birim">
+<option disabled="" selected="" value="">Seçiniz...</option>
+<option value="m2">Metrekare (m²)</option>
+<option value="m3">Metreküp (m³)</option>
+<option value="mt">Metretül (mt)</option>
+<option value="kg">Kilogram (kg)</option>
+<option value="ton">Ton (t)</option>
+<option value="adet">Adet</option>
+<option value="gun">Gün</option>
+</select>
+</div>
+</div>
+<!-- Spacer for grid alignment if needed, or expand others -->
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-4 border-t border-border-slate pt-6 mt-2">
+<!-- Sözleşme Miktarı Field -->
+<div class="space-y-1.5">
+<label class="block font-label-caps text-label-caps text-on-surface-variant" for="miktar">SÖZLEŞME MİKTARI <span class="text-danger-rose">*</span></label>
+<div class="relative">
+<input class="block w-full rounded-lg border-border-slate shadow-sm focus:border-primary focus:ring-primary sm:text-sm font-data-mono text-data-mono text-right bg-surface-white py-2.5 px-3 transition-colors hover:border-outline" id="miktar" min="0" name="miktar" placeholder="0.00" step="0.01" type="number"/>
+</div>
+</div>
+<!-- Birim Fiyat Field -->
+<div class="space-y-1.5">
+<label class="block font-label-caps text-label-caps text-on-surface-variant" for="birim_fiyat">BİRİM FİYAT (TL) <span class="text-danger-rose">*</span></label>
+<div class="relative">
+<input class="block w-full rounded-lg border-border-slate shadow-sm focus:border-primary focus:ring-primary sm:text-sm font-data-mono text-data-mono text-right bg-surface-white py-2.5 pl-3 pr-8 transition-colors hover:border-outline" id="birim_fiyat" min="0" name="birim_fiyat" placeholder="0.00" step="0.01" type="number"/>
+<div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+<span class="text-text-muted font-body-sm text-body-sm">₺</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Calculated Total (Read-only UI enhancement) -->
+<div class="bg-surface-container-low rounded-lg p-4 border border-border-slate border-dashed flex justify-between items-center mt-6">
+<span class="font-label-caps text-label-caps text-secondary">TAHMİNİ TOPLAM TUTAR</span>
+<span class="font-data-mono text-data-mono text-primary font-bold text-lg">0.00 ₺</span>
+</div>
+</form>
+</div>
+<!-- Panel Footer (Actions) -->
+<div class="px-6 py-4 border-t border-border-slate bg-surface-container-lowest shrink-0 flex justify-end gap-3">
+<button class="px-5 py-2.5 border border-border-slate text-on-surface-variant rounded-lg hover:bg-surface-container-low hover:text-on-surface transition-colors font-label-caps text-label-caps bg-surface-white shadow-sm focus:outline-none focus:ring-2 focus:ring-primary/20" type="button">
+                    VAZGEÇ
+                </button>
+<button class="px-5 py-2.5 bg-primary text-on-primary rounded-lg shadow-[0_1px_3px_rgba(79,70,229,0.12)] hover:bg-surface-tint transition-all font-label-caps text-label-caps flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2" type="submit">
+<span class="material-symbols-outlined text-[18px]" data-icon="save">save</span>
+                    KAYDET VE EKLE
+                </button>
+</div>
+</div>
+</div>
+<script>
+        // Simple client-side calculation for UI feedback
+        const miktarInput = document.getElementById('miktar');
+        const fiyatInput = document.getElementById('birim_fiyat');
+        const totalDisplay = document.querySelector('.bg-surface-container-low .text-primary');
+
+        function calculateTotal() {
+            const miktar = parseFloat(miktarInput.value) || 0;
+            const fiyat = parseFloat(fiyatInput.value) || 0;
+            const total = miktar * fiyat;
+            
+            // Format as Turkish Lira
+            totalDisplay.textContent = new Intl.NumberFormat('tr-TR', { 
+                minimumFractionDigits: 2, 
+                maximumFractionDigits: 2 
+            }).format(total) + ' ₺';
+        }
+
+        miktarInput.addEventListener('input', calculateTotal);
+        fiyatInput.addEventListener('input', calculateTotal);
+    </script>
+</body></html>

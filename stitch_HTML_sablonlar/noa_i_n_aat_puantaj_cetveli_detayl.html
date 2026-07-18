@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+
+<html class="light" lang="tr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Puantaj Cetveli - NOA İnşaat ERP</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "outline": "#777587",
+                        "border-slate": "#E2E8F0",
+                        "on-tertiary-container": "#ffd2be",
+                        "background": "#f7f9fb",
+                        "on-secondary-container": "#5c647a",
+                        "surface-tint": "#4d44e3",
+                        "error": "#ba1a1a",
+                        "secondary-container": "#dae2fd",
+                        "outline-variant": "#c7c4d8",
+                        "success-emerald": "#10B981",
+                        "surface": "#f7f9fb",
+                        "inverse-surface": "#2d3133",
+                        "surface-bright": "#f7f9fb",
+                        "tertiary-container": "#a44100",
+                        "surface-container": "#eceef0",
+                        "on-tertiary-fixed-variant": "#7b2f00",
+                        "on-primary": "#ffffff",
+                        "decorative-purple": "#800080",
+                        "text-muted": "#64748B",
+                        "on-surface-variant": "#464555",
+                        "surface-container-low": "#f2f4f6",
+                        "on-secondary": "#ffffff",
+                        "on-primary-container": "#dad7ff",
+                        "secondary-fixed": "#dae2fd",
+                        "surface-dim": "#d8dadc",
+                        "surface-variant": "#e0e3e5",
+                        "surface-container-highest": "#e0e3e5",
+                        "secondary-fixed-dim": "#bec6e0",
+                        "on-secondary-fixed": "#131b2e",
+                        "primary-fixed-dim": "#c3c0ff",
+                        "primary-fixed": "#e2dfff",
+                        "surface-container-lowest": "#ffffff",
+                        "tertiary-fixed": "#ffdbcc",
+                        "inverse-primary": "#c3c0ff",
+                        "primary-container": "#4f46e5",
+                        "decorative-navy": "#000080",
+                        "primary": "#3525cd",
+                        "on-error-container": "#93000a",
+                        "secondary": "#565e74",
+                        "on-surface": "#191c1e",
+                        "on-error": "#ffffff",
+                        "on-primary-fixed": "#0f0069",
+                        "tertiary-fixed-dim": "#ffb695",
+                        "error-container": "#ffdad6",
+                        "surface-container-high": "#e6e8ea",
+                        "surface-white": "#FFFFFF",
+                        "danger-rose": "#E11D48",
+                        "tertiary": "#7e3000",
+                        "on-tertiary-fixed": "#351000",
+                        "on-tertiary": "#ffffff",
+                        "on-secondary-fixed-variant": "#3f465c",
+                        "on-background": "#191c1e",
+                        "on-primary-fixed-variant": "#3323cc",
+                        "inverse-on-surface": "#eff1f3",
+                        "warning-amber": "#F59E0B"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "sidebar-collapsed": "80px",
+                        "sidebar-width": "260px",
+                        "container-gap": "1.5rem",
+                        "stack-md": "1rem",
+                        "header-height": "64px",
+                        "grid-cell-py": "0.5rem",
+                        "stack-sm": "0.5rem",
+                        "grid-cell-px": "0.75rem"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "data-mono": ["JetBrains Mono"],
+                        "body-sm": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-sm": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["30px", { "lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "700" }],
+                        "data-mono": ["13px", { "lineHeight": "16px", "fontWeight": "500" }],
+                        "body-sm": ["13px", { "lineHeight": "18px", "fontWeight": "400" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .table-container::-webkit-scrollbar {
+            height: 8px;
+            width: 8px;
+        }
+        .table-container::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 4px;
+        }
+        .table-container::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        .table-container::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        .status-cell:focus-within {
+            outline: 2px solid #3525cd;
+            outline-offset: -2px;
+            z-index: 10;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen flex flex-col">
+<!-- TopNavBar (Shared Component JSON) -->
+<header class="sticky top-0 w-full z-40 flex justify-between items-center h-header-height px-grid-cell-px bg-surface border-b border-outline-variant shadow-sm">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-on-surface lg:hidden cursor-pointer">menu</span>
+<div class="font-headline-md text-headline-md font-bold text-primary">NOA İnşaat ERP</div>
+</div>
+<div class="flex-1 max-w-xl mx-4 hidden md:block">
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+<input class="w-full pl-10 pr-4 py-2 bg-surface-container rounded-lg border-none focus:ring-2 focus:ring-primary text-body-md outline-none" placeholder="Ara..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 text-on-surface-variant hover:bg-surface-container transition-colors rounded-full relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-1 right-1 w-2 h-2 bg-danger-rose rounded-full"></span>
+</button>
+<button class="p-2 text-on-surface-variant hover:bg-surface-container transition-colors rounded-full hidden sm:block">
+<span class="material-symbols-outlined">apps</span>
+</button>
+<div class="hidden md:flex items-center gap-2 cursor-pointer border-l pl-4 border-outline-variant ml-2">
+<span class="text-body-sm font-medium">Yardım</span>
+</div>
+<div class="w-8 h-8 rounded-full bg-surface-variant flex items-center justify-center overflow-hidden border border-outline-variant cursor-pointer ml-2">
+<img alt="Kullanıcı Profili" class="w-full h-full object-cover" data-alt="A small, professional headshot portrait of a corporate user, neutral lighting, minimalist background, bright light-mode aesthetic, suitable for an ERP system avatar." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCzc6isEv677Jn5jRlgxWtjJxb7HiuSPWkcgvGBvcUmxlUTbGPKCo1QPAOUEphHbG_j3gKX4Fk2MRE_WCUZVF-yUxvhcZgXTkMq3fMUUh5gT2oMEnImBJfiyvq07y9R37HY6D3ID826UsZ6S43yvatac_0hNkNTIX9y-blnfdsGDTactingAMW8Vu0-pHS5rE93tzIPwLpibQl9Wl3I2kjKkEX3PuMUnfvU6tPzOpGOqbPki7GPJqQo"/>
+</div>
+</div>
+</header>
+<div class="flex flex-1 overflow-hidden">
+<!-- SideNavBar (Shared Component JSON) -->
+<nav class="hidden lg:flex flex-col h-screen fixed left-0 top-header-height border-r border-outline-variant bg-surface-white w-sidebar-width z-30 pb-header-height">
+<div class="p-4 border-b border-outline-variant flex items-center gap-3">
+<div class="w-10 h-10 rounded bg-primary-container text-on-primary-container flex items-center justify-center font-bold text-lg">
+                    N
+                 </div>
+<div>
+<div class="font-headline-sm text-headline-sm font-black text-primary">NOA İnşaat</div>
+<div class="text-label-caps font-label-caps text-secondary">ERP Sistemi</div>
+</div>
+</div>
+<div class="p-4">
+<button class="w-full bg-primary hover:bg-primary-fixed-variant text-on-primary font-medium py-2 px-4 rounded-lg shadow-sm transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[20px]">add</span>
+                    Yeni Proje
+                </button>
+</div>
+<div class="flex-1 overflow-y-auto px-3 py-2 space-y-1">
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-secondary hover:bg-surface-container-low transition-all duration-200 ease-in-out font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined text-[24px]" style="font-variation-settings: 'FILL' 0;">dashboard</span>
+                    Panel
+                </a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-secondary hover:bg-surface-container-low transition-all duration-200 ease-in-out font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined text-[24px]" style="font-variation-settings: 'FILL' 0;">business</span>
+                    Firmalar
+                </a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-secondary hover:bg-surface-container-low transition-all duration-200 ease-in-out font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined text-[24px]" style="font-variation-settings: 'FILL' 0;">request_quote</span>
+                    Teklif Yönetimi
+                </a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-secondary hover:bg-surface-container-low transition-all duration-200 ease-in-out font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined text-[24px]" style="font-variation-settings: 'FILL' 0;">folder_open</span>
+                    Belge Merkezi
+                </a>
+<!-- Active Item: Personel relates closest to Puantaj Cetveli -->
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-primary-container text-on-primary-container font-semibold transition-all duration-200 ease-in-out font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined text-[24px]" style="font-variation-settings: 'FILL' 1;">groups</span>
+                    Personel
+                </a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-secondary hover:bg-surface-container-low transition-all duration-200 ease-in-out font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined text-[24px]" style="font-variation-settings: 'FILL' 0;">inventory_2</span>
+                    Envanter
+                </a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-secondary hover:bg-surface-container-low transition-all duration-200 ease-in-out font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined text-[24px]" style="font-variation-settings: 'FILL' 0;">handyman</span>
+                    Araçlar
+                </a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-secondary hover:bg-surface-container-low transition-all duration-200 ease-in-out font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined text-[24px]" style="font-variation-settings: 'FILL' 0;">settings</span>
+                    Ayarlar
+                </a>
+</div>
+<div class="p-3 border-t border-outline-variant mt-auto">
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-secondary hover:bg-surface-container-low transition-all duration-200 ease-in-out font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined text-[24px]" style="font-variation-settings: 'FILL' 0;">logout</span>
+                    Çıkış Yap
+                </a>
+</div>
+</nav>
+<!-- Main Content -->
+<main class="flex-1 lg:ml-sidebar-width flex flex-col h-[calc(100vh-64px)] overflow-hidden bg-background">
+<!-- Page Header -->
+<div class="px-6 py-4 border-b border-border-slate bg-surface-white flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 shrink-0">
+<div>
+<div class="flex items-center gap-2 text-text-muted text-sm mb-1">
+<a class="hover:text-primary transition-colors" href="#">Projeler</a>
+<span class="material-symbols-outlined text-[16px]">chevron_right</span>
+<a class="hover:text-primary transition-colors" href="#">İstanbul Finans Merkezi</a>
+<span class="material-symbols-outlined text-[16px]">chevron_right</span>
+<span class="text-on-surface font-medium">Puantaj Cetveli</span>
+</div>
+<h1 class="font-headline-lg text-headline-lg-mobile md:font-headline-lg md:text-headline-lg text-on-surface">Kasım 2023 Puantajı</h1>
+</div>
+<div class="flex items-center gap-3 w-full sm:w-auto">
+<div class="flex items-center bg-surface-container rounded-lg p-1 border border-border-slate">
+<button class="p-1 hover:bg-surface-white rounded text-secondary transition-colors">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<span class="px-4 font-medium text-body-md">Kasım 2023</span>
+<button class="p-1 hover:bg-surface-white rounded text-secondary transition-colors">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Toolbar & Legend -->
+<div class="px-6 py-3 bg-surface-white border-b border-border-slate flex flex-col md:flex-row justify-between items-center gap-4 shrink-0 shadow-[0_1px_3px_rgba(79,70,229,0.05)] relative z-10">
+<!-- Search -->
+<div class="relative w-full md:w-64">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-text-muted text-[20px]">search</span>
+<input class="w-full pl-9 pr-3 py-1.5 border border-border-slate rounded-lg text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary bg-surface-white" placeholder="Personel ara..." type="text"/>
+</div>
+<!-- Legend -->
+<div class="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
+<div class="flex items-center gap-1.5">
+<span class="w-6 h-6 rounded flex items-center justify-center font-data-mono text-xs font-bold bg-primary-container text-on-primary-container">X</span>
+<span class="text-text-muted text-xs font-medium">Tam Gün</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="w-6 h-6 rounded flex items-center justify-center font-data-mono text-xs font-bold bg-warning-amber/20 text-tertiary-container">Y</span>
+<span class="text-text-muted text-xs font-medium">Yarım Gün</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="w-6 h-6 rounded flex items-center justify-center font-data-mono text-xs font-bold bg-error-container text-on-error-container">R</span>
+<span class="text-text-muted text-xs font-medium">Raporlu</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="w-6 h-6 rounded flex items-center justify-center font-data-mono text-xs font-bold bg-surface-variant text-on-surface-variant">İ</span>
+<span class="text-text-muted text-xs font-medium">İzinli</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="w-6 h-6 rounded flex items-center justify-center font-data-mono text-xs font-bold bg-success-emerald/20 text-success-emerald">H</span>
+<span class="text-text-muted text-xs font-medium">Haftalık Tatil</span>
+</div>
+</div>
+</div>
+<!-- Timesheet Data Grid -->
+<div class="flex-1 overflow-auto table-container bg-surface-white relative">
+<table class="w-full text-left border-collapse min-w-max">
+<thead class="sticky top-0 z-20 bg-surface-container-low shadow-[0_1px_0_#E2E8F0]">
+<tr>
+<th class="px-4 py-3 font-label-caps text-label-caps text-secondary sticky left-0 z-30 bg-surface-container-low shadow-[1px_0_0_#E2E8F0] w-64">
+                                Personel
+                            </th>
+<!-- Generate Days 1-31 -->
+<th class="px-2 py-3 font-label-caps text-label-caps text-secondary text-center border-l border-border-slate/50 min-w-[40px]">1</th>
+<th class="px-2 py-3 font-label-caps text-label-caps text-secondary text-center border-l border-border-slate/50 min-w-[40px]">2</th>
+<th class="px-2 py-3 font-label-caps text-label-caps text-secondary text-center border-l border-border-slate/50 min-w-[40px]">3</th>
+<th class="px-2 py-3 font-label-caps text-label-caps text-success-emerald text-center border-l border-border-slate/50 min-w-[40px] bg-success-emerald/5">4</th>
+<th class="px-2 py-3 font-label-caps text-label-caps text-success-emerald text-center border-l border-border-slate/50 min-w-[40px] bg-success-emerald/5">5</th>
+<th class="px-2 py-3 font-label-caps text-label-caps text-secondary text-center border-l border-border-slate/50 min-w-[40px]">6</th>
+<th class="px-2 py-3 font-label-caps text-label-caps text-secondary text-center border-l border-border-slate/50 min-w-[40px]">7</th>
+<th class="px-2 py-3 font-label-caps text-label-caps text-secondary text-center border-l border-border-slate/50 min-w-[40px]">8</th>
+<th class="px-2 py-3 font-label-caps text-label-caps text-secondary text-center border-l border-border-slate/50 min-w-[40px]">9</th>
+<th class="px-2 py-3 font-label-caps text-label-caps text-secondary text-center border-l border-border-slate/50 min-w-[40px]">10</th>
+<th class="px-2 py-3 font-label-caps text-label-caps text-success-emerald text-center border-l border-border-slate/50 min-w-[40px] bg-success-emerald/5">11</th>
+<th class="px-2 py-3 font-label-caps text-label-caps text-success-emerald text-center border-l border-border-slate/50 min-w-[40px] bg-success-emerald/5">12</th>
+<th class="px-2 py-3 font-label-caps text-label-caps text-secondary text-center border-l border-border-slate/50 min-w-[40px]">13</th>
+<th class="px-2 py-3 font-label-caps text-label-caps text-secondary text-center border-l border-border-slate/50 min-w-[40px]">14</th>
+<th class="px-2 py-3 font-label-caps text-label-caps text-secondary text-center border-l border-border-slate/50 min-w-[40px]">15</th>
+<th class="px-2 py-3 font-label-caps text-label-caps text-secondary text-center border-l border-border-slate/50 min-w-[40px]">16</th>
+<th class="px-2 py-3 font-label-caps text-label-caps text-secondary text-center border-l border-border-slate/50 min-w-[40px]">17</th>
+<th class="px-2 py-3 font-label-caps text-label-caps text-success-emerald text-center border-l border-border-slate/50 min-w-[40px] bg-success-emerald/5">18</th>
+<th class="px-2 py-3 font-label-caps text-label-caps text-success-emerald text-center border-l border-border-slate/50 min-w-[40px] bg-success-emerald/5">19</th>
+<th class="px-2 py-3 font-label-caps text-label-caps text-secondary text-center border-l border-border-slate/50 min-w-[40px]">20</th>
+<th class="px-2 py-3 font-label-caps text-label-caps text-secondary text-center border-l border-border-slate/50 min-w-[40px]">21</th>
+<th class="px-2 py-3 font-label-caps text-label-caps text-secondary text-center border-l border-border-slate/50 min-w-[40px]">22</th>
+<th class="px-2 py-3 font-label-caps text-label-caps text-secondary text-center border-l border-border-slate/50 min-w-[40px]">23</th>
+<th class="px-2 py-3 font-label-caps text-label-caps text-secondary text-center border-l border-border-slate/50 min-w-[40px]">24</th>
+<th class="px-2 py-3 font-label-caps text-label-caps text-success-emerald text-center border-l border-border-slate/50 min-w-[40px] bg-success-emerald/5">25</th>
+<th class="px-2 py-3 font-label-caps text-label-caps text-success-emerald text-center border-l border-border-slate/50 min-w-[40px] bg-success-emerald/5">26</th>
+<th class="px-2 py-3 font-label-caps text-label-caps text-secondary text-center border-l border-border-slate/50 min-w-[40px]">27</th>
+<th class="px-2 py-3 font-label-caps text-label-caps text-secondary text-center border-l border-border-slate/50 min-w-[40px]">28</th>
+<th class="px-2 py-3 font-label-caps text-label-caps text-secondary text-center border-l border-border-slate/50 min-w-[40px]">29</th>
+<th class="px-2 py-3 font-label-caps text-label-caps text-secondary text-center border-l border-border-slate/50 min-w-[40px]">30</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-border-slate font-data-mono text-data-mono">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-bright transition-colors group">
+<td class="px-4 py-2 sticky left-0 z-10 bg-surface-white group-hover:bg-surface-bright shadow-[1px_0_0_#E2E8F0]">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full overflow-hidden bg-surface-variant shrink-0">
+<img class="w-full h-full object-cover" data-alt="Small headshot of a male construction worker wearing a hardhat, neutral background, professional lighting, ERP interface style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBPJ97_MnsEqeDOpcs_ZlHYiSZPXsHV0Olw0A263Kzyr_r4z6OFqVwfy0_pym28VcVovZHadOOuf2QGX2e4EsSW_7-uZ_GodpVXVlRr6KeRSpJh5AMvGpIESfuJt2uP3ThP0bKxgqz_yf4uO8VLF0nnDL64b5ccDb5ADjrTU_MvLQT7n_hmRYdmJsJzNF2EF9m6OA0dl0eyE3AEj_pwchyqL1ceqUh1E4eY6J3ld92Gd1VopBWvtoMh"/>
+</div>
+<div class="min-w-0">
+<div class="font-body-sm text-body-sm font-semibold text-on-surface truncate">Ahmet Yılmaz</div>
+<div class="text-xs text-text-muted truncate font-body-sm">Usta Başı</div>
+</div>
+</div>
+</td>
+<td class="p-1 border-l border-border-slate/50 text-center status-cell"><input class="w-full h-8 text-center rounded font-bold text-on-primary-container bg-primary-container border-none focus:ring-0 uppercase" type="text" value="X"/></td>
+<td class="p-1 border-l border-border-slate/50 text-center status-cell"><input class="w-full h-8 text-center rounded font-bold text-on-primary-container bg-primary-container border-none focus:ring-0 uppercase" type="text" value="X"/></td>
+<td class="p-1 border-l border-border-slate/50 text-center status-cell"><input class="w-full h-8 text-center rounded font-bold text-on-primary-container bg-primary-container border-none focus:ring-0 uppercase" type="text" value="X"/></td>
+<td class="p-1 border-l border-border-slate/50 text-center bg-success-emerald/5 status-cell"><input class="w-full h-8 text-center rounded font-bold text-success-emerald bg-transparent border-none focus:ring-0 uppercase" readonly="" type="text" value="H"/></td>
+<td class="p-1 border-l border-border-slate/50 text-center bg-success-emerald/5 status-cell"><input class="w-full h-8 text-center rounded font-bold text-success-emerald bg-transparent border-none focus:ring-0 uppercase" readonly="" type="text" value="H"/></td>
+<td class="p-1 border-l border-border-slate/50 text-center status-cell"><input class="w-full h-8 text-center rounded font-bold text-on-primary-container bg-primary-container border-none focus:ring-0 uppercase" type="text" value="X"/></td>
+<td class="p-1 border-l border-border-slate/50 text-center status-cell"><input class="w-full h-8 text-center rounded font-bold text-on-primary-container bg-primary-container border-none focus:ring-0 uppercase" type="text" value="X"/></td>
+<td class="p-1 border-l border-border-slate/50 text-center status-cell"><input class="w-full h-8 text-center rounded font-bold text-tertiary-container bg-warning-amber/20 border-none focus:ring-0 uppercase" type="text" value="Y"/></td>
+<td class="p-1 border-l border-border-slate/50 text-center status-cell"><input class="w-full h-8 text-center rounded font-bold text-on-error-container bg-error-container border-none focus:ring-0 uppercase" type="text" value="R"/></td>
+<td class="p-1 border-l border-border-slate/50 text-center status-cell"><input class="w-full h-8 text-center rounded font-bold text-on-error-container bg-error-container border-none focus:ring-0 uppercase" type="text" value="R"/></td>
+<!-- Fill rest with empty/X for visual -->
+<td class="p-1 border-l border-border-slate/50 text-center bg-success-emerald/5 status-cell"><input class="w-full h-8 text-center rounded font-bold text-success-emerald bg-transparent border-none focus:ring-0 uppercase" readonly="" type="text" value="H"/></td>
+<td class="p-1 border-l border-border-slate/50 text-center bg-success-emerald/5 status-cell"><input class="w-full h-8 text-center rounded font-bold text-success-emerald bg-transparent border-none focus:ring-0 uppercase" readonly="" type="text" value="H"/></td>
+<td class="p-1 border-l border-border-slate/50 text-center status-cell"><input class="w-full h-8 text-center rounded font-bold text-on-primary-container bg-primary-container border-none focus:ring-0 uppercase" type="text" value="X"/></td>
+<td class="p-1 border-l border-border-slate/50 text-center status-cell"><input class="w-full h-8 text-center rounded font-bold text-on-primary-container bg-primary-container border-none focus:ring-0 uppercase" type="text" value="X"/></td>
+<td class="p-1 border-l border-border-slate/50 text-center status-cell"><input class="w-full h-8 text-center rounded font-bold text-on-primary-container bg-primary-container border-none focus:ring-0 uppercase" type="text" value="X"/></td>
+<td class="p-1 border-l border-border-slate/50 text-center status-cell"><input class="w-full h-8 text-center rounded font-bold text-on-primary-container bg-primary-container border-none focus:ring-0 uppercase" type="text" value="X"/></td>
+<td class="p-1 border-l border-border-slate/50 text-center status-cell"><input class="w-full h-8 text-center rounded font-bold text-on-primary-container bg-primary-container border-none focus:ring-0 uppercase" type="text" value="X"/></td>
+<td class="p-1 border-l border-border-slate/50 text-center bg-success-emerald/5 status-cell"><input class="w-full h-8 text-center rounded font-bold text-success-emerald bg-transparent border-none focus:ring-0 uppercase" readonly="" type="text" value="H"/></td>
+<td class="p-1 border-l border-border-slate/50 text-center bg-success-emerald/5 status-cell"><input class="w-full h-8 text-center rounded font-bold text-success-emerald bg-transparent border-none focus:ring-0 uppercase" readonly="" type="text" value="H"/></td>
+<td class="p-1 border-l border-border-slate/50 text-center status-cell"><input class="w-full h-8 text-center rounded font-bold text-on-primary-container bg-primary-container border-none focus:ring-0 uppercase" type="text" value="X"/></td>
+<td class="p-1 border-l border-border-slate/50 text-center status-cell"><input class="w-full h-8 text-center rounded font-bold text-on-primary-container bg-primary-container border-none focus:ring-0 uppercase" type="text" value="X"/></td>
+<td class="p-1 border-l border-border-slate/50 text-center status-cell"><input class="w-full h-8 text-center rounded font-bold text-on-primary-container bg-primary-container border-none focus:ring-0 uppercase" type="text" value="X"/></td>
+<td class="p-1 border-l border-border-slate/50 text-center status-cell"><input class="w-full h-8 text-center rounded font-bold text-on-primary-container bg-primary-container border-none focus:ring-0 uppercase" type="text" value="X"/></td>
+<td class="p-1 border-l border-border-slate/50 text-center status-cell"><input class="w-full h-8 text-center rounded font-bold text-on-primary-container bg-primary-container border-none focus:ring-0 uppercase" type="text" value="X"/></td>
+<td class="p-1 border-l border-border-slate/50 text-center bg-success-emerald/5 status-cell"><input class="w-full h-8 text-center rounded font-bold text-success-emerald bg-transparent border-none focus:ring-0 uppercase" readonly="" type="text" value="H"/></td>
+<td class="p-1 border-l border-border-slate/50 text-center bg-success-emerald/5 status-cell"><input class="w-full h-8 text-center rounded font-bold text-success-emerald bg-transparent border-none focus:ring-0 uppercase" readonly="" type="text" value="H"/></td>
+<td class="p-1 border-l border-border-slate/50 text-center status-cell"><input class="w-full h-8 text-center rounded font-bold text-on-primary-container bg-primary-container border-none focus:ring-0 uppercase" type="text" value="X"/></td>
+<td class="p-1 border-l border-border-slate/50 text-center status-cell"><input class="w-full h-8 text-center rounded font-bold text-on-primary-container bg-primary-container border-none focus:ring-0 uppercase" type="text" value="X"/></td>
+<td class="p-1 border-l border-border-slate/50 text-center status-cell"><input class="w-full h-8 text-center rounded font-bold text-on-primary-container bg-primary-container border-none focus:ring-0 uppercase" type="text" value="X"/></td>
+<td class="p-1 border-l border-border-slate/50 text-center status-cell"><input class="w-full h-8 text-center rounded font-bold text-on-primary-container bg-primary-container border-none focus:ring-0 uppercase" type="text" value="X"/></td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surface-bright transition-colors group bg-surface">
+<td class="px-4 py-2 sticky left-0 z-10 bg-surface group-hover:bg-surface-bright shadow-[1px_0_0_#E2E8F0]">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full overflow-hidden bg-surface-variant shrink-0">
+<img class="w-full h-full object-cover" data-alt="Small headshot of a female engineer, safety vest visible, bright lighting, corporate ERP style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAWudlvdDRUBSlzXyJLZsx6QH1PTDy1pTX26Ze7I1GFwVIfPHyEUqtfVCJzfpDfi3NemKhzU6LqS0T8stIGI75wlnU0U-aiEtMpT3MsfrpT3P2pPyr9i_SiNxE277roxois4AZznd9RZEbmsZ_hL9jqMZGZCchbkRmS6dr2VmjPBLnUIex3ZEVxF68TZgAiu5WQRFmpRuXOoWIJqS_7Vy3o-zJKEpX8d6TMegWUHvwt8BzPhQAmRQap"/>
+</div>
+<div class="min-w-0">
+<div class="font-body-sm text-body-sm font-semibold text-on-surface truncate">Ayşe Demir</div>
+<div class="text-xs text-text-muted truncate font-body-sm">Saha Mühendisi</div>
+</div>
+</div>
+</td>
+<!-- Same structure, different values -->
+<td class="p-1 border-l border-border-slate/50 text-center status-cell"><input class="w-full h-8 text-center rounded font-bold text-on-primary-container bg-primary-container border-none focus:ring-0 uppercase" type="text" value="X"/></td>
+<td class="p-1 border-l border-border-slate/50 text-center status-cell"><input class="w-full h-8 text-center rounded font-bold text-on-primary-container bg-primary-container border-none focus:ring-0 uppercase" type="text" value="X"/></td>
+<td class="p-1 border-l border-border-slate/50 text-center status-cell"><input class="w-full h-8 text-center rounded font-bold text-on-surface-variant bg-surface-variant border-none focus:ring-0 uppercase" type="text" value="İ"/></td>
+<td class="p-1 border-l border-border-slate/50 text-center bg-success-emerald/5 status-cell"><input class="w-full h-8 text-center rounded font-bold text-success-emerald bg-transparent border-none focus:ring-0 uppercase" readonly="" type="text" value="H"/></td>
+<td class="p-1 border-l border-border-slate/50 text-center bg-success-emerald/5 status-cell"><input class="w-full h-8 text-center rounded font-bold text-success-emerald bg-transparent border-none focus:ring-0 uppercase" readonly="" type="text" value="H"/></td>
+<td class="p-1 border-l border-border-slate/50 text-center status-cell"><input class="w-full h-8 text-center rounded font-bold text-on-primary-container bg-primary-container border-none focus:ring-0 uppercase" type="text" value="X"/></td>
+<td class="p-1 border-l border-border-slate/50 text-center status-cell"><input class="w-full h-8 text-center rounded font-bold text-on-primary-container bg-primary-container border-none focus:ring-0 uppercase" type="text" value="X"/></td>
+<td class="p-1 border-l border-border-slate/50 text-center status-cell"><input class="w-full h-8 text-center rounded font-bold text-on-primary-container bg-primary-container border-none focus:ring-0 uppercase" type="text" value="X"/></td>
+<td class="p-1 border-l border-border-slate/50 text-center status-cell"><input class="w-full h-8 text-center rounded font-bold text-on-primary-container bg-primary-container border-none focus:ring-0 uppercase" type="text" value="X"/></td>
+<td class="p-1 border-l border-border-slate/50 text-center status-cell"><input class="w-full h-8 text-center rounded font-bold text-on-primary-container bg-primary-container border-none focus:ring-0 uppercase" type="text" value="X"/></td>
+<td class="p-1 border-l border-border-slate/50 text-center bg-success-emerald/5 status-cell"><input class="w-full h-8 text-center rounded font-bold text-success-emerald bg-transparent border-none focus:ring-0 uppercase" readonly="" type="text" value="H"/></td>
+<td class="p-1 border-l border-border-slate/50 text-center bg-success-emerald/5 status-cell"><input class="w-full h-8 text-center rounded font-bold text-success-emerald bg-transparent border-none focus:ring-0 uppercase" readonly="" type="text" value="H"/></td>
+<td class="p-1 border-l border-border-slate/50 text-center status-cell"><input class="w-full h-8 text-center rounded font-bold text-on-primary-container bg-primary-container border-none focus:ring-0 uppercase" type="text" value="X"/></td>
+<td class="p-1 border-l border-border-slate/50 text-center status-cell"><input class="w-full h-8 text-center rounded font-bold text-on-primary-container bg-primary-container border-none focus:ring-0 uppercase" type="text" value="X"/></td>
+<td class="p-1 border-l border-border-slate/50 text-center status-cell"><input class="w-full h-8 text-center rounded font-bold text-on-primary-container bg-primary-container border-none focus:ring-0 uppercase" type="text" value="X"/></td>
+<td class="p-1 border-l border-border-slate/50 text-center status-cell"><input class="w-full h-8 text-center rounded font-bold text-on-primary-container bg-primary-container border-none focus:ring-0 uppercase" type="text" value="X"/></td>
+<td class="p-1 border-l border-border-slate/50 text-center status-cell"><input class="w-full h-8 text-center rounded font-bold text-on-primary-container bg-primary-container border-none focus:ring-0 uppercase" type="text" value="X"/></td>
+<td class="p-1 border-l border-border-slate/50 text-center bg-success-emerald/5 status-cell"><input class="w-full h-8 text-center rounded font-bold text-success-emerald bg-transparent border-none focus:ring-0 uppercase" readonly="" type="text" value="H"/></td>
+<td class="p-1 border-l border-border-slate/50 text-center bg-success-emerald/5 status-cell"><input class="w-full h-8 text-center rounded font-bold text-success-emerald bg-transparent border-none focus:ring-0 uppercase" readonly="" type="text" value="H"/></td>
+<td class="p-1 border-l border-border-slate/50 text-center status-cell"><input class="w-full h-8 text-center rounded font-bold text-on-primary-container bg-primary-container border-none focus:ring-0 uppercase" type="text" value="X"/></td>
+<td class="p-1 border-l border-border-slate/50 text-center status-cell"><input class="w-full h-8 text-center rounded font-bold text-on-primary-container bg-primary-container border-none focus:ring-0 uppercase" type="text" value="X"/></td>
+<td class="p-1 border-l border-border-slate/50 text-center status-cell"><input class="w-full h-8 text-center rounded font-bold text-on-primary-container bg-primary-container border-none focus:ring-0 uppercase" type="text" value="X"/></td>
+<td class="p-1 border-l border-border-slate/50 text-center status-cell"><input class="w-full h-8 text-center rounded font-bold text-on-primary-container bg-primary-container border-none focus:ring-0 uppercase" type="text" value="X"/></td>
+<td class="p-1 border-l border-border-slate/50 text-center status-cell"><input class="w-full h-8 text-center rounded font-bold text-on-primary-container bg-primary-container border-none focus:ring-0 uppercase" type="text" value="X"/></td>
+<td class="p-1 border-l border-border-slate/50 text-center bg-success-emerald/5 status-cell"><input class="w-full h-8 text-center rounded font-bold text-success-emerald bg-transparent border-none focus:ring-0 uppercase" readonly="" type="text" value="H"/></td>
+<td class="p-1 border-l border-border-slate/50 text-center bg-success-emerald/5 status-cell"><input class="w-full h-8 text-center rounded font-bold text-success-emerald bg-transparent border-none focus:ring-0 uppercase" readonly="" type="text" value="H"/></td>
+<td class="p-1 border-l border-border-slate/50 text-center status-cell"><input class="w-full h-8 text-center rounded font-bold text-on-primary-container bg-primary-container border-none focus:ring-0 uppercase" type="text" value="X"/></td>
+<td class="p-1 border-l border-border-slate/50 text-center status-cell"><input class="w-full h-8 text-center rounded font-bold text-on-primary-container bg-primary-container border-none focus:ring-0 uppercase" type="text" value="X"/></td>
+<td class="p-1 border-l border-border-slate/50 text-center status-cell"><input class="w-full h-8 text-center rounded font-bold text-on-primary-container bg-primary-container border-none focus:ring-0 uppercase" type="text" value="X"/></td>
+<td class="p-1 border-l border-border-slate/50 text-center status-cell"><input class="w-full h-8 text-center rounded font-bold text-secondary bg-surface-container border border-border-slate border-dashed focus:ring-0 uppercase hover:border-primary transition-colors cursor-text" type="text" value=""/></td>
+</tr>
+<!-- Extra rows to show scroll -->
+<tr class="hover:bg-surface-bright transition-colors group">
+<td class="px-4 py-2 sticky left-0 z-10 bg-surface-white group-hover:bg-surface-bright shadow-[1px_0_0_#E2E8F0]"><div class="flex items-center gap-3"><div class="w-8 h-8 rounded-full overflow-hidden bg-surface-variant shrink-0"><img class="w-full h-full object-cover" data-alt="Small headshot of a worker, neutral background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDZW-TTLjGACBebtZGIKz0d5ZNBU0Z6z-ArvYuGTHql6Y9H-745Gt4Sdlzw7e9tNU9Z9SrTAboGzDTKYWy5ehXER9IswI4y9a3CezwpFw5LtUoKmqyx_svnbMnA9Zvk9LS0ajqv_x5e_XuIKImcKp-s9zo_1MKcRO5JzXWu2yB-et4vWLp8VBC70xH-b1xojo9nEioXWR2wiV5tHjOhbhKzCUIYoZ-gPG3vHTKa9k4pAGE3_KogLaxa"/></div><div class="min-w-0"><div class="font-body-sm text-body-sm font-semibold text-on-surface truncate">Mehmet Kaya</div><div class="text-xs text-text-muted truncate font-body-sm">Operatör</div></div></div></td>
+<td class="p-1 border-l border-border-slate/50 text-center text-text-muted italic text-xs" colspan="30">... Diğer günler ...</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Sticky Footer Summary Bar -->
+<div class="bg-surface border-t border-border-slate p-4 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] shrink-0 z-30 relative">
+<div class="flex flex-col md:flex-row justify-between items-center gap-4">
+<!-- Stats -->
+<div class="flex flex-wrap items-center gap-6">
+<div>
+<p class="text-label-caps font-label-caps text-text-muted uppercase tracking-wider mb-1">Toplam Çalışma</p>
+<p class="font-headline-sm text-headline-sm text-on-surface">4,250 <span class="text-body-sm text-secondary font-normal">Saat</span></p>
+</div>
+<div class="h-8 w-px bg-border-slate hidden sm:block"></div>
+<div>
+<p class="text-label-caps font-label-caps text-text-muted uppercase tracking-wider mb-1">Toplam Gün</p>
+<p class="font-headline-sm text-headline-sm text-on-surface">531 <span class="text-body-sm text-secondary font-normal">Gün</span></p>
+</div>
+<div class="h-8 w-px bg-border-slate hidden sm:block"></div>
+<div>
+<p class="text-label-caps font-label-caps text-text-muted uppercase tracking-wider mb-1">Tahmini Bordro</p>
+<p class="font-headline-sm text-headline-sm text-primary">₺845,000</p>
+</div>
+</div>
+<!-- Actions -->
+<div class="flex items-center gap-3 w-full md:w-auto">
+<button class="flex-1 md:flex-none flex items-center justify-center gap-2 px-4 py-2 border border-outline-variant text-secondary rounded-lg font-medium hover:bg-surface-container-low transition-colors shadow-sm">
+<span class="material-symbols-outlined text-[20px]">download</span>
+                            Excel'e Aktar
+                        </button>
+<button class="flex-1 md:flex-none flex items-center justify-center gap-2 px-6 py-2 bg-primary text-on-primary rounded-lg font-medium hover:bg-primary-fixed-variant transition-colors shadow-sm shadow-primary/20">
+<span class="material-symbols-outlined text-[20px]">check_circle</span>
+                            Kaydet ve Kesinleştir
+                        </button>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

@@ -1,0 +1,56 @@
+yeni tasarlayacağım modern , best pract teknoloji ile yazılacak ve güncel SaaS tabanlı projemi geliştirmek için, aşağıdaki listedeki "NOA İNŞAAT ÖN MUHASEBE PROGRAMI" youtube video'larını sırası ile izledikten sonra analiz ederek ve programı çok iyi anlayarak plan düzenleyerek Docs klasörüne .md dosyası olarak içerik oluşturabilirmisin? 
+
+
+1.İnşaat Muhasebe Programı: https://www.youtube.com/watch?v=1g4QmXuxpcI
+
+2.Fatura Girişi - İnşaat Muhasebe Programı: https://www.youtube.com/watch?v=kAKk8pa1DZw
+
+3.İnşaat Muhasebe Programı - Çek İşlemleri: https://www.youtube.com/watch?v=KzrZWV_hvAI
+
+4.İnşaat Muhasebe Programı - Hakediş Ekleme: https://www.youtube.com/watch?v=1XqSUjPaglQ
+
+5.NOA İnşaat Ön Muhasebe Programı Eğitim Videosu: https://www.youtube.com/watch?v=1w_D8nC6VF0
+
+6.NOA İNŞAAT MUHASEBE PROGRAMI ALIŞ FATURA GİRİŞ EĞİTİMİ: https://www.youtube.com/watch?v=XndgHsX9eN0
+
+7.NOA İNŞAAT MUHASEBE PROGRAMI - ÇEK İŞLERİMİ EĞİTİMİ: https://www.youtube.com/watch?v=12MgDPLe6VM
+
+8.NOA İNŞAAT MUAHSEBE PROGRAM - PUANTAJ GİRİŞİ EĞİTİMİ: https://www.youtube.com/watch?v=AOntUy7L9lA
+
+9.NOA İNŞAAT MUHASEBE PROGRAMI - GİDER KAYDI EĞİTİM VİDEOSU: https://www.youtube.com/watch?v=yLbGaR-hNxc
+
+10.NOA İNŞAAT ÖN MUHASEBE PROGRAMI - DEPO TAKİP: https://www.youtube.com/watch?v=sPBxbD48nZc
+
+11.NOA İNŞAAT ÖN MUHASEBE PROGRAMI TANITIM VİDEOSU: https://www.youtube.com/watch?v=13jDlElkgYo&t=6s
+
+
+Bu ürün demo videolarını izle ve demo uygulamanın "D:\Projeler\NOA-InsaatYonetim\NOA-insaat-SS görseller" klasördeki SS Ekran görüntüleri aldım , 
+bu ekran görüntülerini klasör isimlerine dikkat ederek sırası ile çok iyi analiz ve inceledikten sonra tüm sayfa içerik ve sayfa düzenlerini , 
+iş akışlarını, uygulamanın işleyişini, vb. tüm özllikleri aynen birebir yeni projemde kullanalım . 
+Tüm özellikleri çıkar. Bunları modüllere ayır. Benzer bir SaaS ürünü geliştirmek için MVP kapsamı, teknik mimari ve 12 haftalık geliştirme planı oluştur.
+
+
+
+bu planla, yeni projeyi oluşturacağım, uzun zaman diliminde, bağlamdan kopmamak için senin öngörülerinle, 
+planı son kontrol yaparak "Yeni SaaS üründe birebir korunması gereken şey eski pencere görünümü değil, 
+iş akışıdır" mantığını dikkate alarak "Video kaynakları" içeriklerinden yararlan fakat, esas "1.2 Ekran görüntüsü kaynakları" 1. önceliğin olmalı, 
+bu açıklamalara göre planı çok detaylı ve kapsamlı bir şekilde güncelle,
+
+
+"D:\Projeler\NOA-InsaatYonetim\stitch_HTML_sablonlar" klasörü içinde, bu projede kullanabileceğimiz, HTML dosya havuzu ekledim. 
+bu dosya havuzundan planın  iş akışı korunacak şekilde ve sayfalar arası uyum ve tutarlılık olmak koşuluyla projemize entegre ederek uygulayabiliriz ,
+ bu açıklamalara göre planı çok detaylı ve kapsamlı bir şekilde güncelle. acele etmeden çok dikkatli olalım. bu plan projeyi uygulamaya hazır olacak.
+
+
+
+
+
+
+
+"D:\Projeler\NOA-InsaatYonetim\Docs" klasöründeki "NOA-insaat-on-muhasebe-saas-analiz-ve-gelistirme-plani.md" bu planla, yeni projeyi oluşturacağım, proje uzun zaman diliminde, bağlamdan kopmamak için senin öngörülerinle, planı son kontrol yaparak bu açıklamalara göre ve mevcut plana dokunmadan, yeni modüller için, çok detaylı ve kapsamlı bir şekilde ayrı ve yeni plan oluşturalım.
+
+"C:\Users\SisteM\Pictures\Screenshots\Parsek-insaat" klasörü içinde, bu projede kullanabileceğimiz, yeni modüller için SS ekran görüntüleri havuzu ekledim. 
+
+bu havuzdan planın  iş akışı korunacak şekilde ve sayfalar arası uyum ve tutarlılık olmak koşuluyla projemize entegre ederek uygulayabiliriz ,
+
+ bu açıklamalara göre planı çok detaylı ve kapsamlı bir şekilde güncelle. acele etmeden çok dikkatli olalım. bu plan projeyi uygulamaya hazır olacak.

@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>NOA İnşaat - Hakediş Yönetimi</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "inverse-primary": "#c3c0ff",
+                        "on-error-container": "#93000a",
+                        "surface-dim": "#d8dadc",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-fixed": "#0f0069",
+                        "on-primary-container": "#dad7ff",
+                        "surface-container-high": "#e6e8ea",
+                        "surface-container": "#eceef0",
+                        "on-surface-variant": "#464555",
+                        "surface-white": "#FFFFFF",
+                        "secondary-container": "#dae2fd",
+                        "border-slate": "#E2E8F0",
+                        "background": "#f7f9fb",
+                        "outline": "#777587",
+                        "decorative-navy": "#000080",
+                        "on-secondary-fixed": "#131b2e",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary-container": "#5c647a",
+                        "surface": "#f7f9fb",
+                        "inverse-surface": "#2d3133",
+                        "primary-container": "#4f46e5",
+                        "surface-container-low": "#f2f4f6",
+                        "secondary": "#565e74",
+                        "on-primary-fixed-variant": "#3323cc",
+                        "on-surface": "#191c1e",
+                        "tertiary-container": "#a44100",
+                        "on-secondary-fixed-variant": "#3f465c",
+                        "tertiary-fixed-dim": "#ffb695",
+                        "on-secondary": "#ffffff",
+                        "text-muted": "#64748B",
+                        "on-tertiary-fixed": "#351000",
+                        "on-background": "#191c1e",
+                        "outline-variant": "#c7c4d8",
+                        "error": "#ba1a1a",
+                        "surface-variant": "#e0e3e5",
+                        "primary-fixed-dim": "#c3c0ff",
+                        "surface-container-highest": "#e0e3e5",
+                        "tertiary": "#7e3000",
+                        "danger-rose": "#E11D48",
+                        "decorative-purple": "#800080",
+                        "inverse-on-surface": "#eff1f3",
+                        "on-tertiary-fixed-variant": "#7b2f00",
+                        "on-primary": "#ffffff",
+                        "primary-fixed": "#e2dfff",
+                        "on-tertiary-container": "#ffd2be",
+                        "error-container": "#ffdad6",
+                        "surface-bright": "#f7f9fb",
+                        "surface-tint": "#4d44e3",
+                        "warning-amber": "#F59E0B",
+                        "primary": "#3525cd",
+                        "success-emerald": "#10B981",
+                        "tertiary-fixed": "#ffdbcc",
+                        "secondary-fixed": "#dae2fd",
+                        "on-error": "#ffffff",
+                        "secondary-fixed-dim": "#bec6e0"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "sidebar-width": "260px",
+                        "stack-sm": "0.5rem",
+                        "grid-cell-px": "0.75rem",
+                        "stack-md": "1rem",
+                        "grid-cell-py": "0.5rem",
+                        "container-gap": "1.5rem",
+                        "sidebar-collapsed": "80px",
+                        "header-height": "64px"
+                    },
+                    "fontFamily": {
+                        "headline-lg-mobile": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "headline-sm": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "data-mono": ["JetBrains Mono"]
+                    },
+                    "fontSize": {
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "700" }],
+                        "body-sm": ["13px", { "lineHeight": "18px", "fontWeight": "400" }],
+                        "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "headline-lg": ["30px", { "lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "data-mono": ["13px", { "lineHeight": "16px", "fontWeight": "500" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { background-color: #f7f9fb; }
+        .shadow-soft { box-shadow: 0 1px 3px rgba(79, 70, 229, 0.08); }
+        .table-stripe tr:nth-child(even) { background-color: #f8fafc; }
+    </style>
+</head>
+<body class="font-body-md text-on-surface bg-background flex flex-col md:flex-row h-screen overflow-hidden">
+<!-- Top Navigation (Mobile/Top Bar) -->
+<header class="sticky top-0 w-full z-40 h-header-height bg-surface-white border-b border-border-slate flex justify-between items-center px-6 md:ml-sidebar-width flex-shrink-0">
+<div class="flex items-center gap-4">
+<div class="md:hidden">
+<span class="material-symbols-outlined cursor-pointer">menu</span>
+</div>
+<div class="font-headline-sm text-headline-sm font-bold text-primary">NOA İnşaat</div>
+</div>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-secondary hover:text-primary transition-colors cursor-pointer">notifications</span>
+<span class="material-symbols-outlined text-secondary hover:text-primary transition-colors cursor-pointer">history</span>
+<span class="material-symbols-outlined text-secondary hover:text-primary transition-colors cursor-pointer">chat_bubble</span>
+<button class="bg-primary text-on-primary px-4 py-2 rounded-lg font-label-caps text-label-caps hover:bg-primary-container transition-colors">Add Entry</button>
+<div class="w-8 h-8 rounded-full bg-surface-variant overflow-hidden border border-border-slate">
+<img alt="User Profile" class="w-full h-full object-cover" data-alt="A professional headshot of a user in a well-lit office environment, suitable for an ERP system profile picture. Corporate style, clean lighting, confident expression, soft grey background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDCTiJJ8wPiscpBpj08v7zeoMBBfH3Um_ld1FIlAwR-ozToMl2kN5bj98WvTKK3lQej5_6wNJCcUgW_mC6QrmYj2_COQ9j6gjS1h4yPvZJe9U9Eb6xYTPWswQ5ePTmtTv_JBxA-QQ6Qq3Kb50cp9wqvaor3ydbF5uCRhIWA33yrLXuDzBdGu7Yhulr74yiEUkSS83lEVRYx9RGbYucHzRLZO8ae2ogDt5czUtns9EDOCHMPk3rhRNHj"/>
+</div>
+</div>
+</header>
+<!-- Side Navigation (Desktop) -->
+<aside class="hidden md:flex flex-col h-full border-r border-border-slate bg-surface-white shadow-sm fixed left-0 top-0 w-sidebar-width z-50 pt-header-height">
+<div class="absolute top-0 left-0 w-full h-header-height flex items-center px-6 border-b border-border-slate bg-surface-white z-10">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 bg-primary rounded text-on-primary flex items-center justify-center font-bold">N</div>
+<div>
+<div class="font-headline-md text-headline-md font-bold text-primary">NOA İnşaat</div>
+<div class="font-body-sm text-body-sm text-secondary">Construction ERP</div>
+</div>
+</div>
+</div>
+<nav class="flex-1 overflow-y-auto py-6 px-4 space-y-2">
+<button class="w-full mb-6 bg-primary text-on-primary px-4 py-3 rounded-lg font-label-caps text-label-caps flex items-center justify-center gap-2 hover:bg-primary-container transition-colors shadow-soft">
+<span class="material-symbols-outlined text-sm">add</span> New Project
+            </button>
+<a class="flex items-center gap-3 text-secondary px-4 py-2 rounded-lg hover:bg-surface-container-low transition-colors font-label-caps text-label-caps" href="#">
+<span class="material-symbols-outlined">dashboard</span> Dashboard
+            </a>
+<a class="flex items-center gap-3 text-secondary px-4 py-2 rounded-lg hover:bg-surface-container-low transition-colors font-label-caps text-label-caps" href="#">
+<span class="material-symbols-outlined">business_center</span> Projects
+            </a>
+<a class="flex items-center gap-3 text-secondary px-4 py-2 rounded-lg hover:bg-surface-container-low transition-colors font-label-caps text-label-caps" href="#">
+<span class="material-symbols-outlined">gavel</span> Tender
+            </a>
+<a class="flex items-center gap-3 text-secondary px-4 py-2 rounded-lg hover:bg-surface-container-low transition-colors font-label-caps text-label-caps" href="#">
+<span class="material-symbols-outlined">description</span> Documents
+            </a>
+<a class="flex items-center gap-3 text-secondary px-4 py-2 rounded-lg hover:bg-surface-container-low transition-colors font-label-caps text-label-caps" href="#">
+<span class="material-symbols-outlined">group</span> Personnel
+            </a>
+<a class="flex items-center gap-3 text-secondary px-4 py-2 rounded-lg hover:bg-surface-container-low transition-colors font-label-caps text-label-caps" href="#">
+<span class="material-symbols-outlined">inventory_2</span> Inventory
+            </a>
+<a class="flex items-center gap-3 bg-secondary-container text-on-secondary-container rounded-lg px-4 py-2 font-label-caps text-label-caps transition-all duration-150 opacity-90" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">payments</span> Finance
+            </a>
+<a class="flex items-center gap-3 text-secondary px-4 py-2 rounded-lg hover:bg-surface-container-low transition-colors font-label-caps text-label-caps" href="#">
+<span class="material-symbols-outlined">engineering</span> Vehicles
+            </a>
+<a class="flex items-center gap-3 text-secondary px-4 py-2 rounded-lg hover:bg-surface-container-low transition-colors font-label-caps text-label-caps" href="#">
+<span class="material-symbols-outlined">settings</span> Settings
+            </a>
+</nav>
+<div class="mt-auto border-t border-border-slate py-4 px-4 space-y-2">
+<a class="flex items-center gap-3 text-secondary px-4 py-2 rounded-lg hover:bg-surface-container-low transition-colors font-label-caps text-label-caps" href="#">
+<span class="material-symbols-outlined">help_outline</span> Help Center
+            </a>
+<a class="flex items-center gap-3 text-secondary px-4 py-2 rounded-lg hover:bg-surface-container-low transition-colors font-label-caps text-label-caps" href="#">
+<span class="material-symbols-outlined">logout</span> Log Out
+            </a>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 md:ml-sidebar-width flex flex-col h-full overflow-hidden">
+<!-- Page Header -->
+<div class="bg-surface-white border-b border-border-slate p-6 flex-shrink-0">
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+<div>
+<div class="flex items-center gap-2 mb-1">
+<span class="px-2 py-0.5 bg-secondary-container text-on-secondary-container rounded font-label-caps text-label-caps text-[10px]">HAKEDİŞ DETAYI</span>
+<span class="font-data-mono text-data-mono text-secondary">#PRJ-23-014-H03</span>
+</div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface">Ege Yapı Taşeron Hakedişi</h1>
+<div class="font-body-md text-body-md text-secondary mt-1 flex items-center gap-4">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[16px]">calendar_month</span> October 2023 Period</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[16px]">domain</span> Block A Core Construction</span>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<button class="flex items-center gap-2 px-4 py-2 border border-border-slate rounded-lg text-secondary hover:bg-surface-container-low transition-colors font-label-caps text-label-caps">
+<span class="material-symbols-outlined text-sm">picture_as_pdf</span> PDF Export
+                    </button>
+<button class="flex items-center gap-2 px-4 py-2 border border-border-slate rounded-lg text-secondary hover:bg-surface-container-low transition-colors font-label-caps text-label-caps">
+<span class="material-symbols-outlined text-sm">print</span> Print
+                    </button>
+<button class="flex items-center gap-2 px-4 py-2 bg-primary text-on-primary rounded-lg hover:bg-primary-container transition-colors font-label-caps text-label-caps">
+<span class="material-symbols-outlined text-sm">check_circle</span> Approve Payment
+                    </button>
+</div>
+</div>
+<!-- Approval Timeline -->
+<div class="mt-6 pt-6 border-t border-border-slate">
+<div class="flex items-center justify-between max-w-3xl mx-auto">
+<div class="flex flex-col items-center">
+<div class="w-8 h-8 rounded-full bg-success-emerald text-surface-white flex items-center justify-center mb-2 z-10">
+<span class="material-symbols-outlined text-sm">done</span>
+</div>
+<span class="font-label-caps text-label-caps text-success-emerald">Drafted</span>
+<span class="font-body-sm text-body-sm text-secondary">Oct 28</span>
+</div>
+<div class="flex-1 h-0.5 bg-success-emerald mx-2 -mt-6"></div>
+<div class="flex flex-col items-center">
+<div class="w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center mb-2 z-10 shadow-soft ring-4 ring-primary-fixed">
+<span class="material-symbols-outlined text-sm">pending_actions</span>
+</div>
+<span class="font-label-caps text-label-caps text-primary">Submitted</span>
+<span class="font-body-sm text-body-sm text-secondary">Oct 30</span>
+</div>
+<div class="flex-1 h-0.5 bg-border-slate mx-2 -mt-6"></div>
+<div class="flex flex-col items-center">
+<div class="w-8 h-8 rounded-full bg-surface-variant text-outline flex items-center justify-center mb-2 z-10">
+<span class="material-symbols-outlined text-sm">gavel</span>
+</div>
+<span class="font-label-caps text-label-caps text-outline">PM Review</span>
+<span class="font-body-sm text-body-sm text-secondary">Pending</span>
+</div>
+<div class="flex-1 h-0.5 bg-border-slate mx-2 -mt-6"></div>
+<div class="flex flex-col items-center">
+<div class="w-8 h-8 rounded-full bg-surface-variant text-outline flex items-center justify-center mb-2 z-10">
+<span class="material-symbols-outlined text-sm">account_balance</span>
+</div>
+<span class="font-label-caps text-label-caps text-outline">Finance Auth</span>
+<span class="font-body-sm text-body-sm text-secondary">Pending</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Scrollable Content -->
+<div class="flex-1 overflow-y-auto p-6">
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+<!-- Left Column: BOQ & Progress -->
+<div class="lg:col-span-2 space-y-6">
+<!-- Cumulative Progress Visual -->
+<div class="bg-surface-white rounded-xl shadow-soft p-6 border border-border-slate">
+<h2 class="font-headline-sm text-headline-sm text-on-surface mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">monitoring</span> Financial Progress
+                        </h2>
+<div class="space-y-4">
+<div class="flex justify-between items-end mb-1">
+<span class="font-label-caps text-label-caps text-secondary">Contract Total: <span class="font-data-mono text-data-mono text-on-surface ml-1">₺2,500,000.00</span></span>
+<span class="font-label-caps text-label-caps text-success-emerald bg-[#ecfdf5] px-2 py-0.5 rounded">42% Complete</span>
+</div>
+<!-- Progress Bar -->
+<div class="h-6 w-full bg-surface-container-low rounded-full overflow-hidden flex">
+<!-- Previous -->
+<div class="h-full bg-surface-variant flex items-center justify-center text-[10px] font-data-mono text-on-surface-variant" style="width: 28%;" title="Previous Amount: ₺700,000">28%</div>
+<!-- Current -->
+<div class="h-full bg-primary flex items-center justify-center text-[10px] font-data-mono text-on-primary relative group" style="width: 14%;" title="Current Period: ₺350,000">
+<div class="absolute inset-0 bg-white/20 animate-pulse"></div>
+                                    14%
+                                </div>
+</div>
+<div class="flex justify-between font-body-sm text-body-sm text-secondary pt-2">
+<div class="flex items-center gap-1"><div class="w-3 h-3 bg-surface-variant rounded-sm"></div> Previous Progress</div>
+<div class="flex items-center gap-1"><div class="w-3 h-3 bg-primary rounded-sm"></div> Current Period</div>
+<div class="flex items-center gap-1"><div class="w-3 h-3 bg-surface-container-low rounded-sm"></div> Remaining</div>
+</div>
+</div>
+</div>
+<!-- Work Items Table (BOQ) -->
+<div class="bg-surface-white rounded-xl shadow-soft border border-border-slate overflow-hidden flex flex-col h-[500px]">
+<div class="p-4 border-b border-border-slate flex justify-between items-center bg-surface-white z-10 sticky top-0">
+<h2 class="font-headline-sm text-headline-sm text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">list_alt</span> Bill of Quantities (BOQ)
+                            </h2>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-sm">search</span>
+<input class="pl-9 pr-4 py-1.5 border border-border-slate rounded-lg text-sm focus:ring-primary focus:border-primary w-64 bg-surface" placeholder="Search items..." type="text"/>
+</div>
+</div>
+<div class="flex-1 overflow-auto">
+<table class="w-full text-left border-collapse table-stripe">
+<thead class="sticky top-0 bg-surface-container-low border-b border-border-slate z-10 shadow-sm">
+<tr>
+<th class="py-grid-cell-py px-grid-cell-px font-label-caps text-label-caps text-secondary font-semibold">Item No</th>
+<th class="py-grid-cell-py px-grid-cell-px font-label-caps text-label-caps text-secondary font-semibold">Description</th>
+<th class="py-grid-cell-py px-grid-cell-px font-label-caps text-label-caps text-secondary font-semibold">Unit</th>
+<th class="py-grid-cell-py px-grid-cell-px font-label-caps text-label-caps text-secondary font-semibold text-right">Unit Price</th>
+<th class="py-grid-cell-py px-grid-cell-px font-label-caps text-label-caps text-secondary font-semibold text-right">Prev. Qty</th>
+<th class="py-grid-cell-py px-grid-cell-px font-label-caps text-label-caps text-primary font-semibold text-right bg-primary-fixed/30">Curr. Qty</th>
+<th class="py-grid-cell-py px-grid-cell-px font-label-caps text-label-caps text-secondary font-semibold text-right">Amount (₺)</th>
+</tr>
+</thead>
+<tbody class="font-body-md text-body-md divide-y divide-border-slate/50">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="py-grid-cell-py px-grid-cell-px font-data-mono text-data-mono text-secondary">01.01</td>
+<td class="py-grid-cell-py px-grid-cell-px text-on-surface">Excavation Works (C-Class)</td>
+<td class="py-grid-cell-py px-grid-cell-px text-secondary text-sm">m³</td>
+<td class="py-grid-cell-py px-grid-cell-px font-data-mono text-data-mono text-right text-secondary">150.00</td>
+<td class="py-grid-cell-py px-grid-cell-px font-data-mono text-data-mono text-right text-secondary">1,200</td>
+<td class="py-grid-cell-py px-grid-cell-px font-data-mono text-data-mono text-right text-primary font-semibold bg-primary-fixed/10">350</td>
+<td class="py-grid-cell-py px-grid-cell-px font-data-mono text-data-mono text-right text-on-surface">52,500.00</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="py-grid-cell-py px-grid-cell-px font-data-mono text-data-mono text-secondary">02.04</td>
+<td class="py-grid-cell-py px-grid-cell-px text-on-surface">C30 Concrete Pouring (Foundation)</td>
+<td class="py-grid-cell-py px-grid-cell-px text-secondary text-sm">m³</td>
+<td class="py-grid-cell-py px-grid-cell-px font-data-mono text-data-mono text-right text-secondary">2,100.00</td>
+<td class="py-grid-cell-py px-grid-cell-px font-data-mono text-data-mono text-right text-secondary">450</td>
+<td class="py-grid-cell-py px-grid-cell-px font-data-mono text-data-mono text-right text-primary font-semibold bg-primary-fixed/10">120</td>
+<td class="py-grid-cell-py px-grid-cell-px font-data-mono text-data-mono text-right text-on-surface">252,000.00</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="py-grid-cell-py px-grid-cell-px font-data-mono text-data-mono text-secondary">03.12</td>
+<td class="py-grid-cell-py px-grid-cell-px text-on-surface">Rebar Installation (S420)</td>
+<td class="py-grid-cell-py px-grid-cell-px text-secondary text-sm">ton</td>
+<td class="py-grid-cell-py px-grid-cell-px font-data-mono text-data-mono text-right text-secondary">18,500.00</td>
+<td class="py-grid-cell-py px-grid-cell-px font-data-mono text-data-mono text-right text-secondary">25</td>
+<td class="py-grid-cell-py px-grid-cell-px font-data-mono text-data-mono text-right text-primary font-semibold bg-primary-fixed/10">2.5</td>
+<td class="py-grid-cell-py px-grid-cell-px font-data-mono text-data-mono text-right text-on-surface">46,250.00</td>
+</tr>
+<!-- Row 4 (Empty for spacing demo) -->
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="py-grid-cell-py px-grid-cell-px font-data-mono text-data-mono text-secondary">04.01</td>
+<td class="py-grid-cell-py px-grid-cell-px text-on-surface">Formwork Installation</td>
+<td class="py-grid-cell-py px-grid-cell-px text-secondary text-sm">m²</td>
+<td class="py-grid-cell-py px-grid-cell-px font-data-mono text-data-mono text-right text-secondary">320.00</td>
+<td class="py-grid-cell-py px-grid-cell-px font-data-mono text-data-mono text-right text-secondary">800</td>
+<td class="py-grid-cell-py px-grid-cell-px font-data-mono text-data-mono text-right text-primary font-semibold bg-primary-fixed/10">0</td>
+<td class="py-grid-cell-py px-grid-cell-px font-data-mono text-data-mono text-right text-on-surface text-outline">0.00</td>
+</tr>
+</tbody>
+<tfoot class="sticky bottom-0 bg-surface-white border-t-2 border-border-slate">
+<tr>
+<td class="py-3 px-4 font-label-caps text-label-caps text-right text-secondary" colspan="6">Subtotal (This Period):</td>
+<td class="py-3 px-4 font-data-mono text-data-mono text-right font-bold text-on-surface">₺350,750.00</td>
+</tr>
+</tfoot>
+</table>
+</div>
+</div>
+</div>
+<!-- Right Column: Financial Summary -->
+<div class="space-y-6">
+<div class="bg-surface-white rounded-xl shadow-soft border border-border-slate p-6 sticky top-6">
+<h2 class="font-headline-sm text-headline-sm text-on-surface border-b border-border-slate pb-4 mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">receipt_long</span> Financial Summary
+                        </h2>
+<div class="space-y-3 font-body-md text-body-md">
+<!-- Line Item -->
+<div class="flex justify-between items-center">
+<span class="text-secondary">Gross Work Amount</span>
+<span class="font-data-mono text-data-mono">₺350,750.00</span>
+</div>
+<!-- Deductions -->
+<div class="pt-2 border-t border-dashed border-border-slate">
+<div class="flex justify-between items-center text-danger-rose mb-2">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">remove</span> Retention (5%)</span>
+<span class="font-data-mono text-data-mono">-₺17,537.50</span>
+</div>
+<div class="flex justify-between items-center text-danger-rose">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">remove</span> Advance Deduction</span>
+<span class="font-data-mono text-data-mono">-₺35,000.00</span>
+</div>
+</div>
+<!-- Subtotal Pre-Tax -->
+<div class="pt-3 border-t border-border-slate flex justify-between items-center font-semibold">
+<span class="text-on-surface">Subtotal</span>
+<span class="font-data-mono text-data-mono text-on-surface">₺298,212.50</span>
+</div>
+<!-- VAT -->
+<div class="flex justify-between items-center text-secondary">
+<span>VAT (20%)</span>
+<span class="font-data-mono text-data-mono">₺59,642.50</span>
+</div>
+<!-- Net Payable -->
+<div class="mt-4 pt-4 border-t-2 border-primary flex justify-between items-end bg-primary-fixed/10 -mx-6 px-6 py-4 rounded-b-xl">
+<span class="font-headline-sm text-headline-sm font-bold text-primary">Net Payable</span>
+<span class="font-headline-lg text-headline-lg font-bold text-primary font-data-mono">₺357,855.00</span>
+</div>
+</div>
+<div class="mt-6 pt-6 border-t border-border-slate">
+<h3 class="font-label-caps text-label-caps text-secondary mb-3">Attachments</h3>
+<div class="space-y-2">
+<div class="flex items-center justify-between p-2 border border-border-slate rounded bg-surface hover:bg-surface-container-low cursor-pointer transition-colors">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-danger-rose">picture_as_pdf</span>
+<span class="text-sm truncate w-32">Signed_BOQ_Oct.pdf</span>
+</div>
+<span class="material-symbols-outlined text-outline text-sm">download</span>
+</div>
+<div class="flex items-center justify-between p-2 border border-border-slate rounded bg-surface hover:bg-surface-container-low cursor-pointer transition-colors">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-success-emerald">table_chart</span>
+<span class="text-sm truncate w-32">Measurements.xlsx</span>
+</div>
+<span class="material-symbols-outlined text-outline text-sm">download</span>
+</div>
+</div>
+<button class="w-full mt-4 flex items-center justify-center gap-2 border border-dashed border-primary text-primary px-4 py-2 rounded-lg hover:bg-primary-fixed/20 transition-colors font-label-caps text-label-caps">
+<span class="material-symbols-outlined text-sm">upload</span> Upload Document
+                            </button>
+</div>
+</div>
+</div>
+</div>
+<!-- Footer Spacing -->
+<div class="h-12"></div>
+</div>
+</main>
+</body></html>

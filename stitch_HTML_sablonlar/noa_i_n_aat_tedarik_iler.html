@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+
+<html lang="tr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Tedarikçiler - NOA İnşaat ERP</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "surface-dim": "#d8dadc",
+                        "on-secondary-fixed": "#131b2e",
+                        "inverse-surface": "#2d3133",
+                        "on-secondary-container": "#5c647a",
+                        "outline": "#777587",
+                        "inverse-primary": "#c3c0ff",
+                        "on-error-container": "#93000a",
+                        "on-tertiary-container": "#ffd2be",
+                        "on-tertiary": "#ffffff",
+                        "on-secondary-fixed-variant": "#3f465c",
+                        "primary": "#3525cd",
+                        "on-primary-fixed-variant": "#3323cc",
+                        "tertiary-container": "#a44100",
+                        "border-slate": "#E2E8F0",
+                        "surface-variant": "#e0e3e5",
+                        "primary-fixed": "#e2dfff",
+                        "success-emerald": "#10B981",
+                        "on-error": "#ffffff",
+                        "surface-container-high": "#e6e8ea",
+                        "primary-fixed-dim": "#c3c0ff",
+                        "on-surface-variant": "#464555",
+                        "warning-amber": "#F59E0B",
+                        "error-container": "#ffdad6",
+                        "surface-container-highest": "#e0e3e5",
+                        "surface-bright": "#f7f9fb",
+                        "secondary-fixed-dim": "#bec6e0",
+                        "tertiary-fixed-dim": "#ffb695",
+                        "on-tertiary-fixed-variant": "#7b2f00",
+                        "surface": "#f7f9fb",
+                        "text-muted": "#64748B",
+                        "primary-container": "#4f46e5",
+                        "on-background": "#191c1e",
+                        "tertiary": "#7e3000",
+                        "on-primary-fixed": "#0f0069",
+                        "danger-rose": "#E11D48",
+                        "surface-container": "#eceef0",
+                        "on-primary-container": "#dad7ff",
+                        "surface-tint": "#4d44e3",
+                        "on-secondary": "#ffffff",
+                        "secondary-fixed": "#dae2fd",
+                        "decorative-purple": "#800080",
+                        "on-tertiary-fixed": "#351000",
+                        "tertiary-fixed": "#ffdbcc",
+                        "outline-variant": "#c7c4d8",
+                        "secondary": "#565e74",
+                        "decorative-navy": "#000080",
+                        "on-primary": "#ffffff",
+                        "on-surface": "#191c1e",
+                        "background": "#f7f9fb",
+                        "surface-container-lowest": "#ffffff",
+                        "error": "#ba1a1a",
+                        "inverse-on-surface": "#eff1f3",
+                        "surface-white": "#FFFFFF",
+                        "secondary-container": "#dae2fd",
+                        "surface-container-low": "#f2f4f6"
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    spacing: {
+                        "header-height": "64px",
+                        "grid-cell-py": "0.5rem",
+                        "sidebar-collapsed": "80px",
+                        "sidebar-width": "260px",
+                        "stack-sm": "0.5rem",
+                        "grid-cell-px": "0.75rem",
+                        "container-gap": "1.5rem",
+                        "stack-md": "1rem"
+                    },
+                    fontFamily: {
+                        "headline-sm": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "data-mono": ["JetBrains Mono"],
+                        "body-md": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "headline-lg": ["Inter"]
+                    },
+                    fontSize: {
+                        "headline-sm": ["20px", { lineHeight: "28px", fontWeight: "600" }],
+                        "headline-md": ["24px", { lineHeight: "32px", letterSpacing: "-0.01em", fontWeight: "600" }],
+                        "body-sm": ["13px", { lineHeight: "18px", fontWeight: "400" }],
+                        "headline-lg-mobile": ["24px", { lineHeight: "32px", fontWeight: "700" }],
+                        "body-lg": ["16px", { lineHeight: "24px", fontWeight: "400" }],
+                        "data-mono": ["13px", { lineHeight: "16px", fontWeight: "500" }],
+                        "body-md": ["14px", { lineHeight: "20px", fontWeight: "400" }],
+                        "label-caps": ["12px", { lineHeight: "16px", letterSpacing: "0.05em", fontWeight: "700" }],
+                        "headline-lg": ["30px", { lineHeight: "38px", letterSpacing: "-0.02em", fontWeight: "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .icon-fill {
+            font-variation-settings: 'FILL' 1;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body-md text-body-md antialiased overflow-hidden flex h-screen">
+<!-- SideNavBar -->
+<nav class="w-sidebar-width h-screen fixed left-0 top-0 bg-surface-white dark:bg-inverse-surface shadow-[0_1px_3px_rgba(79,70,229,0.08)] flex flex-col h-full border-r border-outline-variant dark:border-outline z-50 hidden md:flex">
+<!-- Header -->
+<div class="h-header-height flex items-center px-6 border-b border-outline-variant dark:border-outline gap-3">
+<div class="w-8 h-8 bg-primary rounded flex items-center justify-center text-on-primary font-bold text-lg">N</div>
+<div>
+<h1 class="font-headline-sm text-headline-sm font-bold text-primary dark:text-inverse-primary">NOA İnşaat</h1>
+<p class="font-body-sm text-body-sm text-text-muted">Construction ERP</p>
+</div>
+</div>
+<!-- Navigation Links -->
+<div class="flex-1 overflow-y-auto py-4 px-3 flex flex-col gap-1">
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-low transition-colors rounded-lg transition-all duration-200 active:scale-95" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span>Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 bg-secondary-container dark:bg-primary-container text-primary dark:text-on-primary-container rounded-lg font-semibold transition-all duration-200 active:scale-95" href="#">
+<span class="material-symbols-outlined icon-fill">business</span>
+<span>Firms</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-low transition-colors rounded-lg transition-all duration-200 active:scale-95" href="#">
+<span class="material-symbols-outlined">gavel</span>
+<span>Tender Management</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-low transition-colors rounded-lg transition-all duration-200 active:scale-95" href="#">
+<span class="material-symbols-outlined">description</span>
+<span>Document Center</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-low transition-colors rounded-lg transition-all duration-200 active:scale-95" href="#">
+<span class="material-symbols-outlined">group</span>
+<span>Staff</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-low transition-colors rounded-lg transition-all duration-200 active:scale-95" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+<span>Inventory</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-low transition-colors rounded-lg transition-all duration-200 active:scale-95" href="#">
+<span class="material-symbols-outlined">directions_car</span>
+<span>Vehicles</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-surface-variant hover:bg-surface-container-low transition-colors rounded-lg transition-all duration-200 active:scale-95" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span>Settings</span>
+</a>
+</div>
+<!-- User Profile -->
+<div class="p-4 border-t border-outline-variant dark:border-outline">
+<div class="flex items-center gap-3 px-2">
+<div class="w-10 h-10 rounded-full bg-surface-variant overflow-hidden border border-outline-variant">
+<img alt="NOA Admin Avatar" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDQ_VYpwonGNSAF7osSQPLBaBu9t75cULFoMUTr0sw724-G-q4Jlm4u_yvFxb_RFirKhvAh-VSMK5dNeofde9XlvegUmtNvmLHfJh2c3TuZxgoax5I0c65B-L7O86iI9fijHQ9FiSIOItVdnh6JUoQ72StJDpnMy_0Vwigyd2g8Fg1D7eCL7jdHP3zDWf59FskfVfQVJUn63iPr_V5QEjAwr3YFHUYSHBbN5IhKUkD0_8O2Tki1GCG6"/>
+</div>
+<div class="flex-1 min-w-0">
+<p class="font-body-md text-body-md font-medium text-on-surface truncate">Admin User</p>
+<p class="font-body-sm text-body-sm text-text-muted truncate">admin@noainsaat.com</p>
+</div>
+</div>
+</div>
+</nav>
+<!-- Main Content Wrapper -->
+<div class="flex-1 ml-0 md:ml-sidebar-width flex flex-col h-screen overflow-hidden">
+<!-- TopNavBar -->
+<header class="h-header-height fixed top-0 right-0 z-40 bg-surface-white/80 dark:bg-inverse-surface/80 backdrop-blur-md flex justify-between items-center px-6 w-full md:w-[calc(100%-theme(spacing.sidebar-width))] border-b border-outline-variant dark:border-outline transition-all duration-200">
+<!-- Mobile Menu Toggle -->
+<button class="md:hidden text-on-surface-variant hover:text-primary transition-colors p-2 -ml-2 rounded-lg hover:bg-surface-container-low">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<!-- Search Bar -->
+<div class="hidden md:flex items-center bg-surface-container-low border border-border-slate rounded-lg px-3 py-1.5 w-64 focus-within:border-primary focus-within:ring-1 focus-within:ring-primary transition-all">
+<span class="material-symbols-outlined text-text-muted text-[20px] mr-2">search</span>
+<input class="bg-transparent border-none outline-none w-full font-body-sm text-body-sm text-on-surface placeholder-text-muted focus:ring-0 p-0" placeholder="Arama..." type="text"/>
+</div>
+<!-- Trailing Actions -->
+<div class="flex items-center gap-4">
+<button class="text-on-surface-variant hover:text-primary transition-colors p-2 rounded-full hover:bg-surface-container-low relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-1.5 right-1.5 w-2 h-2 bg-danger-rose rounded-full border border-surface-white"></span>
+</button>
+<div class="w-8 h-8 rounded-full bg-surface-variant overflow-hidden border border-outline-variant cursor-pointer hidden md:block">
+<img alt="User Profile Avatar" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAQKaKMOCQI4o8toYPNgtRkF-skvjZYhPERJ0Ns05DpSbnbL350JGTIX7WK67fVK6xdavmzqDrXSq9BQgpiDYA53cckff75GuYFBE_vdFH-aNCX9jt0cCLORMztNeLd0IFm-2M1xBLDL2zmhDY8Woqx5Qc5jyrq0G5lKWH1po16C2X8Gx1e-Qmla27NslFkRb2B6PN6XHPBF7d9oD4yCtXvULjxLaWPqGILfufPyG4hFaw6e3rBJsts"/>
+</div>
+</div>
+</header>
+<!-- Canvas -->
+<main class="flex-1 overflow-y-auto bg-background pt-[calc(theme(spacing.header-height)+1.5rem)] px-6 pb-8">
+<div class="max-w-[1400px] mx-auto w-full flex flex-col gap-6">
+<!-- Page Header & Actions -->
+<div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+<div>
+<h2 class="font-headline-md text-headline-md font-bold text-on-surface">Tedarikçiler</h2>
+<p class="font-body-sm text-body-sm text-text-muted mt-1">Sistemde kayıtlı malzeme ve hizmet tedarikçilerini yönetin.</p>
+</div>
+<div class="flex items-center gap-3">
+<div class="flex bg-surface-white border border-border-slate rounded-lg overflow-hidden shadow-sm">
+<button class="px-3 py-2 text-on-surface-variant hover:bg-surface-container-low hover:text-primary transition-colors font-body-sm text-body-sm font-medium border-r border-border-slate flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[18px]">upload_file</span> İçe Aktar
+                            </button>
+<button class="px-3 py-2 text-on-surface-variant hover:bg-surface-container-low hover:text-primary transition-colors font-body-sm text-body-sm font-medium border-r border-border-slate flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[18px]">download</span> Excel
+                            </button>
+<button class="px-3 py-2 text-on-surface-variant hover:bg-surface-container-low hover:text-primary transition-colors font-body-sm text-body-sm font-medium flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[18px]">picture_as_pdf</span> PDF
+                            </button>
+</div>
+<button class="bg-primary hover:bg-primary-fixed-variant text-white px-4 py-2 rounded-lg font-body-sm text-body-sm font-medium flex items-center gap-2 shadow-[0_1px_3px_rgba(79,70,229,0.2)] transition-all active:scale-95">
+<span class="material-symbols-outlined text-[20px]">add</span> Yeni Tedarikçi
+                        </button>
+</div>
+</div>
+<!-- Main Content Card -->
+<div class="bg-surface-white rounded-xl shadow-[0_1px_3px_rgba(79,70,229,0.08)] border border-border-slate flex flex-col overflow-hidden">
+<!-- Advanced Filtering Bar -->
+<div class="p-4 border-b border-border-slate bg-surface-bright flex flex-col lg:flex-row gap-4 justify-between items-center">
+<div class="flex-1 w-full relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-text-muted">search</span>
+<input class="w-full lg:max-w-md pl-10 pr-4 py-2 border border-border-slate rounded-lg font-body-sm text-body-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-shadow bg-surface-white" placeholder="Tedarikçi adı veya vergi no ara..." type="text"/>
+</div>
+<div class="flex flex-wrap items-center gap-3 w-full lg:w-auto">
+<div class="flex items-center bg-surface-white border border-border-slate rounded-lg px-3 py-1.5 cursor-pointer hover:border-outline transition-colors">
+<span class="material-symbols-outlined text-text-muted text-[18px] mr-2">category</span>
+<select class="bg-transparent border-none outline-none font-body-sm text-body-sm text-on-surface py-0 pl-0 pr-6 focus:ring-0 appearance-none cursor-pointer">
+<option value="">Tüm Kategoriler</option>
+<option value="malzeme">Malzeme</option>
+<option value="hizmet">Hizmet</option>
+<option value="ekipman">Ekipman Kiralama</option>
+<option value="nakliye">Nakliye</option>
+</select>
+<span class="material-symbols-outlined absolute right-2 pointer-events-none text-text-muted text-[18px]">expand_more</span>
+</div>
+<div class="flex items-center bg-surface-white border border-border-slate rounded-lg overflow-hidden">
+<button class="px-4 py-1.5 font-body-sm text-body-sm font-medium bg-surface-container-low text-primary border-r border-border-slate">Tümü</button>
+<button class="px-4 py-1.5 font-body-sm text-body-sm font-medium text-text-muted hover:bg-surface-bright transition-colors border-r border-border-slate">Aktif</button>
+<button class="px-4 py-1.5 font-body-sm text-body-sm font-medium text-text-muted hover:bg-surface-bright transition-colors">Pasif</button>
+</div>
+</div>
+</div>
+<!-- Data Table -->
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="border-b border-border-slate bg-surface-bright">
+<th class="py-3 px-4 font-label-caps text-label-caps text-text-muted whitespace-nowrap">KOD</th>
+<th class="py-3 px-4 font-label-caps text-label-caps text-text-muted">TEDARİKÇİ UNVANI</th>
+<th class="py-3 px-4 font-label-caps text-label-caps text-text-muted">VERGİ NO</th>
+<th class="py-3 px-4 font-label-caps text-label-caps text-text-muted">İLETİŞİM KİŞİSİ</th>
+<th class="py-3 px-4 font-label-caps text-label-caps text-text-muted text-right">GÜNCEL BAKİYE</th>
+<th class="py-3 px-4 font-label-caps text-label-caps text-text-muted text-center">DURUM</th>
+<th class="py-3 px-4 font-label-caps text-label-caps text-text-muted text-right">İŞLEMLER</th>
+</tr>
+</thead>
+<tbody class="font-body-sm text-body-sm text-on-surface divide-y divide-border-slate">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="py-3 px-4 font-data-mono text-data-mono text-primary font-medium">TED-001</td>
+<td class="py-3 px-4">
+<div class="flex flex-col gap-1">
+<span class="font-medium text-on-surface">Akçansa Çimento San. ve Tic. A.Ş.</span>
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-surface-container text-text-muted w-fit border border-outline-variant">Malzeme</span>
+</div>
+</td>
+<td class="py-3 px-4 text-text-muted">0110034567</td>
+<td class="py-3 px-4">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center font-bold text-[10px]">AH</div>
+<span>Ahmet Yılmaz</span>
+</div>
+</td>
+<td class="py-3 px-4 text-right">
+<div class="flex flex-col items-end">
+<span class="font-data-mono font-medium text-danger-rose">1.250.000,00 ₺</span>
+<span class="text-[11px] text-text-muted">Borçlu (B)</span>
+</div>
+</td>
+<td class="py-3 px-4 text-center">
+<span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                            Aktif
+                                        </span>
+</td>
+<td class="py-3 px-4 text-right">
+<div class="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1.5 text-text-muted hover:text-primary hover:bg-surface-bright rounded transition-colors" title="Düzenle">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+</button>
+<button class="p-1.5 text-text-muted hover:text-primary hover:bg-surface-bright rounded transition-colors" title="Hesap Ekstresi">
+<span class="material-symbols-outlined text-[18px]">receipt_long</span>
+</button>
+<button class="p-1.5 text-text-muted hover:text-danger-rose hover:bg-surface-bright rounded transition-colors" title="Pasife Al">
+<span class="material-symbols-outlined text-[18px]">block</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="py-3 px-4 font-data-mono text-data-mono text-primary font-medium">TED-002</td>
+<td class="py-3 px-4">
+<div class="flex flex-col gap-1">
+<span class="font-medium text-on-surface">Kardemir Karabük Demir Çelik</span>
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-surface-container text-text-muted w-fit border border-outline-variant">Malzeme</span>
+</div>
+</td>
+<td class="py-3 px-4 text-text-muted">5240012389</td>
+<td class="py-3 px-4">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-surface-variant border border-outline-variant overflow-hidden">
+<img alt="Contact Avatar" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAYL0-1hyALJil8i8AjGXTJx33gN1qDsOYfEZXJL3TyGf98XVNze6vFsFYv5zEMgEK23Bhuci2IimIdHzRmL0upyV3oUOs2EZqrrsCzvEGv7gPlFYaP1eGS_tNfiI_DpUu6jmyooD2dUykBr1UJeHrF1_alZca4yvxHwdMjVyKmOBpiXX7GM4K76kezvqnaOZWVGlvJkvSbdfJvmqn_Xfq353PA-lW9v29Uhc9fcrao-RgMi9xx7mx9"/>
+</div>
+<span>Mehmet Demir</span>
+</div>
+</td>
+<td class="py-3 px-4 text-right">
+<div class="flex flex-col items-end">
+<span class="font-data-mono font-medium text-success-emerald">450.000,00 ₺</span>
+<span class="text-[11px] text-text-muted">Alacaklı (A)</span>
+</div>
+</td>
+<td class="py-3 px-4 text-center">
+<span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                            Aktif
+                                        </span>
+</td>
+<td class="py-3 px-4 text-right">
+<div class="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1.5 text-text-muted hover:text-primary hover:bg-surface-bright rounded transition-colors" title="Düzenle">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+</button>
+<button class="p-1.5 text-text-muted hover:text-primary hover:bg-surface-bright rounded transition-colors" title="Hesap Ekstresi">
+<span class="material-symbols-outlined text-[18px]">receipt_long</span>
+</button>
+<button class="p-1.5 text-text-muted hover:text-danger-rose hover:bg-surface-bright rounded transition-colors" title="Pasife Al">
+<span class="material-symbols-outlined text-[18px]">block</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="py-3 px-4 font-data-mono text-data-mono text-primary font-medium">TED-003</td>
+<td class="py-3 px-4">
+<div class="flex flex-col gap-1">
+<span class="font-medium text-on-surface">Borusan Makina ve Güç Sistemleri</span>
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-surface-container text-text-muted w-fit border border-outline-variant">Ekipman Kiralama</span>
+</div>
+</td>
+<td class="py-3 px-4 text-text-muted">1800055441</td>
+<td class="py-3 px-4">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-tertiary-container text-on-tertiary-container flex items-center justify-center font-bold text-[10px]">CO</div>
+<span>Can Özcan</span>
+</div>
+</td>
+<td class="py-3 px-4 text-right">
+<div class="flex flex-col items-end">
+<span class="font-data-mono font-medium text-danger-rose">85.500,00 ₺</span>
+<span class="text-[11px] text-text-muted">Borçlu (B)</span>
+</div>
+</td>
+<td class="py-3 px-4 text-center">
+<span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                            Aktif
+                                        </span>
+</td>
+<td class="py-3 px-4 text-right">
+<div class="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1.5 text-text-muted hover:text-primary hover:bg-surface-bright rounded transition-colors" title="Düzenle">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+</button>
+<button class="p-1.5 text-text-muted hover:text-primary hover:bg-surface-bright rounded transition-colors" title="Hesap Ekstresi">
+<span class="material-symbols-outlined text-[18px]">receipt_long</span>
+</button>
+<button class="p-1.5 text-text-muted hover:text-danger-rose hover:bg-surface-bright rounded transition-colors" title="Pasife Al">
+<span class="material-symbols-outlined text-[18px]">block</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-surface-container-low transition-colors group bg-surface-container-lowest">
+<td class="py-3 px-4 font-data-mono text-data-mono text-text-muted font-medium">TED-004</td>
+<td class="py-3 px-4 opacity-75">
+<div class="flex flex-col gap-1">
+<span class="font-medium text-on-surface line-through">Ekol Lojistik A.Ş.</span>
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-surface-container text-text-muted w-fit border border-outline-variant">Nakliye</span>
+</div>
+</td>
+<td class="py-3 px-4 text-text-muted opacity-75">3290088776</td>
+<td class="py-3 px-4 opacity-75">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-surface-variant text-text-muted flex items-center justify-center font-bold text-[10px]">AK</div>
+<span class="text-text-muted">Ali Kaya</span>
+</div>
+</td>
+<td class="py-3 px-4 text-right opacity-75">
+<div class="flex flex-col items-end">
+<span class="font-data-mono font-medium text-text-muted">0,00 ₺</span>
+<span class="text-[11px] text-text-muted">-</span>
+</div>
+</td>
+<td class="py-3 px-4 text-center">
+<span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-surface-variant text-text-muted border border-outline-variant">
+                                            Pasif
+                                        </span>
+</td>
+<td class="py-3 px-4 text-right">
+<div class="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1.5 text-text-muted hover:text-primary hover:bg-surface-bright rounded transition-colors" title="Düzenle">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+</button>
+<button class="p-1.5 text-text-muted hover:text-primary hover:bg-surface-bright rounded transition-colors" title="Hesap Ekstresi">
+<span class="material-symbols-outlined text-[18px]">receipt_long</span>
+</button>
+<button class="p-1.5 text-text-muted hover:text-success-emerald hover:bg-surface-bright rounded transition-colors" title="Aktife Al">
+<span class="material-symbols-outlined text-[18px]">check_circle</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination/Footer -->
+<div class="p-4 border-t border-border-slate bg-surface-bright flex justify-between items-center">
+<span class="font-body-sm text-body-sm text-text-muted">Toplam 142 tedarikçiden 1-4 arası gösteriliyor</span>
+<div class="flex items-center gap-1">
+<button class="p-1 text-text-muted hover:text-primary disabled:opacity-50" disabled="">
+<span class="material-symbols-outlined text-[20px]">chevron_left</span>
+</button>
+<button class="w-8 h-8 rounded-md bg-primary text-white font-medium text-sm flex items-center justify-center">1</button>
+<button class="w-8 h-8 rounded-md text-on-surface hover:bg-surface-container-low font-medium text-sm flex items-center justify-center transition-colors">2</button>
+<button class="w-8 h-8 rounded-md text-on-surface hover:bg-surface-container-low font-medium text-sm flex items-center justify-center transition-colors">3</button>
+<span class="text-text-muted mx-1">...</span>
+<button class="p-1 text-text-muted hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[20px]">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

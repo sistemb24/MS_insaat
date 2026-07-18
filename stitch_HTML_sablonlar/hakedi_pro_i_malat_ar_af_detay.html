@@ -1,0 +1,371 @@
+<!DOCTYPE html><html lang="tr" class="light"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=block" rel="stylesheet"><script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script><script id="tailwind-config">try{
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary-fixed": "#ffdbcc",
+                        "surface-container-highest": "#e0e3e5",
+                        "on-tertiary-fixed": "#351000",
+                        "on-primary": "#ffffff",
+                        "secondary": "#565e74",
+                        "on-primary-fixed": "#0f0069",
+                        "inverse-on-surface": "#eff1f3",
+                        "on-secondary": "#ffffff",
+                        "surface-dim": "#d8dadc",
+                        "outline": "#777587",
+                        "on-surface-variant": "#464555",
+                        "outline-variant": "#c7c4d8",
+                        "tertiary-container": "#a44100",
+                        "inverse-primary": "#c3c0ff",
+                        "on-surface": "#191c1e",
+                        "success-emerald": "#10B981",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-variant": "#e0e3e5",
+                        "danger-rose": "#E11D48",
+                        "background": "#f7f9fb",
+                        "primary-fixed": "#e2dfff",
+                        "tertiary": "#7e3000",
+                        "surface-bright": "#f7f9fb",
+                        "decorative-navy": "#000080",
+                        "surface-tint": "#4d44e3",
+                        "secondary-fixed-dim": "#bec6e0",
+                        "tertiary-fixed-dim": "#ffb695",
+                        "on-tertiary": "#ffffff",
+                        "error": "#ba1a1a",
+                        "surface-container": "#eceef0",
+                        "primary-container": "#4f46e5",
+                        "inverse-surface": "#2d3133",
+                        "on-primary-fixed-variant": "#3323cc",
+                        "primary": "#3525cd",
+                        "warning-amber": "#F59E0B",
+                        "border-slate": "#E2E8F0",
+                        "on-tertiary-container": "#ffd2be",
+                        "secondary-container": "#dae2fd",
+                        "on-primary-container": "#dad7ff",
+                        "secondary-fixed": "#dae2fd",
+                        "primary-fixed-dim": "#c3c0ff",
+                        "on-error-container": "#93000a",
+                        "on-error": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "surface-container-low": "#f2f4f6",
+                        "surface-container-high": "#e6e8ea",
+                        "on-tertiary-fixed-variant": "#7b2f00",
+                        "decorative-purple": "#800080",
+                        "on-background": "#191c1e",
+                        "text-muted": "#64748B",
+                        "on-secondary-fixed": "#131b2e",
+                        "surface-white": "#FFFFFF",
+                        "on-secondary-container": "#5c647a",
+                        "on-secondary-fixed-variant": "#3f465c",
+                        "surface": "#f7f9fb"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-md": "1rem",
+                        "grid-cell-py": "0.5rem",
+                        "sidebar-collapsed": "80px",
+                        "header-height": "64px",
+                        "sidebar-width": "260px",
+                        "stack-sm": "0.5rem",
+                        "container-gap": "1.5rem",
+                        "grid-cell-px": "0.75rem"
+                    },
+                    "fontFamily": {
+                        "headline-lg-mobile": ["Inter"],
+                        "headline-sm": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "data-mono": ["JetBrains Mono"],
+                        "body-lg": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "body-md": ["Inter"],
+                        "headline-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "700" }],
+                        "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "body-sm": ["13px", { "lineHeight": "18px", "fontWeight": "400" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "data-mono": ["13px", { "lineHeight": "16px", "fontWeight": "500" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "headline-lg": ["30px", { "lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    }catch(_e){}</script><meta charset="utf-8"></head><body class="bg-background text-on-surface font-body-md h-screen flex overflow-hidden">
+<!-- SideNavBar -->
+<nav class="hidden md:flex flex-col bg-surface-white dark:bg-inverse-surface border-r border-border-slate dark:border-outline fixed left-0 top-0 bottom-0 w-sidebar-width h-full z-40 overflow-y-auto">
+<div class="flex items-center gap-stack-sm px-grid-cell-px h-header-height border-b border-border-slate shrink-0">
+<img alt="Şirket Logosu" class="w-8 h-8 rounded" data-alt="A clean, minimalist logo for a construction ERP software named Hakediş Pro, featuring geometric shapes in indigo and slate colors, professional corporate design, white background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC6JkHqMN2CfLluuImLQqXfiVlewq5LMwlx-qgkgC9uFJiN5mf9jEkXpVeRXzGId9Om2Uxr3YVguZEEcmoihgeb6fexhKFN2Bjysv-cgCAbPW88-6ZROoswZbPpuuhDW7u4Gl4mFAdhBU_kqsQBjE0jJYpCwu2_Z18JHigE9rp6pUCOiHzEkFhQ_UnR5q3-KmSt-D1AxHXHQyCUQNJ7O7nfvyLlojVrouBEt8Wton04cjNhE05DOuBW">
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm font-bold text-primary dark:text-inverse-primary">Hakediş Pro</span>
+<span class="font-label-caps text-label-caps text-text-muted">İnşaat Yönetim Paneli</span>
+</div>
+</div>
+<div class="flex-1 py-stack-md px-grid-cell-px space-y-1 overflow-y-auto">
+<a class="flex items-center gap-stack-md text-text-muted dark:text-surface-variant px-grid-cell-px py-grid-cell-py hover:bg-surface-container-highest dark:hover:bg-on-secondary-fixed-variant transition-all rounded-lg font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="">Dashboard</span>
+</a>
+<a class="flex items-center gap-stack-md text-text-muted dark:text-surface-variant px-grid-cell-px py-grid-cell-py hover:bg-surface-container-highest dark:hover:bg-on-secondary-fixed-variant transition-all rounded-lg font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined">info</span>
+<span class="">Proje Bilgileri</span>
+</a>
+<a class="flex items-center gap-stack-md text-text-muted dark:text-surface-variant px-grid-cell-px py-grid-cell-py hover:bg-surface-container-highest dark:hover:bg-on-secondary-fixed-variant transition-all rounded-lg font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined">calculate</span>
+<span class="">Genel Metraj</span>
+</a>
+<a class="flex items-center gap-stack-md text-text-muted dark:text-surface-variant px-grid-cell-px py-grid-cell-py hover:bg-surface-container-highest dark:hover:bg-on-secondary-fixed-variant transition-all rounded-lg font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined">construction</span>
+<span class="">Demir Metrajı</span>
+</a>
+<a class="flex items-center gap-stack-md text-text-muted dark:text-surface-variant px-grid-cell-px py-grid-cell-py hover:bg-surface-container-highest dark:hover:bg-on-secondary-fixed-variant transition-all rounded-lg font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined">description</span>
+<span class="">Tutanaklı İşler</span>
+</a>
+<a class="flex items-center gap-stack-md text-text-muted dark:text-surface-variant px-grid-cell-px py-grid-cell-py hover:bg-surface-container-highest dark:hover:bg-on-secondary-fixed-variant transition-all rounded-lg font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined">grid_on</span>
+<span class="">Yeşil Defter</span>
+</a>
+<a class="flex items-center gap-stack-md bg-secondary-container text-on-secondary-container rounded-lg px-grid-cell-px py-grid-cell-py font-bold translate-x-1 transition-transform duration-200 font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined icon-fill">list_alt</span>
+<span class="">İmalat Çarşafı</span>
+</a>
+<a class="flex items-center gap-stack-md text-text-muted dark:text-surface-variant px-grid-cell-px py-grid-cell-py hover:bg-surface-container-highest dark:hover:bg-on-secondary-fixed-variant transition-all rounded-lg font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+<span class="">Kesintiler</span>
+</a>
+<a class="flex items-center gap-stack-md text-text-muted dark:text-surface-variant px-grid-cell-px py-grid-cell-py hover:bg-surface-container-highest dark:hover:bg-on-secondary-fixed-variant transition-all rounded-lg font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined">summarize</span>
+<span class="">Hakediş Özeti</span>
+</a>
+<a class="flex items-center gap-stack-md text-text-muted dark:text-surface-variant px-grid-cell-px py-grid-cell-py hover:bg-surface-container-highest dark:hover:bg-on-secondary-fixed-variant transition-all rounded-lg font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined">assessment</span>
+<span class="">Raporlar</span>
+</a>
+</div>
+<div class="border-t border-border-slate py-stack-md px-grid-cell-px space-y-1 shrink-0">
+<a class="flex items-center gap-stack-md text-text-muted dark:text-surface-variant px-grid-cell-px py-grid-cell-py hover:bg-surface-container-highest dark:hover:bg-on-secondary-fixed-variant transition-all rounded-lg font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined">support_agent</span>
+<span class="">Destek</span>
+</a>
+<a class="flex items-center gap-stack-md text-text-muted dark:text-surface-variant px-grid-cell-px py-grid-cell-py hover:bg-surface-container-highest dark:hover:bg-on-secondary-fixed-variant transition-all rounded-lg font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined">logout</span>
+<span class="">Çıkış</span>
+</a>
+</div>
+</nav>
+<!-- Main Content Area -->
+<main class="flex-1 flex flex-col md:ml-sidebar-width h-screen overflow-hidden">
+<!-- TopNavBar -->
+<header class="bg-surface-white dark:bg-inverse-surface shadow-sm dark:shadow-none sticky top-0 z-50 flex justify-between items-center h-header-height px-container-gap w-full shrink-0">
+<div class="flex items-center gap-stack-md">
+<button class="md:hidden text-on-surface hover:bg-surface-container-low p-2 rounded-lg">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<div class="flex flex-col">
+<h1 class="font-headline-sm text-headline-sm text-on-surface font-bold">İmalat Çarşafı</h1>
+<span class="font-label-caps text-label-caps text-text-muted">Hakediş No: 5, Kasım 2023</span>
+</div>
+</div>
+<div class="flex items-center gap-stack-md">
+<div class="relative hidden sm:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-text-muted">search</span>
+<input class="pl-10 pr-4 py-2 border border-border-slate rounded-lg focus:ring-1 focus:ring-primary focus:border-primary text-sm font-body-sm w-64 bg-surface" placeholder="Ara..." type="text">
+</div>
+<div class="flex items-center gap-2">
+<button class="p-2 text-text-muted hover:bg-surface-container-low rounded-lg transition-colors relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-1.5 right-1.5 w-2 h-2 bg-danger-rose rounded-full"></span>
+</button>
+<button class="p-2 text-text-muted hover:bg-surface-container-low rounded-lg transition-colors">
+<span class="material-symbols-outlined">settings</span>
+</button>
+<button class="p-2 text-text-muted hover:bg-surface-container-low rounded-lg transition-colors">
+<span class="material-symbols-outlined">help</span>
+</button>
+<div class="w-px h-6 bg-border-slate mx-2"></div>
+<button class="flex items-center gap-2 hover:bg-surface-container-low p-1.5 rounded-lg transition-colors">
+<img alt="Kullanıcı Profili" class="w-8 h-8 rounded-full border border-border-slate object-cover" data-alt="A professional headshot of a young male civil engineer, wearing a light blue dress shirt and a hard hat subtly visible in the background, confident expression, neutral office lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAB4oZYbCWtHoZfZfnHIsMthNrDtiXz24j-nsB1HF96AKKJZG4OdwbR8eN_1fn8gajAtVO8gSYG8mZ6nMEjkJPvaVAyEzLYJZtXHvfL0xqH-4SvARuihhceW84mO8ZqwFcIg7FDrnFWgkh7bJQw-IhL-KR7JACQdClXYu4UvY-b9hf_BcRSn4cy9glhqFW2u4NIk3_fAXbxov7hXbNy6cnfGgoxQV4LFSeLHkIMDN6WO0UgL-jlMZuB">
+<span class="material-symbols-outlined text-text-muted text-sm">expand_more</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Page Content Canvas -->
+<div class="flex-1 overflow-y-auto bg-background p-container-gap flex flex-col gap-container-gap">
+<!-- Action Bar -->
+<div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-stack-md bg-surface-white p-4 rounded-xl shadow-sm border border-border-slate">
+<div class="flex items-center gap-2">
+<button class="flex items-center gap-2 px-4 py-2 bg-surface border border-border-slate rounded-lg font-body-sm text-on-surface hover:bg-surface-container-highest transition-colors">
+<span class="material-symbols-outlined text-[20px]">filter_list</span>
+                        Filtrele
+                    </button>
+</div>
+<div class="flex items-center gap-2 w-full sm:w-auto">
+<button class="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2 bg-surface-white border border-border-slate text-on-surface rounded-lg font-body-sm hover:bg-surface-container-highest transition-colors shadow-sm">
+<span class="material-symbols-outlined text-[20px] text-success-emerald">table_chart</span>
+                        Excel'e Aktar
+                    </button>
+<button class="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2 bg-surface-white border border-border-slate text-on-surface rounded-lg font-body-sm hover:bg-surface-container-highest transition-colors shadow-sm">
+<span class="material-symbols-outlined text-[20px] text-danger-rose">picture_as_pdf</span>
+                        PDF İndir
+                    </button>
+<button class="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2 bg-primary-container text-on-primary rounded-lg font-body-sm hover:bg-primary transition-colors shadow-sm">
+<span class="material-symbols-outlined text-[20px]">print</span>
+                        Yazdır
+                    </button>
+</div>
+</div>
+<!-- Financial Summary Cards -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-stack-md">
+<div class="bg-surface-white p-5 rounded-xl border border-border-slate shadow-sm flex flex-col gap-2">
+<div class="flex justify-between items-center">
+<span class="font-label-caps text-label-caps text-text-muted">Önceki Dönem Toplam</span>
+<span class="material-symbols-outlined text-text-muted text-[20px]">history</span>
+</div>
+<span class="font-data-mono text-headline-sm text-on-surface">₺ 4.250.000,00</span>
+</div>
+<div class="bg-surface-white p-5 rounded-xl border border-border-slate shadow-sm flex flex-col gap-2 border-l-4 border-l-primary">
+<div class="flex justify-between items-center">
+<span class="font-label-caps text-label-caps text-primary">Bu Dönem Toplam</span>
+<span class="material-symbols-outlined text-primary text-[20px]">timeline</span>
+</div>
+<span class="font-data-mono text-headline-sm text-on-surface">₺ 1.150.500,00</span>
+</div>
+<div class="bg-surface-white p-5 rounded-xl border border-border-slate shadow-sm flex flex-col gap-2">
+<div class="flex justify-between items-center">
+<span class="font-label-caps text-label-caps text-text-muted">Kümülatif Toplam</span>
+<span class="material-symbols-outlined text-text-muted text-[20px]">functions</span>
+</div>
+<span class="font-data-mono text-headline-sm text-on-surface">₺ 5.400.500,00</span>
+</div>
+<div class="bg-surface-white p-5 rounded-xl border border-border-slate shadow-sm flex flex-col gap-2">
+<div class="flex justify-between items-center">
+<span class="font-label-caps text-label-caps text-text-muted">Sözleşme Bakiyesi</span>
+<span class="material-symbols-outlined text-text-muted text-[20px]">account_balance</span>
+</div>
+<span class="font-data-mono text-headline-sm text-on-surface">₺ 12.500.000,00</span>
+</div>
+</div>
+<!-- Detailed Data Grid -->
+<div class="bg-surface-white rounded-xl border border-border-slate shadow-sm flex-1 flex flex-col overflow-hidden min-h-[400px]">
+<div class="overflow-x-auto flex-1">
+<table class="w-full text-left border-collapse min-w-[1200px]">
+<thead class="sticky top-0 bg-surface-container-low z-10 shadow-sm font-label-caps text-label-caps text-text-muted uppercase">
+<tr>
+<th class="px-3 py-2 border-b border-r border-border-slate text-center bg-surface-white" colspan="5">İş Kalemi Bilgileri</th>
+<th class="px-3 py-2 border-b border-r border-border-slate text-center bg-surface-container-lowest" colspan="2">Önceki Dönem</th>
+<th class="px-3 py-2 border-b border-r border-border-slate text-center bg-secondary-container text-on-secondary-container" colspan="2"><div class="flex items-center justify-center gap-2"><span class="">Bu Dönem</span><span class="material-symbols-outlined text-sm cursor-pointer hover:text-primary transition-colors" title="Düzenle">edit</span></div></th>
+<th class="px-3 py-2 border-b border-r border-border-slate text-center bg-surface-container-lowest" colspan="2">Kümülatif</th>
+<th class="px-3 py-2 border-b border-border-slate text-center bg-surface-container-lowest" colspan="2">Sözleşme</th>
+</tr>
+<tr>
+<th class="px-3 py-grid-cell-py border-b border-r border-border-slate w-12 text-center bg-surface-white">Sıra</th>
+<th class="px-3 py-grid-cell-py border-b border-r border-border-slate w-24 bg-surface-white">Poz No</th>
+<th class="px-3 py-grid-cell-py border-b border-r border-border-slate min-w-[200px] bg-surface-white">İş Kalemi Tanımı</th>
+<th class="px-3 py-grid-cell-py border-b border-r border-border-slate w-16 text-center bg-surface-white">Birim</th>
+<th class="px-3 py-grid-cell-py border-b border-r border-border-slate w-28 text-right bg-surface-white">Birim Fiyat</th>
+<th class="px-3 py-grid-cell-py border-b border-r border-border-slate w-24 text-right bg-surface-container-lowest">Miktar</th>
+<th class="px-3 py-grid-cell-py border-b border-r border-border-slate w-32 text-right bg-surface-container-lowest">Tutar</th>
+<th class="px-3 py-grid-cell-py border-b border-r border-border-slate w-24 text-right bg-secondary-fixed">Miktar</th>
+<th class="px-3 py-grid-cell-py border-b border-r border-border-slate w-32 text-right bg-secondary-fixed">Tutar</th>
+<th class="px-3 py-grid-cell-py border-b border-r border-border-slate w-24 text-right bg-surface-container-lowest">Toplam Miktar</th>
+<th class="px-3 py-grid-cell-py border-b border-r border-border-slate w-32 text-right bg-surface-container-lowest">Toplam Tutar</th>
+<th class="px-3 py-grid-cell-py border-b border-r border-border-slate w-24 text-right bg-surface-container-lowest">Sözleşme Miktarı</th>
+<th class="px-3 py-grid-cell-py border-b border-border-slate w-24 text-right bg-surface-container-lowest">Kalan Miktar</th>
+</tr>
+</thead>
+<tbody class="font-body-sm text-body-sm text-on-surface divide-y divide-border-slate">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-container-highest transition-colors group">
+<td class="px-3 py-2 border-r border-border-slate text-center text-text-muted">1</td>
+<td class="px-3 py-2 border-r border-border-slate font-data-mono">15.120.101</td>
+<td class="px-3 py-2 border-r border-border-slate truncate max-w-[200px]" title="Makine ile her derinlik ve genişlikte yumuşak ve sert toprak kazılması">Makine ile her derinlik ve gen...</td>
+<td class="px-3 py-2 border-r border-border-slate text-center text-text-muted">m3</td>
+<td class="px-3 py-2 border-r border-border-slate text-right font-data-mono">120,50</td>
+<td class="px-3 py-2 border-r border-border-slate text-right font-data-mono text-text-muted">1.500,00</td>
+<td class="px-3 py-2 border-r border-border-slate text-right font-data-mono text-text-muted">180.750,00</td>
+<td class="border-r border-border-slate text-right font-data-mono font-medium text-primary px-3"><input type="text" value="500,00" class="w-full bg-transparent border-none focus:ring-1 focus:ring-primary/30 focus:bg-primary/5 text-right font-data-mono font-medium text-primary p-0 outline-none"></td>
+<td class="px-3 py-2 border-r border-border-slate text-right font-data-mono font-medium text-primary">60.250,00</td>
+<td class="px-3 py-2 border-r border-border-slate text-right font-data-mono font-medium">2.000,00</td>
+<td class="px-3 py-2 border-r border-border-slate text-right font-data-mono font-medium">241.000,00</td>
+<td class="px-3 py-2 border-r border-border-slate text-right font-data-mono text-text-muted">2.500,00</td>
+<td class="px-3 py-2 text-right font-data-mono"><span class="inline-block px-2 py-0.5 rounded text-[11px] bg-success-emerald/10 text-success-emerald font-bold">500,00</span></td>
+</tr>
+<!-- Row 2 -->
+<tr class="bg-surface hover:bg-surface-container-highest transition-colors group">
+<td class="px-3 py-2 border-r border-border-slate text-center text-text-muted">2</td>
+<td class="px-3 py-2 border-r border-border-slate font-data-mono">15.150.103</td>
+<td class="px-3 py-2 border-r border-border-slate truncate max-w-[200px]" title="C25/30 beton dökülmesi">C25/30 beton dökülmesi</td>
+<td class="px-3 py-2 border-r border-border-slate text-center text-text-muted">m3</td>
+<td class="px-3 py-2 border-r border-border-slate text-right font-data-mono">1.850,00</td>
+<td class="px-3 py-2 border-r border-border-slate text-right font-data-mono text-text-muted">320,00</td>
+<td class="px-3 py-2 border-r border-border-slate text-right font-data-mono text-text-muted">592.000,00</td>
+<td class="border-r border-border-slate text-right font-data-mono font-medium text-primary px-3"><input type="text" value="120,00" class="w-full bg-transparent border-none focus:ring-1 focus:ring-primary/30 focus:bg-primary/5 text-right font-data-mono font-medium text-primary p-0 outline-none"></td>
+<td class="px-3 py-2 border-r border-border-slate text-right font-data-mono font-medium text-primary">222.000,00</td>
+<td class="px-3 py-2 border-r border-border-slate text-right font-data-mono font-medium">440,00</td>
+<td class="px-3 py-2 border-r border-border-slate text-right font-data-mono font-medium">814.000,00</td>
+<td class="px-3 py-2 border-r border-border-slate text-right font-data-mono text-text-muted">450,00</td>
+<td class="px-3 py-2 text-right font-data-mono"><span class="inline-block px-2 py-0.5 rounded text-[11px] bg-warning-amber/10 text-warning-amber font-bold">10,00</span></td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface-container-highest transition-colors group">
+<td class="px-3 py-2 border-r border-border-slate text-center text-text-muted">3</td>
+<td class="px-3 py-2 border-r border-border-slate font-data-mono">15.160.105</td>
+<td class="px-3 py-2 border-r border-border-slate truncate max-w-[200px]" title="Nervürlü çelik hasır (S420)">Nervürlü çelik hasır (S420)</td>
+<td class="px-3 py-2 border-r border-border-slate text-center text-text-muted">ton</td>
+<td class="px-3 py-2 border-r border-border-slate text-right font-data-mono">18.500,00</td>
+<td class="px-3 py-2 border-r border-border-slate text-right font-data-mono text-text-muted">45,00</td>
+<td class="px-3 py-2 border-r border-border-slate text-right font-data-mono text-text-muted">832.500,00</td>
+<td class="border-r border-border-slate text-right font-data-mono font-medium text-primary px-3"><input type="text" value="15,00" class="w-full bg-transparent border-none focus:ring-1 focus:ring-primary/30 focus:bg-primary/5 text-right font-data-mono font-medium text-primary p-0 outline-none"></td>
+<td class="px-3 py-2 border-r border-border-slate text-right font-data-mono font-medium text-primary">277.500,00</td>
+<td class="px-3 py-2 border-r border-border-slate text-right font-data-mono font-medium">60,00</td>
+<td class="px-3 py-2 border-r border-border-slate text-right font-data-mono font-medium">1.110.000,00</td>
+<td class="px-3 py-2 border-r border-border-slate text-right font-data-mono text-text-muted">55,00</td>
+<td class="px-3 py-2 text-right font-data-mono"><span class="inline-block px-2 py-0.5 rounded text-[11px] bg-danger-rose/10 text-danger-rose font-bold">-5,00</span></td>
+</tr>
+<!-- Add a few more rows for visual density -->
+<tr class="bg-surface hover:bg-surface-container-highest transition-colors group">
+<td class="px-3 py-2 border-r border-border-slate text-center text-text-muted">4</td>
+<td class="px-3 py-2 border-r border-border-slate font-data-mono">15.180.110</td>
+<td class="px-3 py-2 border-r border-border-slate truncate max-w-[200px]" title="Ahşap oturtma çatı yapılması">Ahşap oturtma çatı yapılması</td>
+<td class="px-3 py-2 border-r border-border-slate text-center text-text-muted">m2</td>
+<td class="px-3 py-2 border-r border-border-slate text-right font-data-mono">850,00</td>
+<td class="px-3 py-2 border-r border-border-slate text-right font-data-mono text-text-muted">0,00</td>
+<td class="px-3 py-2 border-r border-border-slate text-right font-data-mono text-text-muted">0,00</td>
+<td class="border-r border-border-slate text-right font-data-mono font-medium text-primary px-3"><input type="text" value="200,00" class="w-full bg-transparent border-none focus:ring-1 focus:ring-primary/30 focus:bg-primary/5 text-right font-data-mono font-medium text-primary p-0 outline-none"></td>
+<td class="px-3 py-2 border-r border-border-slate text-right font-data-mono font-medium text-primary">170.000,00</td>
+<td class="px-3 py-2 border-r border-border-slate text-right font-data-mono font-medium">200,00</td>
+<td class="px-3 py-2 border-r border-border-slate text-right font-data-mono font-medium">170.000,00</td>
+<td class="px-3 py-2 border-r border-border-slate text-right font-data-mono text-text-muted">500,00</td>
+<td class="px-3 py-2 text-right font-data-mono"><span class="inline-block px-2 py-0.5 rounded text-[11px] bg-success-emerald/10 text-success-emerald font-bold">300,00</span></td>
+</tr>
+</tbody>
+<tfoot class="sticky bottom-0 bg-surface-white border-t-2 border-border-slate font-data-mono font-bold">
+<tr>
+<td class="px-3 py-3 border-r border-border-slate text-right text-text-muted uppercase text-xs" colspan="6">Genel Toplamlar:</td>
+<td class="px-3 py-3 border-r border-border-slate text-right">4.250.000,00</td>
+<td class="px-3 py-3 border-r border-border-slate bg-secondary-container/50"></td>
+<td class="px-3 py-3 border-r border-border-slate text-right text-primary bg-secondary-container/50">1.150.500,00</td>
+<td class="px-3 py-3 border-r border-border-slate"></td>
+<td class="px-3 py-3 border-r border-border-slate text-right">5.400.500,00</td>
+<td class="px-3 py-3" colspan="2"></td>
+</tr>
+</tfoot>
+</table>
+</div>
+</div>
+</div>
+</main>
+
+</body></html>
