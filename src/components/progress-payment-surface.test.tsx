@@ -45,7 +45,12 @@ describe("ProgressPaymentSurface", () => {
       />,
     );
 
-    expect(screen.getByText("Hakediş")).toBeTruthy();
+    expect(
+      screen.getByRole("table", {
+        name: "Hakediş faturası hareket listesi",
+      }),
+    ).toBeTruthy();
+    expect(screen.getByText("Hakediş İşlemleri")).toBeTruthy();
     expect(screen.getByText("Hakediş faturası hareket listesi")).toBeTruthy();
     expect(screen.getByText("HAK-0001")).toBeTruthy();
     expect(screen.getByText("ŞİRKETİN TAŞERONU")).toBeTruthy();

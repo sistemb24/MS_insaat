@@ -48,7 +48,9 @@ describe("ReportsSurface", () => {
       />,
     );
 
-    expect(screen.getByText("Raporlar")).toBeTruthy();
+    expect(
+      screen.getByRole("heading", { level: 1, name: "Rapor Merkezi" }),
+    ).toBeTruthy();
     expect(screen.getByText("Rapor Para Birimi")).toBeTruthy();
     expect(screen.getByText("TL")).toBeTruthy();
     expect(screen.getByText("Operasyon Özeti")).toBeTruthy();
@@ -64,6 +66,10 @@ describe("ReportsSurface", () => {
     expect(screen.getAllByText("11.400,00 TL").length).toBeGreaterThanOrEqual(3);
     expect(screen.getAllByText("31.500,00 TL").length).toBeGreaterThanOrEqual(5);
     expect(screen.getByText("Son Hareketler")).toBeTruthy();
+    expect(screen.getByText("Hazır raporlar")).toBeTruthy();
+    expect(
+      screen.getAllByRole("link", { name: "Raporu görüntüle" })[0]?.getAttribute("href"),
+    ).toBe("#santiye-karlilik");
     expect(screen.getAllByText("FAT-0001").length).toBeGreaterThan(0);
     expect(screen.getAllByText("THS-0001").length).toBeGreaterThan(0);
     expect(screen.getAllByText("CEK-0001").length).toBeGreaterThan(0);

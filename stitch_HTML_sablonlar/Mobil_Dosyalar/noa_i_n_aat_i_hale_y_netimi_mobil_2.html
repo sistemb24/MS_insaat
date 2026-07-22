@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>NOA İnşaat - İhale Yönetimi</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', '"Liberation Mono"', '"Courier New"', 'monospace'],
+          },
+          colors: {
+            surface: '#f7f9fb',
+            'surface-dim': '#d8dadc',
+            'surface-bright': '#f7f9fb',
+            'surface-container-lowest': '#ffffff',
+            'surface-container-low': '#f2f4f6',
+            'surface-container': '#ebeef0',
+            'surface-container-high': '#e5e8eb',
+            'surface-container-highest': '#dfe3e6',
+            primary: '#4f46e5',
+            'primary-light': '#818cf8',
+            'primary-dark': '#3730a3',
+            'on-primary': '#ffffff',
+            'primary-container': '#e0e7ff',
+            'on-primary-container': '#312e81',
+            text: '#1f2937',
+            'text-muted': '#6b7280',
+            border: '#e5e7eb',
+            success: '#10b981',
+            warning: '#f59e0b',
+            danger: '#ef4444',
+            info: '#3b82f6',
+          },
+          borderRadius: {
+            DEFAULT: '0.5rem', // ROUND_EIGHT
+          },
+          boxShadow: {
+            card: '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)',
+          }
+        }
+      }
+    }
+  </script>
+<style data-purpose="base-styles">
+    body {
+      background-color: theme('colors.surface');
+      color: theme('colors.text');
+      font-family: theme('fontFamily.sans');
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* Hide scrollbar for clean horizontal scrolling */
+    .scrollbar-hide::-webkit-scrollbar {
+        display: none;
+    }
+    .scrollbar-hide {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+  </style>
+</head>
+<body class="flex flex-col min-h-screen bg-surface pb-16">
+<!-- BEGIN: Top AppBar -->
+<header class="sticky top-0 z-10 bg-surface-container-lowest border-b border-border shadow-sm">
+<div class="flex items-center justify-between px-4 h-14">
+<button aria-label="Go back" class="p-2 text-text-muted hover:text-text focus:outline-none">
+<i class="fa-solid fa-arrow-left text-lg"></i>
+</button>
+<h1 class="text-lg font-bold text-primary">İhale Yönetimi</h1>
+<div class="flex items-center gap-2">
+<button aria-label="Notifications" class="p-2 text-text-muted hover:text-text focus:outline-none">
+<div class="relative">
+<i class="fa-regular fa-bell text-lg"></i>
+<span class="absolute top-0.5 right-0.5 block h-2 w-2 rounded-full bg-danger ring-2 ring-white"></span>
+</div>
+</button>
+</div>
+</div>
+</header>
+<!-- END: Top AppBar -->
+<!-- BEGIN: Main Content -->
+<main class="flex-1 overflow-y-auto w-full max-w-md mx-auto">
+<!-- Search & Actions -->
+<div class="p-4 bg-surface-container-lowest border-b border-border space-y-3">
+<div class="relative">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+<i class="fa-solid fa-magnifying-glass text-text-muted text-sm"></i>
+</div>
+<input class="block w-full pl-9 pr-3 py-2 border border-border rounded-md leading-5 bg-surface-container-low text-text placeholder-text-muted focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary sm:text-sm" placeholder="İhale ara..." type="text"/>
+</div>
+<div class="flex justify-between items-center">
+<div class="flex bg-surface-container-low rounded-md p-0.5 border border-border">
+<button class="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded bg-surface-container-lowest text-primary shadow-sm">
+<i class="fa-solid fa-table-columns text-xs"></i> Kanban
+          </button>
+<button class="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded text-text-muted hover:text-text">
+<i class="fa-solid fa-list text-xs"></i> Liste
+          </button>
+</div>
+</div>
+</div>
+<!-- Status Tabs (Horizontal Scroll) -->
+<div class="border-b border-border bg-surface-container-lowest">
+<div class="flex overflow-x-auto scrollbar-hide py-3 px-4 gap-2">
+<button class="flex-shrink-0 flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200 text-sm font-medium whitespace-nowrap">
+<span class="w-2 h-2 rounded-full bg-blue-500"></span>
+          Yeni İlanlar
+          <span class="ml-1 bg-white text-blue-700 px-1.5 py-0.5 rounded text-xs">2</span>
+</button>
+<button class="flex-shrink-0 flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface-container-low text-text-muted border border-border text-sm font-medium whitespace-nowrap">
+<span class="w-2 h-2 rounded-full bg-warning"></span>
+          Teklif Hazırlananlar
+          <span class="ml-1 bg-surface-container text-text-muted px-1.5 py-0.5 rounded text-xs">1</span>
+</button>
+<button class="flex-shrink-0 flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface-container-low text-text-muted border border-border text-sm font-medium whitespace-nowrap">
+<span class="w-2 h-2 rounded-full bg-purple-500"></span>
+          Değerlendirmede
+          <span class="ml-1 bg-surface-container text-text-muted px-1.5 py-0.5 rounded text-xs">1</span>
+</button>
+</div>
+</div>
+<!-- Tender Cards List -->
+<div class="p-4 space-y-4">
+<!-- Card 1: Ankara Yüksek Hızlı Tren Garı -->
+<div class="bg-surface-container-lowest rounded shadow-card border border-border overflow-hidden">
+<div class="p-4">
+<h3 class="text-base font-semibold text-text mb-1 leading-snug">Ankara Yüksek Hızlı Tren Garı Ek Bina</h3>
+<div class="flex items-center text-sm text-text-muted mb-4">
+<i class="fa-solid fa-building-columns mr-1.5 text-xs"></i>
+            TCDD
+          </div>
+<div class="bg-surface-container-low rounded-md p-3 mb-4 flex justify-between items-center">
+<div>
+<p class="text-xs text-text-muted mb-0.5">Tahmini Bütçe</p>
+<p class="text-sm text-text-muted">Son Tarih</p>
+</div>
+<div class="text-right">
+<p class="text-sm font-mono font-medium text-text mb-0.5">₺150.000.000</p>
+<p class="text-sm font-medium text-text">15 Ekim 2026</p>
+</div>
+</div>
+<div class="flex justify-between items-center">
+<div class="inline-flex items-center px-2 py-1 rounded bg-surface-container text-text-muted text-xs font-medium">
+<i class="fa-regular fa-clock mr-1"></i> 45 Gün Kaldı
+            </div>
+<div class="flex -space-x-2">
+<img alt="User Avatar" class="w-6 h-6 rounded-full border border-surface-container-lowest" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCnUEd_oBgaU74JIIsMyEJQUow3D1Z_iCw5iSvxpHfWwmGxKnoEhU4x0GZtYNj9XEDiXyEF83egy5A67jTze7vwSJ2KgyjcXlAkhcCbPrtac8KYo_7OJwIuNAakQKaD9JlbNyEjHATeC_wZ6pPvjoL7wYK1Eg1TyiBeoCmwKStrszBCD4dUf6i0pgyNwoqOm2_QUxcxV_kkzuW3QKN1LDzMq2cj2uR_jeSt06t1QyTQixrVXIDXg4Cc"/>
+</div>
+</div>
+</div>
+</div>
+<!-- Card 2: İzmir Limanı -->
+<div class="bg-surface-container-lowest rounded shadow-card border border-border overflow-hidden">
+<div class="p-4">
+<h3 class="text-base font-semibold text-text mb-1 leading-snug">İzmir Limanı Rehabilitasyon İhalesi</h3>
+<div class="flex items-center text-sm text-text-muted mb-4">
+<i class="fa-solid fa-building-columns mr-1.5 text-xs"></i>
+            Denizcilik Genel Müd.
+          </div>
+<div class="bg-surface-container-low rounded-md p-3 mb-4 flex justify-between items-center">
+<div>
+<p class="text-xs text-text-muted mb-0.5">Tahmini Bütçe</p>
+<p class="text-sm text-text-muted">Son Tarih</p>
+</div>
+<div class="text-right">
+<p class="text-sm font-mono font-medium text-text mb-0.5">₺85.000.000</p>
+<p class="text-sm font-medium text-text">22 Kasım 2026</p>
+</div>
+</div>
+<div class="flex justify-between items-center">
+<div class="inline-flex items-center px-2 py-1 rounded bg-surface-container text-text-muted text-xs font-medium">
+<i class="fa-regular fa-clock mr-1"></i> 80 Gün Kaldı
+            </div>
+<div class="flex -space-x-2">
+<img alt="User Avatar" class="w-6 h-6 rounded-full border border-surface-container-lowest" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBO6TC9M8mmvcoMWOS1metVUczEy0EWAJh3y10r4qi21DNCOrZDxKEQJXt6rPtxwq0v8Z5JqC16lZgffyyRPaLKE1VxWaAWZEreCGUB6dD9nthJkR-OBDh103X7ZetDIGCX5br4GuNJhyob56dZEK2hFzZloQZpfnKJY_TZeVQJ3Ud173VojEohdLSbTwarAKLcTpyHJd7Pw80LFqglZtYoYRpoNjKmNiFcXcPGShbyjmF-v-XL6Nsq"/>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- END: Main Content -->
+<!-- Floating Action Button -->
+<button class="fixed bottom-20 right-4 w-14 h-14 bg-primary text-white rounded-full shadow-lg flex items-center justify-center hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary z-20">
+<i class="fa-solid fa-plus text-xl"></i>
+</button>
+<!-- BEGIN: Bottom NavBar -->
+<nav class="fixed bottom-0 w-full bg-surface-container-lowest border-t border-border shadow-[0_-1px_3px_rgba(0,0,0,0.05)] z-20 pb-safe">
+<div class="flex justify-around items-center h-16">
+<a class="flex flex-col items-center justify-center w-full h-full text-text-muted hover:text-primary" href="#">
+<i class="fa-solid fa-border-all text-xl mb-1"></i>
+<span class="text-[10px] font-medium">Dashboard</span>
+</a>
+<a class="flex flex-col items-center justify-center w-full h-full text-text-muted hover:text-primary" href="#">
+<i class="fa-solid fa-hammer text-xl mb-1"></i>
+<span class="text-[10px] font-medium">Şantiyeler</span>
+</a>
+<a class="flex flex-col items-center justify-center w-full h-full text-text-muted hover:text-primary" href="#">
+<i class="fa-regular fa-building text-xl mb-1"></i>
+<span class="text-[10px] font-medium">Firmalar</span>
+</a>
+<a class="flex flex-col items-center justify-center w-full h-full text-text-muted hover:text-primary" href="#">
+<i class="fa-regular fa-file-lines text-xl mb-1"></i>
+<span class="text-[10px] font-medium">Belgeler</span>
+</a>
+<a class="flex flex-col items-center justify-center w-full h-full text-text-muted hover:text-primary" href="#">
+<i class="fa-solid fa-gear text-xl mb-1"></i>
+<span class="text-[10px] font-medium">Ayarlar</span>
+</a>
+</div>
+</nav>
+<!-- END: Bottom NavBar -->
+</body></html>

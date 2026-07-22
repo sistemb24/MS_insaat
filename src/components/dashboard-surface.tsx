@@ -7,6 +7,7 @@ import type { PayrollAccrualRow } from "@/lib/payroll-accrual-service";
 import type { ProgressPaymentRow } from "@/lib/progress-payment-service";
 import type { PurchaseInvoiceRow } from "@/lib/purchase-invoice-service";
 import type { TimesheetRow } from "@/lib/timesheet-service";
+import { Icon, Panel, StatusBadge, type IconName } from "@/components/ui";
 import {
   isTenderDeadlineOverdue,
   summarizeTenderDashboardAlerts,
@@ -75,7 +76,41 @@ const monthLabels = [
   "Kas",
   "Ara",
 ];
-const companyChartColors = ["var(--primary)", "#0f766e", "#b45309"];
+const companyChartColors = ["var(--ds-primary)", "var(--ds-success)", "var(--ds-warning)"];
+type DashboardMetricTone = "danger" | "neutral" | "success" | "warning";
+type DashboardFlowRow = {
+  label: string;
+  tone: Exclude<DashboardMetricTone, "neutral">;
+  value: number;
+};
+
+const dashboardMetricToneClasses: Record<
+  DashboardMetricTone,
+  { accent: string; icon: string }
+> = {
+  danger: {
+    accent: "bg-danger",
+    icon: "bg-danger-subtle text-danger",
+  },
+  neutral: {
+    accent: "bg-brand-primary",
+    icon: "bg-brand-primary-subtle text-brand-primary",
+  },
+  success: {
+    accent: "bg-success",
+    icon: "bg-success-subtle text-success",
+  },
+  warning: {
+    accent: "bg-warning",
+    icon: "bg-warning-subtle text-warning",
+  },
+};
+
+const dashboardFlowToneClasses: Record<DashboardFlowRow["tone"], string> = {
+  danger: "bg-danger",
+  success: "bg-success",
+  warning: "bg-warning",
+};
 const quickLinks = [
   { href: "/faturalar", label: "Faturalar" },
   { href: "/giderler", label: "Giderler" },
@@ -203,120 +238,245 @@ export function DashboardSurface({
     .slice(0, 3);
   const monthlyNewCompanyTrend = buildMonthlyCompanyTrend(companyRows, today);
   const tenderAlerts = summarizeTenderDashboardAlerts(tenders, today);
+  const dashboardKpis: Array<{
+    icon: IconName;
+    label: string;
+    tone: DashboardMetricTone;
+    value: string;
+  }> = [
+    {
+      icon: "wallet",
+      label: "Kasa/Banka Net",
+      tone: companyReport.cashNetTotal < 0 ? "danger" : "success",
+      value: formatMoney(companyReport.cashNetTotal),
+    },
+    {
+      icon: "chart",
+      label: "Tahsil Edilen Hakediş Geliri",
+      tone: "success",
+      value: formatMoney(companyReport.progressPaymentCollectedTotal),
+    },
+    {
+      icon: "receipt",
+      label: "Ödeme Bekleyen Fatura",
+      tone: "warning",
+      value: formatMoney(companyReport.purchaseInvoicePaymentWaitingTotal),
+    },
+    {
+      icon: "warning",
+      label: "Vadesi Geçen Çek",
+      tone: companyReport.overdueChequeTotal > 0 ? "danger" : "neutral",
+      value: formatMoney(companyReport.overdueChequeTotal),
+    },
+  ];
+  const financialFlowRows: DashboardFlowRow[] = [
+    {
+      label: "Müşteri tahsilatı",
+      tone: "success",
+      value: companyReport.progressPaymentCollectedTotal,
+    },
+    {
+      label: "Kasa/banka girişi",
+      tone: "success",
+      value: companyReport.cashIncomingTotal,
+    },
+    {
+      label: "Tedarikçi ödemesi",
+      tone: "danger",
+      value: companyReport.purchaseInvoicePaidTotal,
+    },
+    {
+      label: "Taşeron ödemesi",
+      tone: "warning",
+      value: companyReport.progressPaymentPaidTotal,
+    },
+    {
+      label: "Maaş ödemesi",
+      tone: "warning",
+      value: companyReport.payrollPaidTotal,
+    },
+    {
+      label: "Gider",
+      tone: "danger",
+      value: companyReport.expenseTotal,
+    },
+  ];
+  const operationalMetrics = [
+    { label: "Rapor Para Birimi", value: report.currency },
+    { label: "Alış Fatura Borcu", value: formatMoney(report.purchaseInvoiceDebt) },
+    { label: "Ödenen Fatura", value: formatMoney(report.purchaseInvoicePaidTotal) },
+    { label: "Gider Toplamı", value: formatMoney(report.expenseTotal) },
+    { label: "Hakediş Toplamı", value: formatMoney(report.progressPaymentTotal) },
+    { label: "Ödenen Hakediş", value: formatMoney(report.progressPaymentPaidTotal) },
+    {
+      label: "Ödeme Bekleyen Hakediş",
+      value: formatMoney(report.progressPaymentPaymentWaitingTotal),
+    },
+    {
+      label: "Tahsilat Bekleyen Hakediş Geliri",
+      value: formatMoney(report.progressPaymentCollectionWaitingTotal),
+    },
+    { label: "Puantaj Net", value: formatMoney(report.timesheetNetTotal) },
+    { label: "Maaş Tahakkuku", value: formatMoney(report.payrollAccrualNetTotal) },
+    { label: "Ödenen Maaş", value: formatMoney(report.payrollPaidTotal) },
+    {
+      label: "Ödeme Bekleyen Maaş",
+      value: formatMoney(report.payrollPaymentWaitingTotal),
+    },
+    { label: "Portföy Çek", value: formatMoney(report.portfolioChequeTotal) },
+  ];
 
   return (
-    <section className="mx-auto flex max-w-7xl flex-col gap-4">
-      <header className="rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)] p-5">
-        <p className="text-xs font-semibold uppercase tracking-wide text-[var(--primary)]">
-          Yönetici özeti
-        </p>
-        <h1 className="mt-2 text-2xl font-semibold tracking-normal">
-          Dashboard
-        </h1>
-        <p className="mt-2 max-w-3xl text-sm leading-6 text-[var(--on-surface-variant)]">
-          Firma ve dönem bağlamındaki kesinleşmiş fatura, gider, hakediş, puantaj, maaş
-          tahakkuku, kasa/banka ve çek hareketlerinden günlük operasyon
-          görünümü.
-        </p>
-      </header>
-      <article
-        aria-label="İhale dashboard uyarıları"
-        className="rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)] p-4"
-      >
-        <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
-          <div>
-            <h2 className="text-sm font-semibold">İhale Uyarıları</h2>
-            <p className="mt-1 text-sm text-[var(--on-surface-variant)]">
-              Son teklif tarihi yaklaşan ve sonucu bekleyen ihaleler için açılış
-              kontrol bandı.
-            </p>
-          </div>
+    <section className="mx-auto flex w-full max-w-[1440px] flex-col gap-6">
+      <header className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <div className="min-w-0">
+          <p className="text-xs font-semibold uppercase tracking-[0.12em] text-brand-primary">
+            Yönetici özeti
+          </p>
+          <h1 className="mt-2 text-3xl font-bold leading-[2.375rem] tracking-[-0.02em] text-content">
+            Dashboard
+          </h1>
+          <p className="mt-1 flex items-center gap-2 text-sm text-content-subtle">
+            <Icon name="calendar" size={18} />
+            {formatDate(today)} · {selectedCompanyPeriod.label} dönem görünümü
+          </p>
+          <p className="mt-3 max-w-3xl text-sm leading-6 text-content-subtle">
+            Kesinleşmiş finansal hareketler, firma portföyü ve ihale uyarıları tek
+            operasyon görünümünde.
+          </p>
+        </div>
+        <div className="flex flex-wrap items-start gap-2">
           <Link
-            className="inline-flex h-10 items-center justify-center rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] px-3 text-sm font-semibold hover:border-[var(--primary)] hover:bg-[var(--primary-fixed)]"
-            href="/ihale-yonetimi"
+            className="inline-flex min-h-10 items-center justify-center gap-2 rounded-ui-control border border-divider bg-surface-raised px-4 py-2 text-sm font-semibold text-content transition-colors hover:border-outline-strong hover:bg-surface-muted"
+            href="/raporlar"
           >
-            İhale Yönetimine Git
+            <Icon name="file" size={18} />
+            Rapor Merkezi
           </Link>
+          <DashboardPrintAction activityCount={recentActivity.length} />
         </div>
+      </header>
 
-        <div className="mt-4 grid gap-3 md:grid-cols-3">
-          <Metric
-            label="Yaklaşan Son Teklif"
-            value={String(tenderAlerts.upcomingDeadlineRows.length)}
-          />
-          <Metric
-            label="Sonuç Bekleyen"
-            value={String(tenderAlerts.resultWaitingRows.length)}
-          />
-          <Metric
-            label="Bu Ay Kazanma Oranı"
-            value={`%${tenderAlerts.currentMonthWinRate}`}
-          />
-        </div>
-
-        <div className="mt-3 grid gap-3 lg:grid-cols-2">
-          <TenderAlertList
-            emptyText="7 gün içinde son teklif tarihi olan açık ihale yok"
-            rows={tenderAlerts.upcomingDeadlineRows.slice(0, 3)}
-            title="Yaklaşan son teklifler"
-            today={today}
-          />
-          <TenderAlertList
-            emptyText="Sonucu bekleyen süresi dolmuş teklif yok"
-            rows={tenderAlerts.resultWaitingRows.slice(0, 3)}
-            title="Sonuç bekleyen ihaleler"
-            today={today}
-          />
-        </div>
-      </article>
-      <article
-        aria-label="Firmalar dashboard sayaçları"
-        className="rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)] p-4"
+      <nav
+        aria-label="Firma dönem filtresi"
+        className="flex flex-col gap-3 rounded-ui-panel border border-divider bg-surface-raised p-3 shadow-sm sm:flex-row sm:items-center sm:justify-between"
       >
-        <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
-          <div>
-            <h2 className="text-sm font-semibold">Firmalar Dashboard</h2>
-            <p className="mt-1 text-sm text-[var(--on-surface-variant)]">
-              Müşteri, tedarikçi ve taşeron kartlarının dönem/firma
-              bağlamındaki birleşik görünümü.
-            </p>
-            <p className="mt-2 font-mono text-xs font-semibold text-[var(--primary)]">
-              Dönem: {selectedCompanyPeriod.label}
-            </p>
-          </div>
-          <div className="flex flex-col items-stretch gap-2 sm:flex-row sm:items-center">
-            <div
-              aria-label="Firma dönem filtresi"
-              className="inline-flex h-10 overflow-hidden rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-low)]"
-            >
-              {companyPeriodOptions.map((option) => {
-                const isActive = option.value === companyPeriodFilter;
-
-                return (
-                  <Link
-                    aria-current={isActive ? "true" : undefined}
-                    className={`inline-flex items-center justify-center px-3 text-sm font-semibold ${
-                      isActive
-                        ? "bg-[var(--primary)] text-[var(--on-primary)]"
-                        : "text-[var(--on-surface-variant)] hover:bg-[var(--primary-fixed)] hover:text-[var(--on-surface)]"
-                    }`}
-                    href={`/?period=${option.value}`}
-                    key={option.value}
-                  >
-                    {option.label}
-                  </Link>
-                );
-              })}
-            </div>
-            <Link
-              className="inline-flex h-10 items-center justify-center rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] px-3 text-sm font-semibold hover:border-[var(--primary)] hover:bg-[var(--primary-fixed)]"
-              href="/musteriler"
-            >
-              Cari Kartlar
-            </Link>
-          </div>
+        <div>
+          <p className="text-sm font-semibold text-content">Dashboard dönemi</p>
+          <p className="mt-0.5 text-xs text-content-subtle">
+            Finansal akış ve firma hareketleri seçili dönemle hesaplanır.
+          </p>
         </div>
-        <div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+        <div className="grid grid-cols-2 overflow-hidden rounded-ui-control border border-divider bg-surface-muted sm:inline-flex">
+          {companyPeriodOptions.map((option) => {
+            const isActive = option.value === companyPeriodFilter;
+
+            return (
+              <Link
+                aria-current={isActive ? "true" : undefined}
+                className={
+                  "inline-flex min-h-10 items-center justify-center px-3 text-sm font-semibold transition-colors " +
+                  (isActive
+                    ? "bg-brand-primary text-on-brand"
+                    : "text-content-subtle hover:bg-brand-primary-subtle hover:text-content")
+                }
+                href={"/?period=" + option.value}
+                key={option.value}
+              >
+                {option.label}
+              </Link>
+            );
+          })}
+        </div>
+      </nav>
+
+      <div
+        aria-label="Dashboard özet metrikleri"
+        className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4"
+      >
+        {dashboardKpis.map((metric) => (
+          <DashboardSummaryCard key={metric.label} {...metric} />
+        ))}
+      </div>
+
+      <div className="grid min-w-0 gap-6 xl:grid-cols-[minmax(0,2fr)_minmax(320px,1fr)]">
+        <Panel
+          description={
+            selectedCompanyPeriod.label +
+            " için yalnız kesinleşmiş hareketler; sahte projeksiyon içermez."
+          }
+          padding="none"
+          title="Dönemsel Finansal Akış"
+        >
+          <DashboardFlowChart rows={financialFlowRows} />
+        </Panel>
+
+        <Panel
+          actions={
+            <Link
+              className="inline-flex min-h-9 items-center justify-center rounded-ui-control border border-divider bg-surface-raised px-3 py-1.5 text-xs font-semibold text-content hover:border-outline-strong hover:bg-surface-muted"
+              href="/ihale-yonetimi"
+            >
+              İhale Yönetimine Git
+            </Link>
+          }
+          aria-label="İhale dashboard uyarıları"
+          description="Yaklaşan son teklifler ve sonuç bekleyen ihaleler."
+          padding="sm"
+          title="İhale Uyarıları"
+        >
+          <div className="grid gap-3 sm:grid-cols-3 xl:grid-cols-1 2xl:grid-cols-3">
+            <Metric
+              label="Yaklaşan Son Teklif"
+              value={String(tenderAlerts.upcomingDeadlineRows.length)}
+            />
+            <Metric
+              label="Sonuç Bekleyen"
+              value={String(tenderAlerts.resultWaitingRows.length)}
+            />
+            <Metric
+              label="Bu Ay Kazanma Oranı"
+              value={"%" + tenderAlerts.currentMonthWinRate}
+            />
+          </div>
+          <div className="mt-3 grid gap-3">
+            <TenderAlertList
+              emptyText="7 gün içinde son teklif tarihi olan açık ihale yok"
+              rows={tenderAlerts.upcomingDeadlineRows.slice(0, 3)}
+              title="Yaklaşan son teklifler"
+              today={today}
+            />
+            <TenderAlertList
+              emptyText="Sonucu bekleyen süresi dolmuş teklif yok"
+              rows={tenderAlerts.resultWaitingRows.slice(0, 3)}
+              title="Sonuç bekleyen ihaleler"
+              today={today}
+            />
+          </div>
+        </Panel>
+      </div>
+
+      <Panel
+        actions={
+          <Link
+            className="inline-flex min-h-9 items-center justify-center rounded-ui-control border border-divider bg-surface-raised px-3 py-1.5 text-xs font-semibold text-content hover:border-outline-strong hover:bg-surface-muted"
+            href="/musteriler"
+          >
+            Cari Kartlar
+          </Link>
+        }
+        aria-label="Firmalar dashboard sayaçları"
+        description={
+          <>
+            Müşteri, tedarikçi ve taşeronların birleşik görünümü.{" "}
+            <span className="font-mono font-semibold text-brand-primary">
+              Dönem: {selectedCompanyPeriod.label}
+            </span>
+          </>
+        }
+        title="Firmalar Dashboard"
+      >
+        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
           <CompanyMetric label="Toplam Firma" value={totalCompanyCount} />
           {companyMetrics.map((metric) => (
             <CompanyMetric
@@ -327,56 +487,51 @@ export function DashboardSurface({
             />
           ))}
         </div>
-        <div className="mt-3 grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+        <div className="mt-3 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
           {companyFinancialMetrics.map((metric) => (
-            <Metric
-              key={metric.label}
-              label={metric.label}
-              value={metric.value}
-            />
+            <Metric key={metric.label} label={metric.label} value={metric.value} />
           ))}
         </div>
         <div className="mt-3 grid gap-3 md:grid-cols-2 xl:grid-cols-4">
-          <article className="rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] p-4">
+          <article className="rounded-ui-panel border border-divider bg-surface-muted p-4">
             <h3 className="text-sm font-semibold">Firma Tipi Dağılımı</h3>
             <CompanyTypeDonutChart
               rows={companyTypeDistribution}
               total={totalCompanyCount}
             />
             <div className="mt-4 grid gap-3">
-              {companyTypeDistribution.map((metric) => (
+              {companyTypeDistribution.map((metric, index) => (
                 <div key={metric.href}>
                   <div className="flex items-center justify-between gap-3 text-sm">
-                    <span className="font-semibold text-[var(--on-surface-variant)]">
+                    <span className="flex items-center gap-2 font-semibold text-content-subtle">
+                      <span
+                        aria-hidden="true"
+                        className="h-2.5 w-2.5 rounded-full"
+                        style={{ backgroundColor: companyChartColors[index] }}
+                      />
                       {metric.label}
                     </span>
                     <span className="font-mono font-semibold">%{metric.percent}</span>
-                  </div>
-                  <div className="mt-2 h-2 overflow-hidden rounded-full bg-[var(--surface-container-high)]">
-                    <div
-                      className="h-full rounded-full bg-[var(--primary)]"
-                      style={{ width: `${metric.percent}%` }}
-                    />
                   </div>
                 </div>
               ))}
             </div>
           </article>
 
-          <article className="rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] p-4">
+          <article className="rounded-ui-panel border border-divider bg-surface-muted p-4">
             <h3 className="text-sm font-semibold">En Aktif Firmalar</h3>
             <CompanySummaryList
               emptyText="Henüz işlem hacmi yok"
               rows={activeCompanyRows.map((row) => ({
                 href: row.href,
-                meta: `${row.activityCount} işlem`,
+                meta: row.activityCount + " işlem",
                 name: row.name,
                 type: row.type,
               }))}
             />
           </article>
 
-          <article className="rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] p-4">
+          <article className="rounded-ui-panel border border-divider bg-surface-muted p-4">
             <h3 className="text-sm font-semibold">Son Eklenen Firmalar</h3>
             <CompanySummaryList
               emptyText="Henüz firma kaydı yok"
@@ -389,162 +544,75 @@ export function DashboardSurface({
             />
           </article>
 
-          <article className="rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] p-4">
+          <article className="rounded-ui-panel border border-divider bg-surface-muted p-4">
             <h3 className="text-sm font-semibold">Aylık Yeni Firma Trendi</h3>
             <MonthlyTrendColumnChart rows={monthlyNewCompanyTrend} />
-            <div className="mt-4 grid gap-3">
+            <div className="mt-4 grid grid-cols-2 gap-2 text-xs">
               {monthlyNewCompanyTrend.map((row) => (
-                <div key={row.monthKey}>
-                  <div className="flex items-center justify-between gap-3 text-sm">
-                    <span className="font-semibold text-[var(--on-surface-variant)]">
-                      {row.label}
-                    </span>
-                    <span className="font-mono font-semibold">
-                      {row.count} yeni firma
-                    </span>
-                  </div>
-                  <div className="mt-2 h-2 overflow-hidden rounded-full bg-[var(--surface-container-high)]">
-                    <div
-                      className="h-full rounded-full bg-[var(--primary)]"
-                      style={{ width: `${row.percent}%` }}
-                    />
-                  </div>
+                <div
+                  className="flex items-center justify-between gap-2"
+                  key={row.monthKey}
+                >
+                  <span className="text-content-subtle">{row.label}</span>
+                  <span className="font-mono font-semibold">
+                    {row.count} yeni firma
+                  </span>
                 </div>
               ))}
             </div>
           </article>
         </div>
-      </article>
+      </Panel>
 
-      <article className="rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)] p-4">
-        <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
-          <div>
-            <h2 className="text-sm font-semibold">
-              Bugünkü Operasyon Özeti
-            </h2>
-            <p className="mt-1 text-sm text-[var(--on-surface-variant)]">
-              Raporlar modülündeki aynı hesaplama modeli kullanılır.
-            </p>
-          </div>
-          <p className="font-mono text-xs font-semibold text-[var(--on-surface-variant)]">
-            {formatDate(today)}
-          </p>
-          <DashboardPrintAction activityCount={recentActivity.length} />
+      <Panel
+        description={
+          "Raporlar modülündeki hesaplama modeli · " + formatDate(today)
+        }
+        title="Bugünkü Operasyon Özeti"
+      >
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-5">
+          {operationalMetrics.map((metric) => (
+            <Metric key={metric.label} label={metric.label} value={metric.value} />
+          ))}
         </div>
+      </Panel>
 
-        <div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-5">
-          <Metric label="Rapor Para Birimi" value={report.currency} />
-          <Metric
-            label="Alış Fatura Borcu"
-            value={formatMoney(report.purchaseInvoiceDebt)}
-          />
-          <Metric
-            label="Ödenen Fatura"
-            value={formatMoney(report.purchaseInvoicePaidTotal)}
-          />
-          <Metric
-            label="Ödeme Bekleyen Fatura"
-            value={formatMoney(report.purchaseInvoicePaymentWaitingTotal)}
-          />
-          <Metric
-            label="Gider Toplamı"
-            value={formatMoney(report.expenseTotal)}
-          />
-          <Metric
-            label="Hakediş Toplamı"
-            value={formatMoney(report.progressPaymentTotal)}
-          />
-          <Metric
-            label="Ödenen Hakediş"
-            value={formatMoney(report.progressPaymentPaidTotal)}
-          />
-          <Metric
-            label="Ödeme Bekleyen Hakediş"
-            value={formatMoney(report.progressPaymentPaymentWaitingTotal)}
-          />
-          <Metric
-            label="Tahsil Edilen Hakediş Geliri"
-            value={formatMoney(report.progressPaymentCollectedTotal)}
-          />
-          <Metric
-            label="Tahsilat Bekleyen Hakediş Geliri"
-            value={formatMoney(report.progressPaymentCollectionWaitingTotal)}
-          />
-          <Metric
-            label="Puantaj Net"
-            value={formatMoney(report.timesheetNetTotal)}
-          />
-          <Metric
-            label="Maaş Tahakkuku"
-            value={formatMoney(report.payrollAccrualNetTotal)}
-          />
-          <Metric
-            label="Ödenen Maaş"
-            value={formatMoney(report.payrollPaidTotal)}
-          />
-          <Metric
-            label="Ödeme Bekleyen Maaş"
-            value={formatMoney(report.payrollPaymentWaitingTotal)}
-          />
-          <Metric
-            label="Kasa/Banka Net"
-            value={formatMoney(report.cashNetTotal)}
-          />
-          <Metric
-            label="Portföy Çek"
-            value={formatMoney(report.portfolioChequeTotal)}
-          />
-          <Metric
-            label="Vadesi Geçen Çek"
-            value={formatMoney(report.overdueChequeTotal)}
-          />
-        </div>
-      </article>
-
-      <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_360px]">
-        <article className="overflow-hidden rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)]">
-          <div className="border-b border-[var(--grid-border)] px-4 py-3">
-            <h2 className="text-sm font-semibold">Son Hareketler</h2>
-          </div>
+      <div className="grid min-w-0 gap-6 xl:grid-cols-[minmax(0,1fr)_320px]">
+        <Panel padding="none" title="Son Hareketler">
           <div className="overflow-x-auto">
-            <table className="min-w-[760px] w-full text-left text-sm">
-              <thead className="bg-[var(--surface-container-low)] text-xs uppercase text-[var(--on-surface-variant)]">
+            <table className="w-full min-w-[760px] text-left text-sm">
+              <caption className="sr-only">Dashboard son hareketleri</caption>
+              <thead className="bg-surface-muted text-xs uppercase tracking-wide text-content-subtle">
                 <tr>
-                  <th className="px-4 py-3 font-semibold">Tarih</th>
-                  <th className="px-4 py-3 font-semibold">Kaynak</th>
-                  <th className="px-4 py-3 font-semibold">Evrak No</th>
-                  <th className="px-4 py-3 font-semibold">Cari</th>
-                  <th className="px-4 py-3 text-right font-semibold">
+                  <th className="h-10 px-4 py-2 font-semibold">Tarih</th>
+                  <th className="h-10 px-4 py-2 font-semibold">Kaynak</th>
+                  <th className="h-10 px-4 py-2 font-semibold">Evrak No</th>
+                  <th className="h-10 px-4 py-2 font-semibold">Cari</th>
+                  <th className="h-10 px-4 py-2 text-right font-semibold">
                     Tutar
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[var(--grid-border)]">
+              <tbody className="divide-y divide-divider bg-surface-raised">
                 {recentActivity.length === 0 ? (
                   <tr>
                     <td className="px-4 py-10 text-center" colSpan={5}>
-                      <p className="font-semibold">
-                        Henüz dashboard hareketi yok
-                      </p>
-                      <p className="mt-1 text-sm text-[var(--on-surface-variant)]">
-                        Kesinleşmiş fatura, gider, hakediş, puantaj, kasa/banka veya
-                        portföy çek hareketleri oluştuğunda bu alan dolacaktır.
+                      <p className="font-semibold">Henüz dashboard hareketi yok</p>
+                      <p className="mt-1 text-sm text-content-subtle">
+                        Kesinleşmiş operasyon hareketleri oluştuğunda bu alan dolacaktır.
                       </p>
                     </td>
                   </tr>
                 ) : (
                   recentActivity.map((row) => (
-                    <tr
-                      className="hover:bg-[var(--primary-fixed)]"
-                      key={row.id}
-                    >
-                      <td className="px-4 py-3">{formatDate(row.date)}</td>
-                      <td className="px-4 py-3">{row.source}</td>
-                      <td className="px-4 py-3 font-mono text-xs">
+                    <tr className="hover:bg-surface-muted" key={row.id}>
+                      <td className="h-10 px-4 py-2">{formatDate(row.date)}</td>
+                      <td className="h-10 px-4 py-2">{row.source}</td>
+                      <td className="h-10 px-4 py-2 font-mono text-xs">
                         {row.documentNo}
                       </td>
-                      <td className="px-4 py-3">{row.label}</td>
-                      <td className="px-4 py-3 text-right font-mono font-semibold">
+                      <td className="h-10 px-4 py-2">{row.label}</td>
+                      <td className="h-10 px-4 py-2 text-right font-mono font-semibold tabular-nums">
                         {formatMoney(row.amount)}
                       </td>
                     </tr>
@@ -553,27 +621,124 @@ export function DashboardSurface({
               </tbody>
             </table>
           </div>
-        </article>
+        </Panel>
 
-        <aside className="rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)] p-4">
-          <h2 className="text-sm font-semibold">Hızlı Modül Geçişleri</h2>
-          <div className="mt-4 grid gap-2">
+        <Panel className="self-start" title="Hızlı Modül Geçişleri">
+          <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-1">
             {quickLinks.map((link) => (
-              <a
-                className="flex h-11 items-center justify-between rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] px-3 text-sm font-semibold hover:border-[var(--primary)] hover:bg-[var(--primary-fixed)]"
+              <Link
+                className="flex min-h-11 items-center justify-between rounded-ui-control border border-divider bg-surface-muted px-3 text-sm font-semibold text-content transition-colors hover:border-brand-primary hover:bg-brand-primary-subtle"
                 href={link.href}
                 key={link.href}
               >
                 <span>{link.label}</span>
-                <span aria-hidden="true" className="text-[var(--primary)]">
+                <span aria-hidden="true" className="text-brand-primary">
                   →
                 </span>
-              </a>
+              </Link>
             ))}
           </div>
-        </aside>
+        </Panel>
       </div>
     </section>
+  );
+}
+
+function DashboardSummaryCard({
+  icon,
+  label,
+  tone,
+  value,
+}: {
+  icon: IconName;
+  label: string;
+  tone: DashboardMetricTone;
+  value: string;
+}) {
+  const toneClasses = dashboardMetricToneClasses[tone];
+
+  return (
+    <article className="group relative overflow-hidden rounded-ui-panel border border-divider bg-surface-raised p-5 shadow-sm">
+      <span
+        aria-hidden="true"
+        className={"absolute inset-x-0 top-0 h-1 " + toneClasses.accent}
+      />
+      <div className="flex items-start justify-between gap-3">
+        <p className="text-xs font-semibold uppercase tracking-[0.08em] text-content-subtle">
+          {label}
+        </p>
+        <span
+          className={
+            "flex h-9 w-9 shrink-0 items-center justify-center rounded-ui-control " +
+            toneClasses.icon
+          }
+        >
+          <Icon name={icon} size={19} />
+        </span>
+      </div>
+      <p
+        className={
+          "mt-5 font-mono font-semibold leading-tight tabular-nums text-content " +
+          (value.length > 18 ? "text-base" : "text-2xl")
+        }
+      >
+        {value}
+      </p>
+      <p className="mt-2 text-xs text-content-subtle">Seçili dönem kesinleşen verisi</p>
+    </article>
+  );
+}
+
+function DashboardFlowChart({ rows }: { rows: DashboardFlowRow[] }) {
+  const maxValue = Math.max(1, ...rows.map((row) => row.value));
+
+  return (
+    <figure
+      aria-label="Seçili dönem tahsilat ve ödeme akış grafiği"
+      className="p-4 sm:p-6"
+      role="img"
+    >
+      <div className="mb-5 flex flex-wrap items-center gap-4 text-xs font-semibold uppercase tracking-wide text-content-subtle">
+        <span className="flex items-center gap-2">
+          <span aria-hidden="true" className="h-2.5 w-2.5 rounded-full bg-success" />
+          Giriş
+        </span>
+        <span className="flex items-center gap-2">
+          <span aria-hidden="true" className="h-2.5 w-2.5 rounded-full bg-warning" />
+          Planlı çıkış
+        </span>
+        <span className="flex items-center gap-2">
+          <span aria-hidden="true" className="h-2.5 w-2.5 rounded-full bg-danger" />
+          Finansal çıkış
+        </span>
+      </div>
+      <div className="grid gap-4">
+        {rows.map((row) => {
+          const width = row.value === 0 ? 0 : Math.max(4, (row.value / maxValue) * 100);
+
+          return (
+            <div key={row.label}>
+              <div className="mb-1.5 flex items-center justify-between gap-3 text-sm">
+                <span className="font-medium text-content">{row.label}</span>
+                <span className="font-mono font-semibold tabular-nums text-content">
+                  {formatMoney(row.value)}
+                </span>
+              </div>
+              <div className="h-3 overflow-hidden rounded-full bg-surface-selected">
+                <div
+                  className={"h-full rounded-full " + dashboardFlowToneClasses[row.tone]}
+                  style={{ width: width + "%" }}
+                />
+              </div>
+            </div>
+          );
+        })}
+      </div>
+      <figcaption className="mt-5 border-t border-divider pt-4 text-xs leading-5 text-content-subtle">
+        Karşılaştırma ölçeği seçili dönemdeki en yüksek tutara göre normalize edilir;
+        tutarlar Raporlar servisindeki gerçek kayıt toplamlarıdır.
+      </figcaption>
+    </figure>
   );
 }
 
@@ -589,17 +754,17 @@ function TenderAlertList({
   today: string;
 }) {
   return (
-    <article className="rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] p-4">
+    <article className="rounded-ui-panel border border-divider bg-surface-muted p-3">
       <h3 className="text-sm font-semibold">{title}</h3>
       {rows.length === 0 ? (
-        <p className="mt-4 text-sm text-[var(--on-surface-variant)]">
+        <p className="mt-3 text-sm text-content-subtle">
           {emptyText}
         </p>
       ) : (
-        <div className="mt-4 grid gap-2">
+        <div className="mt-3 grid gap-2">
           {rows.map((row) => (
             <Link
-              className="rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)] px-3 py-2 hover:border-[var(--primary)] hover:bg-[var(--primary-fixed)]"
+              className="rounded-ui-control border border-divider bg-surface-raised px-3 py-2 transition-colors hover:border-brand-primary hover:bg-brand-primary-subtle"
               href="/ihale-yonetimi"
               key={row.id}
             >
@@ -607,16 +772,14 @@ function TenderAlertList({
                 <p className="truncate text-sm font-semibold">{row.title}</p>
                 <div className="flex shrink-0 items-center gap-2">
                   {isTenderDeadlineOverdue(row, today) ? (
-                    <span className="inline-flex rounded-[var(--radius-control)] bg-[var(--status-cancelled)] px-2 py-0.5 text-xs font-semibold text-white">
+                    <StatusBadge tone="danger">
                       Süre doldu
-                    </span>
+                    </StatusBadge>
                   ) : null}
-                  <span className="text-xs font-semibold text-[var(--primary)]">
-                    {row.status}
-                  </span>
+                  <StatusBadge tone="info">{row.status}</StatusBadge>
                 </div>
               </div>
-              <p className="mt-1 font-mono text-xs font-semibold text-[var(--on-surface-variant)]">
+              <p className="mt-1 font-mono text-xs font-semibold text-content-subtle">
                 {row.tenderNo} · {formatDate(row.submissionDeadline.slice(0, 10))}
               </p>
             </Link>
@@ -628,11 +791,11 @@ function TenderAlertList({
 }
 function Metric({ label, value }: { label: string; value: string }) {
   return (
-    <article className="rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] p-4">
-      <p className="text-sm font-semibold text-[var(--on-surface-variant)]">
-        {label}
+    <article className="rounded-ui-panel border border-divider bg-surface-muted p-4">
+      <p className="text-sm font-semibold text-content-subtle">{label}</p>
+      <p className="mt-2 font-mono text-xl font-semibold tabular-nums text-content">
+        {value}
       </p>
-      <p className="mt-2 font-mono text-2xl font-semibold">{value}</p>
     </article>
   );
 }
@@ -648,19 +811,22 @@ function CompanyMetric({
 }) {
   const content = (
     <>
-      <p className="text-sm font-semibold text-[var(--on-surface-variant)]">
-        {label}
+      <p className="text-sm font-semibold text-content-subtle">{label}</p>
+      <p className="mt-2 font-mono text-2xl font-semibold tabular-nums text-content">
+        {value}
       </p>
-      <p className="mt-2 font-mono text-2xl font-semibold">{value}</p>
     </>
   );
   const className =
-    "rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] p-4";
+    "rounded-ui-panel border border-divider bg-surface-muted p-4";
 
   if (href) {
     return (
       <Link
-        className={`${className} hover:border-[var(--primary)] hover:bg-[var(--primary-fixed)]`}
+        className={
+          className +
+          " transition-colors hover:border-brand-primary hover:bg-brand-primary-subtle"
+        }
         href={href}
       >
         {content}
@@ -685,7 +851,7 @@ function CompanySummaryList({
 }) {
   if (rows.length === 0) {
     return (
-      <p className="mt-4 text-sm text-[var(--on-surface-variant)]">
+      <p className="mt-4 text-sm text-content-subtle">
         {emptyText}
       </p>
     );
@@ -695,17 +861,17 @@ function CompanySummaryList({
     <div className="mt-4 grid gap-2">
       {rows.map((row) => (
         <Link
-          className="rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)] px-3 py-2 hover:border-[var(--primary)] hover:bg-[var(--primary-fixed)]"
+          className="rounded-ui-control border border-divider bg-surface-raised px-3 py-2 transition-colors hover:border-brand-primary hover:bg-brand-primary-subtle"
           href={row.href}
           key={`${row.type}-${row.name}-${row.meta}`}
         >
           <div className="flex items-center justify-between gap-3">
             <p className="truncate text-sm font-semibold">{row.name}</p>
-            <span className="shrink-0 text-xs font-semibold text-[var(--primary)]">
+            <span className="shrink-0 text-xs font-semibold text-brand-primary">
               {row.type}
             </span>
           </div>
-          <p className="mt-1 font-mono text-xs font-semibold text-[var(--on-surface-variant)]">
+          <p className="mt-1 font-mono text-xs font-semibold text-content-subtle">
             {row.meta}
           </p>
         </Link>
@@ -768,7 +934,7 @@ function CompanyTypeDonutChart({
           : null}
         <text
           aria-hidden="true"
-          className="fill-[var(--on-surface)] font-mono text-[0.34rem] font-semibold"
+          className="fill-content font-mono text-[0.34rem] font-semibold"
           textAnchor="middle"
           x="18"
           y="18"
@@ -823,7 +989,7 @@ function MonthlyTrendColumnChart({
           return (
             <g key={row.monthKey}>
               <rect
-                fill="var(--primary)"
+                fill="var(--ds-primary)"
                 height={barHeight}
                 rx="2"
                 width="16"
@@ -831,7 +997,7 @@ function MonthlyTrendColumnChart({
                 y={y}
               />
               <text
-                className="fill-[var(--on-surface-variant)] text-[0.24rem] font-semibold"
+                className="fill-content-subtle text-[0.24rem] font-semibold"
                 textAnchor="middle"
                 x={x + 8}
                 y="68"

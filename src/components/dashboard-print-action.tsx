@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Button, Icon } from "@/components/ui";
 
 type DashboardPrintActionProps = {
   activityCount: number;
@@ -18,16 +19,16 @@ export function DashboardPrintAction({
 
   return (
     <div className="flex flex-col gap-2 sm:items-end">
-      <button
-        className="h-9 rounded-[var(--radius-control)] border border-[var(--grid-border)] px-3 text-xs font-semibold"
+      <Button
+        leadingIcon={<Icon name="file" size={18} />}
         onClick={handlePrint}
-        type="button"
+        variant="primary"
       >
         Dashboard Özetini Yazdır
-      </button>
+      </Button>
       {notice ? (
         <p
-          className="rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] px-3 py-2 text-sm font-semibold"
+          className="max-w-xs rounded-ui-control border border-divider bg-surface-muted px-3 py-2 text-sm font-semibold text-content"
           role="status"
         >
           {notice}

@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+
+<html lang="tr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>NOA İnşaat - Şantiyeler (Mobile)</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#eef2ff',
+              100: '#e0e7ff',
+              500: '#6366f1',
+              600: '#4f46e5',
+              700: '#4338ca',
+              900: '#312e81',
+            },
+            surface: {
+              DEFAULT: '#f8fafc',
+              alt: '#ffffff',
+            }
+          }
+        }
+      }
+    }
+  </script>
+<style data-purpose="mobile-layout">
+    body {
+      background-color: theme('colors.surface.DEFAULT');
+      -webkit-font-smoothing: antialiased;
+      padding-top: env(safe-area-inset-top);
+      padding-bottom: calc(env(safe-area-inset-bottom) + 64px); /* For bottom nav */
+    }
+
+    /* Hide scrollbar for tabs */
+    .hide-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .hide-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+</head>
+<body class="text-slate-800 flex flex-col min-h-screen">
+<!-- BEGIN: TopHeader -->
+<header class="fixed top-0 left-0 right-0 bg-white shadow-sm z-50 px-4 py-3 flex items-center justify-between" style="padding-top: max(0.75rem, env(safe-area-inset-top));">
+<div class="flex items-center space-x-3">
+<!-- Back or Menu Icon could go here, but focusing on requested elements -->
+<h1 class="text-xl font-bold text-slate-900 tracking-tight">Şantiyeler</h1>
+</div>
+<div class="flex items-center space-x-2">
+<button aria-label="Search" class="p-2 text-slate-500 hover:text-brand-600 transition-colors">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</button>
+<button class="bg-brand-600 text-white p-2 rounded-lg hover:bg-brand-700 transition-colors flex items-center justify-center">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M12 4v16m8-8H4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</button>
+</div>
+</header>
+<!-- END: TopHeader -->
+<!-- BEGIN: MainContent -->
+<main class="flex-1 overflow-y-auto px-4 pt-[76px] pb-6 space-y-5">
+<!-- BEGIN: HeaderSection -->
+<div class="space-y-1 pt-2">
+<p class="text-sm text-slate-500">Aktif ve geçmiş tüm proje sahalarının yönetimi.</p>
+</div>
+<!-- END: HeaderSection -->
+<!-- BEGIN: FilterTabs -->
+<div class="overflow-x-auto hide-scrollbar -mx-4 px-4 pb-2">
+<div class="inline-flex bg-slate-100 rounded-lg p-1 space-x-1 whitespace-nowrap">
+<button class="px-4 py-2 text-sm font-medium rounded-md bg-white text-brand-700 shadow-sm transition-all">Tümü (12)</button>
+<button class="px-4 py-2 text-sm font-medium rounded-md text-slate-600 hover:text-slate-900 transition-all">Aktif (8)</button>
+<button class="px-4 py-2 text-sm font-medium rounded-md text-slate-600 hover:text-slate-900 transition-all">Tamamlandı (4)</button>
+</div>
+</div>
+<!-- END: FilterTabs -->
+<!-- BEGIN: SiteCardsList -->
+<div class="space-y-4">
+<!-- Card 1: Marmaray -->
+<article class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+<div class="relative h-40 bg-slate-200">
+<img alt="Marmaray Ek Hizmet Binasi" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCtsEAsgOOMgmwsc76-KlgniI2VRWjAWI93PnavzMYbT4BTX6hjDyIH4IizDVDqk5lz8ClrCqflewhWKGqZCJWFcAmtdPgFipY7Qyau-1hy78TbG2TDu_5gFyjad4eUIR1Y3BkaoiGcRavWWiCwZK8kuHUn_pTO__WQm9tU63VzkuCDlCq5QnybykC_FYRH1pqpttYLMCPEc-94JOCLzI75kccXd7BXU0lplU54m1ScIT1nN1wJWWLp"/>
+<div class="absolute top-3 right-3 bg-emerald-50 text-emerald-700 border border-emerald-200 px-2 py-1 rounded-full text-xs font-semibold flex items-center shadow-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1.5"></span>
+            Aktif
+          </div>
+</div>
+<div class="p-4">
+<div class="flex justify-between items-start mb-1">
+<span class="text-xs font-medium text-slate-400 tracking-wider">PRJ-2023-014</span>
+<button class="text-slate-400 hover:text-slate-600">
+<svg class="w-5 h-5" fill="currentColor" viewbox="0 0 20 20"><path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z"></path></svg>
+</button>
+</div>
+<h3 class="text-lg font-bold text-slate-900 mb-1 leading-tight">Marmaray Ek Hizmet...</h3>
+<div class="flex items-center text-sm text-slate-500 mb-4">
+<svg class="w-4 h-4 mr-1 flex-shrink-0" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path><path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+            Kadıköy, İstanbul
+          </div>
+<div class="bg-slate-50 rounded-lg p-3 mb-4 border border-slate-100">
+<div class="flex justify-between text-sm mb-2">
+<div>
+<p class="text-xs text-slate-500 font-medium uppercase tracking-wide">Gerçekleşen</p>
+<p class="font-bold text-slate-900">₺45.2M</p>
+</div>
+<div class="text-right">
+<p class="text-xs text-slate-500 font-medium uppercase tracking-wide">Toplam Bütçe</p>
+<p class="font-semibold text-slate-500">₺68.5M</p>
+</div>
+</div>
+<div class="w-full bg-slate-200 rounded-full h-2 mb-1.5">
+<div class="bg-brand-600 h-2 rounded-full" style="width: 66%"></div>
+</div>
+<div class="flex justify-between items-center text-xs">
+<span class="text-slate-500 font-medium">%66 Harcandı</span>
+<span class="text-emerald-600 font-medium">Bütçe İçi</span>
+</div>
+</div>
+<div class="flex items-center justify-between border-t border-slate-100 pt-3">
+<div class="flex items-center">
+<img alt="Ahmet Yılmaz" class="w-8 h-8 rounded-full border-2 border-white bg-slate-200" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDJcpWkBeHhSd6MHwQUYUbSFw8rJoCD1TGfSZVGr7YmNJz5WTuKg1FoUeBbUpVUi4c7V98npDI5PXquAW-b7HhcOydHZUNzYmDnatlBh5cpfGQnoB1ttyGHxLM_G9F9V-4WVt9IpBPLby6Fd6WSavqH_QcKXbbfrNLZTGXOq1xlRZemXFYOJQEalsUVKCV1TGju-zXlq6fnAlprPLv6ptWfw6Ynn8eslbnvqECI18WrgS4l22OWKr7q"/>
+<span class="ml-2 text-sm font-medium text-slate-700">Ahmet Yılmaz</span>
+</div>
+<div class="flex -space-x-2">
+<img alt="User" class="w-7 h-7 rounded-full border-2 border-white bg-slate-200 z-20" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC68Y5UD2esA6DGkpxrqb-yGtUysHRcQgQPAzm3z1ls-_GN-sEAk7jRyPXu6vwVlyJFKQeQYvmqo_I_938Wfo5LNOSmBvZQxtoLNvzNOPtS186Z-wOIu9DsatcuZPpT8c3iBc5pz42QhLXW0TBpjidKnsIc2mJHiN5eZQPFy1ncJcLt4NWTikUyeSDp54Nc4ZXidAMCGQFDmoHGnlDdP_F-P2T1UUO9wBnMO_sJ353VdTRA4H8-kqEE"/>
+<img alt="User" class="w-7 h-7 rounded-full border-2 border-white bg-slate-200 z-10" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDvSUYwtI_x0taif3CEVz6bjrDqjNzT0-eD8Xysw3rHnNvOacqdw9nxSzzCtUlfGbxfKspOXGucTR1UjmFLPEPjj-W-zMhCL_FZlpM-0PuKZBKC8TbH9fjrYW5eP8AmFBfJ97lIquoy3m5kKeOWtCeizi2RRnX0u3ojGGcWo5SBQFTcByOnPAZ0zTDgf7bDVJKDfRFmdGGfUuoudgKeCFkKoaLpYbDvlurSkuKEM2w3h4-w0HMbZBbH"/>
+<div class="w-7 h-7 rounded-full border-2 border-white bg-indigo-100 text-brand-600 flex items-center justify-center text-[10px] font-bold z-0">
+                  +3
+                </div>
+</div>
+</div>
+</div>
+</article>
+<!-- Card 2: Zeta Residence -->
+<article class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+<div class="relative h-40 bg-slate-200">
+<img alt="Zeta Residence Projesi" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDbpsUD7v3L63vgepOc1_cAzbTIwcv-Ji9I0g3tMHQ87Me2GeLZh5gkFi2Leh6Gy9M9gzYISDHOjij4OwQbwd2sC_A_23HxbYwpuc4UHrXf7q0hj5fvXVf2Jp6BmnDo3kGS7htM7wrPt38GIrxuzrr0v2h9XI8l-MWvVXTZPk6U58VM750X2mldI2UMWTW-AuL_JoRzMogg9E9JyZ8SfuD2XfUtEkJ9Qm-y0PHmKlD-9c9m1vjZ43h6"/>
+<div class="absolute top-3 right-3 bg-emerald-50 text-emerald-700 border border-emerald-200 px-2 py-1 rounded-full text-xs font-semibold flex items-center shadow-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1.5"></span>
+            Aktif
+          </div>
+</div>
+<div class="p-4">
+<div class="flex justify-between items-start mb-1">
+<span class="text-xs font-medium text-slate-400 tracking-wider">PRJ-2023-089</span>
+<button class="text-slate-400 hover:text-slate-600">
+<svg class="w-5 h-5" fill="currentColor" viewbox="0 0 20 20"><path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z"></path></svg>
+</button>
+</div>
+<h3 class="text-lg font-bold text-slate-900 mb-1 leading-tight">Zeta Residence Projesi</h3>
+<div class="flex items-center text-sm text-slate-500 mb-4">
+<svg class="w-4 h-4 mr-1 flex-shrink-0" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path><path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+            Ataşehir, İstanbul
+          </div>
+<div class="bg-slate-50 rounded-lg p-3 mb-4 border border-slate-100">
+<div class="flex justify-between text-sm mb-2">
+<div>
+<p class="text-xs text-slate-500 font-medium uppercase tracking-wide">Gerçekleşen</p>
+<p class="font-bold text-slate-900">₺112.4M</p>
+</div>
+<div class="text-right">
+<p class="text-xs text-slate-500 font-medium uppercase tracking-wide">Toplam Bütçe</p>
+<p class="font-semibold text-slate-500">₺120.0M</p>
+</div>
+</div>
+<div class="w-full bg-slate-200 rounded-full h-2 mb-1.5">
+<div class="bg-amber-500 h-2 rounded-full" style="width: 93%"></div>
+</div>
+<div class="flex justify-between items-center text-xs">
+<span class="text-slate-500 font-medium">%93 Harcandı</span>
+<span class="text-amber-600 font-medium">Bütçe Sınırında</span>
+</div>
+</div>
+<div class="flex items-center justify-between border-t border-slate-100 pt-3">
+<div class="flex items-center">
+<img alt="Elif Demir" class="w-8 h-8 rounded-full border-2 border-white bg-slate-200" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCSguLmZ8g1JjYuBuZ0pB4P0yWlsm8pHde76ZqWIGfrpCEikEdi0Wg1KclyqDYPGAA_-p1gIfqxhvcuNRsBoeDATJLRh5Ot1BIj5aJayaN9mvY0JEg_PHl9jtlWS7nmGEoRdgeT6_nFCEDC06f1ZO_fEDO93qpOMSVkHxcFhqpTwsFh7G6lJshNYr_np84N-cCJ-CyVGCrUpEP14NBdFZX6K6IPcAn__QogIb0FPDNhGnoZ7ZKvje8h"/>
+<span class="ml-2 text-sm font-medium text-slate-700">Elif Demir</span>
+</div>
+<div class="flex -space-x-2">
+<div class="w-7 h-7 rounded-full border-2 border-white bg-indigo-100 text-brand-600 flex items-center justify-center text-[10px] font-bold z-0">
+                  +5
+                </div>
+</div>
+</div>
+</div>
+</article>
+<!-- Card 3: Izmir Lojistik -->
+<article class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden opacity-80">
+<div class="relative h-40 bg-slate-200">
+<img alt="İzmir Lojistik Merkezi" class="w-full h-full object-cover grayscale-[30%]" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBzaFESfK0-LQd3yg2pMXbZiMw9QKQqM4xR61WDfDlQqEJeS3jNAKmhzeGw4haWlTWi-deOY6S3LJs0DFbFf-mQDDQByxnHQ-ptpZ5Mz4pz7-dRkmuseYy7iRk8XKlFqC8p67Z0pX5u6hvuLNtqWaVHcLvukdlSS9xHfG9MHeA4KdiIkFRyOYZkLVfLSZKOl3GJ2Ggdvr14Dq943cm3Cpr1uG6As5GcsV9vMHuLmiG9WSYuVtCO4QJF"/>
+<div class="absolute top-3 right-3 bg-slate-100 text-slate-600 border border-slate-300 px-2 py-1 rounded-full text-xs font-semibold flex items-center shadow-sm">
+<svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+            Tamamlandı
+          </div>
+</div>
+<div class="p-4">
+<div class="flex justify-between items-start mb-1">
+<span class="text-xs font-medium text-slate-400 tracking-wider">PRJ-2022-045</span>
+<button class="text-slate-400 hover:text-slate-600">
+<svg class="w-5 h-5" fill="currentColor" viewbox="0 0 20 20"><path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z"></path></svg>
+</button>
+</div>
+<h3 class="text-lg font-bold text-slate-900 mb-1 leading-tight">İzmir Lojistik Merkezi</h3>
+<div class="flex items-center text-sm text-slate-500 mb-4">
+<svg class="w-4 h-4 mr-1 flex-shrink-0" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path><path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+            Kemalpaşa, İzmir
+          </div>
+<div class="bg-slate-50 rounded-lg p-3 mb-4 border border-slate-100">
+<div class="flex justify-between text-sm mb-2">
+<div>
+<p class="text-xs text-slate-500 font-medium uppercase tracking-wide">Kesin Hesap</p>
+<p class="font-bold text-slate-900">₺84.1M</p>
+</div>
+<div class="text-right">
+<p class="text-xs text-slate-500 font-medium uppercase tracking-wide">İhale Bedeli</p>
+<p class="font-semibold text-slate-500">₺85.0M</p>
+</div>
+</div>
+<div class="w-full bg-slate-200 rounded-full h-2 mb-1.5">
+<div class="bg-emerald-500 h-2 rounded-full" style="width: 100%"></div>
+</div>
+<div class="flex justify-between items-center text-xs">
+<span class="text-slate-500 font-medium">Teslim: 12 Kas 2023</span>
+<span class="text-slate-500 font-medium">Kapalı</span>
+</div>
+</div>
+<div class="flex items-center justify-between border-t border-slate-100 pt-3">
+<div class="flex items-center text-slate-500">
+<div class="w-8 h-8 rounded-full border-2 border-white bg-slate-100 flex items-center justify-center">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</div>
+<span class="ml-2 text-sm font-medium">Arşiv Sorumlusu</span>
+</div>
+</div>
+</div>
+</article>
+</div>
+<!-- END: SiteCardsList -->
+</main>
+<!-- END: MainContent -->
+<!-- BEGIN: BottomNavigation -->
+<nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 px-2 pb-safe pt-2 flex justify-around items-center z-50 h-16" style="padding-bottom: max(0.5rem, env(safe-area-inset-bottom));">
+<a class="flex flex-col items-center justify-center w-full text-slate-400 hover:text-brand-600 transition-colors" href="#">
+<svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+<span class="text-[10px] font-medium">Panel</span>
+</a>
+<a class="flex flex-col items-center justify-center w-full text-brand-600 transition-colors" href="#">
+<svg class="w-6 h-6 mb-1" fill="currentColor" viewbox="0 0 20 20"><path clip-rule="evenodd" d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a1 1 0 110 2h-3a1 1 0 01-1-1v-2a1 1 0 00-1-1H9a1 1 0 00-1 1v2a1 1 0 01-1 1H4a1 1 0 110-2V4zm3 1h2v2H7V5zm2 4H7v2h2V9zm2-4h2v2h-2V5zm2 4h-2v2h2V9z" fill-rule="evenodd"></path></svg>
+<span class="text-[10px] font-medium">Şantiyeler</span>
+</a>
+<a class="flex flex-col items-center justify-center w-full text-slate-400 hover:text-brand-600 transition-colors" href="#">
+<svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+<span class="text-[10px] font-medium">Personel</span>
+</a>
+<a class="flex flex-col items-center justify-center w-full text-slate-400 hover:text-brand-600 transition-colors" href="#">
+<svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+<span class="text-[10px] font-medium">Belgeler</span>
+</a>
+<a class="flex flex-col items-center justify-center w-full text-slate-400 hover:text-brand-600 transition-colors" href="#">
+<svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+<span class="text-[10px] font-medium">Diğer</span>
+</a>
+</nav>
+<!-- END: BottomNavigation -->
+</body></html>

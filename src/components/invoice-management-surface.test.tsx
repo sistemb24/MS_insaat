@@ -2,7 +2,7 @@
  * @vitest-environment jsdom
  */
 
-import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen, within } from "@testing-library/react";
 import { afterEach, describe, expect, test } from "vitest";
 
 import { InvoiceManagementSurface } from "./invoice-management-surface";
@@ -51,6 +51,43 @@ const salesInvoice: PurchaseInvoiceRow = {
 };
 
 describe("InvoiceManagementSurface", () => {
+  test("composes the template overview from real invoice and delivery rows", () => {
+    render(
+      <InvoiceManagementSurface
+        deliveryNotes={{
+          rows: [
+            { status: "Kaydedildi", totalQuantity: 12 },
+            { status: "Taslak", totalQuantity: 4 },
+          ],
+        } as never}
+        purchase={{ rows: [purchaseInvoice] }}
+        sales={{ rows: [{ ...salesInvoice, status: "Taslak" }] }}
+      />,
+    );
+
+    expect(screen.getAllByRole("heading", { level: 1 })).toHaveLength(1);
+    expect(
+      screen.getByRole("heading", { level: 1, name: "Faturalar ve İrsaliyeler" }),
+    ).toBeDefined();
+
+    const metrics = screen.getByLabelText("Fatura ve irsaliye özet metrikleri");
+    expect(within(metrics).getByText("Alış Hacmi")).toBeDefined();
+    expect(within(metrics).getByText("Satış Hacmi")).toBeDefined();
+    expect(within(metrics).getByText("Taslak Belge")).toBeDefined();
+    expect(within(metrics).getByText("Depoya Giren")).toBeDefined();
+    expect(within(metrics).getAllByText("120,00 TL")).toHaveLength(2);
+    expect(within(metrics).getByText("2")).toBeDefined();
+    expect(within(metrics).getByText("12")).toBeDefined();
+
+    const tabs = screen.getByRole("tablist", { name: "Fatura türleri" });
+    expect(within(tabs).getAllByRole("tab")).toHaveLength(3);
+    expect(
+      within(tabs).getByRole("tab", { name: "Alış Faturaları (1)" }).getAttribute(
+        "aria-selected",
+      ),
+    ).toBe("true");
+  });
+
   test("resets invoice surface state when switching from purchase to sales", () => {
     render(
       <InvoiceManagementSurface
@@ -62,7 +99,7 @@ describe("InvoiceManagementSurface", () => {
 
     expect(screen.getByText("AF-TEST-001")).toBeTruthy();
 
-    fireEvent.click(screen.getByRole("button", { name: "Satış Faturaları (1)" }));
+    fireEvent.click(screen.getByRole("tab", { name: "Satış Faturaları (1)" }));
 
     expect(screen.queryByText("AF-TEST-001")).toBeNull();
     expect(screen.getByText("SF-TEST-001")).toBeTruthy();

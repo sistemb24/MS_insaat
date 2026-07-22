@@ -38,6 +38,16 @@ type PayrollAccrualSurfaceProps = {
   sourceTimesheets: TimesheetRow[];
 };
 
+type PayrollFilter = "Tümü" | "Taslak" | "Ödeme Bekleyen" | "Ödendi" | "İptal";
+
+const payrollFilters: { label: string; value: PayrollFilter }[] = [
+  { label: "Tümü", value: "Tümü" },
+  { label: "Taslak", value: "Taslak" },
+  { label: "Ödeme Bekleyenler", value: "Ödeme Bekleyen" },
+  { label: "Ödenmiş", value: "Ödendi" },
+  { label: "İptal Kayıtları", value: "İptal" },
+];
+
 export function PayrollAccrualSurface({
   accountOptions = [],
   highlightedDocumentNo,
@@ -53,6 +63,8 @@ export function PayrollAccrualSurface({
     accountOptions[0]?.code ?? "",
   );
   const [message, setMessage] = useState("");
+  const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState<PayrollFilter>("Tümü");
   const [isPending, startTransition] = useTransition();
   const sourceIds = useMemo(
     () => new Set(localRows.map((row) => row.sourceTimesheetId)),
@@ -65,30 +77,60 @@ export function PayrollAccrualSurface({
       ),
     [sourceIds, sourceTimesheets],
   );
+  const visibleRows = useMemo(() => {
+    const normalizedSearch = search.trim().toLocaleLowerCase("tr-TR");
+
+    return localRows.filter((row) => {
+      const paymentMovement = getPayrollPayment(localPaymentMovements, row.id);
+      const matchesStatus =
+        statusFilter === "Tümü" ||
+        (statusFilter === "Ödendi" && Boolean(paymentMovement)) ||
+        (statusFilter === "Ödeme Bekleyen" &&
+          row.status === "Kaydedildi" &&
+          !paymentMovement) ||
+        (statusFilter === "Taslak" && row.status === "Taslak") ||
+        (statusFilter === "İptal" && row.status === "İptal");
+      const matchesSearch =
+        normalizedSearch.length === 0 ||
+        [
+          row.documentNo,
+          row.sourceTimesheetNo,
+          row.siteCode,
+          row.siteName,
+          row.contractorCode,
+          row.contractorName,
+          ...row.lines.flatMap((line) => [line.personCode, line.personName]),
+        ].some((value) =>
+          value.toLocaleLowerCase("tr-TR").includes(normalizedSearch),
+        );
+
+      return matchesStatus && matchesSearch;
+    });
+  }, [localPaymentMovements, localRows, search, statusFilter]);
   const summary = useMemo(
     () => {
-      const paidRows = localRows.filter((row) =>
+      const paidRows = visibleRows.filter((row) =>
         getPayrollPayment(localPaymentMovements, row.id),
       );
-      const paymentWaitingRows = localRows.filter(
+      const paymentWaitingRows = visibleRows.filter(
         (row) =>
           row.status === "Kaydedildi" &&
           !getPayrollPayment(localPaymentMovements, row.id),
       );
 
       return {
-        deductionTotal: localRows.reduce(
+        deductionTotal: visibleRows.reduce(
           (total, row) => total + row.deductionTotal,
           0,
         ),
-        netTotal: localRows.reduce((total, row) => total + row.netTotal, 0),
-        openCount: localRows.filter((row) => row.status === "Taslak").length,
+        netTotal: visibleRows.reduce((total, row) => total + row.netTotal, 0),
+        openCount: visibleRows.filter((row) => row.status === "Taslak").length,
         paidCount: paidRows.length,
         paymentWaitingCount: paymentWaitingRows.length,
         pendingTimesheetCount: availableTimesheets.length,
       };
     },
-    [availableTimesheets.length, localPaymentMovements, localRows],
+    [availableTimesheets.length, localPaymentMovements, visibleRows],
   );
 
   function handleCreate(timesheetId: string) {
@@ -174,30 +216,54 @@ export function PayrollAccrualSurface({
   }
 
   function handlePrint() {
-    setMessage(`Yazdırma kapsamı hazır: ${localRows.length} tahakkuk.`);
+    setMessage(`Yazdırma kapsamı hazır: ${visibleRows.length} tahakkuk.`);
     window.print();
   }
 
   return (
-    <section className="mx-auto flex max-w-7xl flex-col gap-4">
-      <header className="rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)] p-5">
-        <p className="text-xs font-semibold uppercase tracking-wide text-[var(--primary)]">
-          Puantajdan tahakkuk
-        </p>
-        <div className="mt-2">
-          <h2 className="text-2xl font-semibold tracking-normal">
-            Maaş Tahakkuku
-          </h2>
-          <p className="mt-2 max-w-3xl text-sm leading-6 text-[var(--on-surface-variant)]">
-            Kesinleşmiş puantaj kayıtlarından personel bazlı maaş tahakkuku
-            oluşturulur; ödeme ve resmi bordro adımları sonraki iş akışlarına
-            bırakılır.
-          </p>
+    <section
+      className="mx-auto flex max-w-7xl flex-col gap-4"
+      data-payroll-workspace
+    >
+      <header className="overflow-hidden rounded-ui-panel border border-divider bg-surface-raised shadow-sm">
+        <div className="bg-gradient-to-r from-brand-primary/10 via-surface-raised to-surface-raised px-5 py-6 text-content md:px-7">
+          <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
+            <div>
+              <p className="text-xs font-bold uppercase tracking-[0.16em] text-brand-primary">
+                Maaş Tahakkuku
+              </p>
+              <h2 className="mt-2 text-3xl font-semibold tracking-tight">
+                Bordro Yönetimi
+              </h2>
+              <p className="mt-2 max-w-3xl text-sm leading-6 text-content-muted">
+                Kesinleşmiş puantaj kayıtlarından tahakkuk oluşturun, kesintileri
+                izleyin ve gerçek kasa/banka ödeme hareketiyle bordro sürecini tamamlayın.
+              </p>
+            </div>
+            <div className="grid grid-cols-2 gap-2 sm:flex">
+              <div className="rounded-ui-control border border-divider bg-surface-muted px-3 py-2">
+                <p className="text-[11px] font-semibold uppercase tracking-wide text-brand-primary">
+                  Net bordro
+                </p>
+                <p className="mt-1 font-mono text-lg font-semibold">
+                  {formatMoney(summary.netTotal)}
+                </p>
+              </div>
+              <div className="rounded-ui-control border border-divider bg-surface-muted px-3 py-2">
+                <p className="text-[11px] font-semibold uppercase tracking-wide text-brand-primary">
+                  Kesinti
+                </p>
+                <p className="mt-1 font-mono text-lg font-semibold">
+                  {formatMoney(summary.deductionTotal)}
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
       </header>
 
       <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-6">
-        <Metric label="Tahakkuk" value={String(localRows.length)} />
+        <Metric label="Tahakkuk" value={String(visibleRows.length)} />
         <Metric label="Taslak Tahakkuk" value={String(summary.openCount)} />
         <Metric label="Ödenen Tahakkuk" value={String(summary.paidCount)} />
         <Metric
@@ -211,24 +277,66 @@ export function PayrollAccrualSurface({
         <Metric label="Net Toplam" value={formatMoney(summary.netTotal)} />
       </div>
 
+      <section className="rounded-ui-panel border border-divider bg-surface-raised p-4 shadow-sm">
+        <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-3 xl:flex-row xl:items-end xl:justify-between">
+            <div>
+              <p className="text-xs font-bold uppercase tracking-[0.14em] text-brand-primary">
+                Bordro filtresi
+              </p>
+              <p className="mt-1 text-sm text-content-muted">
+                Özet, tahakkuk listesi ve bordro çıktısı yalnız görünür kayıtları kullanır.
+              </p>
+            </div>
+            <label className="flex w-full flex-col gap-1 text-xs font-semibold text-content-muted xl:w-96">
+              Tahakkuk, puantaj, şantiye veya personel ara
+              <input
+                className="h-10 rounded-ui-control border border-divider bg-surface-raised px-3 text-sm font-normal text-content outline-none focus:border-brand-primary"
+                onChange={(event) => setSearch(event.target.value)}
+                placeholder="Tahakkuk no, şantiye veya personel"
+                type="search"
+                value={search}
+              />
+            </label>
+          </div>
+          <div className="flex flex-wrap gap-2" role="group" aria-label="Bordro durumu filtresi">
+            {payrollFilters.map(({ label, value }) => (
+                <button
+                  aria-pressed={statusFilter === value}
+                  className={
+                    statusFilter === value
+                      ? "h-10 rounded-ui-control bg-brand-primary px-3 text-sm font-semibold text-on-brand"
+                      : "h-10 rounded-ui-control border border-divider bg-surface-raised px-3 text-sm font-semibold text-content-muted hover:text-content"
+                  }
+                  key={value}
+                  onClick={() => setStatusFilter(value)}
+                  type="button"
+                >
+                  {label}
+                </button>
+              ))}
+          </div>
+        </div>
+      </section>
+
       {message ? (
         <p
-          className="rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] px-3 py-2 text-sm font-semibold"
+          className="rounded-ui-control border border-divider bg-surface-muted px-3 py-2 text-sm font-semibold"
           role="status"
         >
           {message}
         </p>
       ) : null}
 
-      <article className="overflow-hidden rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)]">
-        <div className="border-b border-[var(--grid-border)] px-4 py-3">
+      <article className="overflow-hidden rounded-ui-panel border border-divider bg-surface-raised">
+        <div className="border-b border-divider px-4 py-3">
           <h3 className="text-sm font-semibold">
             Tahakkuka Hazır Puantajlar
           </h3>
         </div>
         <div className="overflow-x-auto">
           <table className="min-w-[900px] w-full text-left text-sm">
-            <thead className="bg-[var(--surface-container-low)] text-xs uppercase text-[var(--on-surface-variant)]">
+            <thead className="bg-surface-muted text-xs uppercase text-content-subtle">
               <tr>
                 <th className="px-4 py-3">Puantaj No</th>
                 <th className="px-4 py-3">Dönem</th>
@@ -238,21 +346,21 @@ export function PayrollAccrualSurface({
                 <th className="px-4 py-3 text-right">İşlem</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[var(--grid-border)]">
+            <tbody className="divide-y divide-divider">
               {availableTimesheets.length === 0 ? (
                 <tr>
                   <td className="px-4 py-8 text-center" colSpan={6}>
                     <p className="font-semibold">
                       Tahakkuka hazır puantaj yok
                     </p>
-                    <p className="mt-1 text-sm text-[var(--on-surface-variant)]">
+                    <p className="mt-1 text-sm text-content-subtle">
                       Puantaj kesinleştiğinde burada işlem bekler.
                     </p>
                   </td>
                 </tr>
               ) : (
                 availableTimesheets.map((row) => (
-                  <tr className="hover:bg-[var(--primary-fixed)]" key={row.id}>
+                  <tr className="hover:bg-brand-primary-subtle" key={row.id}>
                     <td className="px-4 py-3 font-mono text-xs">
                       {row.documentNo}
                     </td>
@@ -267,7 +375,7 @@ export function PayrollAccrualSurface({
                     <td className="px-4 py-3">
                       <div className="flex justify-end">
                         <button
-                          className="h-9 rounded-[var(--radius-control)] bg-[var(--primary)] px-3 text-xs font-semibold text-white disabled:opacity-50"
+                          className="h-9 rounded-ui-control bg-brand-primary px-3 text-xs font-semibold text-on-brand disabled:opacity-50"
                           disabled={isPending}
                           onClick={() => handleCreate(row.id)}
                           type="button"
@@ -284,15 +392,15 @@ export function PayrollAccrualSurface({
         </div>
       </article>
 
-      <article className="overflow-hidden rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)]">
-        <div className="flex flex-col gap-3 border-b border-[var(--grid-border)] px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
+      <article className="overflow-hidden rounded-ui-panel border border-divider bg-surface-raised">
+        <div className="flex flex-col gap-3 border-b border-divider px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
           <h3 className="text-sm font-semibold">Maaş tahakkuk listesi</h3>
           <div className="flex flex-col gap-2 sm:flex-row sm:items-end">
             {accountOptions.length > 0 ? (
-              <label className="flex flex-col gap-1 text-xs font-semibold text-[var(--on-surface-variant)] sm:min-w-64">
+              <label className="flex flex-col gap-1 text-xs font-semibold text-content-subtle sm:min-w-64">
                 <span>Ödeme hesabı</span>
                 <select
-                  className="h-9 rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)] px-3 text-sm font-semibold text-[var(--on-surface)]"
+                  className="h-9 rounded-ui-control border border-divider bg-surface-raised px-3 text-sm font-semibold text-content"
                   onChange={(event) =>
                     setPaymentAccountCode(event.target.value)
                   }
@@ -307,8 +415,8 @@ export function PayrollAccrualSurface({
               </label>
             ) : null}
             <button
-              className="h-9 rounded-[var(--radius-control)] border border-[var(--grid-border)] px-3 text-xs font-semibold disabled:opacity-50"
-              disabled={localRows.length === 0}
+              className="h-9 rounded-ui-control border border-divider px-3 text-xs font-semibold disabled:opacity-50"
+              disabled={visibleRows.length === 0}
               onClick={handlePrint}
               type="button"
             >
@@ -318,7 +426,7 @@ export function PayrollAccrualSurface({
         </div>
         <div className="overflow-x-auto">
           <table className="min-w-[980px] w-full text-left text-sm">
-            <thead className="bg-[var(--surface-container-low)] text-xs uppercase text-[var(--on-surface-variant)]">
+            <thead className="bg-surface-muted text-xs uppercase text-content-subtle">
               <tr>
                 <th className="px-4 py-3">Tahakkuk No</th>
                 <th className="px-4 py-3">Kaynak Puantaj</th>
@@ -331,19 +439,24 @@ export function PayrollAccrualSurface({
                 <th className="px-4 py-3 text-right">İşlem</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[var(--grid-border)]">
-              {localRows.length === 0 ? (
+            <tbody className="divide-y divide-divider">
+              {visibleRows.length === 0 ? (
                 <tr>
                   <td className="px-4 py-10 text-center" colSpan={9}>
-                    <p className="font-semibold">Henüz tahakkuk yok</p>
-                    <p className="mt-1 text-sm text-[var(--on-surface-variant)]">
-                      Kesinleşmiş puantajdan tahakkuk üretildiğinde liste
-                      dolacaktır.
+                    <p className="font-semibold">
+                      {localRows.length === 0
+                        ? "Henüz tahakkuk yok"
+                        : "Filtreyle eşleşen tahakkuk yok"}
+                    </p>
+                    <p className="mt-1 text-sm text-content-subtle">
+                      {localRows.length === 0
+                        ? "Kesinleşmiş puantajdan tahakkuk üretildiğinde liste dolacaktır."
+                        : "Arama veya durum filtresini değiştirerek bordro kayıtlarını görün."}
                     </p>
                   </td>
                 </tr>
               ) : (
-                localRows.map((row) => {
+                visibleRows.map((row) => {
                   const paymentMovement = getPayrollPayment(
                     localPaymentMovements,
                     row.id,
@@ -380,7 +493,7 @@ export function PayrollAccrualSurface({
                         <div className="grid gap-1">
                           <span>{row.status}</span>
                           {row.ledgerDocumentNo ? (
-                            <span className="font-mono text-[11px] text-[var(--on-surface-variant)]">
+                            <span className="font-mono text-[11px] text-content-subtle">
                               Fiş: {row.ledgerDocumentNo}
                             </span>
                           ) : null}
@@ -390,14 +503,14 @@ export function PayrollAccrualSurface({
                         {paymentMovement ? (
                           <div className="flex flex-col gap-0.5">
                             <span className="font-semibold">Ödendi</span>
-                            <span className="text-xs text-[var(--on-surface-variant)]">
+                            <span className="text-xs text-content-subtle">
                               {paymentMovement.accountName}
                             </span>
-                            <span className="font-mono text-xs text-[var(--on-surface-variant)]">
+                            <span className="font-mono text-xs text-content-subtle">
                               {formatDate(paymentMovement.movementDate)}
                             </span>
                             {paymentMovement.ledgerDocumentNo ? (
-                              <span className="font-mono text-xs text-[var(--on-surface-variant)]">
+                              <span className="font-mono text-xs text-content-subtle">
                                 Muhasebe fişi: {paymentMovement.ledgerDocumentNo}
                               </span>
                             ) : null}
@@ -409,7 +522,7 @@ export function PayrollAccrualSurface({
                       <td className="px-4 py-3">
                         <div className="flex justify-end gap-2">
                           <button
-                            className="h-9 rounded-[var(--radius-control)] border border-[var(--grid-border)] px-3 text-xs font-semibold disabled:opacity-50"
+                            className="h-9 rounded-ui-control border border-divider px-3 text-xs font-semibold disabled:opacity-50"
                             disabled={isPending || row.status !== "Taslak"}
                             onClick={() => mutateStatus(row.id, "post")}
                             type="button"
@@ -417,7 +530,7 @@ export function PayrollAccrualSurface({
                             Kesinleştir
                           </button>
                           <button
-                            className="h-9 rounded-[var(--radius-control)] border border-[var(--grid-border)] px-3 text-xs font-semibold disabled:opacity-50"
+                            className="h-9 rounded-ui-control border border-divider px-3 text-xs font-semibold disabled:opacity-50"
                             disabled={isPending || row.status === "İptal"}
                             onClick={() => mutateStatus(row.id, "cancel")}
                             type="button"
@@ -425,7 +538,7 @@ export function PayrollAccrualSurface({
                             İptal
                           </button>
                           <button
-                            className="h-9 rounded-[var(--radius-control)] bg-[var(--primary)] px-3 text-xs font-semibold text-white disabled:opacity-50"
+                            className="h-9 rounded-ui-control bg-brand-primary px-3 text-xs font-semibold text-on-brand disabled:opacity-50"
                             disabled={
                               isPending || row.status !== "Kaydedildi" || isPaid
                             }
@@ -457,14 +570,14 @@ function isHighlightedDocument(
 
 function highlightedRowClass(isHighlighted: boolean) {
   return isHighlighted
-    ? "bg-[var(--primary-fixed)] ring-1 ring-inset ring-[var(--primary)]"
-    : "hover:bg-[var(--primary-fixed)]";
+    ? "bg-brand-primary-subtle ring-1 ring-inset ring-brand-primary"
+    : "hover:bg-brand-primary-subtle";
 }
 
 function Metric({ label, value }: { label: string; value: string }) {
   return (
-    <article className="rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)] p-4">
-      <p className="text-sm font-semibold text-[var(--on-surface-variant)]">
+    <article className="rounded-ui-panel border border-divider bg-surface-raised p-4">
+      <p className="text-sm font-semibold text-content-subtle">
         {label}
       </p>
       <p className="mt-2 font-mono text-2xl font-semibold">{value}</p>

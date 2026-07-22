@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 
+import { Icon } from "@/components/ui";
 import type { PurchaseInvoiceRow } from "@/lib/purchase-invoice-service";
 import type { DeliveryNoteRow } from "@/lib/delivery-note-service";
 import type { StockMovementRow } from "@/lib/stock-movement-service";
@@ -87,6 +88,17 @@ export function StockDepotSurface({
     (total, row) => total + row.netTotal,
     0,
   );
+  const lowStockRows = filteredSummaryRows.filter((row) => {
+    const threshold = Number(
+      minimumInputs[createStockMinimumRowKey(row)] ?? "",
+    );
+
+    return (
+      Number.isFinite(threshold) &&
+      threshold > 0 &&
+      row.balanceQuantity <= threshold
+    );
+  });
   const summaryCsvHref = buildStockDepotCsvHref(
     buildStockDepotSummaryCsv(filteredSummaryRows),
   );
@@ -129,34 +141,50 @@ export function StockDepotSurface({
   }
 
   return (
-    <section className="mx-auto flex max-w-7xl flex-col gap-4">
-      <header className="rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)] p-5">
-        <p className="text-xs font-semibold uppercase tracking-wide text-[var(--primary)]">
-          Malzeme ve depo takip
+    <section className="mx-auto flex max-w-[1440px] flex-col gap-5">
+      <header className="rounded-ui-panel border border-divider bg-surface-raised p-5 shadow-sm sm:p-6">
+        <p className="text-xs font-semibold uppercase tracking-[0.12em] text-brand-primary">
+          Malzeme, depo ve hareket kontrolü
         </p>
-        <h1 className="mt-2 text-2xl font-semibold tracking-normal">
-          Stok/Depo
-        </h1>
-        <p className="mt-2 max-w-3xl text-sm leading-6 text-[var(--on-surface-variant)]">
-          Fatura ve irsaliye girişleri ile kesinleşmiş depo transferi ve şantiye
-          çıkışları tek hareket modelinde birleşir.
-        </p>
+        <div className="mt-3 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+          <div>
+            <h1 className="text-2xl font-semibold tracking-tight text-content sm:text-3xl">
+              Stok ve Depo Yönetimi
+            </h1>
+            <p className="mt-2 max-w-3xl text-sm leading-6 text-content-muted">
+              Fatura, irsaliye, transfer ve şantiye çıkışlarını aynı stok read-modelinde
+              izleyin; minimum miktarları depo ve stok kartı bazında yönetin.
+            </p>
+          </div>
+          <span className="inline-flex items-center gap-2 rounded-full bg-brand-primary/10 px-3 py-2 text-xs font-semibold text-brand-primary">
+            <Icon name="box" size={16} /> {filteredSummaryRows.length} depolu kalem
+          </span>
+        </div>
       </header>
 
-      <div className="grid gap-3 md:grid-cols-3">
+      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
         <Metric
           label="Depolu Kalem"
           value={String(filteredSummaryRows.length)}
         />
         <Metric label="Mevcut Miktar" value={formatQuantity(totalQuantity)} />
         <Metric label="Stok Değeri" value={formatMoney(totalValue)} />
+        <Metric label="Minimum Altı" value={String(lowStockRows.length)} />
       </div>
 
-      <div className="grid gap-3 rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)] p-4 md:grid-cols-[minmax(0,1fr)_170px_170px_240px]">
+      <section aria-label="Stok depo filtreleri" className="rounded-ui-panel border border-divider bg-surface-raised p-4 shadow-sm">
+        <div className="mb-4 flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <h2 className="text-base font-semibold text-content">Stok çalışma alanı</h2>
+            <p className="text-sm text-content-muted">Filtreler özet, hareket ve CSV kapsamını birlikte değiştirir.</p>
+          </div>
+          <span className="font-mono text-xs font-semibold text-content-muted">{filteredMovementRows.length} hareket</span>
+        </div>
+      <div className="grid gap-3 md:grid-cols-[minmax(0,1fr)_170px_170px_240px]">
         <label className="flex flex-col gap-2 text-sm font-semibold">
           <span>Stok veya evrak ara</span>
           <input
-            className="h-10 rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-white px-3 font-normal outline-none focus:border-[var(--primary)]"
+            className="h-10 rounded-ui-control border border-divider bg-surface-raised px-3 font-normal outline-none focus:border-brand-primary"
             onChange={(event) => setSearchText(event.target.value)}
             placeholder="Stok adı, kod, evrak no, tedarikçi..."
             type="search"
@@ -166,7 +194,7 @@ export function StockDepotSurface({
         <label className="flex flex-col gap-2 text-sm font-semibold">
           <span>Başlangıç tarihi</span>
           <input
-            className="h-10 rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-white px-3 font-normal outline-none focus:border-[var(--primary)]"
+            className="h-10 rounded-ui-control border border-divider bg-surface-raised px-3 font-normal outline-none focus:border-brand-primary"
             onChange={(event) => setStartDate(event.target.value)}
             type="date"
             value={startDate}
@@ -175,7 +203,7 @@ export function StockDepotSurface({
         <label className="flex flex-col gap-2 text-sm font-semibold">
           <span>Bitiş tarihi</span>
           <input
-            className="h-10 rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-white px-3 font-normal outline-none focus:border-[var(--primary)]"
+            className="h-10 rounded-ui-control border border-divider bg-surface-raised px-3 font-normal outline-none focus:border-brand-primary"
             onChange={(event) => setEndDate(event.target.value)}
             type="date"
             value={endDate}
@@ -184,7 +212,7 @@ export function StockDepotSurface({
         <label className="flex flex-col gap-2 text-sm font-semibold">
           <span>Depo filtresi</span>
           <select
-            className="h-10 rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-white px-3 font-normal outline-none focus:border-[var(--primary)]"
+            className="h-10 rounded-ui-control border border-divider bg-surface-raised px-3 font-normal outline-none focus:border-brand-primary"
             onChange={(event) => setWarehouseFilter(event.target.value)}
             value={warehouseFilter}
           >
@@ -197,10 +225,11 @@ export function StockDepotSurface({
           </select>
         </label>
       </div>
+      </section>
 
       {printNotice ? (
         <p
-          className="rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] px-3 py-2 text-sm font-semibold"
+          className="rounded-ui-control border border-divider bg-surface-muted px-3 py-2 text-sm font-semibold"
           role="status"
         >
           {printNotice}
@@ -208,15 +237,15 @@ export function StockDepotSurface({
       ) : null}
       {minimumNotice ? (
         <p
-          className="rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] px-3 py-2 text-sm font-semibold"
+          className="rounded-ui-control border border-divider bg-surface-muted px-3 py-2 text-sm font-semibold"
           role="status"
         >
           {minimumNotice}
         </p>
       ) : null}
 
-      <article className="overflow-hidden rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)]">
-        <div className="flex flex-col gap-3 border-b border-[var(--grid-border)] px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
+      <article className="overflow-hidden rounded-ui-panel border border-divider bg-surface-raised">
+        <div className="flex flex-col gap-3 border-b border-divider px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
           <h2 className="text-sm font-semibold">Depo Stok Özeti</h2>
           {filteredSummaryRows.length > 0 ? (
             <CsvDownloadLink
@@ -228,7 +257,7 @@ export function StockDepotSurface({
         </div>
         <div className="overflow-x-auto">
           <table className="min-w-[1080px] w-full text-left text-sm">
-            <thead className="bg-[var(--surface-container-low)] text-xs uppercase text-[var(--on-surface-variant)]">
+            <thead className="bg-surface-muted text-xs uppercase text-content-subtle">
               <tr>
                 <th className="px-4 py-3 font-semibold">Depo</th>
                 <th className="px-4 py-3 font-semibold">Stok/Hizmet</th>
@@ -241,7 +270,7 @@ export function StockDepotSurface({
                 <th className="px-4 py-3 text-right font-semibold">Ayar</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[var(--grid-border)]">
+            <tbody className="divide-y divide-divider">
               {filteredSummaryRows.length === 0 ? (
                 <tr>
                   <td className="px-4 py-10 text-center" colSpan={9}>
@@ -250,7 +279,7 @@ export function StockDepotSurface({
                         ? "Filtreye uyan depo bakiyesi yok"
                         : "Henüz depo hareketi yok"}
                     </p>
-                    <p className="mt-1 text-sm text-[var(--on-surface-variant)]">
+                    <p className="mt-1 text-sm text-content-subtle">
                       {isFiltered
                         ? "Arama veya depo filtresini değiştirerek tekrar deneyin."
                         : "Kesinleşmiş giriş, transfer ve şantiye çıkışları bu özeti oluşturur."}
@@ -263,7 +292,7 @@ export function StockDepotSurface({
 
                   return (
                     <tr
-                      className="hover:bg-[var(--primary-fixed)]"
+                      className="hover:bg-brand-primary-subtle"
                       key={rowKey}
                     >
                       <td className="px-4 py-3">{row.warehouse}</td>
@@ -286,7 +315,7 @@ export function StockDepotSurface({
                       <td className="px-4 py-3">
                         <input
                           aria-label={`${row.stockCode || row.stockName} minimum miktar`}
-                          className="ml-auto block h-9 w-28 rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-white px-2 text-right font-mono text-sm outline-none focus:border-[var(--primary)]"
+                          className="ml-auto block h-9 w-28 rounded-ui-control border border-divider bg-surface-raised px-2 text-right font-mono text-sm outline-none focus:border-brand-primary"
                           min="0"
                           onChange={(event) =>
                             setMinimumInputs((current) => ({
@@ -302,7 +331,7 @@ export function StockDepotSurface({
                       </td>
                       <td className="px-4 py-3 text-right">
                         <button
-                          className="h-9 rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] px-3 text-xs font-semibold transition hover:bg-[var(--primary-fixed)]"
+                          className="h-9 rounded-ui-control border border-divider bg-surface-muted px-3 text-xs font-semibold transition hover:bg-brand-primary-subtle"
                           onClick={() => void handleSaveMinimumSetting(row)}
                           type="button"
                         >
@@ -318,8 +347,8 @@ export function StockDepotSurface({
         </div>
       </article>
 
-      <article className="overflow-hidden rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)]">
-        <div className="flex flex-col gap-3 border-b border-[var(--grid-border)] px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
+      <article className="overflow-hidden rounded-ui-panel border border-divider bg-surface-raised">
+        <div className="flex flex-col gap-3 border-b border-divider px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
           <h2 className="text-sm font-semibold">Depo Hareketleri</h2>
           <div className="flex flex-wrap gap-2">
             {filteredMovementRows.length > 0 ? (
@@ -330,7 +359,7 @@ export function StockDepotSurface({
               />
             ) : null}
             <button
-              className="h-9 rounded-[var(--radius-control)] border border-[var(--grid-border)] px-3 text-xs font-semibold disabled:opacity-50"
+              className="h-9 rounded-ui-control border border-divider px-3 text-xs font-semibold disabled:opacity-50"
               disabled={filteredMovementRows.length === 0}
               onClick={handlePrint}
               type="button"
@@ -341,7 +370,7 @@ export function StockDepotSurface({
         </div>
         <div className="overflow-x-auto">
           <table className="min-w-[980px] w-full text-left text-sm">
-            <thead className="bg-[var(--surface-container-low)] text-xs uppercase text-[var(--on-surface-variant)]">
+            <thead className="bg-surface-muted text-xs uppercase text-content-subtle">
               <tr>
                 <th className="px-4 py-3 font-semibold">Tarih</th>
                 <th className="px-4 py-3 font-semibold">Evrak No</th>
@@ -354,7 +383,7 @@ export function StockDepotSurface({
                 <th className="px-4 py-3 text-right font-semibold">Net</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[var(--grid-border)]">
+            <tbody className="divide-y divide-divider">
               {filteredMovementRows.length === 0 ? (
                 <tr>
                   <td className="px-4 py-10 text-center" colSpan={9}>
@@ -363,7 +392,7 @@ export function StockDepotSurface({
                         ? "Filtreye uyan depo hareketi yok"
                         : "Fatura veya irsaliye kaynaklı depo hareketi yok"}
                     </p>
-                    <p className="mt-1 text-sm text-[var(--on-surface-variant)]">
+                    <p className="mt-1 text-sm text-content-subtle">
                       {isFiltered
                         ? "Arama metni stok, evrak, şantiye ve tedarikçi alanlarında aranır."
                         : "Alış faturası veya alış irsaliyesi kesinleştiğinde burada görünür."}
@@ -372,7 +401,7 @@ export function StockDepotSurface({
                 </tr>
               ) : (
                 filteredMovementRows.map((row) => (
-                  <tr className="hover:bg-[var(--primary-fixed)]" key={row.sourceId}>
+                  <tr className="hover:bg-brand-primary-subtle" key={row.sourceId}>
                     <td className="px-4 py-3">{formatDate(row.invoiceDate)}</td>
                     <td className="px-4 py-3 font-mono text-xs">
                       {row.documentNo}
@@ -413,7 +442,7 @@ function CsvDownloadLink({
   return (
     <a
       aria-label={ariaLabel}
-      className="inline-flex h-9 items-center justify-center rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] px-3 text-xs font-semibold text-[var(--on-surface)] transition hover:bg-[var(--primary-fixed)]"
+      className="inline-flex h-9 items-center justify-center rounded-ui-control border border-divider bg-surface-muted px-3 text-xs font-semibold text-content transition hover:bg-brand-primary-subtle"
       download={fileName}
       href={href}
     >
@@ -546,11 +575,11 @@ function roundMoney(value: number) {
 
 function Metric({ label, value }: { label: string; value: string }) {
   return (
-    <article className="rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)] p-4">
-      <p className="text-sm font-semibold text-[var(--on-surface-variant)]">
+    <article className="rounded-ui-panel border border-divider bg-surface-raised p-4 shadow-sm">
+      <p className="text-sm font-semibold text-content-muted">
         {label}
       </p>
-      <p className="mt-2 font-mono text-2xl font-semibold">{value}</p>
+      <p className="mt-2 font-mono text-2xl font-semibold text-content">{value}</p>
     </article>
   );
 }

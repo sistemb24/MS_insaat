@@ -327,7 +327,7 @@ export function summarizeOperationalReports({
       paymentWaitingPurchaseInvoices,
       (invoice) => invoice.grandTotal,
     ),
-    siteProfitRows: buildSiteProfitRows({
+    siteProfitRows: buildOperationalSiteProfitRows({
       expenses: postedExpenses,
       payrollAccruals: postedPayrollAccruals,
       progressPayments: postedProgressPayments,
@@ -508,7 +508,7 @@ function dedupeActivityRowIds(
   });
 }
 
-function buildSiteProfitRows({
+export function buildOperationalSiteProfitRows({
   expenses = [],
   payrollAccruals,
   progressPayments,

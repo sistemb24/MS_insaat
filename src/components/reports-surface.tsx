@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 
+import { Icon, type IconName } from "@/components/ui";
 import type { CashBankMovementRow } from "@/lib/cash-bank-movement-service";
 import type { ChequeRow } from "@/lib/cheque-service";
 import type { ExpenseRow } from "@/lib/expense-service";
@@ -107,33 +108,32 @@ export function ReportsSurface({
   }
 
   return (
-    <section className="mx-auto flex max-w-7xl flex-col gap-4">
-      <header className="rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)] p-5">
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+    <section className="mx-auto flex max-w-[1440px] flex-col gap-5">
+      <header className="rounded-ui-panel border border-divider bg-surface-raised p-5 shadow-sm sm:p-6">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wide text-[var(--primary)]">
-              Ekstre ve analiz
+            <p className="text-xs font-semibold uppercase tracking-[0.12em] text-brand-primary">
+              Finans ve operasyon analizi
             </p>
-            <h1 className="mt-2 text-2xl font-semibold tracking-normal">
-              Raporlar
+            <h1 className="mt-3 text-2xl font-semibold tracking-tight text-content sm:text-3xl">
+              Rapor Merkezi
             </h1>
-            <p className="mt-2 max-w-3xl text-sm leading-6 text-[var(--on-surface-variant)]">
-              Kesinleşmiş faturalar, giderler, hakedişler, puantajlar, maaş tahakkukları,
-              kasa/banka hareketleri ve portföy çeklerinden P0 operasyon raporu
-              üretilir.
+            <p className="mt-2 max-w-3xl text-sm leading-6 text-content-muted">
+              Kesinleşmiş finansal ve operasyonel kayıtları aynı filtre bağlamında
+              inceleyin, CSV olarak dışa aktarın veya görünür kapsamı yazdırın.
             </p>
           </div>
           <button
-            className="inline-flex h-9 shrink-0 items-center justify-center rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] px-3 text-xs font-semibold text-[var(--on-surface)] transition hover:bg-[var(--primary-fixed)]"
+            className="inline-flex h-10 shrink-0 items-center justify-center gap-2 rounded-ui-control border border-divider bg-surface-raised px-3 text-sm font-semibold text-content transition hover:bg-brand-primary/5"
             onClick={printReport}
             type="button"
           >
-            Yazdır
+            <Icon name="file" size={16} /> Yazdır
           </button>
         </div>
         {printNotice ? (
           <p
-            className="mt-4 rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] px-3 py-2 text-sm font-semibold text-[var(--on-surface-variant)]"
+            className="mt-4 rounded-ui-control border border-divider bg-surface-muted px-3 py-2 text-sm font-semibold text-content-subtle"
             role="status"
           >
             {printNotice}
@@ -141,11 +141,19 @@ export function ReportsSurface({
         ) : null}
       </header>
 
-      <div className="grid gap-3 rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)] p-4 md:grid-cols-2 xl:grid-cols-4">
+      <section aria-label="Rapor filtreleri" className="rounded-ui-panel border border-divider bg-surface-raised p-4 shadow-sm">
+        <div className="mb-4 flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <h2 className="text-base font-semibold text-content">Rapor çalışma alanı</h2>
+            <p className="text-sm text-content-muted">Filtreler tüm özet, tablo ve CSV çıktısına uygulanır.</p>
+          </div>
+          <span className="font-mono text-xs font-semibold text-content-muted">{report.activityRows.length} hareket</span>
+        </div>
+      <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
         <label className="flex flex-col gap-2 text-sm font-semibold">
           <span>Rapor kaynağı</span>
           <select
-            className="h-10 rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-white px-3 font-normal outline-none focus:border-[var(--primary)]"
+            className="h-10 rounded-ui-control border border-divider bg-surface-raised px-3 font-normal outline-none focus:border-brand-primary"
             onChange={(event) =>
               setSourceFilter(
                 event.target.value as OperationalReportSourceFilter,
@@ -167,7 +175,7 @@ export function ReportsSurface({
         <label className="flex flex-col gap-2 text-sm font-semibold">
           <span>Başlangıç tarihi</span>
           <input
-            className="h-10 rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-white px-3 font-normal outline-none focus:border-[var(--primary)]"
+            className="h-10 rounded-ui-control border border-divider bg-surface-raised px-3 font-normal outline-none focus:border-brand-primary"
             onChange={(event) => setStartDate(event.target.value)}
             type="date"
             value={startDate}
@@ -176,7 +184,7 @@ export function ReportsSurface({
         <label className="flex flex-col gap-2 text-sm font-semibold">
           <span>Bitiş tarihi</span>
           <input
-            className="h-10 rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-white px-3 font-normal outline-none focus:border-[var(--primary)]"
+            className="h-10 rounded-ui-control border border-divider bg-surface-raised px-3 font-normal outline-none focus:border-brand-primary"
             onChange={(event) => setEndDate(event.target.value)}
             type="date"
             value={endDate}
@@ -185,7 +193,7 @@ export function ReportsSurface({
         <label className="flex flex-col gap-2 text-sm font-semibold">
           <span>Cari ekstresi</span>
           <select
-            className="h-10 rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-white px-3 font-normal outline-none focus:border-[var(--primary)]"
+            className="h-10 rounded-ui-control border border-divider bg-surface-raised px-3 font-normal outline-none focus:border-brand-primary"
             onChange={(event) => setSelectedCounterparty(event.target.value)}
             value={selectedCounterpartyValue}
           >
@@ -198,9 +206,21 @@ export function ReportsSurface({
           </select>
         </label>
       </div>
+      </section>
 
-      <article className="rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)] p-4">
-        <h2 className="text-sm font-semibold">Operasyon Özeti</h2>
+      <section aria-labelledby="rapor-kisayollari" className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+        <div className="col-span-full flex items-center justify-between">
+          <h2 className="text-base font-semibold text-content" id="rapor-kisayollari">Hazır raporlar</h2>
+          <p className="text-sm text-content-muted">Her kart mevcut canlı rapor bölümüne gider.</p>
+        </div>
+        <ReportShortcut description="Gelir, maliyet ve net sonucu şantiye bazında karşılaştırın." href="#santiye-karlilik" icon="chart" title="Şantiye Kârlılık Analizi" />
+        <ReportShortcut description="Mevcut kasa/banka net hareketini ve portföy çeklerini görün." href="#operasyon-ozeti" icon="wallet" title="Nakit Akış Özeti" />
+        <ReportShortcut description="Cari hareketleri ve yürüyen bakiyeyi filtre bağlamında inceleyin." href="#cari-ekstre" icon="users" title="Cari Ekstre Raporu" />
+        <ReportShortcut description="Kesinleşmiş hakediş, puantaj ve maaş özetlerini aynı görünümde takip edin." href="#operasyon-ozeti" icon="receipt" title="Hakediş ve İşçilik Özeti" />
+      </section>
+
+      <article className="rounded-ui-panel border border-divider bg-surface-raised p-4 shadow-sm" id="operasyon-ozeti">
+        <h2 className="text-base font-semibold text-content">Operasyon Özeti</h2>
         <div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-5">
           <Metric label="Rapor Para Birimi" value={report.currency} />
           <Metric
@@ -278,13 +298,13 @@ export function ReportsSurface({
         </div>
       </article>
 
-      <article className="overflow-hidden rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)]">
-        <div className="flex flex-col gap-3 border-b border-[var(--grid-border)] px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
+      <article className="overflow-hidden rounded-ui-panel border border-divider bg-surface-raised" id="cari-ekstre">
+        <div className="flex flex-col gap-3 border-b border-divider px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
           <h2 className="text-sm font-semibold">Cari Hareket Ekstresi</h2>
           {counterpartyStatementDetailRows.length > 0 ? (
             <a
               aria-label="Cari ekstresi CSV indir"
-              className="inline-flex h-9 items-center justify-center rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] px-3 text-xs font-semibold text-[var(--on-surface)] transition hover:bg-[var(--primary-fixed)]"
+              className="inline-flex h-9 items-center justify-center rounded-ui-control border border-divider bg-surface-muted px-3 text-xs font-semibold text-content transition hover:bg-brand-primary-subtle"
               download={counterpartyStatementCsvFileName}
               href={counterpartyStatementCsvHref}
             >
@@ -297,7 +317,7 @@ export function ReportsSurface({
             aria-label="Cari hareket ekstresi tablosu"
             className="min-w-[980px] w-full text-left text-sm"
           >
-            <thead className="bg-[var(--surface-container-low)] text-xs uppercase text-[var(--on-surface-variant)]">
+            <thead className="bg-surface-muted text-xs uppercase text-content-subtle">
               <tr>
                 <th className="px-4 py-3 font-semibold">Tarih</th>
                 <th className="px-4 py-3 font-semibold">Cari</th>
@@ -310,12 +330,12 @@ export function ReportsSurface({
                 </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[var(--grid-border)]">
+            <tbody className="divide-y divide-divider">
               {counterpartyStatementDetailRows.length === 0 ? (
                 <tr>
                   <td className="px-4 py-10 text-center" colSpan={8}>
                     <p className="font-semibold">Henüz cari hareketi yok</p>
-                    <p className="mt-1 text-sm text-[var(--on-surface-variant)]">
+                    <p className="mt-1 text-sm text-content-subtle">
                       Seçili filtrelere uygun fatura, hakediş, maaş veya
                       kasa/banka hareketi oluştuğunda bu tablo dolacaktır.
                     </p>
@@ -324,7 +344,7 @@ export function ReportsSurface({
               ) : (
                 counterpartyStatementDetailRows.map((row, idx) => (
                   <tr
-                    className="hover:bg-[var(--primary-fixed)]"
+                    className="hover:bg-brand-primary-subtle"
                     key={`${row.counterpartyName}-${row.source}-${row.documentNo}-${row.date}-${idx}`}
                   >
                     <td className="px-4 py-3">{formatDate(row.date)}</td>
@@ -335,7 +355,7 @@ export function ReportsSurface({
                     <td className="px-4 py-3 font-mono text-xs">
                       <Link
                         aria-label={`${row.documentNo} evrakına git`}
-                        className="font-semibold text-[var(--primary)] underline-offset-2 hover:underline"
+                        className="font-semibold text-brand-primary underline-offset-2 hover:underline"
                         href={row.targetHref}
                       >
                         {row.documentNo}
@@ -345,8 +365,8 @@ export function ReportsSurface({
                     <td
                       className={`px-4 py-3 text-right font-mono font-semibold ${
                         row.amount >= 0
-                          ? "text-[var(--status-approved)]"
-                          : "text-[var(--status-cancelled)]"
+                          ? "text-[var(--ds-success)]"
+                          : "text-[var(--ds-danger)]"
                       }`}
                     >
                       {formatMoney(row.amount)}
@@ -354,8 +374,8 @@ export function ReportsSurface({
                     <td
                       className={`px-4 py-3 text-right font-mono font-semibold ${
                         row.balanceAfter >= 0
-                          ? "text-[var(--status-approved)]"
-                          : "text-[var(--status-cancelled)]"
+                          ? "text-[var(--ds-success)]"
+                          : "text-[var(--ds-danger)]"
                       }`}
                     >
                       {formatMoney(row.balanceAfter)}
@@ -368,8 +388,8 @@ export function ReportsSurface({
         </div>
       </article>
 
-      <article className="overflow-hidden rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)]">
-        <div className="flex flex-col gap-3 border-b border-[var(--grid-border)] px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
+      <article className="overflow-hidden rounded-ui-panel border border-divider bg-surface-raised" id="santiye-karlilik">
+        <div className="flex flex-col gap-3 border-b border-divider px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
           <h2 className="text-sm font-semibold">Şantiye Kârlılık Özeti</h2>
           {report.siteProfitRows.length > 0 ? (
             <CsvDownloadLink
@@ -381,7 +401,7 @@ export function ReportsSurface({
         </div>
         <div className="overflow-x-auto">
           <table className="min-w-[980px] w-full text-left text-sm">
-            <thead className="bg-[var(--surface-container-low)] text-xs uppercase text-[var(--on-surface-variant)]">
+            <thead className="bg-surface-muted text-xs uppercase text-content-subtle">
               <tr>
                 <th className="px-4 py-3 font-semibold">Şantiye</th>
                 <th className="px-4 py-3 text-right font-semibold">Gelir</th>
@@ -393,12 +413,12 @@ export function ReportsSurface({
                 <th className="px-4 py-3 text-right font-semibold">Net</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[var(--grid-border)]">
+            <tbody className="divide-y divide-divider">
               {report.siteProfitRows.length === 0 ? (
                 <tr>
                   <td className="px-4 py-10 text-center" colSpan={8}>
                     <p className="font-semibold">Henüz şantiye kârlılık verisi yok</p>
-                    <p className="mt-1 text-sm text-[var(--on-surface-variant)]">
+                    <p className="mt-1 text-sm text-content-subtle">
                       Kesinleşmiş gelir hakedişi, alış faturası, gider, taşeron hakedişi
                       veya işçilik hareketleri oluştuğunda bu tablo dolacaktır.
                     </p>
@@ -406,10 +426,10 @@ export function ReportsSurface({
                 </tr>
               ) : (
                 report.siteProfitRows.map((row) => (
-                  <tr className="hover:bg-[var(--primary-fixed)]" key={row.siteCode || row.siteName}>
+                  <tr className="hover:bg-brand-primary-subtle" key={row.siteCode || row.siteName}>
                     <td className="px-4 py-3">
                       <p className="font-semibold">{row.siteName}</p>
-                      <p className="mt-1 font-mono text-xs text-[var(--on-surface-variant)]">
+                      <p className="mt-1 font-mono text-xs text-content-subtle">
                         {row.siteCode}
                       </p>
                     </td>
@@ -434,8 +454,8 @@ export function ReportsSurface({
                     <td
                       className={`px-4 py-3 text-right font-mono font-semibold ${
                         row.netProfit >= 0
-                          ? "text-[var(--status-approved)]"
-                          : "text-[var(--status-cancelled)]"
+                          ? "text-[var(--ds-success)]"
+                          : "text-[var(--ds-danger)]"
                       }`}
                     >
                       {formatMoney(row.netProfit)}
@@ -448,8 +468,8 @@ export function ReportsSurface({
         </div>
       </article>
 
-      <article className="overflow-hidden rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)]">
-        <div className="flex flex-col gap-3 border-b border-[var(--grid-border)] px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
+      <article className="overflow-hidden rounded-ui-panel border border-divider bg-surface-raised" id="cari-bakiye">
+        <div className="flex flex-col gap-3 border-b border-divider px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
           <h2 className="text-sm font-semibold">Cari Bakiye Özeti</h2>
           {report.counterpartyStatementRows.length > 0 ? (
             <CsvDownloadLink
@@ -461,7 +481,7 @@ export function ReportsSurface({
         </div>
         <div className="overflow-x-auto">
           <table className="min-w-[900px] w-full text-left text-sm">
-            <thead className="bg-[var(--surface-container-low)] text-xs uppercase text-[var(--on-surface-variant)]">
+            <thead className="bg-surface-muted text-xs uppercase text-content-subtle">
               <tr>
                 <th className="px-4 py-3 font-semibold">Cari</th>
                 <th className="px-4 py-3 text-right font-semibold">
@@ -479,12 +499,12 @@ export function ReportsSurface({
                 </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[var(--grid-border)]">
+            <tbody className="divide-y divide-divider">
               {report.counterpartyStatementRows.length === 0 ? (
                 <tr>
                   <td className="px-4 py-10 text-center" colSpan={6}>
                     <p className="font-semibold">Henüz cari bakiye verisi yok</p>
-                    <p className="mt-1 text-sm text-[var(--on-surface-variant)]">
+                    <p className="mt-1 text-sm text-content-subtle">
                       Fatura, gider, hakediş, maaş veya kasa/banka hareketleri
                       oluştuğunda bu tablo dolacaktır.
                     </p>
@@ -493,7 +513,7 @@ export function ReportsSurface({
               ) : (
                 report.counterpartyStatementRows.map((row, idx) => (
                   <tr
-                    className="hover:bg-[var(--primary-fixed)]"
+                    className="hover:bg-brand-primary-subtle"
                     key={`${row.counterpartyName}-${idx}`}
                   >
                     <td className="px-4 py-3 font-semibold">
@@ -514,8 +534,8 @@ export function ReportsSurface({
                     <td
                       className={`px-4 py-3 text-right font-mono font-semibold ${
                         row.netBalance >= 0
-                          ? "text-[var(--status-approved)]"
-                          : "text-[var(--status-cancelled)]"
+                          ? "text-[var(--ds-success)]"
+                          : "text-[var(--ds-danger)]"
                       }`}
                     >
                       {formatMoney(row.netBalance)}
@@ -528,8 +548,8 @@ export function ReportsSurface({
         </div>
       </article>
 
-      <article className="overflow-hidden rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)]">
-        <div className="flex flex-col gap-3 border-b border-[var(--grid-border)] px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
+      <article className="overflow-hidden rounded-ui-panel border border-divider bg-surface-raised" id="son-hareketler">
+        <div className="flex flex-col gap-3 border-b border-divider px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
           <h2 className="text-sm font-semibold">Son Hareketler</h2>
           {report.activityRows.length > 0 ? (
             <CsvDownloadLink
@@ -541,7 +561,7 @@ export function ReportsSurface({
         </div>
         <div className="overflow-x-auto">
           <table className="min-w-[860px] w-full text-left text-sm">
-            <thead className="bg-[var(--surface-container-low)] text-xs uppercase text-[var(--on-surface-variant)]">
+            <thead className="bg-surface-muted text-xs uppercase text-content-subtle">
               <tr>
                 <th className="px-4 py-3 font-semibold">Tarih</th>
                 <th className="px-4 py-3 font-semibold">Kaynak</th>
@@ -550,12 +570,12 @@ export function ReportsSurface({
                 <th className="px-4 py-3 text-right font-semibold">Tutar</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[var(--grid-border)]">
+            <tbody className="divide-y divide-divider">
               {report.activityRows.length === 0 ? (
                 <tr>
                   <td className="px-4 py-10 text-center" colSpan={5}>
                     <p className="font-semibold">Henüz rapor hareketi yok</p>
-                    <p className="mt-1 text-sm text-[var(--on-surface-variant)]">
+                    <p className="mt-1 text-sm text-content-subtle">
                       Fatura, gider, hakediş, puantaj, kasa/banka veya çek hareketleri
                       oluştuğunda bu liste dolacaktır.
                     </p>
@@ -564,7 +584,7 @@ export function ReportsSurface({
               ) : (
                 report.activityRows.map((row) => (
                   <tr
-                    className="hover:bg-[var(--primary-fixed)]"
+                    className="hover:bg-brand-primary-subtle"
                     key={row.id}
                   >
                     <td className="px-4 py-3">{formatDate(row.date)}</td>
@@ -599,7 +619,7 @@ function CsvDownloadLink({
   return (
     <a
       aria-label={ariaLabel}
-      className="inline-flex h-9 items-center justify-center rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] px-3 text-xs font-semibold text-[var(--on-surface)] transition hover:bg-[var(--primary-fixed)]"
+      className="inline-flex h-9 items-center justify-center rounded-ui-control border border-divider bg-surface-muted px-3 text-xs font-semibold text-content transition hover:bg-brand-primary-subtle"
       download={fileName}
       href={href}
     >
@@ -608,13 +628,38 @@ function CsvDownloadLink({
   );
 }
 
+function ReportShortcut({
+  description,
+  href,
+  icon,
+  title,
+}: {
+  description: string;
+  href: string;
+  icon: IconName;
+  title: string;
+}) {
+  return (
+    <article className="flex min-h-52 flex-col rounded-ui-panel border border-divider bg-surface-raised p-5 shadow-sm transition hover:border-brand-primary/40 hover:shadow-md">
+      <span className="inline-flex h-11 w-11 items-center justify-center rounded-ui-control bg-brand-primary/10 text-brand-primary">
+        <Icon name={icon} size={22} />
+      </span>
+      <h3 className="mt-4 text-base font-semibold text-content">{title}</h3>
+      <p className="mt-2 flex-1 text-sm leading-6 text-content-muted">{description}</p>
+      <a className="mt-5 inline-flex h-10 items-center justify-center rounded-ui-control border border-brand-primary px-3 text-sm font-semibold text-brand-primary transition hover:bg-brand-primary hover:text-on-brand" href={href}>
+        Raporu görüntüle
+      </a>
+    </article>
+  );
+}
+
 function Metric({ label, value }: { label: string; value: string }) {
   return (
-    <article className="rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] p-4">
-      <p className="text-sm font-semibold text-[var(--on-surface-variant)]">
+    <article className="rounded-ui-panel border border-divider bg-surface-raised p-4 shadow-sm">
+      <p className="text-sm font-semibold text-content-muted">
         {label}
       </p>
-      <p className="mt-2 font-mono text-2xl font-semibold">{value}</p>
+      <p className="mt-2 font-mono text-2xl font-semibold text-content">{value}</p>
     </article>
   );
 }

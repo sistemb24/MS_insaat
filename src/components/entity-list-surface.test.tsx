@@ -23,6 +23,56 @@ afterEach(() => {
 });
 
 describe("EntityListSurface", () => {
+  it("applies the customer route list, status filter and create panel standard", () => {
+    const definition = getEntityDefinition("musteriler");
+
+    expect(definition).toBeDefined();
+
+    render(
+      <EntityListSurface
+        definition={definition!}
+        initialRows={[
+          {
+            ...definition!.sampleRows[0],
+            code: "MUS-AKTIF",
+            name: "Aktif Müşteri",
+            status: "Aktif",
+          },
+          {
+            ...definition!.sampleRows[1],
+            code: "MUS-PASIF",
+            name: "Pasif Müşteri",
+            status: "Pasif",
+          },
+        ]}
+        visualVariant="customer"
+      />,
+    );
+
+    expect(screen.queryByRole("heading", { level: 1 })).toBeNull();
+    expect(
+      screen.getByRole("table", { name: "Müşteri cari kartları tablosu" }),
+    ).toBeDefined();
+    expect(
+      screen.getByRole("group", { name: "Müşteri durum filtresi" }),
+    ).toBeDefined();
+
+    fireEvent.click(screen.getByRole("button", { name: /Pasif\s*1/ }));
+
+    expect(screen.queryByText("Aktif Müşteri")).toBeNull();
+    expect(screen.getByText("Pasif Müşteri")).toBeDefined();
+
+    fireEvent.click(screen.getByRole("button", { name: "Yeni Müşteri" }));
+
+    expect(
+      screen.getByRole("form", { name: "Müşteri kayıt paneli" }),
+    ).toBeDefined();
+    expect(
+      screen.getByRole("heading", { level: 2, name: "Yeni Müşteri" }),
+    ).toBeDefined();
+    expect(document.activeElement).toBe(screen.getByLabelText("Kodu"));
+  });
+
   it("creates a counterparty collection or payment from the selected card", async () => {
     const definition = getEntityDefinition("musteriler");
     const createCounterpartyMovement = vi.fn(async () => ({
@@ -297,8 +347,8 @@ describe("EntityListSurface", () => {
       name: /3\. satır\s+MUS-0003\s+-\s+Hatalı\s+Tanım zorunludur\./i,
     });
 
-    expect(validPreviewRow.className).toContain("status-approved");
-    expect(invalidPreviewRow.className).toContain("mandatory-indicator");
+    expect(validPreviewRow.className).toContain("ds-success");
+    expect(invalidPreviewRow.className).toContain("ds-danger");
 
     const previewErrorReportLink = screen.getByRole("link", {
       name: "Önizleme hata raporu CSV indir",

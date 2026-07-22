@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+
+<html lang="tr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Puantaj Cetveli - NOA İnşaat</title>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Google Fonts: Inter -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind Configuration -->
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+          colors: {
+            primary: {
+              50: '#eef2ff',
+              100: '#e0e7ff',
+              500: '#6366f1',
+              600: '#4f46e5',
+              700: '#4338ca',
+            },
+            status: {
+              tam: '#4f46e5', // Indigo
+              yarim: '#f59e0b', // Amber
+              raporlu: '#ef4444', // Red
+              izinli: '#6b7280', // Gray
+              tatil: '#10b981', // Emerald
+            }
+          }
+        }
+      }
+    }
+  </script>
+<!-- Custom Styles -->
+<style data-purpose="custom-utilities">
+    /* Hide scrollbar for Chrome, Safari and Opera */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    /* Hide scrollbar for IE, Edge and Firefox */
+    .no-scrollbar {
+      -ms-overflow-style: none;  /* IE and Edge */
+      scrollbar-width: none;  /* Firefox */
+    }
+
+    /* Ensure content area doesn't overlap with sticky footer/header */
+    body {
+      padding-top: 56px; /* Top app bar height */
+      padding-bottom: 140px; /* Summary footer + bottom nav height */
+    }
+  </style>
+</head>
+<body class="bg-gray-50 font-sans text-gray-900 flex flex-col min-h-screen relative">
+<!-- BEGIN: TopAppBar -->
+<!-- Sticky top app bar with back navigation, title, and search -->
+<header class="fixed top-0 left-0 right-0 h-14 bg-white border-b border-gray-200 z-50 flex items-center justify-between px-4" data-purpose="top-app-bar">
+<div class="flex items-center">
+<!-- Back Button -->
+<button aria-label="Geri Dön" class="p-2 -ml-2 text-gray-600 hover:text-gray-900 rounded-full focus:outline-none focus:ring-2 focus:ring-primary-500">
+<svg class="h-6 w-6" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M15 19l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</button>
+<!-- Title -->
+<h1 class="ml-2 text-lg font-semibold text-gray-900 truncate">Puantaj Cetveli</h1>
+</div>
+<!-- Search Action -->
+<button aria-label="Ara" class="p-2 text-gray-600 hover:text-gray-900 rounded-full focus:outline-none focus:ring-2 focus:ring-primary-500">
+<svg class="h-5 w-5" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</button>
+</header>
+<!-- END: TopAppBar -->
+<!-- BEGIN: MainContent -->
+<main class="flex-1 overflow-y-auto" data-purpose="main-content">
+<!-- BEGIN: Context & Filters Section -->
+<section class="bg-white px-4 py-3 border-b border-gray-200" data-purpose="context-filters">
+<!-- Project Context -->
+<div class="text-xs text-gray-500 uppercase tracking-wider mb-1 font-medium">Proje</div>
+<div class="text-sm font-medium text-gray-800 mb-3 truncate">İstanbul Finans Merkezi</div>
+<!-- Date Filter -->
+<div class="flex items-center justify-between">
+<div class="text-sm font-medium text-gray-700">Dönem</div>
+<button class="flex items-center space-x-1 px-3 py-1.5 border border-gray-300 rounded-md bg-white text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary-500">
+<span>Kasım 2023</span>
+<svg class="h-4 w-4 text-gray-500" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+<path clip-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" fill-rule="evenodd"></path>
+</svg>
+</button>
+</div>
+</section>
+<!-- END: Context & Filters Section -->
+<!-- BEGIN: Legend Section -->
+<section class="bg-gray-50 py-3 border-b border-gray-200" data-purpose="status-legend">
+<div class="px-4 mb-1 text-xs text-gray-500 uppercase tracking-wider font-medium">Durumlar</div>
+<!-- Horizontal scrollable chip bar for legend -->
+<div class="flex overflow-x-auto no-scrollbar px-4 space-x-2 pb-1">
+<!-- Legend Item: Tam Gün -->
+<div class="flex-shrink-0 flex items-center space-x-1.5 bg-white border border-gray-200 rounded-full px-2.5 py-1 shadow-sm">
+<span class="w-4 h-4 rounded bg-status-tam text-white flex items-center justify-center text-[10px] font-bold">X</span>
+<span class="text-xs font-medium text-gray-700">Tam Gün</span>
+</div>
+<!-- Legend Item: Yarım Gün -->
+<div class="flex-shrink-0 flex items-center space-x-1.5 bg-white border border-gray-200 rounded-full px-2.5 py-1 shadow-sm">
+<span class="w-4 h-4 rounded bg-status-yarim text-white flex items-center justify-center text-[10px] font-bold">Y</span>
+<span class="text-xs font-medium text-gray-700">Yarım Gün</span>
+</div>
+<!-- Legend Item: Raporlu -->
+<div class="flex-shrink-0 flex items-center space-x-1.5 bg-white border border-gray-200 rounded-full px-2.5 py-1 shadow-sm">
+<span class="w-4 h-4 rounded bg-status-raporlu text-white flex items-center justify-center text-[10px] font-bold">R</span>
+<span class="text-xs font-medium text-gray-700">Raporlu</span>
+</div>
+<!-- Legend Item: İzinli -->
+<div class="flex-shrink-0 flex items-center space-x-1.5 bg-white border border-gray-200 rounded-full px-2.5 py-1 shadow-sm">
+<span class="w-4 h-4 rounded bg-status-izinli text-white flex items-center justify-center text-[10px] font-bold">İ</span>
+<span class="text-xs font-medium text-gray-700">İzinli</span>
+</div>
+<!-- Legend Item: Hafta Tatili -->
+<div class="flex-shrink-0 flex items-center space-x-1.5 bg-white border border-gray-200 rounded-full px-2.5 py-1 shadow-sm">
+<span class="w-4 h-4 rounded bg-status-tatil text-white flex items-center justify-center text-[10px] font-bold">H</span>
+<span class="text-xs font-medium text-gray-700">H. Tatil</span>
+</div>
+</div>
+</section>
+<!-- END: Legend Section -->
+<!-- BEGIN: Personnel List -->
+<section class="p-4 space-y-4" data-purpose="personnel-list">
+<!-- Week Navigator (Common for all cards in this view context) -->
+<div class="flex justify-between items-center mb-2 px-1">
+<button class="p-1 text-gray-500 hover:text-gray-800 focus:outline-none rounded">
+<svg class="h-5 w-5" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+<path clip-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" fill-rule="evenodd"></path>
+</svg>
+</button>
+<span class="text-sm font-medium text-gray-700">1 - 7 Kasım 2023</span>
+<button class="p-1 text-gray-500 hover:text-gray-800 focus:outline-none rounded">
+<svg class="h-5 w-5" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+<path clip-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" fill-rule="evenodd"></path>
+</svg>
+</button>
+</div>
+<!-- Personnel Card 1: Ahmet Yılmaz -->
+<article class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden" data-purpose="personnel-card">
+<!-- Card Header: Profile Info -->
+<div class="p-3 flex items-center border-b border-gray-100">
+<img alt="Ahmet Yılmaz" class="h-10 w-10 rounded-full object-cover mr-3 bg-gray-100 border border-gray-200" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB5ewsmcNJ7QX3MIV1fu7G2ehtctCFEA0FyfbLjc-4xZ6VAlmdcSaaGDxgX0WDxBrjISzRRo7lNzZtXGIbmbOir2r3ejIgmCjNoYTIA_zkVZMeSH0aBpVOjFXIttiF4KN5YyISIWCPCzfcaOLboL9uDwIJGbNtsijHfDwW81EpWtJdE8p4vou1wzJBDMUnbm-0ROdsv_vPIOOpUkKIK9Vjr73bbSYkpGjwLJ5AOz72GIDbm9l5OmU36"/>
+<div>
+<h3 class="text-sm font-semibold text-gray-900">Ahmet Yılmaz</h3>
+<p class="text-xs text-gray-500">Usta Başı</p>
+</div>
+</div>
+<!-- Card Body: Weekly Timesheet Scroll -->
+<div class="bg-gray-50/50 p-2 overflow-x-auto no-scrollbar">
+<div class="flex space-x-1 min-w-max">
+<!-- Day 1 -->
+<button class="flex flex-col items-center justify-center w-11 p-1 rounded-md hover:bg-gray-100 focus:outline-none focus:ring-1 focus:ring-primary-500">
+<span class="text-[10px] font-medium text-gray-500 mb-1">PER 1</span>
+<div class="w-7 h-7 rounded border border-gray-200 bg-white flex items-center justify-center text-gray-800 text-xs font-semibold shadow-sm">X</div>
+</button>
+<!-- Day 2 -->
+<button class="flex flex-col items-center justify-center w-11 p-1 rounded-md hover:bg-gray-100 focus:outline-none focus:ring-1 focus:ring-primary-500">
+<span class="text-[10px] font-medium text-gray-500 mb-1">CUM 2</span>
+<div class="w-7 h-7 rounded border border-gray-200 bg-white flex items-center justify-center text-gray-800 text-xs font-semibold shadow-sm">X</div>
+</button>
+<!-- Day 3 -->
+<button class="flex flex-col items-center justify-center w-11 p-1 rounded-md hover:bg-gray-100 focus:outline-none focus:ring-1 focus:ring-primary-500">
+<span class="text-[10px] font-medium text-gray-500 mb-1">CMT 3</span>
+<div class="w-7 h-7 rounded border border-gray-200 bg-white flex items-center justify-center text-gray-800 text-xs font-semibold shadow-sm">X</div>
+</button>
+<!-- Day 4 -->
+<button class="flex flex-col items-center justify-center w-11 p-1 rounded-md hover:bg-gray-100 focus:outline-none focus:ring-1 focus:ring-primary-500">
+<span class="text-[10px] font-medium text-gray-500 mb-1">PAZ 4</span>
+<div class="w-7 h-7 rounded border border-gray-200 bg-white flex items-center justify-center text-gray-800 text-xs font-semibold shadow-sm">X</div>
+</button>
+<!-- Day 5 -->
+<button class="flex flex-col items-center justify-center w-11 p-1 rounded-md bg-status-tatil/10 hover:bg-status-tatil/20 focus:outline-none focus:ring-1 focus:ring-primary-500">
+<span class="text-[10px] font-bold text-status-tatil mb-1">PZT 5</span>
+<div class="w-7 h-7 rounded border border-status-tatil/30 bg-status-tatil text-white flex items-center justify-center text-xs font-bold shadow-sm">H</div>
+</button>
+<!-- Day 6 -->
+<button class="flex flex-col items-center justify-center w-11 p-1 rounded-md hover:bg-gray-100 focus:outline-none focus:ring-1 focus:ring-primary-500">
+<span class="text-[10px] font-medium text-gray-500 mb-1">SAL 6</span>
+<div class="w-7 h-7 rounded border border-gray-200 bg-white flex items-center justify-center text-gray-800 text-xs font-semibold shadow-sm">X</div>
+</button>
+<!-- Day 7 -->
+<button class="flex flex-col items-center justify-center w-11 p-1 rounded-md hover:bg-gray-100 focus:outline-none focus:ring-1 focus:ring-primary-500">
+<span class="text-[10px] font-medium text-gray-500 mb-1">ÇAR 7</span>
+<div class="w-7 h-7 rounded border border-gray-200 bg-white flex items-center justify-center text-gray-800 text-xs font-semibold shadow-sm">X</div>
+</button>
+</div>
+</div>
+</article>
+<!-- Personnel Card 2: Elif Demir -->
+<article class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden" data-purpose="personnel-card">
+<div class="p-3 flex items-center border-b border-gray-100">
+<img alt="Elif Demir" class="h-10 w-10 rounded-full object-cover mr-3 bg-gray-100 border border-gray-200" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCowAbCg4dEp4WbmwyWHj03bUHpXAyI27S1x85hbUMWzeBVgGrq3qNGeWhF-fYio-h1vgxv_nEeDPj3NqFyCfRh1-3DDDM1rxTmkc6SUn5XfW5Nsy16Gdi6-cz56X9CqDzn5q4D1Ct4QR6UZoIQV8y0He1Xsf_uIq-ut4M69EBIUsEjWoAsLnz0H7n1acXsX3YkRgw-8Uj3fUBec5KtbpHqvGwJz3d5hlkkJtw8wP8xpVbn270KAYgG"/>
+<div>
+<h3 class="text-sm font-semibold text-gray-900">Elif Demir</h3>
+<p class="text-xs text-gray-500">İnşaat Mühendisi</p>
+</div>
+</div>
+<div class="bg-gray-50/50 p-2 overflow-x-auto no-scrollbar">
+<div class="flex space-x-1 min-w-max">
+<button class="flex flex-col items-center justify-center w-11 p-1 rounded-md hover:bg-gray-100 focus:outline-none focus:ring-1 focus:ring-primary-500">
+<span class="text-[10px] font-medium text-gray-500 mb-1">PER 1</span>
+<div class="w-7 h-7 rounded border border-gray-200 bg-white flex items-center justify-center text-gray-800 text-xs font-semibold shadow-sm">X</div>
+</button>
+<button class="flex flex-col items-center justify-center w-11 p-1 rounded-md hover:bg-gray-100 focus:outline-none focus:ring-1 focus:ring-primary-500">
+<span class="text-[10px] font-medium text-gray-500 mb-1">CUM 2</span>
+<div class="w-7 h-7 rounded border border-gray-200 bg-white flex items-center justify-center text-gray-800 text-xs font-semibold shadow-sm">X</div>
+</button>
+<button class="flex flex-col items-center justify-center w-11 p-1 rounded-md hover:bg-gray-100 focus:outline-none focus:ring-1 focus:ring-primary-500">
+<span class="text-[10px] font-medium text-gray-500 mb-1">CMT 3</span>
+<div class="w-7 h-7 rounded border border-gray-200 bg-white flex items-center justify-center text-gray-800 text-xs font-semibold shadow-sm">X</div>
+</button>
+<button class="flex flex-col items-center justify-center w-11 p-1 rounded-md hover:bg-gray-100 focus:outline-none focus:ring-1 focus:ring-primary-500">
+<span class="text-[10px] font-medium text-gray-500 mb-1">PAZ 4</span>
+<div class="w-7 h-7 rounded border border-gray-200 bg-white flex items-center justify-center text-gray-800 text-xs font-semibold shadow-sm">X</div>
+</button>
+<button class="flex flex-col items-center justify-center w-11 p-1 rounded-md bg-status-tatil/10 hover:bg-status-tatil/20 focus:outline-none focus:ring-1 focus:ring-primary-500">
+<span class="text-[10px] font-bold text-status-tatil mb-1">PZT 5</span>
+<div class="w-7 h-7 rounded border border-status-tatil/30 bg-status-tatil text-white flex items-center justify-center text-xs font-bold shadow-sm">H</div>
+</button>
+<button class="flex flex-col items-center justify-center w-11 p-1 rounded-md hover:bg-gray-100 focus:outline-none focus:ring-1 focus:ring-primary-500">
+<span class="text-[10px] font-medium text-gray-500 mb-1">SAL 6</span>
+<div class="w-7 h-7 rounded border border-gray-200 bg-white flex items-center justify-center text-gray-800 text-xs font-semibold shadow-sm">X</div>
+</button>
+<button class="flex flex-col items-center justify-center w-11 p-1 rounded-md hover:bg-gray-100 focus:outline-none focus:ring-1 focus:ring-primary-500">
+<span class="text-[10px] font-medium text-gray-500 mb-1">ÇAR 7</span>
+<div class="w-7 h-7 rounded border border-gray-200 bg-white flex items-center justify-center text-gray-800 text-xs font-semibold shadow-sm">X</div>
+</button>
+</div>
+</div>
+</article>
+<!-- Personnel Card 3: Mehmet Kaya (Initials Avatar) -->
+<article class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden" data-purpose="personnel-card">
+<div class="p-3 flex items-center border-b border-gray-100">
+<div class="h-10 w-10 rounded-full mr-3 bg-indigo-100 text-primary-700 flex items-center justify-center font-bold text-sm border border-indigo-200">
+            MK
+          </div>
+<div>
+<h3 class="text-sm font-semibold text-gray-900">Mehmet Kaya</h3>
+<p class="text-xs text-gray-500">Düz İşçi</p>
+</div>
+</div>
+<div class="bg-gray-50/50 p-2 overflow-x-auto no-scrollbar">
+<div class="flex space-x-1 min-w-max">
+<!-- Day cells logic identical to above, omitted repeated code for brevity in similar elements -->
+<button class="flex flex-col items-center justify-center w-11 p-1 rounded-md hover:bg-gray-100"><span class="text-[10px] font-medium text-gray-500 mb-1">PER 1</span><div class="w-7 h-7 rounded border border-gray-200 bg-white flex items-center justify-center text-gray-800 text-xs font-semibold shadow-sm">X</div></button>
+<button class="flex flex-col items-center justify-center w-11 p-1 rounded-md hover:bg-gray-100"><span class="text-[10px] font-medium text-gray-500 mb-1">CUM 2</span><div class="w-7 h-7 rounded border border-gray-200 bg-white flex items-center justify-center text-gray-800 text-xs font-semibold shadow-sm">X</div></button>
+<button class="flex flex-col items-center justify-center w-11 p-1 rounded-md hover:bg-gray-100"><span class="text-[10px] font-medium text-gray-500 mb-1">CMT 3</span><div class="w-7 h-7 rounded border border-gray-200 bg-white flex items-center justify-center text-gray-800 text-xs font-semibold shadow-sm">X</div></button>
+<button class="flex flex-col items-center justify-center w-11 p-1 rounded-md hover:bg-gray-100"><span class="text-[10px] font-medium text-gray-500 mb-1">PAZ 4</span><div class="w-7 h-7 rounded border border-gray-200 bg-white flex items-center justify-center text-gray-800 text-xs font-semibold shadow-sm">X</div></button>
+<button class="flex flex-col items-center justify-center w-11 p-1 rounded-md bg-status-tatil/10"><span class="text-[10px] font-bold text-status-tatil mb-1">PZT 5</span><div class="w-7 h-7 rounded border border-status-tatil/30 bg-status-tatil text-white flex items-center justify-center text-xs font-bold shadow-sm">H</div></button>
+<button class="flex flex-col items-center justify-center w-11 p-1 rounded-md hover:bg-gray-100"><span class="text-[10px] font-medium text-gray-500 mb-1">SAL 6</span><div class="w-7 h-7 rounded border border-gray-200 bg-white flex items-center justify-center text-gray-800 text-xs font-semibold shadow-sm">X</div></button>
+<button class="flex flex-col items-center justify-center w-11 p-1 rounded-md hover:bg-gray-100"><span class="text-[10px] font-medium text-gray-500 mb-1">ÇAR 7</span><div class="w-7 h-7 rounded border border-gray-200 bg-white flex items-center justify-center text-gray-800 text-xs font-semibold shadow-sm">X</div></button>
+</div>
+</div>
+</article>
+</section>
+<!-- END: Personnel List -->
+</main>
+<!-- END: MainContent -->
+<!-- BEGIN: Sticky Summary Footer -->
+<section class="fixed bottom-[56px] left-0 right-0 bg-white border-t border-gray-200 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] z-40" data-purpose="summary-footer">
+<div class="px-4 py-3 flex justify-between items-start space-x-2">
+<!-- Toplam Çalışma -->
+<div class="flex-1">
+<div class="text-[10px] text-gray-500 uppercase tracking-wide font-medium mb-0.5">Top. Çalışma</div>
+<div class="text-sm font-bold text-gray-900">4,250 Saat</div>
+</div>
+<!-- Toplam Gün -->
+<div class="flex-1 border-l border-gray-200 pl-2">
+<div class="text-[10px] text-gray-500 uppercase tracking-wide font-medium mb-0.5">Top. Gün</div>
+<div class="text-sm font-bold text-gray-900">531 Gün</div>
+</div>
+<!-- Tahmini Tahakkuk -->
+<div class="flex-1 border-l border-gray-200 pl-2 text-right">
+<div class="text-[10px] text-gray-500 uppercase tracking-wide font-medium mb-0.5">Tah. Tahakkuk</div>
+<div class="text-sm font-bold text-emerald-600">₺845,000</div>
+</div>
+</div>
+<!-- Floating Action Button inside footer area for saving -->
+<div class="px-4 pb-3">
+<button class="w-full bg-primary-600 hover:bg-primary-700 text-white font-medium py-2.5 px-4 rounded-lg shadow-md flex justify-center items-center space-x-2 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors">
+<svg class="h-5 w-5" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+<path clip-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" fill-rule="evenodd"></path>
+</svg>
+<span>Kaydet ve Kesinleştir</span>
+</button>
+</div>
+</section>
+<!-- END: Sticky Summary Footer -->
+<!-- BEGIN: BottomNavigationBar -->
+<nav class="fixed bottom-0 left-0 right-0 h-14 bg-white border-t border-gray-200 flex justify-around items-center px-2 z-50 pb-safe" data-purpose="bottom-nav">
+<!-- Nav Item: Panel -->
+<a class="flex flex-col items-center justify-center w-full h-full text-gray-500 hover:text-primary-600" href="#">
+<svg class="h-5 w-5 mb-1" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span class="text-[10px] font-medium">Panel</span>
+</a>
+<!-- Nav Item: Şantiyeler -->
+<a class="flex flex-col items-center justify-center w-full h-full text-gray-500 hover:text-primary-600" href="#">
+<svg class="h-5 w-5 mb-1" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span class="text-[10px] font-medium">Şantiyeler</span>
+</a>
+<!-- Nav Item: Personel (Active) -->
+<a class="flex flex-col items-center justify-center w-full h-full text-primary-600" href="#">
+<svg class="h-5 w-5 mb-1" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span class="text-[10px] font-medium">Personel</span>
+</a>
+<!-- Nav Item: Belgeler -->
+<a class="flex flex-col items-center justify-center w-full h-full text-gray-500 hover:text-primary-600" href="#">
+<svg class="h-5 w-5 mb-1" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span class="text-[10px] font-medium">Belgeler</span>
+</a>
+<!-- Nav Item: Ayarlar -->
+<a class="flex flex-col items-center justify-center w-full h-full text-gray-500 hover:text-primary-600" href="#">
+<svg class="h-5 w-5 mb-1" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+<path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span class="text-[10px] font-medium">Ayarlar</span>
+</a>
+</nav>
+<!-- END: BottomNavigationBar -->
+</body></html>

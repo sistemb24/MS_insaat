@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+
+<html class="light" lang="tr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Personel Yönetimi</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                            "primary-container": "#4f46e5",
+                            "tertiary-container": "#a44100",
+                            "tertiary": "#7e3000",
+                            "tertiary-fixed-dim": "#ffb695",
+                            "decorative-navy": "#000080",
+                            "inverse-surface": "#2d3133",
+                            "surface-bright": "#f7f9fb",
+                            "secondary": "#565e74",
+                            "on-tertiary-fixed-variant": "#7b2f00",
+                            "on-tertiary-container": "#ffd2be",
+                            "background": "#f7f9fb",
+                            "border-slate": "#E2E8F0",
+                            "on-secondary-fixed": "#131b2e",
+                            "secondary-fixed": "#dae2fd",
+                            "inverse-on-surface": "#eff1f3",
+                            "on-primary-container": "#dad7ff",
+                            "on-secondary-container": "#5c647a",
+                            "inverse-primary": "#c3c0ff",
+                            "on-secondary": "#ffffff",
+                            "surface-container-lowest": "#ffffff",
+                            "surface-container-low": "#f2f4f6",
+                            "on-surface-variant": "#464555",
+                            "text-muted": "#64748B",
+                            "surface-container": "#eceef0",
+                            "warning-amber": "#F59E0B",
+                            "surface-container-highest": "#e0e3e5",
+                            "on-secondary-fixed-variant": "#3f465c",
+                            "on-error-container": "#93000a",
+                            "secondary-fixed-dim": "#bec6e0",
+                            "outline": "#777587",
+                            "danger-rose": "#E11D48",
+                            "decorative-purple": "#800080",
+                            "error-container": "#ffdad6",
+                            "error": "#ba1a1a",
+                            "surface": "#f7f9fb",
+                            "on-surface": "#191c1e",
+                            "outline-variant": "#c7c4d8",
+                            "secondary-container": "#dae2fd",
+                            "surface-white": "#FFFFFF",
+                            "on-error": "#ffffff",
+                            "on-background": "#191c1e",
+                            "on-primary": "#ffffff",
+                            "surface-dim": "#d8dadc",
+                            "primary-fixed": "#e2dfff",
+                            "on-tertiary": "#ffffff",
+                            "primary": "#3525cd",
+                            "on-tertiary-fixed": "#351000",
+                            "on-primary-fixed": "#0f0069",
+                            "tertiary-fixed": "#ffdbcc",
+                            "on-primary-fixed-variant": "#3323cc",
+                            "surface-variant": "#e0e3e5",
+                            "success-emerald": "#10B981",
+                            "surface-container-high": "#e6e8ea",
+                            "primary-fixed-dim": "#c3c0ff",
+                            "surface-tint": "#4d44e3"
+                    },
+                    "borderRadius": {
+                            "DEFAULT": "0.25rem",
+                            "lg": "0.5rem",
+                            "xl": "0.75rem",
+                            "full": "9999px"
+                    },
+                    "spacing": {
+                            "stack-md": "1rem",
+                            "header-height": "64px",
+                            "grid-cell-px": "0.75rem",
+                            "container-gap": "1.5rem",
+                            "sidebar-collapsed": "80px",
+                            "stack-sm": "0.5rem",
+                            "sidebar-width": "260px",
+                            "grid-cell-py": "0.5rem"
+                    },
+                    "fontFamily": {
+                            "body-md": [
+                                    "Inter"
+                            ],
+                            "body-sm": [
+                                    "Inter"
+                            ],
+                            "headline-sm": [
+                                    "Inter"
+                            ],
+                            "label-caps": [
+                                    "Inter"
+                            ],
+                            "headline-lg": [
+                                    "Inter"
+                            ],
+                            "headline-lg-mobile": [
+                                    "Inter"
+                            ],
+                            "body-lg": [
+                                    "Inter"
+                            ],
+                            "headline-md": [
+                                    "Inter"
+                            ],
+                            "data-mono": [
+                                    "JetBrains Mono"
+                            ]
+                    },
+                    "fontSize": {
+                            "body-md": [
+                                    "14px",
+                                    {
+                                            "lineHeight": "20px",
+                                            "fontWeight": "400"
+                                    }
+                            ],
+                            "body-sm": [
+                                    "13px",
+                                    {
+                                            "lineHeight": "18px",
+                                            "fontWeight": "400"
+                                    }
+                            ],
+                            "headline-sm": [
+                                    "20px",
+                                    {
+                                            "lineHeight": "28px",
+                                            "fontWeight": "600"
+                                    }
+                            ],
+                            "label-caps": [
+                                    "12px",
+                                    {
+                                            "lineHeight": "16px",
+                                            "letterSpacing": "0.05em",
+                                            "fontWeight": "700"
+                                    }
+                            ],
+                            "headline-lg": [
+                                    "30px",
+                                    {
+                                            "lineHeight": "38px",
+                                            "letterSpacing": "-0.02em",
+                                            "fontWeight": "700"
+                                    }
+                            ],
+                            "headline-lg-mobile": [
+                                    "24px",
+                                    {
+                                            "lineHeight": "32px",
+                                            "fontWeight": "700"
+                                    }
+                            ],
+                            "body-lg": [
+                                    "16px",
+                                    {
+                                            "lineHeight": "24px",
+                                            "fontWeight": "400"
+                                    }
+                            ],
+                            "headline-md": [
+                                    "24px",
+                                    {
+                                            "lineHeight": "32px",
+                                            "letterSpacing": "-0.01em",
+                                            "fontWeight": "600"
+                                    }
+                            ],
+                            "data-mono": [
+                                    "13px",
+                                    {
+                                            "lineHeight": "16px",
+                                            "fontWeight": "500"
+                                    }
+                            ]
+                    }
+            },
+                },
+        }
+    </script>
+<style>
+        body {
+            -webkit-tap-highlight-color: transparent;
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body-md pb-24 md:hidden">
+<!-- TopAppBar -->
+<header class="sticky top-0 w-full z-50 flex items-center justify-between px-4 h-header-height bg-surface shadow-sm">
+<button class="text-on-surface-variant hover:bg-surface-container-high transition-colors p-2 rounded-full">
+<span class="material-symbols-outlined text-headline-md font-headline-md">menu</span>
+</button>
+<h1 class="font-headline-md text-headline-md font-bold text-primary">Personel Yönetimi</h1>
+<div class="flex items-center gap-2">
+<button class="text-on-surface-variant hover:bg-surface-container-high transition-colors p-2 rounded-full">
+<span class="material-symbols-outlined text-headline-md font-headline-md">filter_list</span>
+</button>
+<button class="text-on-surface-variant hover:bg-surface-container-high transition-colors p-2 rounded-full">
+<span class="material-symbols-outlined text-headline-md font-headline-md">search</span>
+</button>
+</div>
+</header>
+<main class="px-4 pt-4 pb-8 flex flex-col gap-6">
+<!-- Summary & Actions -->
+<section class="flex flex-col gap-4">
+<div class="flex items-center justify-between">
+<div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">145 aktif personel</h2>
+<p class="font-body-sm text-body-sm text-text-muted">Tüm şantiyeler ve merkez ofis</p>
+</div>
+</div>
+<button class="w-full bg-primary text-on-primary font-body-md font-medium py-3 px-4 rounded-xl shadow-sm flex justify-center items-center gap-2 hover:opacity-90 transition-opacity active:scale-[0.98]">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">add</span>
+                Yeni Personel
+            </button>
+</section>
+<!-- Filtering Chips -->
+<section class="overflow-x-auto hide-scrollbar -mx-4 px-4 pb-2">
+<div class="flex gap-2 w-max">
+<button class="px-4 py-1.5 rounded-full bg-primary text-on-primary font-label-caps text-label-caps border border-transparent whitespace-nowrap">Tümü</button>
+<button class="px-4 py-1.5 rounded-full bg-surface-white text-on-surface-variant font-label-caps text-label-caps border border-border-slate hover:bg-surface-container-low transition-colors whitespace-nowrap">Merkez Ofis</button>
+<button class="px-4 py-1.5 rounded-full bg-surface-white text-on-surface-variant font-label-caps text-label-caps border border-border-slate hover:bg-surface-container-low transition-colors whitespace-nowrap">Şantiye A</button>
+<button class="px-4 py-1.5 rounded-full bg-surface-white text-on-surface-variant font-label-caps text-label-caps border border-border-slate hover:bg-surface-container-low transition-colors whitespace-nowrap">Şantiye B</button>
+<button class="px-4 py-1.5 rounded-full bg-surface-white text-on-surface-variant font-label-caps text-label-caps border border-border-slate hover:bg-surface-container-low transition-colors whitespace-nowrap">İzinde</button>
+</div>
+</section>
+<!-- Personnel Cards -->
+<section class="flex flex-col gap-4">
+<!-- Card 1 -->
+<div class="bg-surface-white rounded-xl shadow-[0_1px_3px_rgba(79,70,229,0.08)] border border-border-slate p-4 flex flex-col gap-4">
+<div class="flex items-start gap-4">
+<img class="w-16 h-16 rounded-full object-cover border border-border-slate shadow-sm" data-alt="A professional headshot portrait of a middle-aged male construction site engineer named Ahmet Yılmaz. He is wearing a clean white hard hat and a high-visibility yellow vest over a light blue collared shirt. The background is slightly blurred, showing a modern construction site under a clear blue sky, emphasizing a bright, professional, and rigorous corporate construction aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCKx6HPR1rWCnGKpOVUMxV_1fM50phJ-VynDdZVOrSDPjW0kp3vyoRudZQfA-v-pXnREFMS3GOPt0T2ynHKZQuvxUpttJAIG-d_5YCIQhG628Pzk_nStWxbGMgO0hsFD6_QIOQdCocZqKyp7ZdXQBilYwRkC_1BjkkwyHwZFxwsBV5sod3nilcJ0B81KHMVtcgfGYlcBcFYMhHZ5cshw-VH_JJPOKDOFifsg_h21_NSO6u69fsVCIDf"/>
+<div class="flex-1 min-w-0">
+<div class="flex items-center justify-between gap-2">
+<h3 class="font-headline-sm text-headline-sm text-on-surface truncate">Ahmet Yılmaz</h3>
+<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-emerald-50 text-success-emerald ring-1 ring-inset ring-success-emerald/20">Aktif</span>
+</div>
+<div class="flex items-center gap-2 mt-1">
+<span class="inline-flex items-center px-2 py-1 rounded bg-surface-container-low text-on-surface-variant font-label-caps text-label-caps">Saha Mühendisi</span>
+</div>
+<div class="flex items-center gap-1 mt-2 text-text-muted font-body-sm text-body-sm">
+<span class="material-symbols-outlined text-[16px]">location_on</span>
+<span class="truncate">Şantiye A (Kuzey Marmara Otoyolu)</span>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-3 gap-2 pt-3 border-t border-border-slate mt-2">
+<button class="flex flex-col items-center justify-center gap-1 py-2 text-on-surface-variant hover:text-primary transition-colors rounded-lg hover:bg-surface-container-lowest">
+<span class="material-symbols-outlined text-[20px]">schedule</span>
+<span class="font-body-sm text-body-sm">Puantaj</span>
+</button>
+<button class="flex flex-col items-center justify-center gap-1 py-2 text-on-surface-variant hover:text-primary transition-colors rounded-lg hover:bg-surface-container-lowest">
+<span class="material-symbols-outlined text-[20px]">inventory_2</span>
+<span class="font-body-sm text-body-sm">Zimmetler</span>
+</button>
+<button class="flex flex-col items-center justify-center gap-1 py-2 text-on-surface-variant hover:text-primary transition-colors rounded-lg hover:bg-surface-container-lowest">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+<span class="font-body-sm text-body-sm">Düzenle</span>
+</button>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="bg-surface-white rounded-xl shadow-[0_1px_3px_rgba(79,70,229,0.08)] border border-border-slate p-4 flex flex-col gap-4">
+<div class="flex items-start gap-4">
+<img class="w-16 h-16 rounded-full object-cover border border-border-slate shadow-sm" data-alt="A professional headshot portrait of a mature male construction foreman named Mehmet Demir. He has a rugged but approachable expression, wearing a bright orange hard hat and a standard safety vest over a sturdy work shirt. The background features structural steel framing out of focus, bathed in natural daylight, capturing a clean, rigorous, and safe industrial aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDbTZhjnYtDhe7adt7fojTw5F3NN_yDV1L5RTcBiI3WehrDBlVYK1L3W5E3griICXcvROno_AKgIxVvEG_IeXv4ngu1maudckkbkCFjf-rSnri5HNdTjUBpaVOpdP1e2CIUj5UFq7r7iW_YUOhv-OctxSn2L7g8NDVsxx29eaIVsbeaucL6J7Wtyu_9Yn5m5nLUVuxtDV4MhpENZCNgQ30xSFu2P8mg9KGsufKAT15Tz8el0sgA6cyo"/>
+<div class="flex-1 min-w-0">
+<div class="flex items-center justify-between gap-2">
+<h3 class="font-headline-sm text-headline-sm text-on-surface truncate">Mehmet Demir</h3>
+<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-emerald-50 text-success-emerald ring-1 ring-inset ring-success-emerald/20">Aktif</span>
+</div>
+<div class="flex items-center gap-2 mt-1">
+<span class="inline-flex items-center px-2 py-1 rounded bg-surface-container-low text-on-surface-variant font-label-caps text-label-caps">Formen</span>
+</div>
+<div class="flex items-center gap-1 mt-2 text-text-muted font-body-sm text-body-sm">
+<span class="material-symbols-outlined text-[16px]">location_on</span>
+<span class="truncate">Şantiye B (Şehir Hastanesi)</span>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-3 gap-2 pt-3 border-t border-border-slate mt-2">
+<button class="flex flex-col items-center justify-center gap-1 py-2 text-on-surface-variant hover:text-primary transition-colors rounded-lg hover:bg-surface-container-lowest">
+<span class="material-symbols-outlined text-[20px]">schedule</span>
+<span class="font-body-sm text-body-sm">Puantaj</span>
+</button>
+<button class="flex flex-col items-center justify-center gap-1 py-2 text-on-surface-variant hover:text-primary transition-colors rounded-lg hover:bg-surface-container-lowest">
+<span class="material-symbols-outlined text-[20px]">inventory_2</span>
+<span class="font-body-sm text-body-sm">Zimmetler</span>
+</button>
+<button class="flex flex-col items-center justify-center gap-1 py-2 text-on-surface-variant hover:text-primary transition-colors rounded-lg hover:bg-surface-container-lowest">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+<span class="font-body-sm text-body-sm">Düzenle</span>
+</button>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="bg-surface-white rounded-xl shadow-[0_1px_3px_rgba(79,70,229,0.08)] border border-border-slate p-4 flex flex-col gap-4">
+<div class="flex items-start gap-4">
+<img class="w-16 h-16 rounded-full object-cover border border-border-slate shadow-sm" data-alt="A professional headshot portrait of a female human resources manager named Ayşe Kaya. She is wearing modern, professional business attire suitable for a corporate headquarters, with a neat blazer. The setting is a bright, well-lit, minimalist modern office interior with large windows, projecting an image of organized efficiency, clean professionalism, and rigorous corporate standards." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDBOWUmIsaDqXdboSZqBMSYwnVvWVRns-BJ6zB3K6VrU_dpD1Oaoq__-ROR0yh5cn2LTXaXWObuIMsTLplPu3dNzMMwxYQKUuQB1xzdNUZM8afZ-eIixmlEdkZS0Nr6anrOVCdPJalfC5RY3Eb6B1d71dikM3NJ6GvmUq_4hEA5K44b2J-Xv8I-LlueoCGqife6dA40v9hpauufsMOWmtHQTo5ATyMEDxxbcaEqsXQC6sE8RPfcNlyc"/>
+<div class="flex-1 min-w-0">
+<div class="flex items-center justify-between gap-2">
+<h3 class="font-headline-sm text-headline-sm text-on-surface truncate">Ayşe Kaya</h3>
+<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-amber-50 text-warning-amber ring-1 ring-inset ring-warning-amber/20">İzinde</span>
+</div>
+<div class="flex items-center gap-2 mt-1">
+<span class="inline-flex items-center px-2 py-1 rounded bg-surface-container-low text-on-surface-variant font-label-caps text-label-caps">İK Yöneticisi</span>
+</div>
+<div class="flex items-center gap-1 mt-2 text-text-muted font-body-sm text-body-sm">
+<span class="material-symbols-outlined text-[16px]">location_on</span>
+<span class="truncate">Merkez Ofis (Levent, İst.)</span>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-3 gap-2 pt-3 border-t border-border-slate mt-2">
+<button class="flex flex-col items-center justify-center gap-1 py-2 text-on-surface-variant hover:text-primary transition-colors rounded-lg hover:bg-surface-container-lowest">
+<span class="material-symbols-outlined text-[20px]">schedule</span>
+<span class="font-body-sm text-body-sm">Puantaj</span>
+</button>
+<button class="flex flex-col items-center justify-center gap-1 py-2 text-on-surface-variant hover:text-primary transition-colors rounded-lg hover:bg-surface-container-lowest">
+<span class="material-symbols-outlined text-[20px]">inventory_2</span>
+<span class="font-body-sm text-body-sm">Zimmetler</span>
+</button>
+<button class="flex flex-col items-center justify-center gap-1 py-2 text-on-surface-variant hover:text-primary transition-colors rounded-lg hover:bg-surface-container-lowest">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+<span class="font-body-sm text-body-sm">Düzenle</span>
+</button>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-2 py-2 bg-surface-white border-t border-border-slate shadow-lg font-label-caps text-label-caps pb-safe">
+<a class="flex flex-col items-center justify-center text-on-surface-variant p-2 w-16 hover:text-primary transition-colors group" href="#">
+<span class="material-symbols-outlined mb-1 group-hover:scale-110 transition-transform">dashboard</span>
+<span class="text-[10px] tracking-wider">Dashboard</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant p-2 w-16 hover:text-primary transition-colors group" href="#">
+<span class="material-symbols-outlined mb-1 group-hover:scale-110 transition-transform">construction</span>
+<span class="text-[10px] tracking-wider">Şantiyeler</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-xl p-2 w-16 scale-90 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 1;">groups</span>
+<span class="text-[10px] tracking-wider">Personel</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant p-2 w-16 hover:text-primary transition-colors group" href="#">
+<span class="material-symbols-outlined mb-1 group-hover:scale-110 transition-transform">description</span>
+<span class="text-[10px] tracking-wider">Belgeler</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant p-2 w-16 hover:text-primary transition-colors group" href="#">
+<span class="material-symbols-outlined mb-1 group-hover:scale-110 transition-transform">settings</span>
+<span class="text-[10px] tracking-wider">Ayarlar</span>
+</a>
+</nav>
+</body></html>

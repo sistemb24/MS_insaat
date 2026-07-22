@@ -81,7 +81,9 @@ describe("PurchaseInvoiceSurface", () => {
   test("renders purchase invoice workflow with totals and table columns", () => {
     render(<PurchaseInvoiceSurface rows={[invoice]} />);
 
-    expect(screen.getByRole("heading", { name: "Faturalar" })).toBeTruthy();
+    expect(
+      screen.getByRole("table", { name: "Alış Faturası hareket listesi" }),
+    ).toBeTruthy();    expect(screen.getByRole("heading", { name: "Faturalar" })).toBeTruthy();
     expect(screen.getByText("Alış Faturası")).toBeTruthy();
     expect(
       screen.getByText(/153 Ticari Mallar ve 191 İndirilecek KDV borç/),
@@ -134,7 +136,16 @@ describe("PurchaseInvoiceSurface", () => {
     expect(
       screen.getByRole("dialog", { name: "Alış Faturası PDF önizleme" }),
     ).toBeTruthy();
-    fireEvent.click(screen.getByRole("button", { name: "Kapat" }));
+    expect(
+      screen.getByRole("table", { name: "Alış Faturası döküm tablosu" }),
+    ).toBeTruthy();
+    expect(document.activeElement).toBe(
+      screen.getByRole("button", { name: "Kapat" }),
+    );
+    fireEvent.keyDown(document, { key: "Escape" });
+    expect(
+      screen.queryByRole("dialog", { name: "Alış Faturası PDF önizleme" }),
+    ).toBeNull();
 
     fireEvent.click(screen.getByRole("button", { name: "Sil" }));
     expect(print).not.toHaveBeenCalled();

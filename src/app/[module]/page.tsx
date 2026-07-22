@@ -193,6 +193,7 @@ import { ModuleSurface } from "@/components/module-surface";
 import { NotificationCenterSurface } from "@/components/notification-center-surface";
 import { PayrollAccrualSurface } from "@/components/payroll-accrual-surface";
 import { PersonnelAssetSurface } from "@/components/personnel-asset-surface";
+import { PersonnelWorkspaceHeader } from "@/components/personnel-workspace-header";
 import { ProgressPaymentSurface } from "@/components/progress-payment-surface";
 import { ConstructionProgressPaymentSurface } from "@/components/construction-progress-payment-surface";
 import { InvoiceManagementSurface } from "@/components/invoice-management-surface";
@@ -416,7 +417,7 @@ export default async function ModulePage({
     timesheetSubcontractorRowsResult,
     timesheetAuditResult,
   ] =
-    module === "puantaj" || module === "raporlar"
+    module === "puantaj" || module === "raporlar" || module === "santiyeler"
       ? await Promise.all([
           listTimesheetsAction(),
           module === "puantaj" ? listEntityRowsAction("personel") : undefined,
@@ -476,7 +477,10 @@ export default async function ModulePage({
         })
       : [];
   const shouldLoadPayrollAccruals =
-    module === "personel" || module === "raporlar" || shouldLoadCounterpartyStatements;
+    module === "personel" ||
+    module === "raporlar" ||
+    module === "santiyeler" ||
+    shouldLoadCounterpartyStatements;
   const [
     payrollAccrualResult,
     payrollSourceTimesheetResult,
@@ -686,9 +690,30 @@ export default async function ModulePage({
         />
       ) : module === "stok-depo" ? (
         <>
+          <StockDepotSurface
+            deliveryNotes={deliveryNoteResult?.ok ? deliveryNoteResult.data.rows : []}
+            persistence={{
+              saveMinimumSetting: saveStockMinimumSettingAction,
+            }}
+            purchaseInvoices={
+              purchaseInvoiceResult?.ok ? purchaseInvoiceResult.data.rows : []
+            }
+            stockMovements={
+              stockMovementResult?.ok ? stockMovementResult.data.rows : []
+            }
+            stockCardRows={
+              stockCardRowsResult?.ok ? stockCardRowsResult.data.rows : []
+            }
+            stockMinimumSettings={
+              stockMinimumSettingResult?.ok
+                ? stockMinimumSettingResult.data.rows
+                : []
+            }
+          />
           {stockCardDefinition ? (
             <EntityListSurface
               definition={stockCardDefinition}
+              hideHeader
               initialRows={
                 stockCardRowsResult?.ok ? stockCardRowsResult.data.rows : []
               }
@@ -723,26 +748,6 @@ export default async function ModulePage({
             }
             stockCardRows={
               stockCardRowsResult?.ok ? stockCardRowsResult.data.rows : []
-            }
-          />
-          <StockDepotSurface
-            deliveryNotes={deliveryNoteResult?.ok ? deliveryNoteResult.data.rows : []}
-            persistence={{
-              saveMinimumSetting: saveStockMinimumSettingAction,
-            }}
-            purchaseInvoices={
-              purchaseInvoiceResult?.ok ? purchaseInvoiceResult.data.rows : []
-            }
-            stockMovements={
-              stockMovementResult?.ok ? stockMovementResult.data.rows : []
-            }
-            stockCardRows={
-              stockCardRowsResult?.ok ? stockCardRowsResult.data.rows : []
-            }
-            stockMinimumSettings={
-              stockMinimumSettingResult?.ok
-                ? stockMinimumSettingResult.data.rows
-                : []
             }
           />
         </>
@@ -855,8 +860,25 @@ export default async function ModulePage({
         />
       ) : module === "personel" && entityDefinition ? (
         <>
+          <PersonnelWorkspaceHeader
+            paymentMovements={
+              cashBankMovementResult?.ok
+                ? cashBankMovementResult.data.rows
+                : []
+            }
+            payrollAccruals={
+              payrollAccrualResult?.ok ? payrollAccrualResult.data.rows : []
+            }
+            personnelRows={entityListResult?.ok ? entityListResult.data.rows : []}
+            siteRows={
+              personnelAssetSiteRowsResult?.ok
+                ? personnelAssetSiteRowsResult.data.rows
+                : []
+            }
+          />
           <EntityListSurface
             definition={entityDefinition}
+            hideHeader
             initialRows={entityListResult?.ok ? entityListResult.data.rows : []}
             persistence={{
               createRow: createEntityRowAction,
@@ -1088,9 +1110,11 @@ export default async function ModulePage({
             updateRow: updateEntityRowAction,
           }}
           expenses={expenseResult?.ok ? expenseResult.data.rows : []}
+          payrollAccruals={payrollAccrualResult?.ok ? payrollAccrualResult.data.rows : []}
           progressPayments={progressPaymentResult?.ok ? progressPaymentResult.data.rows : []}
           purchaseInvoices={purchaseInvoiceResult?.ok ? purchaseInvoiceResult.data.rows : []}
           salesInvoices={salesInvoiceResult?.ok ? salesInvoiceResult.data.rows : []}
+          timesheets={timesheetResult?.ok ? timesheetResult.data.rows : []}
         />
       ) : shouldLoadCounterpartyStatements && entityDefinition ? (
         <CounterpartyManagementSurface

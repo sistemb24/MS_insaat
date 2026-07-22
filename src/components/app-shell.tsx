@@ -1,6 +1,9 @@
 import Link from "next/link";
 
-import { appContext, navigationItems } from "@/lib/navigation";
+import { AppShellMobileDrawer } from "@/components/app-shell-mobile-drawer";
+import { ShellNavigation } from "@/components/app-shell-navigation";
+import { Icon, ThemeControl } from "@/components/ui";
+import { appContext } from "@/lib/navigation";
 import {
   createSeedNotificationRows,
   getUnreadNotificationCount,
@@ -30,108 +33,171 @@ export function AppShell({
   switchSessionAction,
 }: AppShellProps) {
   return (
-    <div className="min-h-screen bg-[var(--surface)] text-[var(--on-surface)]">
-      <TopBar
-        activeSessionId={activeSessionId}
-        context={context}
-        currentPath={currentPath}
-        notificationUnreadCount={notificationUnreadCount}
-        sessionOptions={sessionOptions}
-        signOutAction={signOutAction}
-        switchSessionAction={switchSessionAction}
-      />
-      <div className="flex min-h-[calc(100vh-var(--app-header-height))]">
-        <SidebarNav />
-        <main className="min-w-0 flex-1 px-5 py-4">{children}</main>
-      </div>
-    </div>
+    <StandardAppShell
+      activeSessionId={activeSessionId}
+      context={context}
+      currentPath={currentPath}
+      notificationUnreadCount={notificationUnreadCount}
+      sessionOptions={sessionOptions}
+      signOutAction={signOutAction}
+      switchSessionAction={switchSessionAction}
+    >
+      {children}
+    </StandardAppShell>
   );
 }
 
-function TopBar({
+function StandardAppShell({
   activeSessionId,
+  children,
   context,
   currentPath,
   notificationUnreadCount,
   sessionOptions,
   signOutAction,
   switchSessionAction,
-}: {
-  activeSessionId?: string;
-  context: TenantScope;
-  currentPath: string;
-  notificationUnreadCount: number;
-  sessionOptions: SessionOption[];
-  signOutAction?: () => void | Promise<void>;
-  switchSessionAction?: (formData: FormData) => void | Promise<void>;
-}) {
+}: Required<Pick<AppShellProps, "children" | "context" | "currentPath" | "notificationUnreadCount" | "sessionOptions">> &
+  Pick<AppShellProps, "activeSessionId" | "signOutAction" | "switchSessionAction">) {
   return (
-    <header className="flex h-[var(--app-header-height)] items-center justify-between border-b border-[var(--grid-border)] bg-[var(--surface-container-lowest)] px-5">
-      <div className="flex min-w-0 items-center gap-4">
-        <div className="flex h-9 w-9 items-center justify-center rounded-[var(--radius-panel)] bg-[var(--primary)] text-sm font-bold text-white">
-          NOA
-        </div>
-        <div className="min-w-0">
-          <p className="truncate text-sm font-semibold">
-            İnşaat Yönetim SaaS
-          </p>
-          <p className="truncate text-xs text-[var(--on-surface-variant)]">
-            {context.tenantName} · {context.companyName}
-          </p>
-        </div>
-      </div>
-      <div className="hidden items-center gap-3 text-xs md:flex">
-        <SessionSwitcher
-          activeSessionId={activeSessionId}
-          currentPath={currentPath}
-          options={sessionOptions}
-          switchSessionAction={switchSessionAction}
-        />
-        <NotificationBadge count={notificationUnreadCount} />
-        <ContextPill label="Dönem" value={context.periodLabel} />
-        <ContextPill label="Kullanıcı" value={context.userName} />
-        {context.userRole === "viewer" ? (
-          <div
-            className="rounded-[var(--radius-control)] border border-amber-300 bg-amber-50 px-3 py-1.5 font-semibold text-amber-800"
-            role="status"
-          >
-            Salt okur · işlemler pasif
+    <div
+      className="min-h-screen overflow-x-clip bg-surface text-content"
+      data-shell-variant="standard"
+    >
+      <a
+        className="sr-only z-[70] rounded-ui-control bg-brand-primary px-4 py-2 font-semibold text-on-brand focus:not-sr-only focus:fixed focus:left-4 focus:top-4"
+        href="#main-content"
+      >
+        Ana içeriğe geç
+      </a>
+      <header
+        className="sticky top-0 z-40 flex h-[var(--ds-app-header-height)] items-center border-b border-divider bg-surface-raised px-4 shadow-sm sm:px-5"
+        data-print-hidden="true"
+      >
+        <div className="flex min-w-0 items-center gap-3 lg:w-[var(--ds-app-sidebar-width)] lg:shrink-0">
+          <AppShellMobileDrawer>
+            <MobileContextSummary context={context} />
+            <ShellNavigation currentPath={currentPath} label="Mobil ana modüller" />
+            <div className="space-y-3 border-t border-divider bg-surface-raised p-4" data-mobile-drawer-footer="true">
+              <ThemeControl />
+              <SessionSwitcher
+                activeSessionId={activeSessionId}
+                currentPath={currentPath}
+                id="mobile-sessionId"
+                options={sessionOptions}
+                switchSessionAction={switchSessionAction}
+              />
+              <SignOutButton className="w-full" signOutAction={signOutAction} />
+            </div>
+          </AppShellMobileDrawer>
+          <span className="hidden h-10 w-10 shrink-0 items-center justify-center rounded-ui-control bg-brand-primary-strong text-on-brand shadow-sm lg:inline-flex">
+            <Icon name="building" size={21} />
+          </span>
+          <div className="min-w-0">
+            <p className="truncate text-base font-bold leading-5 text-brand-primary">NOA İnşaat</p>
+            <p className="truncate text-[10px] font-bold uppercase tracking-[0.08em] text-content-muted">
+              İnşaat Yönetim SaaS
+            </p>
           </div>
-        ) : null}
-        <ContextPill label="Lisans" value={context.licenseLabel} />
-        <SignOutButton signOutAction={signOutAction} />
+        </div>
+
+        <div className="ml-auto hidden min-w-0 flex-1 items-center px-4 lg:flex">
+          <div className="min-w-0">
+            <p className="truncate text-xs font-semibold text-content">{context.companyName}</p>
+            <p className="truncate text-[11px] text-content-muted">
+              {context.tenantName} · {context.periodLabel} dönemi
+            </p>
+          </div>
+        </div>
+
+        <div className="ml-auto hidden items-center gap-2 lg:flex">
+          <ThemeControl className="hidden 2xl:inline-flex" compact />
+          <SessionSwitcher
+            activeSessionId={activeSessionId}
+            currentPath={currentPath}
+            id="sessionId"
+            options={sessionOptions}
+            switchSessionAction={switchSessionAction}
+          />
+          <NotificationBadge count={notificationUnreadCount} />
+          {context.userRole === "viewer" ? (
+            <div
+              className="hidden rounded-ui-control border border-warning bg-warning-subtle px-2 py-1.5 text-[11px] font-semibold text-warning 2xl:block"
+              role="status"
+            >
+              Salt okur · işlemler pasif
+            </div>
+          ) : null}
+          <div className="hidden items-center gap-2 rounded-ui-control px-2 py-1.5 xl:flex">
+            <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-brand-primary-subtle text-xs font-bold text-brand-primary">
+              {getInitials(context.userName)}
+            </span>
+            <span className="min-w-0">
+              <span className="block max-w-28 truncate text-xs font-semibold text-content">
+                {context.userName}
+              </span>
+              <span className="block text-[10px] text-content-muted">
+                {getRoleLabel(context.userRole)} · {context.licenseLabel}
+              </span>
+            </span>
+          </div>
+          <SignOutButton signOutAction={signOutAction} />
+        </div>
+      </header>
+
+      <div
+        className="flex min-h-[calc(100vh-var(--ds-app-header-height))]"
+        data-shell-body="true"
+      >
+        <aside
+          className="sticky top-[var(--ds-app-header-height)] hidden h-[calc(100vh-var(--ds-app-header-height))] w-[var(--ds-app-sidebar-width)] shrink-0 flex-col border-r border-divider bg-surface-raised shadow-sm lg:flex"
+          data-print-hidden="true"
+        >
+          <ShellNavigation currentPath={currentPath} />
+        </aside>
+        <main className="min-w-0 flex-1 px-4 py-5 sm:px-6 sm:py-6" data-ui-workspace="true" id="main-content">
+          {children}
+        </main>
       </div>
-      <div className="flex items-center md:hidden">
-        <SignOutButton signOutAction={signOutAction} />
-      </div>
-    </header>
+    </div>
   );
 }
 
-function NotificationBadge({ count }: { count: number }) {
-  if (count <= 0) {
-    return null;
-  }
-
+function MobileContextSummary({ context }: { context: TenantScope }) {
   return (
-    <Link
-      aria-label={`${count} okunmamış bildirim`}
-      className="rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--primary)] px-3 py-1.5 font-mono text-xs font-semibold text-white transition hover:bg-[var(--primary-hover)]"
-      href="/bildirimler"
-    >
-      {count}
-    </Link>
+    <div className="border-b border-divider bg-surface-muted px-4 py-3">
+      <dl className="grid grid-cols-2 gap-x-3 gap-y-2 text-xs">
+        <div className="col-span-2">
+          <dt className="text-content-muted">Firma</dt>
+          <dd className="truncate font-semibold text-content">{context.companyName}</dd>
+        </div>
+        <div>
+          <dt className="text-content-muted">Dönem</dt>
+          <dd className="font-semibold text-content">{context.periodLabel}</dd>
+        </div>
+        <div>
+          <dt className="text-content-muted">Kullanıcı</dt>
+          <dd className="truncate font-semibold text-content">{context.userName}</dd>
+        </div>
+      </dl>
+      {context.userRole === "viewer" ? (
+        <p className="mt-2 rounded-ui-control border border-warning bg-warning-subtle px-2 py-1.5 text-xs font-semibold text-warning">
+          Salt okur · işlemler pasif
+        </p>
+      ) : null}
+    </div>
   );
 }
 
 function SessionSwitcher({
   activeSessionId,
   currentPath,
+  id,
   options,
   switchSessionAction,
 }: {
   activeSessionId?: string;
   currentPath: string;
+  id: string;
   options: SessionOption[];
   switchSessionAction?: (formData: FormData) => void | Promise<void>;
 }) {
@@ -140,25 +206,25 @@ function SessionSwitcher({
   }
 
   return (
-    <form action={switchSessionAction} className="flex items-center gap-2">
+    <form action={switchSessionAction} className="flex items-end gap-2">
       <input name="redirectTo" type="hidden" value={currentPath} />
-      <label className="text-[var(--on-surface-variant)]" htmlFor="sessionId">
+      <label className="min-w-0 flex-1 text-[11px] font-semibold text-content-subtle" htmlFor={id}>
         Oturum
+        <select
+          className="mt-1 h-9 w-full min-w-0 rounded-ui-control border border-divider bg-surface-muted px-2 text-xs font-semibold text-content outline-none focus:border-brand-primary"
+          defaultValue={activeSessionId}
+          id={id}
+          name="sessionId"
+        >
+          {options.map((option) => (
+            <option key={option.id} value={option.id}>
+              {option.label}
+            </option>
+          ))}
+        </select>
       </label>
-      <select
-        className="h-8 min-w-52 rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] px-2 text-xs font-semibold outline-none transition focus:border-[var(--primary)]"
-        defaultValue={activeSessionId}
-        id="sessionId"
-        name="sessionId"
-      >
-        {options.map((option) => (
-          <option key={option.id} value={option.id}>
-            {option.label}
-          </option>
-        ))}
-      </select>
       <button
-        className="h-8 rounded-[var(--radius-control)] bg-[var(--primary)] px-3 text-xs font-semibold text-white transition hover:bg-[var(--primary-hover)]"
+        className="h-9 rounded-ui-control bg-brand-primary px-3 text-xs font-semibold text-on-brand transition-colors hover:bg-brand-primary-strong"
         type="submit"
       >
         Geç
@@ -167,9 +233,30 @@ function SessionSwitcher({
   );
 }
 
+function NotificationBadge({ count }: { count: number }) {
+  const label = count > 0 ? `${count} okunmamış bildirim` : "Bildirimler";
+
+  return (
+    <Link
+      aria-label={label}
+      className="relative inline-flex h-10 w-10 items-center justify-center rounded-ui-control text-content-subtle transition-colors hover:bg-surface-muted hover:text-brand-primary"
+      href="/bildirimler"
+    >
+      <Icon name="bell" size={20} />
+      {count > 0 ? (
+        <span className="absolute right-0.5 top-0.5 inline-flex min-h-4 min-w-4 items-center justify-center rounded-full bg-danger px-1 font-mono text-[9px] font-bold leading-4 text-on-danger">
+          {count > 99 ? "99+" : count}
+        </span>
+      ) : null}
+    </Link>
+  );
+}
+
 function SignOutButton({
+  className,
   signOutAction,
 }: {
+  className?: string;
   signOutAction?: () => void | Promise<void>;
 }) {
   if (!signOutAction) {
@@ -177,9 +264,9 @@ function SignOutButton({
   }
 
   return (
-    <form action={signOutAction}>
+    <form action={signOutAction} className={className}>
       <button
-        className="h-8 rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] px-3 text-xs font-semibold transition hover:bg-[var(--primary-fixed)]"
+        className="h-9 w-full rounded-ui-control border border-divider bg-surface-raised px-3 text-xs font-semibold text-content transition-colors hover:bg-surface-muted"
         type="submit"
       >
         Çıkış
@@ -188,42 +275,17 @@ function SignOutButton({
   );
 }
 
-function ContextPill({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] px-3 py-1.5">
-      <span className="text-[var(--on-surface-variant)]">{label}: </span>
-      <span className="font-semibold">{value}</span>
-    </div>
-  );
+function getInitials(name: string) {
+  return name
+    .trim()
+    .split(/\s+/)
+    .slice(0, 2)
+    .map((part) => part.charAt(0).toLocaleUpperCase("tr-TR"))
+    .join("") || "NO";
 }
 
-function SidebarNav() {
-  return (
-    <aside className="hidden w-[var(--app-sidebar-width)] shrink-0 border-r border-[var(--grid-border)] bg-[var(--surface-container-lowest)] p-3 lg:block">
-      <nav aria-label="Planlı modüller" className="space-y-1">
-        {navigationItems.map((item) => (
-          <Link
-            className="group flex items-start gap-3 rounded-[var(--radius-control)] px-3 py-2 text-sm transition hover:bg-[var(--primary-fixed)]"
-            href={item.href}
-            key={item.href}
-          >
-            <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-[var(--radius-control)] bg-[var(--primary-fixed)] font-mono text-[11px] font-semibold text-[var(--primary)]">
-              {item.icon}
-            </span>
-            <span className="min-w-0">
-              <span className="flex items-center gap-2">
-                <span className="block font-semibold">{item.label}</span>
-                <span className="rounded-[var(--radius-control)] border border-[var(--grid-border)] px-1.5 py-0.5 font-mono text-[10px] font-semibold text-[var(--on-surface-variant)]">
-                  {item.phase}
-                </span>
-              </span>
-              <span className="line-clamp-2 text-xs text-[var(--on-surface-variant)]">
-                {item.description}
-              </span>
-            </span>
-          </Link>
-        ))}
-      </nav>
-    </aside>
-  );
+function getRoleLabel(role: TenantScope["userRole"]) {
+  if (role === "admin") return "Yönetici";
+  if (role === "viewer") return "Salt Okur";
+  return "Muhasebe";
 }

@@ -88,11 +88,44 @@ describe("CashBankSurface", () => {
     expect(screen.getByText("Otomatik Hareketler")).toBeTruthy();
     expect(screen.getByText("Giriş Toplamı")).toBeTruthy();
     expect(screen.getAllByText("125.000,00 TL")).toHaveLength(3);
-    expect(screen.getByText("126.000,00 TL")).toBeTruthy();
+    expect(screen.getAllByText("126.000,00 TL")).toHaveLength(2);
     expect(screen.getByText("CEK-0001")).toBeTruthy();
     expect(screen.getByText("Çek Tahsilatı")).toBeTruthy();
     expect(screen.getByText("YVM-THS-CEK-0001")).toBeTruthy();
     expect(screen.getAllByText("MERKEZ KASA")).toHaveLength(3);
+    expect(screen.getAllByRole("heading", { level: 1 })).toHaveLength(1);
+  });
+
+  test("filters real movement rows by direction and search text", () => {
+    const definition = getEntityDefinition("kasa-banka");
+    const outgoingMovement: CashBankMovementRow = {
+      ...movement,
+      id: "movement-2",
+      counterpartyName: "DEF Hafriyat",
+      direction: "Çıkış",
+      documentNo: "ODM-0001",
+      ledgerDocumentNo: undefined,
+      movementType: "Ödeme",
+    };
+
+    render(
+      <CashBankSurface
+        accountDefinition={definition!}
+        accountRows={accountRows}
+        movements={[movement, outgoingMovement]}
+      />,
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Çıkış" }));
+    expect(screen.queryByText("CEK-0001")).toBeNull();
+    expect(screen.getByText("ODM-0001")).toBeTruthy();
+
+    fireEvent.click(screen.getByRole("button", { name: "Tümü" }));
+    fireEvent.change(screen.getByLabelText("Hareketlerde ara"), {
+      target: { value: "ABC Beton" },
+    });
+    expect(screen.getByText("CEK-0001")).toBeTruthy();
+    expect(screen.queryByText("ODM-0001")).toBeNull();
   });
 
   test("labels compensating reversal movements in the automatic list", () => {

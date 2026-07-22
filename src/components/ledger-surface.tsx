@@ -37,8 +37,6 @@ export function LedgerSurface({ entries, auditEntries, periodClosed: initialPeri
   const [description, setDescription] = useState("");
   const [lines, setLines] = useState(emptyLines);
   const [notice, setNotice] = useState("");
-  const [auditSearch, setAuditSearch] = useState("");
-  const filteredAuditEntries = auditEntries.filter((entry) => entry.entityLabel.toLocaleLowerCase("tr-TR").includes(auditSearch.trim().toLocaleLowerCase("tr-TR")));
   const trialBalance = buildLedgerTrialBalance(entries);
   const trialTotalsByCurrency = ["TL", "USD", "EUR"].map((currency) => {
     const rows = trialBalance.filter((row) => row.currency === currency);
@@ -84,8 +82,19 @@ export function LedgerSurface({ entries, auditEntries, periodClosed: initialPeri
     URL.revokeObjectURL(url);
     setNotice("Mizan CSV dışa aktarımı hazırlandı.");
   }
-  function exportAuditCsv() {
-    const rows = [["Fiş/Dönem", "İşlem", "Zaman", "Kullanıcı"], ...auditEntries.map((entry) => [entry.entityLabel, entry.action, entry.occurredAt, entry.actorUserId])];
+  function exportAuditCsv(entriesToExport = auditEntries) {
+    const rows = [
+      ["Fiş/Dönem", "İşlem", "Varlık", "Varlık ID", "Zaman", "Kullanıcı", "Metadata"],
+      ...entriesToExport.map((entry) => [
+        entry.entityLabel,
+        entry.action,
+        entry.entityType,
+        entry.entityId,
+        entry.occurredAt,
+        entry.actorUserId,
+        JSON.stringify(entry.metadata),
+      ]),
+    ];
     const csv = rows.map((row) => row.map((value) => `"${value.replaceAll('"', '""')}"`).join(",")).join("\r\n");
     const url = URL.createObjectURL(new Blob([`\uFEFF${csv}`], { type: "text/csv;charset=utf-8" }));
     const link = document.createElement("a");
@@ -115,59 +124,278 @@ export function LedgerSurface({ entries, auditEntries, periodClosed: initialPeri
   }
 
   return (
-    <section className="rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)] p-4">
+    <section className="min-w-0 rounded-ui-panel border border-divider bg-surface-raised p-4">
       <div className="flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between">
         <div>
           <h3 className="text-sm font-semibold">Yevmiye fişleri</h3>
-          <p className="text-xs text-[var(--on-surface-variant)]">Kalıcı ledger kayıtları ve manuel dengeli fiş girişi.</p>
+          <p className="text-xs text-content-subtle">Kalıcı ledger kayıtları ve manuel dengeli fiş girişi.</p>
         </div>
-        <div className="flex items-center gap-2"><button className="rounded-[var(--radius-control)] border border-[var(--grid-border)] px-2 py-1 text-xs font-semibold" type="button" onClick={exportLedgerCsv}>Fiş CSV</button><button className="rounded-[var(--radius-control)] border border-[var(--grid-border)] px-2 py-1 text-xs font-semibold" type="button" onClick={exportTrialBalanceCsv}>Mizan CSV</button><button className="rounded-[var(--radius-control)] border border-[var(--grid-border)] px-2 py-1 text-xs font-semibold" type="button" onClick={exportAuditCsv}>Audit CSV</button><span className="rounded border border-[var(--grid-border)] px-2 py-1 text-xs">{periodClosed ? "Dönem kapalı" : "Dönem açık"}</span>{!periodClosed && canClosePeriod ? <button className="rounded-[var(--radius-control)] border border-[var(--grid-border)] px-2 py-1 text-xs font-semibold" type="button" onClick={() => void handleClosePeriod()}>Dönemi kapat</button> : null}{periodClosed && canClosePeriod ? <button className="rounded-[var(--radius-control)] border border-[var(--grid-border)] px-2 py-1 text-xs font-semibold" type="button" onClick={() => void handleReopenPeriod()}>Dönemi yeniden aç</button> : null}<span className="text-xs text-[var(--on-surface-variant)]">{entries.length} kayıt</span></div>
+        <div className="flex flex-wrap items-center gap-2"><button className="rounded-ui-control border border-divider px-2 py-1 text-xs font-semibold" type="button" onClick={exportLedgerCsv}>Fiş CSV</button><button className="rounded-ui-control border border-divider px-2 py-1 text-xs font-semibold" type="button" onClick={exportTrialBalanceCsv}>Mizan CSV</button><button className="rounded-ui-control border border-divider px-2 py-1 text-xs font-semibold" type="button" onClick={() => exportAuditCsv()}>Audit CSV</button><span className="rounded border border-divider px-2 py-1 text-xs">{periodClosed ? "Dönem kapalı" : "Dönem açık"}</span>{!periodClosed && canClosePeriod ? <button className="rounded-ui-control border border-divider px-2 py-1 text-xs font-semibold" type="button" onClick={() => void handleClosePeriod()}>Dönemi kapat</button> : null}{periodClosed && canClosePeriod ? <button className="rounded-ui-control border border-divider px-2 py-1 text-xs font-semibold" type="button" onClick={() => void handleReopenPeriod()}>Dönemi yeniden aç</button> : null}<span className="text-xs text-content-subtle">{entries.length} kayıt</span></div>
       </div>
       <div className="mt-3 grid gap-2 sm:grid-cols-3">
-        <input className="rounded-[var(--radius-control)] border border-[var(--grid-border)] px-3 py-2 text-sm" placeholder="Fiş no" value={documentNo} onChange={(event) => setDocumentNo(event.target.value)} disabled={!canPost} />
-        <input className="rounded-[var(--radius-control)] border border-[var(--grid-border)] px-3 py-2 text-sm" type="date" value={entryDate} onChange={(event) => setEntryDate(event.target.value)} disabled={!canPost} />
-        <input className="rounded-[var(--radius-control)] border border-[var(--grid-border)] px-3 py-2 text-sm" placeholder="Açıklama" value={description} onChange={(event) => setDescription(event.target.value)} disabled={!canPost} />
+        <input aria-label="Yevmiye fiş numarası" className="rounded-ui-control border border-divider px-3 py-2 text-sm" placeholder="Fiş no" value={documentNo} onChange={(event) => setDocumentNo(event.target.value)} disabled={!canPost} />
+        <input aria-label="Yevmiye fişi tarihi" className="rounded-ui-control border border-divider px-3 py-2 text-sm" type="date" value={entryDate} onChange={(event) => setEntryDate(event.target.value)} disabled={!canPost} />
+        <input aria-label="Yevmiye fişi açıklaması" className="rounded-ui-control border border-divider px-3 py-2 text-sm" placeholder="Açıklama" value={description} onChange={(event) => setDescription(event.target.value)} disabled={!canPost} />
       </div>
       <div className="mt-2 grid gap-2">
         {lines.map((line, index) => (
-          <div className="grid grid-cols-[110px_1fr_1fr_110px_auto] gap-2" key={index}>
-            <select className="rounded-[var(--radius-control)] border border-[var(--grid-border)] px-2 py-2 text-sm" aria-label={`Satır ${index + 1} yön`} value={line.direction} onChange={(event) => setLines((current) => current.map((item, itemIndex) => itemIndex === index ? { ...item, direction: event.target.value as LedgerFormLine["direction"] } : item))} disabled={!canPost}>
+          <div className="grid gap-2 sm:grid-cols-[110px_minmax(0,1fr)_minmax(0,1fr)_110px_auto]" key={index}>
+            <select className="rounded-ui-control border border-divider px-2 py-2 text-sm" aria-label={`Satır ${index + 1} yön`} value={line.direction} onChange={(event) => setLines((current) => current.map((item, itemIndex) => itemIndex === index ? { ...item, direction: event.target.value as LedgerFormLine["direction"] } : item))} disabled={!canPost}>
               <option value="debit">Borç</option>
               <option value="credit">Alacak</option>
             </select>
-            <input className="rounded-[var(--radius-control)] border border-[var(--grid-border)] px-2 py-2 text-sm" aria-label={`Satır ${index + 1} hesap kodu`} value={line.accountCode} onChange={(event) => setLines((current) => current.map((item, itemIndex) => itemIndex === index ? { ...item, accountCode: event.target.value } : item))} disabled={!canPost} />
-            <input className="rounded-[var(--radius-control)] border border-[var(--grid-border)] px-2 py-2 text-sm" aria-label={`Satır ${index + 1} hesap adı`} value={line.accountName} onChange={(event) => setLines((current) => current.map((item, itemIndex) => itemIndex === index ? { ...item, accountName: event.target.value } : item))} disabled={!canPost} />
-            <input className="rounded-[var(--radius-control)] border border-[var(--grid-border)] px-2 py-2 text-sm" aria-label={`Satır ${index + 1} tutar`} type="number" min="0" step="0.01" placeholder={line.direction === "debit" ? "Borç" : "Alacak"} value={line.amount} onChange={(event) => setLines((current) => current.map((item, itemIndex) => itemIndex === index ? { ...item, amount: event.target.value } : item))} disabled={!canPost} />
-            <button className="rounded-[var(--radius-control)] border border-[var(--grid-border)] px-2 py-1 text-xs font-semibold disabled:opacity-50" type="button" aria-label={`Satır ${index + 1} sil`} onClick={() => setLines((current) => current.filter((_, itemIndex) => itemIndex !== index))} disabled={!canPost || lines.length <= 2}>Sil</button>
+            <input className="rounded-ui-control border border-divider px-2 py-2 text-sm" aria-label={`Satır ${index + 1} hesap kodu`} value={line.accountCode} onChange={(event) => setLines((current) => current.map((item, itemIndex) => itemIndex === index ? { ...item, accountCode: event.target.value } : item))} disabled={!canPost} />
+            <input className="rounded-ui-control border border-divider px-2 py-2 text-sm" aria-label={`Satır ${index + 1} hesap adı`} value={line.accountName} onChange={(event) => setLines((current) => current.map((item, itemIndex) => itemIndex === index ? { ...item, accountName: event.target.value } : item))} disabled={!canPost} />
+            <input className="rounded-ui-control border border-divider px-2 py-2 text-sm" aria-label={`Satır ${index + 1} tutar`} type="number" min="0" step="0.01" placeholder={line.direction === "debit" ? "Borç" : "Alacak"} value={line.amount} onChange={(event) => setLines((current) => current.map((item, itemIndex) => itemIndex === index ? { ...item, amount: event.target.value } : item))} disabled={!canPost} />
+            <button className="rounded-ui-control border border-divider px-2 py-1 text-xs font-semibold disabled:opacity-50" type="button" aria-label={`Satır ${index + 1} sil`} onClick={() => setLines((current) => current.filter((_, itemIndex) => itemIndex !== index))} disabled={!canPost || lines.length <= 2}>Sil</button>
           </div>
         ))}
       </div>
       <div className="mt-3 flex flex-wrap items-center gap-2">
-        <button className="rounded-[var(--radius-control)] border border-[var(--grid-border)] px-3 py-2 text-sm font-semibold disabled:opacity-50" type="button" onClick={() => setLines((current) => [...current, createEmptyLedgerLine()])} disabled={!canPost || periodClosed}>Satır ekle</button>
-        <button className="rounded-[var(--radius-control)] bg-[var(--primary)] px-3 py-2 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-50" type="button" onClick={() => void handleSubmit()} disabled={!canPost || periodClosed}>Fişi kaydet</button>
-        {!canPost ? <span className="text-xs text-[var(--on-surface-variant)]">Bu rol fiş post edemez.</span> : null}
-        {notice ? <span className="text-xs font-semibold text-[var(--on-surface-variant)]" role="status">{notice}</span> : null}
+        <button className="rounded-ui-control border border-divider px-3 py-2 text-sm font-semibold disabled:opacity-50" type="button" onClick={() => setLines((current) => [...current, createEmptyLedgerLine()])} disabled={!canPost || periodClosed}>Satır ekle</button>
+        <button className="rounded-ui-control bg-brand-primary px-3 py-2 text-sm font-semibold text-on-brand disabled:cursor-not-allowed disabled:opacity-50" type="button" onClick={() => void handleSubmit()} disabled={!canPost || periodClosed}>Fişi kaydet</button>
+        {!canPost ? <span className="text-xs text-content-subtle">Bu rol fiş post edemez.</span> : null}
+        {notice ? <span className="text-xs font-semibold text-content-subtle" role="status">{notice}</span> : null}
       </div>
       <div className="mt-4 overflow-x-auto">
-        <table className="w-full text-left text-xs">
-          <thead><tr className="border-b border-[var(--grid-border)]"><th className="px-2 py-2">Fiş</th><th className="px-2 py-2">Tarih</th><th className="px-2 py-2">Açıklama</th><th className="px-2 py-2 text-right">Toplam</th></tr></thead>
-          <tbody>{entries.map((entry) => <tr className="border-b border-[var(--grid-border)] last:border-0" key={entry.id}><td className="px-2 py-2 font-semibold">{entry.documentNo}</td><td className="px-2 py-2">{entry.entryDate}</td><td className="px-2 py-2">{entry.description}</td><td className="px-2 py-2 text-right">{entry.debitTotal.toFixed(2)} {entry.currency}</td></tr>)}</tbody>
+        <table aria-label="Yevmiye fişleri" className="w-full text-left text-xs">
+          <thead><tr className="border-b border-divider"><th className="px-2 py-2">Fiş</th><th className="px-2 py-2">Tarih</th><th className="px-2 py-2">Açıklama</th><th className="px-2 py-2 text-right">Toplam</th></tr></thead>
+          <tbody>{entries.map((entry) => <tr className="border-b border-divider last:border-0" key={entry.id}><td className="px-2 py-2 font-semibold">{entry.documentNo}</td><td className="px-2 py-2">{entry.entryDate}</td><td className="px-2 py-2">{entry.description}</td><td className="px-2 py-2 text-right">{entry.debitTotal.toFixed(2)} {entry.currency}</td></tr>)}</tbody>
         </table>
-        {!entries.length ? <p className="py-3 text-xs text-[var(--on-surface-variant)]">Henüz yevmiye fişi yok.</p> : null}
+        {!entries.length ? <p className="py-3 text-xs text-content-subtle">Henüz yevmiye fişi yok.</p> : null}
       </div>
-      <div className="mt-4 border-t border-[var(--grid-border)] pt-3">
+      <div className="mt-4 border-t border-divider pt-3">
         <h4 className="text-sm font-semibold">Hesap bazlı mizan özeti</h4>
-        <div className="mt-2 grid gap-2 sm:grid-cols-3">{trialTotalsByCurrency.map((total) => <div className={`rounded border px-3 py-2 text-xs font-semibold ${total.balanced ? "border-green-200 text-green-700" : "border-red-200 text-red-700"}`} key={total.currency}>{total.currency}: Borç {total.debit.toFixed(2)} · Alacak {total.credit.toFixed(2)} · {total.balanced ? "Dengeli" : "Dengesiz"}</div>)}</div>
-        <div className="mt-2 overflow-x-auto"><table className="w-full text-left text-xs"><thead><tr className="border-b border-[var(--grid-border)]"><th className="px-2 py-2">Hesap</th><th className="px-2 py-2">Döviz</th><th className="px-2 py-2 text-right">Borç</th><th className="px-2 py-2 text-right">Alacak</th><th className="px-2 py-2 text-right">Bakiye</th></tr></thead><tbody>{trialBalance.map((row) => <tr className="border-b border-[var(--grid-border)] last:border-0" key={`${row.currency}-${row.accountCode}`}><td className="px-2 py-2">{row.accountCode} · {row.accountName}</td><td className="px-2 py-2">{row.currency}</td><td className="px-2 py-2 text-right">{row.debitTotal.toFixed(2)}</td><td className="px-2 py-2 text-right">{row.creditTotal.toFixed(2)}</td><td className="px-2 py-2 text-right font-semibold">{row.balance.toFixed(2)}</td></tr>)}</tbody></table></div>
+        <div className="mt-2 grid gap-2 sm:grid-cols-3">{trialTotalsByCurrency.map((total) => <div className={`rounded border px-3 py-2 text-xs font-semibold ${total.balanced ? "border-success text-success" : "border-danger text-danger"}`} key={total.currency}>{total.currency}: Borç {total.debit.toFixed(2)} · Alacak {total.credit.toFixed(2)} · {total.balanced ? "Dengeli" : "Dengesiz"}</div>)}</div>
+        <div className="mt-2 overflow-x-auto"><table aria-label="Hesap bazlı mizan özeti" className="w-full text-left text-xs"><thead><tr className="border-b border-divider"><th className="px-2 py-2">Hesap</th><th className="px-2 py-2">Döviz</th><th className="px-2 py-2 text-right">Borç</th><th className="px-2 py-2 text-right">Alacak</th><th className="px-2 py-2 text-right">Bakiye</th></tr></thead><tbody>{trialBalance.map((row) => <tr className="border-b border-divider last:border-0" key={`${row.currency}-${row.accountCode}`}><td className="px-2 py-2">{row.accountCode} · {row.accountName}</td><td className="px-2 py-2">{row.currency}</td><td className="px-2 py-2 text-right">{row.debitTotal.toFixed(2)}</td><td className="px-2 py-2 text-right">{row.creditTotal.toFixed(2)}</td><td className="px-2 py-2 text-right font-semibold">{row.balance.toFixed(2)}</td></tr>)}</tbody></table></div>
       </div>
-      <div className="mt-4 border-t border-[var(--grid-border)] pt-3">
-        <div className="flex flex-wrap items-center justify-between gap-2">
-          <div><h4 className="text-sm font-semibold">Ledger post auditleri</h4><p className="text-xs text-[var(--on-surface-variant)]">Başarılı fiş post işlemleri, mevcut dönem kapsamıyla listelenir.</p></div>
-          <input aria-label="Ledger audit fiş araması" className="rounded-[var(--radius-control)] border border-[var(--grid-border)] px-2 py-1 text-xs" placeholder="Fiş ara" value={auditSearch} onChange={(event) => setAuditSearch(event.target.value)} />
-        </div>
-        <div className="mt-2 overflow-x-auto"><table className="w-full text-left text-xs"><thead><tr className="border-b border-[var(--grid-border)]"><th className="px-2 py-2">Fiş</th><th className="px-2 py-2">İşlem</th><th className="px-2 py-2">Zaman</th><th className="px-2 py-2">Kullanıcı</th></tr></thead><tbody>{filteredAuditEntries.map((entry) => <tr className="border-b border-[var(--grid-border)] last:border-0" key={entry.id}><td className="px-2 py-2 font-semibold">{entry.entityLabel}</td><td className="px-2 py-2">{entry.action}</td><td className="px-2 py-2">{new Intl.DateTimeFormat("tr-TR", { dateStyle: "short", timeStyle: "short" }).format(new Date(entry.occurredAt))}</td><td className="px-2 py-2">{entry.actorUserId}</td></tr>)}</tbody></table></div>
-        {!filteredAuditEntries.length ? <p className="py-2 text-xs text-[var(--on-surface-variant)]">Eşleşen ledger audit kaydı yok.</p> : null}
-      </div>
+      <LedgerAuditPanel entries={auditEntries} onExport={exportAuditCsv} />
     </section>
   );
+}
+
+function LedgerAuditPanel({
+  entries,
+  onExport,
+}: {
+  entries: AuditLogEntry[];
+  onExport: (entries: AuditLogEntry[]) => void;
+}) {
+  const [search, setSearch] = useState("");
+  const [actionFilter, setActionFilter] = useState("all");
+  const [dateFrom, setDateFrom] = useState("");
+  const [dateTo, setDateTo] = useState("");
+  const [selectedEntryId, setSelectedEntryId] = useState<string>();
+  const normalizedSearch = search.trim().toLocaleLowerCase("tr-TR");
+  const actionOptions = Array.from(new Set(entries.map((entry) => entry.action))).sort(
+    (left, right) => left.localeCompare(right, "tr-TR"),
+  );
+  const filteredEntries = entries.filter((entry) => {
+    const searchableValue = [
+      entry.entityLabel,
+      entry.entityType,
+      entry.entityId,
+      entry.action,
+      entry.actorUserId,
+      JSON.stringify(entry.metadata),
+    ]
+      .join(" ")
+      .toLocaleLowerCase("tr-TR");
+    const entryDate = entry.occurredAt.slice(0, 10);
+    return (
+      (!normalizedSearch || searchableValue.includes(normalizedSearch)) &&
+      (actionFilter === "all" || entry.action === actionFilter) &&
+      (!dateFrom || entryDate >= dateFrom) &&
+      (!dateTo || entryDate <= dateTo)
+    );
+  });
+  const selectedEntry = filteredEntries.find((entry) => entry.id === selectedEntryId);
+  const hasActiveFilters = Boolean(
+    normalizedSearch || actionFilter !== "all" || dateFrom || dateTo,
+  );
+
+  function clearFilters() {
+    setSearch("");
+    setActionFilter("all");
+    setDateFrom("");
+    setDateTo("");
+  }
+
+  return (
+    <div className="mt-4 border-t border-divider pt-3">
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <h4 className="text-sm font-semibold">Ledger post auditleri</h4>
+          <p className="text-xs text-content-subtle">
+            Mevcut tenant, firma ve dönem kapsamındaki kayıtları filtreleyin ve metadata ayrıntısını inceleyin.
+          </p>
+        </div>
+        <span className="rounded-ui-control border border-divider bg-surface-muted px-2 py-1 text-xs font-semibold">
+          {filteredEntries.length} / {entries.length} kayıt
+        </span>
+      </div>
+      <div className="mt-3 grid gap-2 md:grid-cols-2 xl:grid-cols-[minmax(220px,1fr)_220px_155px_155px_auto]">
+        <label className="grid gap-1 text-xs font-semibold">
+          Arama
+          <input
+            aria-label="Ledger audit araması"
+            className="rounded-ui-control border border-divider bg-surface-raised px-3 py-2 text-xs"
+            onChange={(event) => setSearch(event.target.value)}
+            placeholder="Fiş, işlem, kullanıcı veya metadata"
+            value={search}
+          />
+        </label>
+        <label className="grid gap-1 text-xs font-semibold">
+          İşlem
+          <select
+            aria-label="Ledger audit işlem filtresi"
+            className="rounded-ui-control border border-divider bg-surface-raised px-3 py-2 text-xs"
+            onChange={(event) => setActionFilter(event.target.value)}
+            value={actionFilter}
+          >
+            <option value="all">Tüm işlemler</option>
+            {actionOptions.map((action) => (
+              <option key={action} value={action}>{action}</option>
+            ))}
+          </select>
+        </label>
+        <label className="grid gap-1 text-xs font-semibold">
+          Başlangıç
+          <input
+            aria-label="Ledger audit başlangıç tarihi"
+            className="rounded-ui-control border border-divider bg-surface-raised px-3 py-2 text-xs"
+            onChange={(event) => setDateFrom(event.target.value)}
+            type="date"
+            value={dateFrom}
+          />
+        </label>
+        <label className="grid gap-1 text-xs font-semibold">
+          Bitiş
+          <input
+            aria-label="Ledger audit bitiş tarihi"
+            className="rounded-ui-control border border-divider bg-surface-raised px-3 py-2 text-xs"
+            onChange={(event) => setDateTo(event.target.value)}
+            type="date"
+            value={dateTo}
+          />
+        </label>
+        <div className="flex items-end gap-2">
+          <button
+            className="rounded-ui-control border border-divider px-3 py-2 text-xs font-semibold disabled:opacity-50"
+            disabled={!hasActiveFilters}
+            onClick={clearFilters}
+            type="button"
+          >
+            Temizle
+          </button>
+          <button
+            className="rounded-ui-control border border-divider px-3 py-2 text-xs font-semibold disabled:opacity-50"
+            disabled={!filteredEntries.length}
+            onClick={() => onExport(filteredEntries)}
+            type="button"
+          >
+            Sonuç CSV
+          </button>
+        </div>
+      </div>
+      <div className="mt-3 overflow-x-auto">
+        <table aria-label="Ledger audit kayıtları" className="w-full min-w-[760px] text-left text-xs">
+          <thead>
+            <tr className="border-b border-divider">
+              <th className="px-2 py-2">Fiş</th>
+              <th className="px-2 py-2">İşlem</th>
+              <th className="px-2 py-2">Zaman</th>
+              <th className="px-2 py-2">Kullanıcı</th>
+              <th className="px-2 py-2 text-right">Aksiyon</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredEntries.map((entry) => (
+              <tr className="border-b border-divider last:border-0" key={entry.id}>
+                <td className="px-2 py-2 font-semibold">{entry.entityLabel}</td>
+                <td className="px-2 py-2">{entry.action}</td>
+                <td className="px-2 py-2">{formatAuditDate(entry.occurredAt)}</td>
+                <td className="px-2 py-2">{entry.actorUserId}</td>
+                <td className="px-2 py-2 text-right">
+                  <button
+                    aria-expanded={selectedEntryId === entry.id}
+                    className="rounded-ui-control border border-divider px-2 py-1 font-semibold"
+                    onClick={() => setSelectedEntryId((current) => current === entry.id ? undefined : entry.id)}
+                    type="button"
+                  >
+                    {selectedEntryId === entry.id ? "Kapat" : "Detay"}
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      {!filteredEntries.length ? (
+        <p className="py-3 text-xs text-content-subtle">Eşleşen ledger audit kaydı yok.</p>
+      ) : null}
+      {selectedEntry ? <AuditEntryDetail entry={selectedEntry} /> : null}
+    </div>
+  );
+}
+
+function AuditEntryDetail({ entry }: { entry: AuditLogEntry }) {
+  const metadataRows = Object.entries(entry.metadata);
+  return (
+    <aside
+      aria-label={`${entry.entityLabel} audit detayı`}
+      className="mt-3 rounded-ui-panel border border-divider bg-surface-muted p-4"
+    >
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <p className="text-xs font-semibold uppercase text-content-subtle">Audit kaydı</p>
+          <h5 className="mt-1 text-sm font-semibold">{entry.entityLabel}</h5>
+        </div>
+        <span className="rounded-ui-control border border-divider bg-surface-raised px-2 py-1 font-mono text-xs">
+          {entry.action}
+        </span>
+      </div>
+      <dl className="mt-3 grid gap-2 text-xs sm:grid-cols-2 xl:grid-cols-4">
+        <AuditDetailItem label="Varlık" value={entry.entityType} />
+        <AuditDetailItem label="Varlık ID" value={entry.entityId} />
+        <AuditDetailItem label="Kullanıcı" value={entry.actorUserId} />
+        <AuditDetailItem label="Zaman" value={formatAuditDate(entry.occurredAt)} />
+      </dl>
+      <div className="mt-3 border-t border-divider pt-3">
+        <p className="text-xs font-semibold">Metadata</p>
+        {metadataRows.length ? (
+          <dl className="mt-2 grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
+            {metadataRows.map(([key, value]) => (
+              <AuditDetailItem key={key} label={key} value={formatAuditMetadataValue(value)} />
+            ))}
+          </dl>
+        ) : (
+          <p className="mt-2 text-xs text-content-subtle">Bu kayıt için ek metadata bulunmuyor.</p>
+        )}
+      </div>
+    </aside>
+  );
+}
+
+function AuditDetailItem({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-ui-control border border-divider bg-surface-raised p-3">
+      <dt className="text-content-subtle">{label}</dt>
+      <dd className="mt-1 break-words font-mono font-semibold">{value}</dd>
+    </div>
+  );
+}
+
+function formatAuditDate(value: string) {
+  return new Intl.DateTimeFormat("tr-TR", {
+    dateStyle: "short",
+    timeStyle: "short",
+  }).format(new Date(value));
+}
+
+function formatAuditMetadataValue(value: unknown) {
+  if (typeof value === "string") return value;
+  if (value === null) return "null";
+  if (value === undefined) return "—";
+  return JSON.stringify(value);
 }

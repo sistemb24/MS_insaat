@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+
+<html lang="tr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>NOA İnşaat - Döküman Merkezi</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#4f46e5',
+            primaryHover: '#4338ca',
+            background: '#f8fafc',
+            surface: '#ffffff',
+            text: {
+              main: '#0f172a',
+              muted: '#64748b'
+            },
+            border: '#e2e8f0',
+            folder: {
+              blue: '#3b82f6',
+              yellow: '#eab308',
+              green: '#22c55e',
+              red: '#ef4444'
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+<!-- Phosphor Icons -->
+<script src="https://unpkg.com/@phosphor-icons/web"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<style data-purpose="custom-utilities">
+    body {
+      font-family: 'Inter', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+      background-color: theme('colors.background');
+    }
+
+    /* Hide scrollbar for horizontal scrolling elements */
+    .hide-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .hide-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    /* Smooth accordion transitions */
+    .accordion-content {
+      transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
+      max-height: 0;
+      opacity: 0;
+      overflow: hidden;
+    }
+
+    .accordion-content.expanded {
+      max-height: 500px; /* Arbitrary large max-height */
+      opacity: 1;
+    }
+
+    .accordion-icon {
+      transition: transform 0.3s ease;
+    }
+
+    .accordion-icon.expanded {
+      transform: rotate(180deg);
+    }
+  </style>
+</head>
+<body class="text-text-main flex flex-col min-h-screen bg-background pb-[72px]">
+<!-- BEGIN: Mobile Header -->
+<header class="bg-surface sticky top-0 z-40 border-b border-border" data-purpose="main-header">
+<div class="px-4 h-16 flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-lg bg-primary text-white flex items-center justify-center font-bold text-sm">
+          N
+        </div>
+<h1 class="text-lg font-semibold text-text-main leading-tight">Döküman Merkezi</h1>
+</div>
+<button aria-label="Arama Yap" class="w-10 h-10 flex items-center justify-center rounded-full bg-slate-100 text-text-main hover:bg-slate-200 transition-colors">
+<i class="ph ph-magnifying-glass text-xl"></i>
+</button>
+</div>
+</header>
+<!-- END: Mobile Header -->
+<!-- BEGIN: Main Content Area -->
+<main class="flex-1 flex flex-col gap-6 p-4 overflow-y-auto">
+<!-- BEGIN: Storage Indicator -->
+<section class="bg-surface rounded-xl p-4 shadow-sm border border-border" data-purpose="storage-usage">
+<div class="flex justify-between items-center mb-2">
+<span class="text-sm font-medium text-text-muted uppercase tracking-wider">Depolama Alanı</span>
+<span class="text-sm font-semibold text-primary">1.2 GB <span class="text-text-muted font-normal">/ 5 GB</span></span>
+</div>
+<div class="w-full bg-slate-100 rounded-full h-2 mb-2">
+<div class="bg-primary h-2 rounded-full" style="width: 24%;"></div>
+</div>
+<div class="flex justify-between items-center mt-3">
+<span class="text-xs text-text-muted">%24 Kullanılıyor</span>
+<a class="text-sm text-primary font-medium hover:underline" href="#">Planı Yükselt</a>
+</div>
+</section>
+<!-- END: Storage Indicator -->
+<!-- BEGIN: System Folders (Horizontal Scroll) -->
+<section data-purpose="system-folders">
+<h2 class="text-sm font-semibold text-text-muted uppercase tracking-wider mb-3 px-1">Sistem Klasörleri</h2>
+<div class="flex overflow-x-auto hide-scrollbar gap-3 pb-2 -mx-4 px-4">
+<a class="flex-shrink-0 w-28 bg-surface rounded-xl p-4 border border-border shadow-sm flex flex-col items-start gap-3 active:bg-slate-50 transition-colors" href="#">
+<div class="p-2 rounded-lg bg-blue-50 text-folder-blue">
+<i class="ph-fill ph-folder text-2xl"></i>
+</div>
+<div class="w-full">
+<h3 class="text-sm font-medium truncate text-text-main">Sözleşmeler</h3>
+<span class="text-xs text-text-muted mt-1 block">12 Öğe</span>
+</div>
+</a>
+<a class="flex-shrink-0 w-28 bg-surface rounded-xl p-4 border border-border shadow-sm flex flex-col items-start gap-3 active:bg-slate-50 transition-colors" href="#">
+<div class="p-2 rounded-lg bg-yellow-50 text-folder-yellow">
+<i class="ph-fill ph-folder text-2xl"></i>
+</div>
+<div class="w-full">
+<h3 class="text-sm font-medium truncate text-text-main">Araçlar</h3>
+<span class="text-xs text-text-muted mt-1 block">8 Öğe</span>
+</div>
+</a>
+<a class="flex-shrink-0 w-28 bg-surface rounded-xl p-4 border border-border shadow-sm flex flex-col items-start gap-3 active:bg-slate-50 transition-colors" href="#">
+<div class="p-2 rounded-lg bg-green-50 text-folder-green">
+<i class="ph-fill ph-folder text-2xl"></i>
+</div>
+<div class="w-full">
+<h3 class="text-sm font-medium truncate text-text-main">Faturalar</h3>
+<span class="text-xs text-text-muted mt-1 block">45 Öğe</span>
+</div>
+</a>
+<a class="flex-shrink-0 w-28 bg-surface rounded-xl p-4 border border-border shadow-sm flex flex-col items-start gap-3 active:bg-slate-50 transition-colors" href="#">
+<div class="p-2 rounded-lg bg-blue-50 text-folder-blue">
+<i class="ph-fill ph-folder text-2xl"></i>
+</div>
+<div class="w-full">
+<h3 class="text-sm font-medium truncate text-text-main">Personel</h3>
+<span class="text-xs text-text-muted mt-1 block">24 Öğe</span>
+</div>
+</a>
+<a class="flex-shrink-0 w-28 bg-surface rounded-xl p-4 border border-border shadow-sm flex flex-col items-start gap-3 active:bg-slate-50 transition-colors" href="#">
+<div class="p-2 rounded-lg bg-red-50 text-folder-red">
+<i class="ph-fill ph-folder text-2xl"></i>
+</div>
+<div class="w-full">
+<h3 class="text-sm font-medium truncate text-text-main">Giderler</h3>
+<span class="text-xs text-text-muted mt-1 block">18 Öğe</span>
+</div>
+</a>
+</div>
+</section>
+<!-- END: System Folders -->
+<!-- BEGIN: Projects & Quick Access (Accordions) -->
+<section class="flex flex-col gap-3" data-purpose="navigation-lists">
+<!-- Projects Accordion -->
+<div class="bg-surface rounded-xl border border-border shadow-sm overflow-hidden">
+<button aria-controls="projects-content" aria-expanded="true" class="w-full flex items-center justify-between p-4" onclick="toggleAccordion('projects-content', 'projects-icon')">
+<h2 class="text-sm font-semibold text-text-muted uppercase tracking-wider">Projeler</h2>
+<i class="ph ph-caret-down text-text-muted transition-transform expanded" id="projects-icon"></i>
+</button>
+<div class="accordion-content expanded bg-slate-50/50" id="projects-content">
+<ul class="pb-2">
+<li>
+<a class="flex items-center gap-3 px-4 py-3 hover:bg-slate-100 active:bg-slate-200 transition-colors" href="#">
+<i class="ph ph-folder-notch text-text-muted text-xl"></i>
+<span class="text-sm font-medium text-text-main">Marmaray Projesi</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-3 hover:bg-slate-100 active:bg-slate-200 transition-colors" href="#">
+<i class="ph ph-folder-notch text-text-muted text-xl"></i>
+<span class="text-sm font-medium text-text-main">Zeta Residence</span>
+</a>
+</li>
+</ul>
+</div>
+</div>
+<!-- Quick Access Accordion -->
+<div class="bg-surface rounded-xl border border-border shadow-sm overflow-hidden">
+<button aria-controls="quick-access-content" aria-expanded="true" class="w-full flex items-center justify-between p-4" onclick="toggleAccordion('quick-access-content', 'quick-access-icon')">
+<h2 class="text-sm font-semibold text-text-muted uppercase tracking-wider">Hızlı Erişim</h2>
+<i class="ph ph-caret-down text-text-muted transition-transform expanded" id="quick-access-icon"></i>
+</button>
+<div class="accordion-content expanded bg-slate-50/50" id="quick-access-content">
+<ul class="pb-2">
+<li>
+<a class="flex items-center gap-3 px-4 py-3 hover:bg-slate-100 active:bg-slate-200 transition-colors" href="#">
+<i class="ph ph-users text-text-muted text-xl"></i>
+<span class="text-sm font-medium text-text-main">Benimle Paylaşılanlar</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-3 hover:bg-slate-100 active:bg-slate-200 transition-colors" href="#">
+<i class="ph ph-star text-text-muted text-xl"></i>
+<span class="text-sm font-medium text-text-main">Yıldızlılar</span>
+</a>
+</li>
+</ul>
+</div>
+</div>
+</section>
+<!-- END: Projects & Quick Access -->
+<!-- BEGIN: Recent Files List -->
+<section data-purpose="recent-files">
+<div class="flex items-center justify-between mb-3 px-1">
+<h2 class="text-sm font-semibold text-text-muted uppercase tracking-wider">Son Dosyalar</h2>
+<a class="text-sm text-primary font-medium" href="#">Tümünü Gör</a>
+</div>
+<div class="flex flex-col gap-3">
+<!-- File Item 1 -->
+<a class="bg-surface border border-border rounded-xl p-3 flex items-center gap-4 active:bg-slate-50 transition-colors" href="#">
+<div class="w-12 h-12 rounded-lg bg-red-50 text-red-500 flex items-center justify-center flex-shrink-0">
+<i class="ph-fill ph-file-pdf text-2xl"></i>
+</div>
+<div class="flex-1 min-w-0">
+<h3 class="text-sm font-medium text-text-main truncate">Subcontractor_Ag...</h3>
+<div class="flex items-center gap-2 mt-1 text-xs text-text-muted">
+<span>2.4 MB</span>
+<span class="w-1 h-1 rounded-full bg-slate-300"></span>
+<span>24 Eki 2023</span>
+</div>
+</div>
+<button aria-label="Seçenekler" class="p-2 text-text-muted active:bg-slate-100 rounded-full">
+<i class="ph ph-dots-three-vertical text-xl"></i>
+</button>
+</a>
+<!-- File Item 2 -->
+<a class="bg-surface border border-border rounded-xl p-3 flex items-center gap-4 active:bg-slate-50 transition-colors" href="#">
+<div class="w-12 h-12 rounded-lg bg-green-50 text-green-500 flex items-center justify-center flex-shrink-0">
+<i class="ph-fill ph-file-csv text-2xl"></i>
+</div>
+<div class="flex-1 min-w-0">
+<h3 class="text-sm font-medium text-text-main truncate">BOQ_Marmaray_P...</h3>
+<div class="flex items-center gap-2 mt-1 text-xs text-text-muted">
+<span>1.1 MB</span>
+<span class="w-1 h-1 rounded-full bg-slate-300"></span>
+<span>22 Eki 2023</span>
+</div>
+</div>
+<button aria-label="Seçenekler" class="p-2 text-text-muted active:bg-slate-100 rounded-full">
+<i class="ph ph-dots-three-vertical text-xl"></i>
+</button>
+</a>
+<!-- File Item 3 -->
+<a class="bg-surface border border-border rounded-xl p-3 flex items-center gap-4 active:bg-slate-50 transition-colors" href="#">
+<div class="w-12 h-12 rounded-lg bg-orange-50 text-orange-500 flex items-center justify-center flex-shrink-0">
+<i class="ph-fill ph-image text-2xl"></i>
+</div>
+<div class="flex-1 min-w-0">
+<h3 class="text-sm font-medium text-text-main truncate">Site_Inspection_S...</h3>
+<div class="flex items-center gap-2 mt-1 text-xs text-text-muted">
+<span>4.8 MB</span>
+<span class="w-1 h-1 rounded-full bg-slate-300"></span>
+<span>20 Eki 2023</span>
+</div>
+</div>
+<button aria-label="Seçenekler" class="p-2 text-text-muted active:bg-slate-100 rounded-full">
+<i class="ph ph-dots-three-vertical text-xl"></i>
+</button>
+</a>
+<!-- File Item 4 -->
+<a class="bg-surface border border-border rounded-xl p-3 flex items-center gap-4 active:bg-slate-50 transition-colors" href="#">
+<div class="w-12 h-12 rounded-lg bg-red-50 text-red-500 flex items-center justify-center flex-shrink-0">
+<i class="ph-fill ph-file-pdf text-2xl"></i>
+</div>
+<div class="flex-1 min-w-0">
+<h3 class="text-sm font-medium text-text-main truncate">NDA_Consultant.pdf</h3>
+<div class="flex items-center gap-2 mt-1 text-xs text-text-muted">
+<span>850 KB</span>
+<span class="w-1 h-1 rounded-full bg-slate-300"></span>
+<span>15 Eki 2023</span>
+</div>
+</div>
+<button aria-label="Seçenekler" class="p-2 text-text-muted active:bg-slate-100 rounded-full">
+<i class="ph ph-dots-three-vertical text-xl"></i>
+</button>
+</a>
+</div>
+</section>
+<!-- END: Recent Files List -->
+</main>
+<!-- END: Main Content Area -->
+<!-- BEGIN: Floating Action Button (FAB) -->
+<button aria-label="Dosya Yükle" class="fixed bottom-[88px] right-4 w-14 h-14 bg-primary text-white rounded-full shadow-lg flex items-center justify-center hover:bg-primaryHover active:scale-95 transition-all z-40" data-purpose="fab-upload">
+<i class="ph ph-upload-simple text-2xl"></i>
+</button>
+<!-- END: Floating Action Button (FAB) -->
+<!-- BEGIN: Bottom Navigation -->
+<nav class="bg-surface border-t border-border fixed bottom-0 w-full h-[72px] flex items-center justify-around px-2 pb-safe z-50 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]" data-purpose="bottom-navigation">
+<a class="flex flex-col items-center justify-center w-full h-full gap-1 text-text-muted hover:text-primary transition-colors" href="#">
+<i class="ph ph-squares-four text-[24px]"></i>
+<span class="text-[10px] font-medium">Panel</span>
+</a>
+<a class="flex flex-col items-center justify-center w-full h-full gap-1 text-text-muted hover:text-primary transition-colors" href="#">
+<i class="ph ph-buildings text-[24px]"></i>
+<span class="text-[10px] font-medium">Firmalar</span>
+</a>
+<a class="flex flex-col items-center justify-center w-full h-full gap-1 text-text-muted hover:text-primary transition-colors" href="#">
+<i class="ph ph-gavel text-[24px]"></i>
+<span class="text-[10px] font-medium">İhaleler</span>
+</a>
+<a class="flex flex-col items-center justify-center w-full h-full gap-1 text-primary relative" href="#">
+<!-- Active indicator dot -->
+<span class="absolute top-1 right-1/2 translate-x-3 w-1.5 h-1.5 bg-primary rounded-full"></span>
+<i class="ph-fill ph-file-text text-[24px]"></i>
+<span class="text-[10px] font-semibold">Evraklar</span>
+</a>
+<a class="flex flex-col items-center justify-center w-full h-full gap-1 text-text-muted hover:text-primary transition-colors" href="#">
+<i class="ph ph-gear text-[24px]"></i>
+<span class="text-[10px] font-medium">Ayarlar</span>
+</a>
+</nav>
+<!-- END: Bottom Navigation -->
+<!-- BEGIN: Interactivity Scripts -->
+<script data-purpose="accordion-logic">
+    function toggleAccordion(contentId, iconId) {
+      const content = document.getElementById(contentId);
+      const icon = document.getElementById(iconId);
+
+      content.classList.toggle('expanded');
+      icon.classList.toggle('expanded');
+
+      // Update aria-expanded
+      const button = icon.parentElement;
+      const isExpanded = content.classList.contains('expanded');
+      button.setAttribute('aria-expanded', isExpanded);
+    }
+  </script>
+<!-- END: Interactivity Scripts -->
+</body></html>

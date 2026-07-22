@@ -26,7 +26,10 @@ describe("StockDepotSurface", () => {
   test("renders stock depot summary from posted purchase invoice lines", () => {
     render(<StockDepotSurface purchaseInvoices={[createPostedInvoice()]} />);
 
-    expect(screen.getByText("Stok/Depo")).toBeTruthy();
+    expect(
+      screen.getByRole("heading", { level: 1, name: "Stok ve Depo Yönetimi" }),
+    ).toBeTruthy();
+    expect(screen.getByText("Minimum Altı")).toBeTruthy();
     expect(screen.getByText("Depo Stok Özeti")).toBeTruthy();
     expect(screen.getByText("Depo Hareketleri")).toBeTruthy();
     expect(screen.getAllByText("Merkez Depo")).toHaveLength(3);

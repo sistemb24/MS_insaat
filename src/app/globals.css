@@ -1,65 +1,263 @@
 @import "tailwindcss";
 
 :root {
-  --font-inter: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  --font-jetbrains-mono: "JetBrains Mono", "SFMono-Regular", Consolas, "Liberation Mono", monospace;
-  --app-header-height: 56px;
-  --app-sidebar-width: 248px;
-  --data-row-height: 34px;
-  --radius-control: 4px;
-  --radius-panel: 6px;
-  --background: #f7f9fb;
-  --foreground: #191c1e;
-  --surface: #f7f9fb;
-  --surface-container-lowest: #ffffff;
-  --surface-container-low: #f2f4f6;
-  --surface-container: #eceef0;
-  --on-surface: #191c1e;
-  --on-surface-variant: #444653;
-  --grid-border: #e2e8f0;
-  --primary: #00288e;
-  --primary-hover: #001f70;
-  --primary-fixed: #dde1ff;
-  --status-draft: #94a3b8;
-  --status-process: #3b82f6;
-  --status-approved: #10b981;
-  --status-cancelled: #ef4444;
-  --mandatory-indicator: #b91c1c;
+  color-scheme: light;
+
+  /* Template Standard v1 — canonical semantic tokens. */
+  --ds-primary: #3525cd;
+  --ds-primary-container: #4f46e5;
+  --ds-on-primary: #ffffff;
+  --ds-on-primary-container: #dad7ff;
+  --ds-primary-fixed: #e2dfff;
+  --ds-primary-fixed-dim: #c3c0ff;
+  --ds-on-primary-fixed: #0f0069;
+  --ds-on-primary-fixed-variant: #3323cc;
+  --ds-surface-tint: #4d44e3;
+
+  --ds-secondary: #565e74;
+  --ds-secondary-container: #dae2fd;
+  --ds-on-secondary: #ffffff;
+  --ds-on-secondary-container: #5c647a;
+  --ds-tertiary: #7e3000;
+  --ds-tertiary-container: #a44100;
+  --ds-on-tertiary: #ffffff;
+  --ds-tertiary-fixed: #ffdbcc;
+
+  --ds-background: #f7f9fb;
+  --ds-surface: #f7f9fb;
+  --ds-surface-raised: #ffffff;
+  --ds-surface-low: #f2f4f6;
+  --ds-surface-container: #eceef0;
+  --ds-surface-high: #e6e8ea;
+  --ds-surface-highest: #e0e3e5;
+  --ds-surface-dim: #d8dadc;
+  --ds-on-surface: #191c1e;
+  --ds-on-surface-variant: #464555;
+  --ds-text-muted: #64748b;
+  --ds-outline: #777587;
+  --ds-outline-variant: #c7c4d8;
+  --ds-grid-border: #e2e8f0;
+
+  --ds-success: #047857;
+  --ds-success-container: #d1fae5;
+  --ds-warning: #92400e;
+  --ds-warning-container: #fef3c7;
+  --ds-danger: #be123c;
+  --ds-danger-container: #ffe4e6;
+  --ds-error: #ba1a1a;
+  --ds-error-container: #ffdad6;
+  --ds-on-error-container: #93000a;
+  --ds-info: #1d4ed8;
+  --ds-info-container: #dbeafe;
+  --ds-on-info: #ffffff;
+  --ds-on-success: #ffffff;
+  --ds-on-warning: #ffffff;
+  --ds-on-danger: #ffffff;
+  --ds-on-status: #ffffff;
+  --ds-danger-strong: #9f1239;
+  --ds-accent-violet: #6d28d9;
+  --ds-accent-violet-container: #ede9fe;
+  --ds-accent-orange: #c2410c;
+  --ds-accent-orange-container: #ffedd5;
+  --ds-surface-inverse: #0f172a;
+  --ds-on-surface-inverse: #f8fafc;
+  --ds-scrim: rgb(15 23 42 / 45%);
+
+  --ds-radius-control: 8px;
+  --ds-radius-panel: 12px;
+  --ds-control-height: 40px;
+  --ds-data-row-height: 40px;
+  --ds-app-header-height: 64px;
+  --ds-app-sidebar-width: 260px;
+
+}
+
+:root.dark {
+  color-scheme: dark;
+
+  --ds-primary: #c3c0ff;
+  --ds-primary-container: #a9a4ff;
+  --ds-on-primary: #21116f;
+  --ds-on-primary-container: #f0eeff;
+  --ds-primary-fixed: #332c6f;
+  --ds-primary-fixed-dim: #423a82;
+  --ds-on-primary-fixed: #f0eeff;
+  --ds-on-primary-fixed-variant: #d8d5ff;
+  --ds-surface-tint: #c3c0ff;
+
+  --ds-secondary: #c1c8df;
+  --ds-secondary-container: #3d4558;
+  --ds-on-secondary: #273044;
+  --ds-on-secondary-container: #e0e6ff;
+  --ds-tertiary: #ffb68f;
+  --ds-tertiary-container: #743000;
+  --ds-on-tertiary: #552000;
+  --ds-tertiary-fixed: #5a2a16;
+
+  --ds-background: #111318;
+  --ds-surface: #111318;
+  --ds-surface-raised: #191b20;
+  --ds-surface-low: #1f2127;
+  --ds-surface-container: #25272d;
+  --ds-surface-high: #2c2e35;
+  --ds-surface-highest: #34363d;
+  --ds-surface-dim: #0d0f13;
+  --ds-on-surface: #e5e2e8;
+  --ds-on-surface-variant: #cac5d1;
+  --ds-text-muted: #aaa4b3;
+  --ds-outline: #938e9d;
+  --ds-outline-variant: #484550;
+  --ds-grid-border: #353740;
+
+  --ds-success: #6ee7b7;
+  --ds-success-container: #123b2e;
+  --ds-warning: #fcd34d;
+  --ds-warning-container: #422d0f;
+  --ds-danger: #fda4af;
+  --ds-danger-container: #4a1824;
+  --ds-error: #ffb4ab;
+  --ds-error-container: #5c1b17;
+  --ds-on-error-container: #ffdad6;
+  --ds-info: #93c5fd;
+  --ds-info-container: #172554;
+  --ds-on-info: #172554;
+  --ds-on-success: #052e21;
+  --ds-on-warning: #422006;
+  --ds-on-danger: #4c0519;
+  --ds-on-status: #111318;
+  --ds-danger-strong: #fb7185;
+  --ds-accent-violet: #c4b5fd;
+  --ds-accent-violet-container: #2e1065;
+  --ds-accent-orange: #fdba74;
+  --ds-accent-orange-container: #431407;
+  --ds-surface-inverse: #e2e8f0;
+  --ds-on-surface-inverse: #0f172a;
+  --ds-scrim: rgb(0 0 0 / 55%);
+
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-inter);
-  --font-mono: var(--font-jetbrains-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-  --font-inter: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  --font-jetbrains-mono: "JetBrains Mono", "SFMono-Regular", Consolas, "Liberation Mono", monospace;
-    --background: #111827;
-    --foreground: #f9fafb;
-    --surface: #111827;
-    --surface-container-lowest: #172033;
-    --surface-container-low: #1f2937;
-    --surface-container: #273449;
-    --on-surface: #f9fafb;
-    --on-surface-variant: #cbd5e1;
-    --grid-border: #334155;
-    --primary-hover: #1d4ed8;
-    --primary-fixed: #1e3a8a;
-  }
+  --color-background: var(--ds-background);
+  --color-foreground: var(--ds-on-surface);
+  --color-brand-primary: var(--ds-primary);
+  --color-brand-primary-strong: var(--ds-primary-container);
+  --color-brand-primary-subtle: var(--ds-primary-fixed);
+  --color-brand-primary-subtle-hover: var(--ds-primary-fixed-dim);
+  --color-on-brand: var(--ds-on-primary);
+  --color-content: var(--ds-on-surface);
+  --color-content-subtle: var(--ds-on-surface-variant);
+  --color-content-muted: var(--ds-text-muted);
+  --color-surface: var(--ds-surface);
+  --color-surface-raised: var(--ds-surface-raised);
+  --color-surface-muted: var(--ds-surface-low);
+  --color-surface-selected: var(--ds-surface-high);
+  --color-divider: var(--ds-grid-border);
+  --color-outline-strong: var(--ds-outline);
+  --color-success: var(--ds-success);
+  --color-success-subtle: var(--ds-success-container);
+  --color-warning: var(--ds-warning);
+  --color-warning-subtle: var(--ds-warning-container);
+  --color-danger: var(--ds-danger);
+  --color-danger-subtle: var(--ds-danger-container);
+  --color-error: var(--ds-error);
+  --color-error-subtle: var(--ds-error-container);
+  --color-info: var(--ds-info);
+  --color-info-subtle: var(--ds-info-container);
+  --color-on-info: var(--ds-on-info);
+  --color-on-success: var(--ds-on-success);
+  --color-on-warning: var(--ds-on-warning);
+  --color-on-danger: var(--ds-on-danger);
+  --color-on-status: var(--ds-on-status);
+  --color-danger-strong: var(--ds-danger-strong);
+  --color-accent-violet: var(--ds-accent-violet);
+  --color-accent-violet-subtle: var(--ds-accent-violet-container);
+  --color-accent-orange: var(--ds-accent-orange);
+  --color-accent-orange-subtle: var(--ds-accent-orange-container);
+  --color-surface-inverse: var(--ds-surface-inverse);
+  --color-on-surface-inverse: var(--ds-on-surface-inverse);
+  --color-scrim: var(--ds-scrim);
+  --font-sans: var(--font-inter), Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-mono: var(--font-jetbrains-mono), "JetBrains Mono", "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  --radius-ui-control: var(--ds-radius-control);
+  --radius-ui-panel: var(--ds-radius-panel);
 }
 
 * {
   box-sizing: border-box;
 }
 
+html {
+  background: var(--ds-background);
+}
+
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-inter), Arial, Helvetica, sans-serif;
+  background: var(--ds-background);
+  color: var(--ds-on-surface);
+  font-family: var(--font-inter, Inter), ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+html,
+body {
+  transition: background-color 160ms ease, color 160ms ease;
+}
+
+body {
+  min-width: 320px;
+  line-height: 1.5;
+  text-rendering: optimizeLegibility;
+}
+
+[data-ui-workspace="true"] {
+  container-type: inline-size;
+}
+
+[data-ui-workspace="true"] :where(input, select, textarea) {
+  color: var(--ds-on-surface);
+  font: inherit;
+}
+
+[data-ui-workspace="true"] :where(input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]), select) {
+  min-height: var(--ds-control-height);
+}
+
+[data-ui-workspace="true"] :where(input, select, textarea):disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+[data-ui-workspace="true"] :where(input, select, textarea)::placeholder {
+  color: var(--ds-text-muted);
+  opacity: 0.9;
+}
+
+[data-ui-workspace="true"] :where(button, [role="button"]) {
+  touch-action: manipulation;
+}
+
+[data-ui-workspace="true"] :where(table) {
+  font-variant-numeric: tabular-nums;
+}
+
+[data-ui-workspace="true"] :where(th) {
+  text-wrap: balance;
+}
+
+[data-ui-workspace="true"] :where(td, th) {
+  vertical-align: middle;
+}
+
+[data-ui-workspace="true"] :where([role="status"], [role="alert"]) {
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 639px) {
+  [data-ui-page-header="true"] [data-ui-page-actions="true"] {
+    width: 100%;
+  }
+
+  [data-ui-action-bar="true"] button {
+    min-height: 40px;
+  }
 }
 
 button,
@@ -67,3 +265,134 @@ a {
   letter-spacing: 0;
 }
 
+:focus-visible {
+  outline: 2px solid var(--ds-primary);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html:focus-within {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@media print {
+  @page {
+    margin: 12mm;
+  }
+
+  html,
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+
+  :root.dark {
+    color-scheme: light;
+    --ds-primary: #3525cd;
+    --ds-primary-container: #4f46e5;
+    --ds-on-primary: #ffffff;
+    --ds-primary-fixed: #e2dfff;
+    --ds-primary-fixed-dim: #c3c0ff;
+    --ds-on-primary-fixed: #0f0069;
+    --ds-on-primary-fixed-variant: #3323cc;
+    --ds-surface-tint: #4d44e3;
+    --ds-background: #ffffff;
+    --ds-surface: #ffffff;
+    --ds-surface-raised: #ffffff;
+    --ds-surface-low: #f8fafc;
+    --ds-surface-container: #f1f5f9;
+    --ds-surface-high: #e2e8f0;
+    --ds-surface-highest: #e2e8f0;
+    --ds-surface-dim: #f8fafc;
+    --ds-on-surface: #000000;
+    --ds-on-surface-variant: #334155;
+    --ds-text-muted: #475569;
+    --ds-outline: #64748b;
+    --ds-outline-variant: #cbd5e1;
+    --ds-grid-border: #cbd5e1;
+    --ds-success: #047857;
+    --ds-success-container: #d1fae5;
+    --ds-warning: #92400e;
+    --ds-warning-container: #fef3c7;
+    --ds-danger: #be123c;
+    --ds-danger-container: #ffe4e6;
+    --ds-error: #ba1a1a;
+    --ds-error-container: #ffdad6;
+    --ds-on-error-container: #93000a;
+    --ds-info: #1d4ed8;
+    --ds-info-container: #dbeafe;
+    --ds-accent-violet: #6d28d9;
+    --ds-accent-violet-container: #ede9fe;
+    --ds-accent-orange: #c2410c;
+    --ds-accent-orange-container: #ffedd5;
+    --ds-surface-inverse: #0f172a;
+    --ds-on-surface-inverse: #f8fafc;
+  }
+
+  [data-print-hidden="true"],
+  .no-print {
+    display: none !important;
+  }
+
+  [data-print-break-before="true"] {
+    break-before: page;
+  }
+
+  [data-shell-body="true"] {
+    display: block !important;
+    min-height: 0 !important;
+  }
+
+  main[data-ui-workspace="true"] {
+    overflow: visible !important;
+    padding: 0 !important;
+  }
+
+  [data-ui-page-actions="true"],
+  [data-ui-action-bar="true"],
+  [data-ui-workspace="true"] button {
+    display: none !important;
+  }
+
+  [data-ui-workspace="true"] {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  [data-ui-workspace="true"] :where(table) {
+    border-collapse: collapse;
+    width: 100%;
+  }
+
+  [data-ui-workspace="true"] :where(thead) {
+    display: table-header-group;
+  }
+
+  [data-ui-workspace="true"] :where(tfoot) {
+    display: table-footer-group;
+  }
+
+  [data-ui-workspace="true"] :where(tr, img, svg),
+  [data-ui-panel="true"] {
+    break-inside: avoid;
+  }
+
+  [data-ui-workspace="true"] :where(a[href]) {
+    color: inherit !important;
+    text-decoration: none !important;
+  }
+
+  [data-ui-panel="true"] {
+    box-shadow: none !important;
+  }
+}

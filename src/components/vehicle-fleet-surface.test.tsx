@@ -1507,7 +1507,13 @@ describe("VehicleFleetSurface", () => {
     );
 
     expect(
-      screen.getByRole("heading", { name: "Araç / Filo Yönetimi" }),
+      screen.getByRole("heading", { name: "Araç ve Filo Yönetimi" }),
+    ).toBeTruthy();
+    expect(
+      document.querySelector('[data-vehicle-fleet-workspace="true"]'),
+    ).toBeTruthy();
+    expect(
+      screen.getByText("Arvento sandbox · canlı GPS bağlantısı yok"),
     ).toBeTruthy();
     expect(screen.getByText("Toplam araç")).toBeTruthy();
     expect(screen.getAllByText("3").length).toBeGreaterThanOrEqual(2);

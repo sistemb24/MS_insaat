@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+
+<html class="light" lang="tr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Puantaj ve Fazla Mesai - NOA İnşaat</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface-bright": "#f7f9fb",
+                      "secondary-fixed-dim": "#bec6e0",
+                      "tertiary-fixed-dim": "#ffb695",
+                      "on-tertiary-fixed-variant": "#7b2f00",
+                      "on-surface-variant": "#464555",
+                      "surface-container-high": "#e6e8ea",
+                      "primary-fixed-dim": "#c3c0ff",
+                      "error-container": "#ffdad6",
+                      "surface-container-highest": "#e0e3e5",
+                      "warning-amber": "#F59E0B",
+                      "on-primary-fixed-variant": "#3323cc",
+                      "on-secondary-fixed-variant": "#3f465c",
+                      "primary": "#3525cd",
+                      "on-error": "#ffffff",
+                      "tertiary-container": "#a44100",
+                      "border-slate": "#E2E8F0",
+                      "surface-variant": "#e0e3e5",
+                      "primary-fixed": "#e2dfff",
+                      "success-emerald": "#10B981",
+                      "surface-dim": "#d8dadc",
+                      "on-secondary-fixed": "#131b2e",
+                      "on-error-container": "#93000a",
+                      "on-tertiary-container": "#ffd2be",
+                      "on-tertiary": "#ffffff",
+                      "inverse-surface": "#2d3133",
+                      "on-secondary-container": "#5c647a",
+                      "outline": "#777587",
+                      "inverse-primary": "#c3c0ff",
+                      "secondary-container": "#dae2fd",
+                      "surface-white": "#FFFFFF",
+                      "surface-container-low": "#f2f4f6",
+                      "on-primary": "#ffffff",
+                      "on-surface": "#191c1e",
+                      "background": "#f7f9fb",
+                      "secondary": "#565e74",
+                      "decorative-navy": "#000080",
+                      "inverse-on-surface": "#eff1f3",
+                      "surface-container-lowest": "#ffffff",
+                      "error": "#ba1a1a",
+                      "on-secondary": "#ffffff",
+                      "secondary-fixed": "#dae2fd",
+                      "decorative-purple": "#800080",
+                      "on-tertiary-fixed": "#351000",
+                      "outline-variant": "#c7c4d8",
+                      "tertiary-fixed": "#ffdbcc",
+                      "primary-container": "#4f46e5",
+                      "surface": "#f7f9fb",
+                      "text-muted": "#64748B",
+                      "on-primary-container": "#dad7ff",
+                      "surface-tint": "#4d44e3",
+                      "on-background": "#191c1e",
+                      "tertiary": "#7e3000",
+                      "on-primary-fixed": "#0f0069",
+                      "danger-rose": "#E11D48",
+                      "surface-container": "#eceef0"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "header-height": "64px",
+                      "sidebar-collapsed": "80px",
+                      "grid-cell-py": "0.5rem",
+                      "stack-sm": "0.5rem",
+                      "grid-cell-px": "0.75rem",
+                      "container-gap": "1.5rem",
+                      "sidebar-width": "260px",
+                      "stack-md": "1rem",
+                      "safe-bottom": "env(safe-area-inset-bottom)"
+              },
+              "fontFamily": {
+                      "headline-lg-mobile": [
+                              "Inter"
+                      ],
+                      "body-lg": [
+                              "Inter"
+                      ],
+                      "data-mono": [
+                              "JetBrains Mono"
+                      ],
+                      "body-md": [
+                              "Inter"
+                      ],
+                      "label-caps": [
+                              "Inter"
+                      ],
+                      "headline-lg": [
+                              "Inter"
+                      ],
+                      "headline-sm": [
+                              "Inter"
+                      ],
+                      "headline-md": [
+                              "Inter"
+                      ],
+                      "body-sm": [
+                              "Inter"
+                      ]
+              },
+              "fontSize": {
+                      "headline-lg-mobile": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "body-lg": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "data-mono": [
+                              "13px",
+                              {
+                                      "lineHeight": "16px",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "body-md": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "label-caps": [
+                              "12px",
+                              {
+                                      "lineHeight": "16px",
+                                      "letterSpacing": "0.05em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "headline-lg": [
+                              "30px",
+                              {
+                                      "lineHeight": "38px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "headline-sm": [
+                              "20px",
+                              {
+                                      "lineHeight": "28px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "headline-md": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "body-sm": [
+                              "13px",
+                              {
+                                      "lineHeight": "18px",
+                                      "fontWeight": "400"
+                              }
+                      ]
+              }
+            }
+          }
+        }
+      </script>
+<style>
+        .pb-safe { padding-bottom: max(env(safe-area-inset-bottom), 1rem); }
+        .pt-safe { padding-top: max(env(safe-area-inset-top), 0px); }
+        /* Hide scrollbar for cleaner look */
+        ::-webkit-scrollbar { display: none; }
+      </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface-bright text-on-surface font-body-md min-h-screen flex flex-col pt-safe pb-[80px]">
+<!-- TopAppBar -->
+<header class="bg-surface shadow-sm w-full sticky top-0 z-50 transition-colors duration-200 ease-in-out flex justify-between items-center h-header-height px-4 w-full">
+<button class="text-on-surface-variant hover:bg-surface-container-low p-2 rounded-full flex items-center justify-center transition-colors">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">arrow_back</span>
+</button>
+<h1 class="font-headline-sm text-headline-sm font-bold text-primary text-center truncate px-4">Puantaj ve Fazla Mesai</h1>
+<button class="text-on-surface-variant hover:bg-surface-container-low p-2 rounded-full flex items-center justify-center transition-colors">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">more_vert</span>
+</button>
+</header>
+<!-- Main Content -->
+<main class="flex-1 p-4 flex flex-col gap-container-gap">
+<!-- Summary Cards -->
+<section class="grid grid-cols-2 gap-3">
+<div class="bg-surface-white rounded-xl p-4 shadow-[0_1px_3px_rgba(79,70,229,0.08)] border border-border-slate flex flex-col justify-center items-center">
+<span class="font-label-caps text-label-caps text-text-muted mb-1 uppercase">DÖNEM</span>
+<span class="font-headline-sm text-headline-sm text-on-surface">Ekim 2023</span>
+</div>
+<div class="bg-surface-white rounded-xl p-4 shadow-[0_1px_3px_rgba(79,70,229,0.08)] border border-border-slate flex flex-col justify-center items-center">
+<span class="font-label-caps text-label-caps text-text-muted mb-1 uppercase text-center">TAHMİNİ EK MALİYET</span>
+<span class="font-data-mono text-data-mono text-danger-rose font-bold">₺ 45,200.00</span>
+</div>
+</section>
+<!-- Quick Actions -->
+<section class="flex gap-3">
+<button class="flex-1 bg-surface-white border border-primary text-primary hover:bg-surface-container-low font-body-md font-medium py-3 px-4 rounded-lg flex items-center justify-center gap-2 transition-colors">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 0;">upload_file</span>
+                Excel Yükle
+            </button>
+<button class="flex-1 bg-primary text-on-primary hover:bg-surface-tint font-body-md font-medium py-3 px-4 rounded-lg flex items-center justify-center gap-2 transition-colors shadow-sm">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 0;">calculate</span>
+                Hesapla &amp; Aktar
+            </button>
+</section>
+<!-- Personnel List -->
+<section class="flex flex-col gap-4">
+<div class="flex justify-between items-center mb-2">
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Personel Kayıtları</h2>
+<div class="relative w-1/2">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-text-muted text-[20px]" style="font-variation-settings: 'FILL' 0;">search</span>
+<input class="w-full pl-9 pr-3 py-2 border border-border-slate rounded-lg focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary font-body-sm text-body-sm bg-surface-white" placeholder="Ara..." type="text"/>
+</div>
+</div>
+<!-- Personnel Card 1 -->
+<div class="bg-surface-white rounded-xl p-4 shadow-[0_1px_3px_rgba(79,70,229,0.08)] border border-border-slate flex flex-col gap-4">
+<div class="flex justify-between items-start">
+<div class="flex items-center gap-3">
+<img class="w-12 h-12 rounded-full object-cover border border-border-slate" data-alt="A professional headshot of a construction worker in a light-mode corporate setting. High quality, clear lighting, realistic style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBIz-XZrSbNz6VsEa0oFOfEmHGXwNOGHjGwq8aOXRbO42ZhNEP-XN9i0lZGvsVLPDRMVRgC-V9kc4vTHB6RRar7TbEDzh6gRGHPIyuny5ZxifoeGkxpls92aWSTqSC6QDb-EoE8ryx39W44yrLzykSCWtSRVVbjQZp1fcAGwjt5FsPSCBAHfK9eyjZw2ujaaUe9ZBFou1F-ljpM4ItE8o2PIIBIEt7XavkqYxrSU5N5cTpVNht9q8cR"/>
+<div>
+<h3 class="font-body-lg text-body-lg font-medium text-on-surface">Ahmet Yılmaz</h3>
+<span class="font-body-sm text-body-sm text-text-muted">Kalıp Ustası - Şantiye A</span>
+</div>
+</div>
+<span class="bg-success-emerald/10 text-success-emerald font-label-caps text-[10px] px-2 py-1 rounded-full uppercase tracking-wider">Aktif</span>
+</div>
+<div class="grid grid-cols-2 gap-3 mt-2">
+<div class="flex flex-col gap-1">
+<label class="font-label-caps text-label-caps text-text-muted uppercase">NORMAL MESAİ (SAAT)</label>
+<input class="w-full border border-border-slate rounded-lg px-4 py-3 font-data-mono text-data-mono focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary bg-surface-bright text-center text-lg" type="number" value="160"/>
+</div>
+<div class="flex flex-col gap-1">
+<label class="font-label-caps text-label-caps text-text-muted uppercase">FAZLA MESAİ (SAAT)</label>
+<input class="w-full border border-border-slate rounded-lg px-4 py-3 font-data-mono text-data-mono focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary bg-surface-bright text-center text-lg text-primary font-bold" type="number" value="12"/>
+</div>
+</div>
+</div>
+<!-- Personnel Card 2 -->
+<div class="bg-surface-white rounded-xl p-4 shadow-[0_1px_3px_rgba(79,70,229,0.08)] border border-border-slate flex flex-col gap-4">
+<div class="flex justify-between items-start">
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 rounded-full bg-secondary-container flex items-center justify-center text-primary font-headline-sm">ME</div>
+<div>
+<h3 class="font-body-lg text-body-lg font-medium text-on-surface">Mehmet Demir</h3>
+<span class="font-body-sm text-body-sm text-text-muted">Elektrik Teknisyeni - Şantiye B</span>
+</div>
+</div>
+<span class="bg-success-emerald/10 text-success-emerald font-label-caps text-[10px] px-2 py-1 rounded-full uppercase tracking-wider">Aktif</span>
+</div>
+<div class="grid grid-cols-2 gap-3 mt-2">
+<div class="flex flex-col gap-1">
+<label class="font-label-caps text-label-caps text-text-muted uppercase">NORMAL MESAİ (SAAT)</label>
+<input class="w-full border border-border-slate rounded-lg px-4 py-3 font-data-mono text-data-mono focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary bg-surface-bright text-center text-lg" type="number" value="152"/>
+</div>
+<div class="flex flex-col gap-1">
+<label class="font-label-caps text-label-caps text-text-muted uppercase">FAZLA MESAİ (SAAT)</label>
+<input class="w-full border border-border-slate rounded-lg px-4 py-3 font-data-mono text-data-mono focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary bg-surface-bright text-center text-lg" type="number" value="0"/>
+</div>
+</div>
+</div>
+<button class="w-full bg-transparent border border-border-slate text-on-surface-variant hover:bg-surface-container-low font-body-md font-medium py-3 px-4 rounded-lg flex items-center justify-center gap-2 transition-colors mt-2">
+                Daha Fazla Yükle
+            </button>
+</section>
+<!-- Rules Accordion -->
+<section class="mt-4 mb-4">
+<details class="group bg-surface-white rounded-xl shadow-[0_1px_3px_rgba(79,70,229,0.08)] border border-border-slate overflow-hidden">
+<summary class="flex justify-between items-center font-body-md font-medium cursor-pointer list-none p-4 hover:bg-surface-container-low transition-colors text-on-surface">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[20px]" style="font-variation-settings: 'FILL' 0;">info</span>
+                        Hesaplama Kuralları
+                    </div>
+<span class="material-symbols-outlined transition group-open:rotate-180" style="font-variation-settings: 'FILL' 0;">expand_more</span>
+</summary>
+<div class="p-4 border-t border-border-slate text-body-sm text-on-surface-variant bg-surface-bright">
+<ul class="list-disc pl-5 space-y-2">
+<li>Aylık standart çalışma saati 160 saattir.</li>
+<li>Fazla mesai ücreti saatlik baz ücretin %150'si olarak hesaplanır.</li>
+<li>Hafta sonu çalışmaları özel puantaj kodu ile girilmelidir.</li>
+</ul>
+</div>
+</details>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="bg-surface border-t border-outline-variant shadow-[0_-1px_3px_rgba(79,70,229,0.08)] fixed bottom-0 w-full z-50 h-16 fixed bottom-0 left-0 w-full flex justify-around items-center px-2 pb-safe md:hidden">
+<button class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1 hover:text-primary active:scale-95 transition-transform duration-150 group">
+<span class="material-symbols-outlined mb-1 group-hover:text-primary" style="font-variation-settings: 'FILL' 0;">dashboard</span>
+<span class="font-label-caps text-label-caps group-hover:text-primary">Dashboard</span>
+</button>
+<button class="flex flex-col items-center justify-center text-primary bg-primary-container/10 rounded-xl px-3 py-1 hover:text-primary active:scale-95 transition-transform duration-150">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 1;">construction</span>
+<span class="font-label-caps text-label-caps">Şantiyeler</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1 hover:text-primary active:scale-95 transition-transform duration-150 group">
+<span class="material-symbols-outlined mb-1 group-hover:text-primary" style="font-variation-settings: 'FILL' 0;">business</span>
+<span class="font-label-caps text-label-caps group-hover:text-primary">Firmalar</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1 hover:text-primary active:scale-95 transition-transform duration-150 group">
+<span class="material-symbols-outlined mb-1 group-hover:text-primary" style="font-variation-settings: 'FILL' 0;">description</span>
+<span class="font-label-caps text-label-caps group-hover:text-primary">Belgeler</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant px-3 py-1 hover:text-primary active:scale-95 transition-transform duration-150 group">
+<span class="material-symbols-outlined mb-1 group-hover:text-primary" style="font-variation-settings: 'FILL' 0;">settings</span>
+<span class="font-label-caps text-label-caps group-hover:text-primary">Ayarlar</span>
+</button>
+</nav>
+</body></html>

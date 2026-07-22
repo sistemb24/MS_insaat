@@ -31,7 +31,8 @@ describe("DocumentCenterSurface", () => {
     expect(screen.getByText("0 MB / 5 GB")).toBeTruthy();
     expect(screen.getByRole("button", { name: "Yeni Klasör" })).toBeTruthy();
     expect(screen.getByRole("button", { name: "Dosya Yükle" })).toBeTruthy();
-    expect(screen.getByRole("button", { name: "+5GB · ₺790/ay" })).toBeTruthy();
+    expect(screen.getByLabelText("Dosya veya klasör ara")).toBeTruthy();
+    expect(document.querySelector('[data-document-center-workspace="true"]')).toBeTruthy();
 
     const tabs = screen.getByLabelText("Döküman sekmeleri");
     expect(within(tabs).getByRole("button", { name: "Dosyalarım" })).toBeTruthy();
@@ -53,6 +54,50 @@ describe("DocumentCenterSurface", () => {
     }) as HTMLButtonElement;
 
     expect(protectedDeleteAction.disabled).toBe(true);
+  });
+
+  test("searches files, folders and linked records from one workspace field", () => {
+    const folders = listDocumentSystemFolders();
+    const contractsFolder = folders.find((folder) => folder.name === "Sözleşmeler");
+    const materialsFolder = folders.find((folder) => folder.name === "Malzemeler");
+    const initialFiles: DocumentFileRow[] = [
+      {
+        createdAt: "2026-07-01T10:00:00.000Z",
+        createdBy: "Ana Kullanıcı",
+        extension: "pdf",
+        folderId: contractsFolder?.id ?? "system-contracts",
+        id: "linked-contract-file",
+        kind: "pdf",
+        lastModified: 1_782_883_200_000,
+        linkedModule: "ihale-yonetimi",
+        linkedRecordLabel: "İHL-2026-018",
+        mimeType: "application/pdf",
+        name: "yüklenici-sozlesmesi.pdf",
+        sizeBytes: 1024,
+      },
+      {
+        createdAt: "2026-07-02T10:00:00.000Z",
+        createdBy: "Ana Kullanıcı",
+        extension: "xlsx",
+        folderId: materialsFolder?.id ?? "system-materials",
+        id: "materials-file",
+        kind: "spreadsheet",
+        lastModified: 1_782_969_600_000,
+        mimeType: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        name: "malzeme-listesi.xlsx",
+        sizeBytes: 2048,
+      },
+    ];
+
+    render(<DocumentCenterSurface folders={folders} initialFiles={initialFiles} />);
+
+    fireEvent.change(screen.getByLabelText("Dosya veya klasör ara"), {
+      target: { value: "İHL-2026-018" },
+    });
+
+    expect(screen.getByText("yüklenici-sozlesmesi.pdf")).toBeTruthy();
+    expect(screen.queryByText("malzeme-listesi.xlsx")).toBeNull();
+    expect(screen.queryByText("Malzemeler")).toBeNull();
   });
 
   test("switches between grid and list folder views without losing system badges", () => {
@@ -348,7 +393,7 @@ describe("DocumentCenterSurface", () => {
 
     expect(screen.queryByText("hakediş-raporu.pdf")).toBeNull();
     expect(screen.getByRole("status").textContent).toContain(
-      "Seçili filtrelere uygun evrak bulunamadı.",
+      "Arama ve filtrelere uygun evrak bulunamadı.",
     );
   });
 

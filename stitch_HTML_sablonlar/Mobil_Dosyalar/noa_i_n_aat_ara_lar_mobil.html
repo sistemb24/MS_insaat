@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+
+<html class="light" lang="tr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Araçlar - NOA İnşaat</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-background": "#191c1e",
+                      "inverse-on-surface": "#eff1f3",
+                      "on-primary-fixed-variant": "#3323cc",
+                      "warning-amber": "#F59E0B",
+                      "tertiary": "#7e3000",
+                      "danger-rose": "#E11D48",
+                      "on-tertiary": "#ffffff",
+                      "on-tertiary-fixed": "#351000",
+                      "on-secondary-fixed-variant": "#3f465c",
+                      "error-container": "#ffdad6",
+                      "surface-white": "#FFFFFF",
+                      "surface-container-high": "#e6e8ea",
+                      "tertiary-fixed-dim": "#ffb695",
+                      "secondary": "#565e74",
+                      "on-surface": "#191c1e",
+                      "on-primary-fixed": "#0f0069",
+                      "on-error": "#ffffff",
+                      "inverse-primary": "#c3c0ff",
+                      "primary-container": "#4f46e5",
+                      "decorative-navy": "#000080",
+                      "primary": "#3525cd",
+                      "on-error-container": "#93000a",
+                      "primary-fixed": "#e2dfff",
+                      "surface-container-lowest": "#ffffff",
+                      "tertiary-fixed": "#ffdbcc",
+                      "surface-container-highest": "#e0e3e5",
+                      "secondary-fixed-dim": "#bec6e0",
+                      "on-secondary-fixed": "#131b2e",
+                      "primary-fixed-dim": "#c3c0ff",
+                      "surface-dim": "#d8dadc",
+                      "surface-variant": "#e0e3e5",
+                      "on-secondary": "#ffffff",
+                      "on-primary-container": "#dad7ff",
+                      "secondary-fixed": "#dae2fd",
+                      "surface-container": "#eceef0",
+                      "text-muted": "#64748B",
+                      "on-tertiary-fixed-variant": "#7b2f00",
+                      "on-primary": "#ffffff",
+                      "decorative-purple": "#800080",
+                      "surface-container-low": "#f2f4f6",
+                      "on-surface-variant": "#464555",
+                      "surface": "#f7f9fb",
+                      "inverse-surface": "#2d3133",
+                      "surface-bright": "#f7f9fb",
+                      "tertiary-container": "#a44100",
+                      "secondary-container": "#dae2fd",
+                      "outline-variant": "#c7c4d8",
+                      "success-emerald": "#10B981",
+                      "on-secondary-container": "#5c647a",
+                      "surface-tint": "#4d44e3",
+                      "error": "#ba1a1a",
+                      "border-slate": "#E2E8F0",
+                      "on-tertiary-container": "#ffd2be",
+                      "background": "#f7f9fb",
+                      "outline": "#777587"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "sidebar-collapsed": "80px",
+                      "sidebar-width": "260px",
+                      "container-gap": "1.5rem",
+                      "stack-md": "1rem",
+                      "header-height": "64px",
+                      "grid-cell-py": "0.5rem",
+                      "stack-sm": "0.5rem",
+                      "grid-cell-px": "0.75rem"
+              },
+              "fontFamily": {
+                      "headline-lg-mobile": [
+                              "Inter"
+                      ],
+                      "data-mono": [
+                              "JetBrains Mono"
+                      ],
+                      "headline-lg": [
+                              "Inter"
+                      ],
+                      "body-md": [
+                              "Inter"
+                      ],
+                      "label-caps": [
+                              "Inter"
+                      ],
+                      "headline-md": [
+                              "Inter"
+                      ],
+                      "body-lg": [
+                              "Inter"
+                      ],
+                      "headline-sm": [
+                              "Inter"
+                      ],
+                      "body-sm": [
+                              "Inter"
+                      ]
+              },
+              "fontSize": {
+                      "headline-lg-mobile": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "data-mono": [
+                              "13px",
+                              {
+                                      "lineHeight": "16px",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "headline-lg": [
+                              "30px",
+                              {
+                                      "lineHeight": "38px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "body-md": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "label-caps": [
+                              "12px",
+                              {
+                                      "lineHeight": "16px",
+                                      "letterSpacing": "0.05em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "headline-md": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "body-lg": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "headline-sm": [
+                              "20px",
+                              {
+                                      "lineHeight": "28px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "body-sm": [
+                              "13px",
+                              {
+                                      "lineHeight": "18px",
+                                      "fontWeight": "400"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+    </script>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen flex flex-col antialiased">
+<!-- Top Navbar (Mobile Header) -->
+<header class="bg-surface-white/80 backdrop-blur-md sticky top-0 z-40 w-full h-header-height border-b border-border-slate flex justify-between items-center px-4 py-4 shadow-sm">
+<div class="flex items-center gap-3">
+<!-- Back Button for Mobile Navigation Context if needed, but per prompt it's a top level screen, so maybe just Title -->
+<h1 class="font-headline-sm text-headline-sm font-bold text-primary">Araçlar</h1>
+</div>
+<div class="flex items-center gap-4 text-primary">
+<button class="hover:bg-surface-container-lowest transition-colors p-1 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined" data-icon="search">search</span>
+</button>
+<button class="hover:bg-surface-container-lowest transition-colors p-1 rounded-full flex items-center justify-center bg-primary-container text-on-primary-container">
+<span class="material-symbols-outlined" data-icon="add">add</span>
+</button>
+</div>
+</header>
+<!-- Main Content -->
+<main class="flex-1 overflow-y-auto pb-24 px-4 pt-4">
+<!-- Summary Cards Horizontal Scroll -->
+<div class="flex overflow-x-auto gap-4 pb-4 snap-x snap-mandatory hide-scrollbar -mx-4 px-4">
+<!-- Card 1: Total -->
+<div class="bg-surface-white rounded-xl p-4 shadow-[0_1px_3px_rgba(79,70,229,0.08)] min-w-[140px] snap-center flex-shrink-0 border border-border-slate">
+<p class="font-label-caps text-label-caps text-text-muted mb-1">Toplam Araç</p>
+<div class="flex items-baseline gap-2">
+<span class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface">142</span>
+<span class="material-symbols-outlined text-primary text-sm" data-icon="local_shipping" style="font-variation-settings: 'FILL' 1;">local_shipping</span>
+</div>
+</div>
+<!-- Card 2: Active -->
+<div class="bg-surface-white rounded-xl p-4 shadow-[0_1px_3px_rgba(79,70,229,0.08)] min-w-[140px] snap-center flex-shrink-0 border border-border-slate">
+<p class="font-label-caps text-label-caps text-text-muted mb-1">Sahada Aktif</p>
+<div class="flex items-baseline gap-2">
+<span class="font-headline-lg-mobile text-headline-lg-mobile text-success-emerald">118</span>
+<span class="material-symbols-outlined text-success-emerald text-sm" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+</div>
+<!-- Card 3: Maintenance -->
+<div class="bg-surface-white rounded-xl p-4 shadow-[0_1px_3px_rgba(79,70,229,0.08)] min-w-[140px] snap-center flex-shrink-0 border border-border-slate">
+<p class="font-label-caps text-label-caps text-text-muted mb-1">Bakımda</p>
+<div class="flex items-baseline gap-2">
+<span class="font-headline-lg-mobile text-headline-lg-mobile text-warning-amber">24</span>
+<span class="material-symbols-outlined text-warning-amber text-sm" data-icon="build" style="font-variation-settings: 'FILL' 1;">build</span>
+</div>
+</div>
+</div>
+<!-- Vehicle List -->
+<div class="flex flex-col gap-4 mt-2">
+<!-- Vehicle Card 1 -->
+<div class="bg-surface-white rounded-xl p-4 shadow-[0_1px_3px_rgba(79,70,229,0.08)] border border-border-slate flex flex-col gap-3">
+<div class="flex justify-between items-start">
+<div>
+<h3 class="font-data-mono text-[16px] font-bold text-on-surface">34 ABC 123</h3>
+<p class="font-body-sm text-body-sm text-text-muted mt-0.5">Ford Transit 2021</p>
+</div>
+<div class="flex items-center gap-1 bg-success-emerald/10 text-success-emerald px-2 py-1 rounded-full font-label-caps text-label-caps">
+<span class="w-2 h-2 rounded-full bg-success-emerald"></span>
+                        GPS Aktif
+                    </div>
+</div>
+<div class="border-t border-border-slate border-dashed pt-3 flex flex-col gap-2">
+<div class="flex items-center gap-2 text-text-muted font-body-sm text-body-sm">
+<span class="material-symbols-outlined text-[18px]" data-icon="apartment">apartment</span>
+<span>Kadıköy Metro Şantiyesi</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2 text-text-muted font-body-sm text-body-sm">
+<span class="material-symbols-outlined text-[18px]" data-icon="event">event</span>
+<span>Muayene Bitiş:</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface font-medium">12.10.2024</span>
+</div>
+</div>
+</div>
+<!-- Vehicle Card 2 (Warning) -->
+<div class="bg-surface-white rounded-xl p-4 shadow-[0_1px_3px_rgba(79,70,229,0.08)] border border-warning-amber/30 flex flex-col gap-3">
+<div class="flex justify-between items-start">
+<div>
+<h3 class="font-data-mono text-[16px] font-bold text-on-surface">06 DEF 456</h3>
+<p class="font-body-sm text-body-sm text-text-muted mt-0.5">Mercedes Actros 2019</p>
+</div>
+<div class="flex items-center gap-1 bg-warning-amber/10 text-warning-amber px-2 py-1 rounded-full font-label-caps text-label-caps">
+<span class="w-2 h-2 rounded-full bg-warning-amber"></span>
+                        Bakımda
+                    </div>
+</div>
+<div class="border-t border-border-slate border-dashed pt-3 flex flex-col gap-2">
+<div class="flex items-center gap-2 text-text-muted font-body-sm text-body-sm">
+<span class="material-symbols-outlined text-[18px]" data-icon="apartment">apartment</span>
+<span>Merkez Garaj</span>
+</div>
+<div class="flex items-center justify-between bg-warning-amber/5 p-2 rounded-lg -mx-2 px-2">
+<div class="flex items-center gap-2 text-warning-amber font-body-sm text-body-sm font-medium">
+<span class="material-symbols-outlined text-[18px]" data-icon="warning">warning</span>
+<span>Bakım Günü:</span>
+</div>
+<span class="font-body-sm text-body-sm text-warning-amber font-bold">Yarın</span>
+</div>
+</div>
+</div>
+<!-- Vehicle Card 3 (Error) -->
+<div class="bg-surface-white rounded-xl p-4 shadow-[0_1px_3px_rgba(79,70,229,0.08)] border border-danger-rose/30 flex flex-col gap-3">
+<div class="flex justify-between items-start">
+<div>
+<h3 class="font-data-mono text-[16px] font-bold text-on-surface">35 GHI 789</h3>
+<p class="font-body-sm text-body-sm text-text-muted mt-0.5">Fiat Doblo 2020</p>
+</div>
+<div class="flex items-center gap-1 bg-text-muted/10 text-text-muted px-2 py-1 rounded-full font-label-caps text-label-caps">
+<span class="w-2 h-2 rounded-full bg-text-muted"></span>
+                        Sinyal Yok
+                    </div>
+</div>
+<div class="border-t border-border-slate border-dashed pt-3 flex flex-col gap-2">
+<div class="flex items-center gap-2 text-text-muted font-body-sm text-body-sm">
+<span class="material-symbols-outlined text-[18px]" data-icon="apartment">apartment</span>
+<span>Bostanlı Sahil Projesi</span>
+</div>
+<div class="flex items-center justify-between bg-danger-rose/5 p-2 rounded-lg -mx-2 px-2">
+<div class="flex items-center gap-2 text-danger-rose font-body-sm text-body-sm font-medium">
+<span class="material-symbols-outlined text-[18px]" data-icon="error">error</span>
+<span>Sigorta Bitiş:</span>
+</div>
+<span class="font-body-sm text-body-sm text-danger-rose font-bold">Süresi Geçti</span>
+</div>
+</div>
+</div>
+<!-- Vehicle Card 4 -->
+<div class="bg-surface-white rounded-xl p-4 shadow-[0_1px_3px_rgba(79,70,229,0.08)] border border-border-slate flex flex-col gap-3">
+<div class="flex justify-between items-start">
+<div>
+<h3 class="font-data-mono text-[16px] font-bold text-on-surface">41 JKL 012</h3>
+<p class="font-body-sm text-body-sm text-text-muted mt-0.5">Renault Master 2022</p>
+</div>
+<div class="flex items-center gap-1 bg-success-emerald/10 text-success-emerald px-2 py-1 rounded-full font-label-caps text-label-caps">
+<span class="w-2 h-2 rounded-full bg-success-emerald"></span>
+                        GPS Aktif
+                    </div>
+</div>
+<div class="border-t border-border-slate border-dashed pt-3 flex flex-col gap-2">
+<div class="flex items-center gap-2 text-text-muted font-body-sm text-body-sm">
+<span class="material-symbols-outlined text-[18px]" data-icon="apartment">apartment</span>
+<span>İzmit Sanayi Sitesi</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2 text-text-muted font-body-sm text-body-sm">
+<span class="material-symbols-outlined text-[18px]" data-icon="event">event</span>
+<span>Muayene Bitiş:</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface font-medium">05.11.2024</span>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Navigation Bar (Mobile) -->
+<nav class="fixed bottom-0 w-full bg-surface-white border-t border-border-slate shadow-[0_-1px_3px_rgba(79,70,229,0.05)] pb-safe pt-2 px-4 z-50">
+<div class="flex justify-between items-center max-w-md mx-auto h-16">
+<!-- Dashboard Tab (Inactive) -->
+<a class="flex flex-col items-center gap-1 w-16 text-text-muted hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-2xl" data-icon="dashboard">dashboard</span>
+<span class="font-label-caps text-[10px]">Özet</span>
+</a>
+<!-- Logistics/Vehicles Tab (Active) -->
+<a class="flex flex-col items-center gap-1 w-16 text-primary" href="#">
+<div class="bg-primary-container/20 px-4 py-1 rounded-full">
+<span class="material-symbols-outlined text-2xl" data-icon="local_shipping" style="font-variation-settings: 'FILL' 1;">local_shipping</span>
+</div>
+<span class="font-label-caps text-[10px] font-bold">Araçlar</span>
+</a>
+<!-- Personnel Tab (Inactive) -->
+<a class="flex flex-col items-center gap-1 w-16 text-text-muted hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-2xl" data-icon="badge">badge</span>
+<span class="font-label-caps text-[10px]">Personel</span>
+</a>
+<!-- Settings Tab (Inactive) -->
+<a class="flex flex-col items-center gap-1 w-16 text-text-muted hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-2xl" data-icon="settings">settings</span>
+<span class="font-label-caps text-[10px]">Ayarlar</span>
+</a>
+</div>
+</nav>
+<style>
+        /* Custom utilities for mobile layout */
+        .pb-safe { padding-bottom: env(safe-area-inset-bottom); }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</body></html>

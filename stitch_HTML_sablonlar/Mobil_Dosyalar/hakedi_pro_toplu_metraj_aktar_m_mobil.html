@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="tr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Toplu Metraj Aktarımı</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-lowest": "#ffffff",
+                        "surface-tint": "#4d44e3",
+                        "on-surface-variant": "#464555",
+                        "surface-container": "#eceef0",
+                        "secondary-fixed": "#dae2fd",
+                        "surface-variant": "#e0e3e5",
+                        "outline": "#777587",
+                        "on-primary-container": "#dad7ff",
+                        "surface-white": "#FFFFFF",
+                        "on-secondary-fixed": "#131b2e",
+                        "tertiary-container": "#a44100",
+                        "error": "#ba1a1a",
+                        "on-tertiary-fixed": "#351000",
+                        "border-slate": "#E2E8F0",
+                        "surface-bright": "#f7f9fb",
+                        "surface-dim": "#d8dadc",
+                        "decorative-purple": "#800080",
+                        "surface": "#f7f9fb",
+                        "error-container": "#ffdad6",
+                        "secondary-fixed-dim": "#bec6e0",
+                        "primary-fixed-dim": "#c3c0ff",
+                        "secondary-container": "#dae2fd",
+                        "outline-variant": "#c7c4d8",
+                        "on-primary-fixed-variant": "#3323cc",
+                        "tertiary": "#7e3000",
+                        "primary-container": "#4f46e5",
+                        "surface-container-low": "#f2f4f6",
+                        "tertiary-fixed-dim": "#ffb695",
+                        "on-error": "#ffffff",
+                        "on-background": "#191c1e",
+                        "on-secondary-container": "#5c647a",
+                        "on-secondary": "#ffffff",
+                        "primary": "#3525cd",
+                        "on-tertiary-fixed-variant": "#7b2f00",
+                        "tertiary-fixed": "#ffdbcc",
+                        "background": "#f7f9fb",
+                        "success-emerald": "#10B981",
+                        "on-tertiary-container": "#ffd2be",
+                        "text-muted": "#64748B",
+                        "on-secondary-fixed-variant": "#3f465c",
+                        "secondary": "#565e74",
+                        "on-primary-fixed": "#0f0069",
+                        "decorative-navy": "#000080",
+                        "danger-rose": "#E11D48",
+                        "on-tertiary": "#ffffff",
+                        "inverse-surface": "#2d3133",
+                        "surface-container-high": "#e6e8ea",
+                        "on-primary": "#ffffff",
+                        "warning-amber": "#F59E0B",
+                        "primary-fixed": "#e2dfff",
+                        "on-error-container": "#93000a",
+                        "surface-container-highest": "#e0e3e5",
+                        "inverse-primary": "#c3c0ff",
+                        "on-surface": "#191c1e",
+                        "inverse-on-surface": "#eff1f3"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "grid-cell-py": "0.5rem",
+                        "container-gap": "1.5rem",
+                        "stack-sm": "0.5rem",
+                        "sidebar-width": "260px",
+                        "grid-cell-px": "0.75rem",
+                        "sidebar-collapsed": "80px",
+                        "header-height": "64px",
+                        "stack-md": "1rem"
+                    },
+                    "fontFamily": {
+                        "label-caps": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-sm": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "data-mono": ["JetBrains Mono"],
+                        "body-md": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "headline-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "700" }],
+                        "data-mono": ["13px", { "lineHeight": "16px", "fontWeight": "500" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "body-sm": ["13px", { "lineHeight": "18px", "fontWeight": "400" }],
+                        "headline-lg": ["30px", { "lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface font-body-md pb-24 pt-header-height min-h-screen">
+<!-- TopAppBar -->
+<header class="bg-surface dark:bg-on-background shadow-sm text-primary dark:text-primary-fixed font-headline-sm text-headline-sm fixed top-0 w-full z-50 flex justify-between items-center px-4 h-header-height w-full">
+<button class="text-on-surface-variant dark:text-outline-variant hover:bg-surface-container-low dark:hover:bg-surface-container-highest transition-colors duration-200 active:opacity-80 p-2 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined" data-icon="arrow_back">arrow_back</span>
+</button>
+<span class="font-headline-sm text-headline-sm font-bold text-primary dark:text-primary-fixed truncate px-4 text-center w-full">Toplu Metraj Aktarımı</span>
+<button class="text-on-surface-variant dark:text-outline-variant hover:bg-surface-container-low dark:hover:bg-surface-container-highest transition-colors duration-200 active:opacity-80 p-2 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+</header>
+<main class="px-4 py-6 max-w-lg mx-auto">
+<!-- Stepper -->
+<div class="mb-8">
+<div class="flex items-center justify-between relative">
+<div class="absolute left-0 top-1/2 -translate-y-1/2 w-full h-0.5 bg-border-slate -z-10"></div>
+<!-- Step 1: Completed -->
+<div class="flex flex-col items-center">
+<div class="w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center font-headline-sm text-sm mb-1 z-10 shadow-[0_1px_3px_rgba(79,70,229,0.08)]">
+<span class="material-symbols-outlined text-[18px]">check</span>
+</div>
+<span class="font-label-caps text-label-caps text-primary">Dosya Yükle</span>
+</div>
+<!-- Step 2: Active -->
+<div class="flex flex-col items-center">
+<div class="w-8 h-8 rounded-full bg-primary-container text-on-primary-container border-2 border-primary-container flex items-center justify-center font-headline-sm text-sm mb-1 z-10 shadow-[0_1px_3px_rgba(79,70,229,0.08)]">
+                        2
+                    </div>
+<span class="font-label-caps text-label-caps text-primary font-bold">Sütun Eşleştirme</span>
+</div>
+<!-- Step 3: Pending -->
+<div class="flex flex-col items-center">
+<div class="w-8 h-8 rounded-full bg-surface-container-low border-2 border-outline-variant text-outline flex items-center justify-center font-headline-sm text-sm mb-1 z-10">
+                        3
+                    </div>
+<span class="font-label-caps text-label-caps text-outline">Veri Onayı</span>
+</div>
+</div>
+</div>
+<!-- File Info -->
+<div class="bg-surface-white rounded-xl p-4 shadow-[0_1px_3px_rgba(79,70,229,0.08)] mb-6 flex items-center justify-between border border-border-slate">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-success-emerald text-2xl">description</span>
+<div>
+<h3 class="font-headline-sm text-sm text-on-surface">blok_a_metraj_v2.xlsx</h3>
+<p class="font-body-sm text-xs text-text-muted">2.4 MB • 120 Satır Bulundu</p>
+</div>
+</div>
+<button class="text-primary hover:bg-surface-container p-2 rounded-lg transition-colors">
+<span class="material-symbols-outlined text-xl">delete</span>
+</button>
+</div>
+<h2 class="font-headline-md text-lg text-on-surface mb-4">Sütunları Eşleştirin</h2>
+<p class="font-body-sm text-text-muted mb-6">Lütfen Excel dosyanızdaki sütunları Hakediş Pro sistemindeki ilgili alanlarla eşleştirin.</p>
+<!-- Mapping Cards -->
+<div class="space-y-4 mb-20">
+<!-- Card 1: Poz No -->
+<div class="bg-surface-white rounded-xl p-4 shadow-[0_1px_3px_rgba(79,70,229,0.08)] border border-border-slate">
+<div class="flex justify-between items-start mb-3">
+<div>
+<span class="font-headline-sm text-base text-on-surface flex items-center gap-2">
+                            Poz No
+                            <span class="bg-error-container text-on-error-container font-label-caps text-[10px] px-2 py-0.5 rounded">Zorunlu</span>
+</span>
+</div>
+</div>
+<div class="relative">
+<select class="w-full bg-surface-container-lowest border border-border-slate rounded-lg py-3 px-4 font-body-md text-on-surface focus:ring-2 focus:ring-primary focus:border-primary appearance-none">
+<option value="Sütun A">Sütun A</option>
+<option value="Sütun B">Sütun B</option>
+<option selected="" value="Sütun C">Sütun C (Poz No)</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-outline pointer-events-none">expand_more</span>
+</div>
+<div class="mt-2 flex items-center gap-1 text-success-emerald font-body-sm text-xs">
+<span class="material-symbols-outlined text-[16px]">check_circle</span>
+                    Eşleşti (Sütun C)
+                </div>
+</div>
+<!-- Card 2: İmalat Açıklaması -->
+<div class="bg-surface-white rounded-xl p-4 shadow-[0_1px_3px_rgba(79,70,229,0.08)] border border-border-slate">
+<div class="flex justify-between items-start mb-3">
+<div>
+<span class="font-headline-sm text-base text-on-surface">İmalat Açıklaması</span>
+</div>
+</div>
+<div class="relative">
+<select class="w-full bg-surface-container-lowest border border-border-slate rounded-lg py-3 px-4 font-body-md text-on-surface focus:ring-2 focus:ring-primary focus:border-primary appearance-none">
+<option value="Sütun A">Sütun A</option>
+<option value="Sütun B">Sütun B</option>
+<option selected="" value="Sütun D">Sütun D (Açıklama)</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-outline pointer-events-none">expand_more</span>
+</div>
+</div>
+<!-- Card 3: Birim (Error State) -->
+<div class="bg-surface-white rounded-xl p-4 shadow-[0_1px_3px_rgba(79,70,229,0.08)] border-2 border-danger-rose">
+<div class="flex justify-between items-start mb-3">
+<div>
+<span class="font-headline-sm text-base text-danger-rose flex items-center gap-2">
+                            Birim
+                            <span class="bg-danger-rose text-white font-label-caps text-[10px] px-2 py-0.5 rounded">Zorunlu</span>
+</span>
+</div>
+</div>
+<div class="relative">
+<select class="w-full bg-error-container border-danger-rose rounded-lg py-3 px-4 font-body-md text-on-error-container focus:ring-2 focus:ring-danger-rose focus:border-danger-rose appearance-none">
+<option disabled="" selected="" value="">Seçiniz...</option>
+<option value="Sütun E">Sütun E</option>
+<option value="Sütun F">Sütun F</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-danger-rose pointer-events-none">expand_more</span>
+</div>
+<div class="mt-2 flex items-center gap-1 text-danger-rose font-body-sm text-xs">
+<span class="material-symbols-outlined text-[16px]">error</span>
+                    Lütfen eşleştirin
+                </div>
+</div>
+<!-- Card 4: Miktar -->
+<div class="bg-surface-white rounded-xl p-4 shadow-[0_1px_3px_rgba(79,70,229,0.08)] border border-border-slate">
+<div class="flex justify-between items-start mb-3">
+<div>
+<span class="font-headline-sm text-base text-on-surface flex items-center gap-2">
+                            Miktar
+                            <span class="bg-error-container text-on-error-container font-label-caps text-[10px] px-2 py-0.5 rounded">Zorunlu</span>
+</span>
+</div>
+</div>
+<div class="relative">
+<select class="w-full bg-surface-container-lowest border border-border-slate rounded-lg py-3 px-4 font-body-md text-on-surface focus:ring-2 focus:ring-primary focus:border-primary appearance-none">
+<option selected="" value="Sütun G">Sütun G (Miktar)</option>
+<option value="Sütun H">Sütun H</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-outline pointer-events-none">expand_more</span>
+</div>
+</div>
+</div>
+</main>
+<!-- Action Bar (Fixed Bottom before Nav) -->
+<div class="fixed bottom-[72px] w-full bg-surface-white border-t border-border-slate p-4 flex gap-3 z-40 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
+<button class="flex-1 py-3 px-4 border border-primary text-primary rounded-lg font-headline-sm text-base flex items-center justify-center gap-2 active:bg-surface-container-low transition-colors">
+            Geri
+        </button>
+<button class="flex-1 py-3 px-4 bg-primary text-on-primary rounded-lg font-headline-sm text-base flex items-center justify-center gap-2 active:bg-on-primary-fixed transition-colors opacity-50 cursor-not-allowed">
+            Devam Et
+            <span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+</button>
+</div>
+<!-- BottomNavBar (Hidden) - As per instruction, this is a transactional flow step 2, navigation should ideally be hidden to focus on task, but instruction 5 says "Standard Mobile Bottom Navigation... from COMPONENTS_128". I will include it but it contradicts standard UX flow for a multi-step form. I will adhere to instruction 5. -->
+<nav class="bg-surface dark:bg-on-background border-t border-border-slate dark:border-outline-variant shadow-[0_-1px_3px_rgba(79,70,229,0.08)] fixed bottom-0 w-full z-50 rounded-t-xl flex justify-around items-center px-2 py-3">
+<!-- Dashboard -->
+<a class="flex flex-col items-center justify-center text-on-secondary-container dark:text-outline-variant px-3 py-1 hover:text-primary dark:hover:text-primary-fixed transition-transform duration-150 active:scale-95" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-label-caps text-label-caps mt-1">Dashboard</span>
+</a>
+<!-- Projects (Active intentionally for context) -->
+<a class="flex flex-col items-center justify-center bg-secondary-container dark:bg-primary-container text-primary dark:text-on-primary-container rounded-xl px-3 py-1 hover:text-primary dark:hover:text-primary-fixed transition-transform duration-150 active:scale-95" href="#">
+<span class="material-symbols-outlined" data-icon="architecture" style="font-variation-settings: 'FILL' 1;">architecture</span>
+<span class="font-label-caps text-label-caps mt-1">Projects</span>
+</a>
+<!-- Personnel -->
+<a class="flex flex-col items-center justify-center text-on-secondary-container dark:text-outline-variant px-3 py-1 hover:text-primary dark:hover:text-primary-fixed transition-transform duration-150 active:scale-95" href="#">
+<span class="material-symbols-outlined" data-icon="engineering">engineering</span>
+<span class="font-label-caps text-label-caps mt-1">Personnel</span>
+</a>
+<!-- Documents -->
+<a class="flex flex-col items-center justify-center text-on-secondary-container dark:text-outline-variant px-3 py-1 hover:text-primary dark:hover:text-primary-fixed transition-transform duration-150 active:scale-95" href="#">
+<span class="material-symbols-outlined" data-icon="description">description</span>
+<span class="font-label-caps text-label-caps mt-1">Documents</span>
+</a>
+<!-- Settings -->
+<a class="flex flex-col items-center justify-center text-on-secondary-container dark:text-outline-variant px-3 py-1 hover:text-primary dark:hover:text-primary-fixed transition-transform duration-150 active:scale-95" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-label-caps text-label-caps mt-1">Settings</span>
+</a>
+</nav>
+</body></html>

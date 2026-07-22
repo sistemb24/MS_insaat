@@ -405,26 +405,26 @@ export function ProgressPaymentSurface({
   }
 
   return (
-    <section className="mx-auto flex max-w-7xl flex-col gap-4">
-      <header className="rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)] p-5">
-        <p className="text-xs font-semibold uppercase tracking-wide text-[var(--primary)]">
+    <section className="mx-auto flex max-w-[1440px] scroll-mt-20 flex-col gap-4" id="progress-payment-operations">
+      <header className="rounded-ui-panel border border-divider bg-surface-raised p-5">
+        <p className="text-xs font-semibold uppercase tracking-wide text-brand-primary">
           Şantiye, taşeron ve cari
         </p>
         <div className="mt-2 flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
           <div>
-            <h1 className="text-2xl font-semibold tracking-normal">Hakediş</h1>
-            <p className="mt-2 max-w-3xl text-sm leading-6 text-[var(--on-surface-variant)]">
+            <h2 className="text-2xl font-semibold tracking-normal">Hakediş İşlemleri</h2>
+            <p className="mt-2 max-w-3xl text-sm leading-6 text-content-subtle">
               Şantiye veya taşeron bağlamında hakediş faturası başlığı, satır
               imalatları, kesinti ve KDV toplamları P0 işlem akışına bağlanır.
             </p>
           </div>
-          <span className="rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] px-3 py-2 text-xs font-semibold text-[var(--on-surface-variant)]">
+          <span className="rounded-ui-control border border-divider bg-surface-muted px-3 py-2 text-xs font-semibold text-content-subtle">
             Hakediş Faturası
           </span>
         </div>
       </header>
 
-      <div className="flex flex-wrap items-center gap-2 rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)] p-2">
+      <div className="flex flex-wrap items-center gap-2 rounded-ui-panel border border-divider bg-surface-raised p-2">
         <button
           className={toolbarButtonClass}
           disabled={!permissions.canMutateProgressPayments}
@@ -454,7 +454,7 @@ export function ProgressPaymentSurface({
       </div>
 
       {errors.length > 0 ? (
-        <div className="rounded-[var(--radius-panel)] border border-[var(--status-cancelled)] bg-[var(--surface-container-lowest)] p-3 text-sm text-[var(--status-cancelled)]">
+        <div className="rounded-ui-panel border border-[var(--ds-danger)] bg-surface-raised p-3 text-sm text-[var(--ds-danger)]">
           <p className="font-semibold">Hakediş kaydedilemedi</p>
           <ul className="mt-2 list-disc pl-5">
             {errors.map((error) => (
@@ -465,14 +465,14 @@ export function ProgressPaymentSurface({
       ) : null}
 
       {paymentMessage ? (
-        <div className="rounded-[var(--radius-panel)] border border-[var(--status-posted)] bg-[var(--surface-container-lowest)] p-3 text-sm font-semibold text-[var(--status-posted)]">
+        <div className="rounded-ui-panel border border-[var(--ds-success)] bg-surface-raised p-3 text-sm font-semibold text-[var(--ds-success)]">
           {paymentMessage}
         </div>
       ) : null}
 
       {printNotice ? (
         <div
-          className="rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)] p-3 text-sm font-semibold text-[var(--on-surface-variant)]"
+          className="rounded-ui-panel border border-divider bg-surface-raised p-3 text-sm font-semibold text-content-subtle"
           role="status"
         >
           {printNotice}
@@ -480,8 +480,8 @@ export function ProgressPaymentSurface({
       ) : null}
 
       {form ? (
-        <article className="rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)]">
-          <div className="border-b border-[var(--grid-border)] px-4 py-3">
+        <article className="rounded-ui-panel border border-divider bg-surface-raised">
+          <div className="border-b border-divider px-4 py-3">
             <h2 className="text-sm font-semibold">Hakediş Faturası Ekle</h2>
           </div>
           <div className="grid gap-4 p-4 lg:grid-cols-[1fr_320px]">
@@ -566,20 +566,20 @@ export function ProgressPaymentSurface({
               <div className="flex items-center justify-between gap-3">
                 <h3 className="text-sm font-semibold">Hakediş Satırları</h3>
                 <div className="flex flex-wrap items-center justify-end gap-2">
-                  <span className="rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] px-2 py-1 text-xs font-semibold text-[var(--on-surface-variant)]">
+                  <span className="rounded-ui-control border border-divider bg-surface-muted px-2 py-1 text-xs font-semibold text-content-subtle">
                     {baseCurrencyContext}
                   </span>
-                  <span className="rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] px-2 py-1 text-xs font-semibold text-[var(--on-surface-variant)]">
+                  <span className="rounded-ui-control border border-divider bg-surface-muted px-2 py-1 text-xs font-semibold text-content-subtle">
                     {currencyPolicyContext}
                   </span>
-                  <span className="rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] px-2 py-1 text-xs font-semibold text-[var(--on-surface-variant)]">
+                  <span className="rounded-ui-control border border-divider bg-surface-muted px-2 py-1 text-xs font-semibold text-content-subtle">
                     {defaultVatContext}
                   </span>
                 </div>
               </div>
-              <div className="overflow-x-auto rounded-[var(--radius-panel)] border border-[var(--grid-border)]">
-                <table className="min-w-[760px] w-full text-left text-sm">
-                  <thead className="bg-[var(--surface-container-low)] text-xs uppercase text-[var(--on-surface-variant)]">
+              <div className="overflow-x-auto rounded-ui-panel border border-divider">
+                <table aria-label="Hakediş giriş satırları" className="min-w-[760px] w-full text-left text-sm">
+                  <thead className="bg-surface-muted text-xs uppercase text-content-subtle">
                     <tr>
                       <th className="px-3 py-2">Açıklama</th>
                       <th className="px-3 py-2">Birim</th>
@@ -648,7 +648,7 @@ export function ProgressPaymentSurface({
                 </table>
               </div>
             </div>
-            <aside className="rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] p-4">
+            <aside className="rounded-ui-panel border border-divider bg-surface-muted p-4">
               <h3 className="text-sm font-semibold">Hakediş Toplamları</h3>
               <SummaryRow label="Brüt Toplam" value={draftTotals?.grossTotal ?? 0} />
               <SummaryRow
@@ -672,16 +672,16 @@ export function ProgressPaymentSurface({
         <Metric label="Genel Toplam" value={formatMoney(grandTotal)} />
       </div>
 
-      <article className="overflow-hidden rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)]">
-        <div className="flex flex-col gap-3 border-b border-[var(--grid-border)] px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
+      <article className="overflow-hidden rounded-ui-panel border border-divider bg-surface-raised">
+        <div className="flex flex-col gap-3 border-b border-divider px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
           <h2 className="text-sm font-semibold">
             Hakediş faturası hareket listesi
           </h2>
           {accountOptions.length > 0 ? (
-            <label className="flex flex-col gap-1 text-xs font-semibold text-[var(--on-surface-variant)] sm:min-w-64">
+            <label className="flex flex-col gap-1 text-xs font-semibold text-content-subtle sm:min-w-64">
               <span>Ödeme/Tahsilat hesabı</span>
               <select
-                className="h-9 rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)] px-3 text-sm font-semibold text-[var(--on-surface)]"
+                className="h-9 rounded-ui-control border border-divider bg-surface-raised px-3 text-sm font-semibold text-content"
                 onChange={(event) => setPaymentAccountCode(event.target.value)}
                 value={paymentAccountCode}
               >
@@ -695,8 +695,8 @@ export function ProgressPaymentSurface({
           ) : null}
         </div>
         <div className="overflow-x-auto">
-          <table className="min-w-[980px] w-full text-left text-sm">
-            <thead className="bg-[var(--surface-container-low)] text-xs uppercase text-[var(--on-surface-variant)]">
+          <table aria-label="Hakediş faturası hareket listesi" className="min-w-[980px] w-full text-left text-sm">
+            <thead className="bg-surface-muted text-xs uppercase text-content-subtle">
               <tr>
                 <th className="px-4 py-3 font-semibold">Evrak No</th>
                 <th className="px-4 py-3 font-semibold">Tarih</th>
@@ -710,12 +710,12 @@ export function ProgressPaymentSurface({
                 <th className="px-4 py-3 text-center font-semibold">İşlem</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[var(--grid-border)]">
+            <tbody className="divide-y divide-divider">
               {displayRows.length === 0 ? (
                 <tr>
                   <td className="px-4 py-10 text-center" colSpan={10}>
                     <p className="font-semibold">Henüz hakediş kaydı yok</p>
-                    <p className="mt-1 text-sm text-[var(--on-surface-variant)]">
+                    <p className="mt-1 text-sm text-content-subtle">
                       İlk hakediş kaydı şantiye ve cari bazlı gelir/gider
                       takibini başlatır.
                     </p>
@@ -772,7 +772,7 @@ export function ProgressPaymentSurface({
                             {row.status}
                           </span>
                           {row.ledgerDocumentNo ? (
-                            <span className="font-mono text-[11px] text-[var(--on-surface-variant)]">
+                            <span className="font-mono text-[11px] text-content-subtle">
                               Fiş: {row.ledgerDocumentNo}
                             </span>
                           ) : null}
@@ -781,45 +781,45 @@ export function ProgressPaymentSurface({
                       <td className="px-4 py-3">
                         {paymentMovement ? (
                           <div className="grid gap-1">
-                            <span className="font-semibold text-[var(--status-posted)]">
+                            <span className="font-semibold text-[var(--ds-success)]">
                               Ödendi
                             </span>
-                            <span className="text-xs text-[var(--on-surface-variant)]">
+                            <span className="text-xs text-content-subtle">
                               {paymentMovement.accountName}
                             </span>
-                            <span className="font-mono text-xs text-[var(--on-surface-variant)]">
+                            <span className="font-mono text-xs text-content-subtle">
                               {formatDate(paymentMovement.movementDate)}
                             </span>
                             {paymentMovement.ledgerDocumentNo ? (
-                              <span className="font-mono text-xs text-[var(--on-surface-variant)]">
+                              <span className="font-mono text-xs text-content-subtle">
                                 Muhasebe fişi: {paymentMovement.ledgerDocumentNo}
                               </span>
                             ) : null}
                           </div>
                         ) : collectionMovement ? (
                           <div className="grid gap-1">
-                            <span className="font-semibold text-[var(--status-posted)]">
+                            <span className="font-semibold text-[var(--ds-success)]">
                               Tahsil Edildi
                             </span>
-                            <span className="text-xs text-[var(--on-surface-variant)]">
+                            <span className="text-xs text-content-subtle">
                               {collectionMovement.accountName}
                             </span>
-                            <span className="font-mono text-xs text-[var(--on-surface-variant)]">
+                            <span className="font-mono text-xs text-content-subtle">
                               {formatDate(collectionMovement.movementDate)}
                             </span>
                             {collectionMovement.ledgerDocumentNo ? (
-                              <span className="font-mono text-xs text-[var(--on-surface-variant)]">
+                              <span className="font-mono text-xs text-content-subtle">
                                 Muhasebe fişi: {collectionMovement.ledgerDocumentNo}
                               </span>
                             ) : null}
                           </div>
                         ) : isIncome && isPosted ? (
                           <div className="grid gap-2">
-                            <span className="font-semibold text-[var(--on-surface-variant)]">
+                            <span className="font-semibold text-content-subtle">
                               Tahsilat Bekliyor
                             </span>
                             <button
-                              className="rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] px-2 py-1 text-xs font-semibold transition hover:bg-[var(--primary-fixed)] disabled:opacity-50"
+                              className="rounded-ui-control border border-divider bg-surface-muted px-2 py-1 text-xs font-semibold transition hover:bg-brand-primary-subtle disabled:opacity-50"
                               disabled={
                                 !permissions.canMutateProgressPayments ||
                                 isCancelled ||
@@ -836,11 +836,11 @@ export function ProgressPaymentSurface({
                           </div>
                         ) : isPosted ? (
                           <div className="grid gap-2">
-                            <span className="font-semibold text-[var(--on-surface-variant)]">
+                            <span className="font-semibold text-content-subtle">
                               Bekliyor
                             </span>
                             <button
-                              className="rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] px-2 py-1 text-xs font-semibold transition hover:bg-[var(--primary-fixed)] disabled:opacity-50"
+                              className="rounded-ui-control border border-divider bg-surface-muted px-2 py-1 text-xs font-semibold transition hover:bg-brand-primary-subtle disabled:opacity-50"
                               disabled={
                                 !permissions.canMutateProgressPayments ||
                                 isCancelled ||
@@ -854,7 +854,7 @@ export function ProgressPaymentSurface({
                             </button>
                           </div>
                         ) : (
-                          <span className="text-xs text-[var(--on-surface-variant)]">
+                          <span className="text-xs text-content-subtle">
                             {isIncome ? "Kesinleşince tahsil edilir" : "Kesinleşince ödenir"}
                           </span>
                         )}
@@ -917,8 +917,8 @@ function isHighlightedDocument(
 
 function highlightedRowClass(isHighlighted: boolean) {
   return isHighlighted
-    ? "bg-[var(--primary-fixed)] ring-1 ring-inset ring-[var(--primary)]"
-    : "hover:bg-[var(--primary-fixed)]";
+    ? "bg-brand-primary-subtle ring-1 ring-inset ring-brand-primary"
+    : "hover:bg-brand-primary-subtle";
 }
 
 function ProgressPaymentAuditHistory({
@@ -940,34 +940,34 @@ function ProgressPaymentAuditHistory({
   }
 
   return (
-    <article className="rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)]">
-      <div className="border-b border-[var(--grid-border)] px-4 py-3">
+    <article className="rounded-ui-panel border border-divider bg-surface-raised">
+      <div className="border-b border-divider px-4 py-3">
         <h2 className="text-sm font-semibold">İşlem Geçmişi</h2>
       </div>
-      <div className="divide-y divide-[var(--grid-border)]">
+      <div className="divide-y divide-divider">
         {groups.map(({ logs, row }) => (
           <section className="grid gap-3 p-4 lg:grid-cols-[180px_1fr]" key={row.id}>
             <div>
               <p className="font-mono text-xs font-semibold">{row.documentNo}</p>
-              <p className="mt-1 text-xs text-[var(--on-surface-variant)]">
+              <p className="mt-1 text-xs text-content-subtle">
                 {row.counterpartyName}
               </p>
             </div>
             <ol className="grid gap-2">
               {logs.map((log) => (
                 <li
-                  className="rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] px-3 py-2"
+                  className="rounded-ui-control border border-divider bg-surface-muted px-3 py-2"
                   key={log.id}
                 >
                   <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
                     <p className="text-sm font-semibold">
                       {formatAuditAction(log.action)}
                     </p>
-                    <time className="font-mono text-xs text-[var(--on-surface-variant)]">
+                    <time className="font-mono text-xs text-content-subtle">
                       {formatAuditDate(log.occurredAt)}
                     </time>
                   </div>
-                  <p className="mt-1 text-xs text-[var(--on-surface-variant)]">
+                  <p className="mt-1 text-xs text-content-subtle">
                     {formatAuditTransition(log.metadata)}
                   </p>
                 </li>
@@ -1030,8 +1030,8 @@ function LineInput({
 
 function Metric({ label, value }: { label: string; value: string }) {
   return (
-    <article className="rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)] p-4">
-      <p className="text-sm font-semibold text-[var(--on-surface-variant)]">
+    <article className="rounded-ui-panel border border-divider bg-surface-raised p-4">
+      <p className="text-sm font-semibold text-content-subtle">
         {label}
       </p>
       <p className="mt-2 font-mono text-2xl font-semibold">{value}</p>
@@ -1051,7 +1051,7 @@ function SummaryRow({
   return (
     <div
       className={`mt-3 flex items-center justify-between gap-3 text-sm ${
-        strong ? "border-t border-[var(--grid-border)] pt-3 font-semibold" : ""
+        strong ? "border-t border-divider pt-3 font-semibold" : ""
       }`}
     >
       <span>{label}</span>
@@ -1173,19 +1173,19 @@ function formatAuditDate(value: string) {
 function statusBadgeClass(status: ProgressPaymentRow["status"]) {
   const tone =
     status === "İptal"
-      ? "bg-[var(--status-cancelled)]"
+      ? "bg-[var(--ds-danger)]"
       : status === "Kaydedildi"
-        ? "bg-[var(--status-complete)]"
-        : "bg-[var(--status-process)]";
+        ? "bg-[var(--ds-success)]"
+        : "bg-[var(--ds-info)]";
 
-  return `rounded-[var(--radius-control)] ${tone} px-2 py-1 text-xs font-semibold text-white`;
+  return `rounded-ui-control ${tone} px-2 py-1 text-xs font-semibold text-on-status`;
 }
 
 const controlClass =
-  "h-10 w-full rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)] px-3 text-sm outline-none transition focus:border-[var(--primary)]";
+  "h-10 w-full rounded-ui-control border border-divider bg-surface-raised px-3 text-sm outline-none transition focus:border-brand-primary";
 
 const toolbarButtonClass =
-  "rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] px-3 py-1.5 text-sm font-medium transition hover:bg-[var(--primary-fixed)]";
+  "rounded-ui-control border border-divider bg-surface-muted px-3 py-1.5 text-sm font-medium transition hover:bg-brand-primary-subtle";
 
 
 

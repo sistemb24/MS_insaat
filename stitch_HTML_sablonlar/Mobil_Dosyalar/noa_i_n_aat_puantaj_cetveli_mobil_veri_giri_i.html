@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+
+<html class="light" lang="tr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Puantaj Veri Girişi - NOA İnşaat</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-tertiary-container": "#ffd2be",
+                      "background": "#f7f9fb",
+                      "border-slate": "#E2E8F0",
+                      "outline": "#777587",
+                      "secondary-container": "#dae2fd",
+                      "outline-variant": "#c7c4d8",
+                      "success-emerald": "#10B981",
+                      "surface-tint": "#4d44e3",
+                      "error": "#ba1a1a",
+                      "on-secondary-container": "#5c647a",
+                      "text-muted": "#64748B",
+                      "on-tertiary-fixed-variant": "#7b2f00",
+                      "on-primary": "#ffffff",
+                      "decorative-purple": "#800080",
+                      "surface-container-low": "#f2f4f6",
+                      "on-surface-variant": "#464555",
+                      "surface-container": "#eceef0",
+                      "surface-bright": "#f7f9fb",
+                      "tertiary-container": "#a44100",
+                      "surface": "#f7f9fb",
+                      "inverse-surface": "#2d3133",
+                      "surface-dim": "#d8dadc",
+                      "surface-variant": "#e0e3e5",
+                      "secondary-fixed": "#dae2fd",
+                      "on-secondary": "#ffffff",
+                      "on-primary-container": "#dad7ff",
+                      "surface-container-lowest": "#ffffff",
+                      "tertiary-fixed": "#ffdbcc",
+                      "primary-fixed": "#e2dfff",
+                      "secondary-fixed-dim": "#bec6e0",
+                      "on-secondary-fixed": "#131b2e",
+                      "primary-fixed-dim": "#c3c0ff",
+                      "surface-container-highest": "#e0e3e5",
+                      "on-primary-fixed": "#0f0069",
+                      "on-error": "#ffffff",
+                      "secondary": "#565e74",
+                      "on-surface": "#191c1e",
+                      "primary": "#3525cd",
+                      "on-error-container": "#93000a",
+                      "inverse-primary": "#c3c0ff",
+                      "primary-container": "#4f46e5",
+                      "decorative-navy": "#000080",
+                      "surface-white": "#FFFFFF",
+                      "surface-container-high": "#e6e8ea",
+                      "error-container": "#ffdad6",
+                      "tertiary-fixed-dim": "#ffb695",
+                      "warning-amber": "#F59E0B",
+                      "on-background": "#191c1e",
+                      "inverse-on-surface": "#eff1f3",
+                      "on-primary-fixed-variant": "#3323cc",
+                      "on-tertiary": "#ffffff",
+                      "on-tertiary-fixed": "#351000",
+                      "on-secondary-fixed-variant": "#3f465c",
+                      "tertiary": "#7e3000",
+                      "danger-rose": "#E11D48"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "sidebar-collapsed": "80px",
+                      "sidebar-width": "260px",
+                      "container-gap": "1.5rem",
+                      "stack-md": "1rem",
+                      "header-height": "64px",
+                      "grid-cell-py": "0.5rem",
+                      "stack-sm": "0.5rem",
+                      "grid-cell-px": "0.75rem"
+              },
+              "fontFamily": {
+                      "headline-lg-mobile": [
+                              "Inter"
+                      ],
+                      "data-mono": [
+                              "JetBrains Mono"
+                      ],
+                      "headline-lg": [
+                              "Inter"
+                      ],
+                      "body-md": [
+                              "Inter"
+                      ],
+                      "label-caps": [
+                              "Inter"
+                      ],
+                      "headline-md": [
+                              "Inter"
+                      ],
+                      "body-lg": [
+                              "Inter"
+                      ],
+                      "headline-sm": [
+                              "Inter"
+                      ],
+                      "body-sm": [
+                              "Inter"
+                      ]
+              },
+              "fontSize": {
+                      "headline-lg-mobile": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "data-mono": [
+                              "13px",
+                              {
+                                      "lineHeight": "16px",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "headline-lg": [
+                              "30px",
+                              {
+                                      "lineHeight": "38px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "body-md": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "label-caps": [
+                              "12px",
+                              {
+                                      "lineHeight": "16px",
+                                      "letterSpacing": "0.05em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "headline-md": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "body-lg": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "headline-sm": [
+                              "20px",
+                              {
+                                      "lineHeight": "28px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "body-sm": [
+                              "13px",
+                              {
+                                      "lineHeight": "18px",
+                                      "fontWeight": "400"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+      </script>
+<style>
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface font-body-md h-screen flex flex-col overflow-hidden pb-[120px]">
+<!-- TopAppBar (Transactional Screen - Supressing BottomNavBar/SideNav as per rules) -->
+<header class="fixed top-0 w-full z-50 bg-surface dark:bg-on-background shadow-sm flex justify-between items-center px-4 h-header-height">
+<div class="flex items-center gap-3">
+<button class="text-primary dark:text-primary-fixed transition-colors duration-200 active:opacity-80 p-2 -ml-2 rounded-full hover:bg-surface-container-low dark:hover:bg-surface-container-highest">
+<span class="material-symbols-outlined" data-icon="arrow_back">arrow_back</span>
+</button>
+<h1 class="font-headline-sm text-headline-sm font-bold text-primary dark:text-primary-fixed">Puantaj Veri Girişi</h1>
+</div>
+<button class="text-on-surface-variant dark:text-outline-variant transition-colors duration-200 active:opacity-80 p-2 -mr-2 rounded-full hover:bg-surface-container-low dark:hover:bg-surface-container-highest">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button>
+</header>
+<!-- Main Content Area -->
+<main class="flex-1 overflow-y-auto mt-header-height px-4 py-4 space-y-container-gap pb-24">
+<!-- Context Area -->
+<div class="bg-surface-white rounded-xl shadow-[0_1px_3px_rgba(79,70,229,0.08)] p-4 border border-border-slate">
+<div class="flex justify-between items-start mb-2">
+<div>
+<p class="font-label-caps text-label-caps text-text-muted mb-1">PROJE</p>
+<h2 class="font-headline-sm text-[18px] font-semibold text-on-surface">Ataşehir Finans Merkezi</h2>
+</div>
+<div class="text-right">
+<p class="font-label-caps text-label-caps text-text-muted mb-1">DÖNEM</p>
+<p class="font-body-md text-on-surface font-medium bg-surface-container-low px-2 py-1 rounded">Ekim 2023</p>
+</div>
+</div>
+</div>
+<!-- Status Selector (Sticky for usability) -->
+<div class="sticky top-[72px] z-40 bg-background/95 backdrop-blur py-2 -mx-4 px-4 border-b border-border-slate">
+<p class="font-label-caps text-label-caps text-text-muted mb-2">DURUM SEÇİCİ</p>
+<div class="flex overflow-x-auto gap-2 hide-scrollbar pb-1">
+<!-- Tam Gün (Blue) -->
+<button class="flex items-center gap-1.5 px-3 py-1.5 rounded-full border-2 border-primary bg-primary-fixed text-on-primary-fixed whitespace-nowrap transition-transform duration-150 active:scale-95 shadow-sm">
+<span class="font-data-mono text-data-mono font-bold">X</span>
+<span class="font-body-sm text-body-sm">Tam Gün</span>
+</button>
+<!-- Yarım Gün (Amber) -->
+<button class="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-border-slate bg-surface-white text-on-surface-variant whitespace-nowrap transition-transform duration-150 active:scale-95">
+<span class="font-data-mono text-data-mono font-bold text-warning-amber">Y</span>
+<span class="font-body-sm text-body-sm">Yarım Gün</span>
+</button>
+<!-- Raporlu (Red) -->
+<button class="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-border-slate bg-surface-white text-on-surface-variant whitespace-nowrap transition-transform duration-150 active:scale-95">
+<span class="font-data-mono text-data-mono font-bold text-danger-rose">R</span>
+<span class="font-body-sm text-body-sm">Raporlu</span>
+</button>
+<!-- İzinli (Purple) -->
+<button class="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-border-slate bg-surface-white text-on-surface-variant whitespace-nowrap transition-transform duration-150 active:scale-95">
+<span class="font-data-mono text-data-mono font-bold text-decorative-purple">İ</span>
+<span class="font-body-sm text-body-sm">İzinli</span>
+</button>
+<!-- Resmi Tatil (Green) -->
+<button class="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-border-slate bg-surface-white text-on-surface-variant whitespace-nowrap transition-transform duration-150 active:scale-95">
+<span class="font-data-mono text-data-mono font-bold text-success-emerald">H</span>
+<span class="font-body-sm text-body-sm">Resmi Tatil</span>
+</button>
+</div>
+</div>
+<!-- Personnel List -->
+<div class="space-y-4">
+<!-- Worker Card 1 -->
+<div class="bg-surface-white rounded-xl shadow-[0_1px_3px_rgba(79,70,229,0.08)] border border-border-slate overflow-hidden">
+<div class="p-3 border-b border-border-slate flex justify-between items-center bg-surface-bright">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-secondary-fixed text-on-secondary-fixed flex items-center justify-center font-bold text-lg">
+                            AY
+                        </div>
+<div>
+<h3 class="font-body-md text-body-md font-semibold text-on-surface">Ahmet Yılmaz</h3>
+<p class="font-body-sm text-body-sm text-text-muted">Şantiye Şefi</p>
+</div>
+</div>
+<div class="text-right">
+<span class="font-data-mono text-data-mono text-primary font-bold">22.5 X</span>
+</div>
+</div>
+<div class="p-2 overflow-x-auto hide-scrollbar">
+<div class="flex gap-1 min-w-max">
+<!-- Dates -->
+<button class="w-10 h-12 flex flex-col items-center justify-center rounded border border-border-slate bg-surface-container-low transition-colors active:bg-surface-variant">
+<span class="font-label-caps text-[10px] text-text-muted">Pzt</span>
+<span class="font-data-mono text-data-mono">1</span>
+</button>
+<button class="w-10 h-12 flex flex-col items-center justify-center rounded border-2 border-primary bg-primary-fixed transition-colors">
+<span class="font-label-caps text-[10px] text-primary">Sal</span>
+<span class="font-data-mono text-data-mono font-bold text-primary">2</span>
+<span class="text-[10px] font-bold text-primary leading-none -mt-1">X</span>
+</button>
+<button class="w-10 h-12 flex flex-col items-center justify-center rounded border border-warning-amber/30 bg-warning-amber/10 transition-colors">
+<span class="font-label-caps text-[10px] text-warning-amber">Çar</span>
+<span class="font-data-mono text-data-mono font-bold text-warning-amber">3</span>
+<span class="text-[10px] font-bold text-warning-amber leading-none -mt-1">Y</span>
+</button>
+<button class="w-10 h-12 flex flex-col items-center justify-center rounded border border-border-slate bg-surface-container-low transition-colors active:bg-surface-variant">
+<span class="font-label-caps text-[10px] text-text-muted">Per</span>
+<span class="font-data-mono text-data-mono">4</span>
+</button>
+<button class="w-10 h-12 flex flex-col items-center justify-center rounded border border-border-slate bg-surface-container-low transition-colors active:bg-surface-variant">
+<span class="font-label-caps text-[10px] text-text-muted">Cum</span>
+<span class="font-data-mono text-data-mono">5</span>
+</button>
+<button class="w-10 h-12 flex flex-col items-center justify-center rounded border border-danger-rose/30 bg-danger-rose/10 transition-colors">
+<span class="font-label-caps text-[10px] text-danger-rose">Cmt</span>
+<span class="font-data-mono text-data-mono font-bold text-danger-rose">6</span>
+<span class="text-[10px] font-bold text-danger-rose leading-none -mt-1">R</span>
+</button>
+<button class="w-10 h-12 flex flex-col items-center justify-center rounded border border-border-slate bg-surface-container-low transition-colors active:bg-surface-variant">
+<span class="font-label-caps text-[10px] text-text-muted">Paz</span>
+<span class="font-data-mono text-data-mono">7</span>
+</button>
+<button class="w-10 h-12 flex flex-col items-center justify-center rounded border border-border-slate bg-surface-container-low transition-colors active:bg-surface-variant">
+<span class="font-label-caps text-[10px] text-text-muted">Pzt</span>
+<span class="font-data-mono text-data-mono">8</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Worker Card 2 -->
+<div class="bg-surface-white rounded-xl shadow-[0_1px_3px_rgba(79,70,229,0.08)] border border-border-slate overflow-hidden">
+<div class="p-3 border-b border-border-slate flex justify-between items-center bg-surface-bright">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-tertiary-fixed text-on-tertiary-fixed flex items-center justify-center font-bold text-lg">
+                            MD
+                        </div>
+<div>
+<h3 class="font-body-md text-body-md font-semibold text-on-surface">Mehmet Demir</h3>
+<p class="font-body-sm text-body-sm text-text-muted">Usta</p>
+</div>
+</div>
+<div class="text-right">
+<span class="font-data-mono text-data-mono text-primary font-bold">18.0 X</span>
+</div>
+</div>
+<div class="p-2 overflow-x-auto hide-scrollbar">
+<div class="flex gap-1 min-w-max">
+<!-- Dates -->
+<button class="w-10 h-12 flex flex-col items-center justify-center rounded border-2 border-primary bg-primary-fixed transition-colors">
+<span class="font-label-caps text-[10px] text-primary">Pzt</span>
+<span class="font-data-mono text-data-mono font-bold text-primary">1</span>
+<span class="text-[10px] font-bold text-primary leading-none -mt-1">X</span>
+</button>
+<button class="w-10 h-12 flex flex-col items-center justify-center rounded border-2 border-primary bg-primary-fixed transition-colors">
+<span class="font-label-caps text-[10px] text-primary">Sal</span>
+<span class="font-data-mono text-data-mono font-bold text-primary">2</span>
+<span class="text-[10px] font-bold text-primary leading-none -mt-1">X</span>
+</button>
+<button class="w-10 h-12 flex flex-col items-center justify-center rounded border-2 border-primary bg-primary-fixed transition-colors">
+<span class="font-label-caps text-[10px] text-primary">Çar</span>
+<span class="font-data-mono text-data-mono font-bold text-primary">3</span>
+<span class="text-[10px] font-bold text-primary leading-none -mt-1">X</span>
+</button>
+<button class="w-10 h-12 flex flex-col items-center justify-center rounded border-2 border-primary bg-primary-fixed transition-colors">
+<span class="font-label-caps text-[10px] text-primary">Per</span>
+<span class="font-data-mono text-data-mono font-bold text-primary">4</span>
+<span class="text-[10px] font-bold text-primary leading-none -mt-1">X</span>
+</button>
+<button class="w-10 h-12 flex flex-col items-center justify-center rounded border border-decorative-purple/30 bg-decorative-purple/10 transition-colors">
+<span class="font-label-caps text-[10px] text-decorative-purple">Cum</span>
+<span class="font-data-mono text-data-mono font-bold text-decorative-purple">5</span>
+<span class="text-[10px] font-bold text-decorative-purple leading-none -mt-1">İ</span>
+</button>
+<button class="w-10 h-12 flex flex-col items-center justify-center rounded border border-border-slate bg-surface-container-low transition-colors active:bg-surface-variant">
+<span class="font-label-caps text-[10px] text-text-muted">Cmt</span>
+<span class="font-data-mono text-data-mono">6</span>
+</button>
+<button class="w-10 h-12 flex flex-col items-center justify-center rounded border border-border-slate bg-surface-container-low transition-colors active:bg-surface-variant">
+<span class="font-label-caps text-[10px] text-text-muted">Paz</span>
+<span class="font-data-mono text-data-mono">7</span>
+</button>
+<button class="w-10 h-12 flex flex-col items-center justify-center rounded border-2 border-primary bg-primary-fixed transition-colors">
+<span class="font-label-caps text-[10px] text-primary">Pzt</span>
+<span class="font-data-mono text-data-mono font-bold text-primary">8</span>
+<span class="text-[10px] font-bold text-primary leading-none -mt-1">X</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Fixed Footer Summary Bar -->
+<footer class="fixed bottom-0 w-full bg-surface-white border-t border-border-slate shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] p-4 pb-6 z-50 rounded-t-xl">
+<div class="flex justify-between items-center mb-4 px-2">
+<div class="text-center">
+<p class="font-label-caps text-label-caps text-text-muted">TOPLAM SAAT</p>
+<p class="font-data-mono text-data-mono font-bold text-on-surface mt-1">1,240 saat</p>
+</div>
+<div class="text-center border-l border-r border-border-slate px-4">
+<p class="font-label-caps text-label-caps text-text-muted">TOPLAM GÜN</p>
+<p class="font-data-mono text-data-mono font-bold text-on-surface mt-1">155 gün</p>
+</div>
+<div class="text-center">
+<p class="font-label-caps text-label-caps text-text-muted">TAHMİNİ TUTAR</p>
+<p class="font-data-mono text-[14px] font-bold text-primary mt-1">₺ 345,600.00</p>
+</div>
+</div>
+<button class="w-full bg-primary hover:bg-on-primary-fixed-variant text-on-primary font-headline-sm text-body-md py-3 rounded-lg shadow-sm transition-colors duration-200 flex justify-center items-center gap-2">
+<span class="material-symbols-outlined text-[20px]" data-icon="save">save</span>
+            Kaydet ve Kesinleştir
+        </button>
+</footer>
+</body></html>

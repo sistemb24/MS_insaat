@@ -32,6 +32,10 @@ describe("SettingsSurface", () => {
     render(<SettingsSurface context={createTenantScope()} />);
 
     expect(screen.getByRole("heading", { name: "Ayarlar" })).toBeTruthy();
+    expect(document.querySelector('[data-settings-workspace="true"]')).toBeTruthy();
+    expect(
+      screen.getByRole("navigation", { name: "Ayarlar çalışma alanı bölümleri" }),
+    ).toBeTruthy();
     expect(screen.getByText("NOA Demo Tenant")).toBeTruthy();
     expect(screen.getByText("DEMO İNŞAAT")).toBeTruthy();
     expect(screen.getByText("2026")).toBeTruthy();

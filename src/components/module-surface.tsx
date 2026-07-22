@@ -2,13 +2,14 @@
 
 import { useState } from "react";
 
+import { ActionBar, Button, MetricCard, PageHeader, StatusBadge, type StatusTone } from "@/components/ui";
 import type { ModuleContent } from "@/lib/module-content";
 
-const statusClass: Record<ModuleContent["metrics"][number]["status"], string> = {
-  approved: "bg-[var(--status-approved)] text-white",
-  process: "bg-[var(--status-process)] text-white",
-  draft: "bg-[var(--status-draft)] text-white",
-  cancelled: "bg-[var(--status-cancelled)] text-white",
+const statusTone: Record<ModuleContent["metrics"][number]["status"], StatusTone> = {
+  approved: "success",
+  process: "info",
+  draft: "neutral",
+  cancelled: "danger",
 };
 
 type ModuleSurfaceProps = {
@@ -33,7 +34,7 @@ export function ModuleSurface({ content }: ModuleSurfaceProps) {
       />
       {actionNotice ? (
         <div
-          className="rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)] p-3 text-sm font-semibold text-[var(--on-surface-variant)]"
+          className="rounded-ui-panel border border-divider bg-surface-raised p-3 text-sm font-semibold text-content-subtle"
           role="status"
         >
           {actionNotice}
@@ -41,25 +42,13 @@ export function ModuleSurface({ content }: ModuleSurfaceProps) {
       ) : null}
       <div className="grid gap-3 md:grid-cols-3">
         {content.metrics.map((metric) => (
-          <article
-            className="rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)] p-4"
+          <MetricCard
+            detail={metric.detail}
             key={metric.label}
-          >
-            <div className="flex items-center justify-between gap-3">
-              <h2 className="text-sm font-semibold">{metric.label}</h2>
-              <span
-                className={`rounded-[var(--radius-control)] px-2 py-1 text-xs font-semibold ${statusClass[metric.status]}`}
-              >
-                {metric.status}
-              </span>
-            </div>
-            <p className="mt-3 font-mono text-2xl font-semibold">
-              {metric.value}
-            </p>
-            <p className="mt-1 text-sm text-[var(--on-surface-variant)]">
-              {metric.detail}
-            </p>
-          </article>
+            label={<span className="flex items-center justify-between gap-3"><span>{metric.label}</span><StatusBadge tone={statusTone[metric.status]}>{metric.status}</StatusBadge></span>}
+            tone={metric.status === "cancelled" ? "danger" : metric.status === "approved" ? "success" : "brand"}
+            value={metric.value}
+          />
         ))}
       </div>
       <div className="grid gap-4 xl:grid-cols-[1fr_360px]">
@@ -72,24 +61,12 @@ export function ModuleSurface({ content }: ModuleSurfaceProps) {
 
 function ModuleHeader({ content }: ModuleSurfaceProps) {
   return (
-    <header className="rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)] p-5">
-      <p className="text-xs font-semibold uppercase tracking-wide text-[var(--primary)]">
-        {content.eyebrow}
-      </p>
-      <div className="mt-2 flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
-        <div>
-          <h1 className="text-2xl font-semibold tracking-normal">
-            {content.title}
-          </h1>
-          <p className="mt-2 max-w-3xl text-sm leading-6 text-[var(--on-surface-variant)]">
-            {content.summary}
-          </p>
-        </div>
-        <div className="rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] px-3 py-2 text-xs text-[var(--on-surface-variant)]">
-          İş akışı korunur · Statik HTML taşınmaz
-        </div>
-      </div>
-    </header>
+    <PageHeader
+      actions={<StatusBadge tone="info">İş akışı korunur · Statik HTML taşınmaz</StatusBadge>}
+      description={content.summary}
+      eyebrow={content.eyebrow}
+      title={content.title}
+    />
   );
 }
 
@@ -103,37 +80,33 @@ function ActionToolbar({
   const defaultActions = ["Yeni", "Düzenle", "Yenile", "Excel", "Yazdır"];
 
   return (
-    <div className="flex flex-wrap items-center gap-2 rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)] p-2">
-      {[...actions, ...defaultActions].map((action) => (
-        <button
-          className="rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] px-3 py-1.5 text-sm font-medium transition hover:bg-[var(--primary-fixed)]"
-          key={action}
+    <ActionBar actions={[...actions, ...defaultActions].map((action, index) => (
+        <Button
+          key={`${action}-${index}`}
           onClick={() => onAction(action)}
-          type="button"
+          size="sm"
+          variant={index === 0 ? "primary" : "secondary"}
         >
           {action}
-        </button>
-      ))}
-    </div>
+        </Button>
+      ))} />
   );
 }
 
 function TemplatePanel({ sources }: { sources: string[] }) {
   return (
-    <article className="rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)]">
-      <div className="border-b border-[var(--grid-border)] px-4 py-3">
+    <article className="rounded-ui-panel border border-divider bg-surface-raised shadow-sm">
+      <div className="border-b border-divider px-4 py-3">
         <h2 className="text-sm font-semibold">HTML şablon kaynakları</h2>
       </div>
-      <div className="divide-y divide-[var(--grid-border)]">
+      <div className="divide-y divide-divider">
         {sources.map((source) => (
           <div
-            className="grid min-h-[var(--data-row-height)] grid-cols-[1fr_auto] items-center gap-3 px-4 py-2 text-sm"
+            className="grid min-h-[var(--ds-data-row-height)] grid-cols-[1fr_auto] items-center gap-3 px-4 py-2 text-sm"
             key={source}
           >
             <span className="font-mono text-xs">{source}</span>
-            <span className="rounded-[var(--radius-control)] bg-[var(--primary-fixed)] px-2 py-1 text-xs font-semibold text-[var(--primary)]">
-              aday
-            </span>
+            <StatusBadge tone="info">Aday</StatusBadge>
           </div>
         ))}
       </div>
@@ -151,12 +124,12 @@ function ReadinessPanel() {
   ];
 
   return (
-    <aside className="rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)] p-4">
+    <aside className="rounded-ui-panel border border-divider bg-surface-raised p-4 shadow-sm">
       <h2 className="text-sm font-semibold">Hafta 1 kabul kontrolü</h2>
       <ul className="mt-3 space-y-2 text-sm">
         {items.map((item) => (
           <li className="flex items-center gap-2" key={item}>
-            <span className="h-2 w-2 rounded-full bg-[var(--status-process)]" />
+            <span className="h-2 w-2 rounded-full bg-brand-primary" />
             {item}
           </li>
         ))}

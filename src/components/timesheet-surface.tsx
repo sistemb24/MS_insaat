@@ -2,6 +2,7 @@
 
 import { useMemo, useState, useTransition } from "react";
 
+import { Button, PageHeader, StatusBadge } from "@/components/ui";
 import type { AuditLogEntry } from "@/lib/audit-log";
 import {
   calculateTimesheetTotals,
@@ -83,6 +84,10 @@ export function TimesheetSurface({
   const [localRows, setLocalRows] = useState(rows);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [message, setMessage] = useState("");
+  const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState<"Tümü" | TimesheetRow["status"]>(
+    "Tümü",
+  );
   const [isPending, startTransition] = useTransition();
   const initialDate = new Date(`${today}T00:00:00`);
   const [draft, setDraft] = useState<DraftState>({
@@ -100,7 +105,29 @@ export function TimesheetSurface({
     workedDays: "20",
     year: String(initialDate.getFullYear()),
   });
-  const summary = useMemo(() => summarizeRows(localRows), [localRows]);
+  const visibleRows = useMemo(() => {
+    const normalizedSearch = search.trim().toLocaleLowerCase("tr-TR");
+
+    return localRows.filter((row) => {
+      const matchesStatus =
+        statusFilter === "Tümü" || row.status === statusFilter;
+      const matchesSearch =
+        normalizedSearch.length === 0 ||
+        [
+          row.documentNo,
+          row.siteCode,
+          row.siteName,
+          row.contractorCode,
+          row.contractorName,
+          ...row.lines.flatMap((line) => [line.personCode, line.personName]),
+        ].some((value) =>
+          value.toLocaleLowerCase("tr-TR").includes(normalizedSearch),
+        );
+
+      return matchesStatus && matchesSearch;
+    });
+  }, [localRows, search, statusFilter]);
+  const summary = useMemo(() => summarizeRows(visibleRows), [visibleRows]);
   const preview = calculateTimesheetTotals({
     contractorCode: selectedName(mergedLookups.subcontractors, draft.subcontractorCode)
       ? draft.subcontractorCode
@@ -216,34 +243,18 @@ export function TimesheetSurface({
   }
 
   function handlePrint() {
-    setMessage(`Yazdırma kapsamı hazır: ${localRows.length} puantaj.`);
+    setMessage(`Yazdırma kapsamı hazır: ${visibleRows.length} puantaj.`);
     window.print();
   }
 
   return (
     <section className="mx-auto flex max-w-7xl flex-col gap-4">
-      <header className="rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)] p-5">
-        <p className="text-xs font-semibold uppercase tracking-wide text-[var(--primary)]">
-          Aylık çalışma grid&apos;i
-        </p>
-        <div className="mt-2 flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
-          <div>
-            <h1 className="text-2xl font-semibold tracking-normal">Puantaj</h1>
-            <p className="mt-2 max-w-3xl text-sm leading-6 text-[var(--on-surface-variant)]">
-              Şantiye, taşeron, ay ve yıl bazında personel çalışma günü, mesai
-              ve net ödeme hazırlığı.
-            </p>
-          </div>
-          <button
-            className="h-10 rounded-[var(--radius-control)] bg-[var(--primary)] px-4 text-sm font-semibold text-white disabled:opacity-60"
-            disabled={!canMutate}
-            onClick={() => setIsFormOpen((current) => !current)}
-            type="button"
-          >
-            Yeni
-          </button>
-        </div>
-      </header>
+      <PageHeader
+        actions={<><StatusBadge tone="info">{visibleRows.length} kayıt görünür</StatusBadge><Button disabled={!canMutate} onClick={() => setIsFormOpen((current) => !current)}>Yeni Puantaj</Button></>}
+        description="Şantiye, taşeron, ay ve yıl bazında personel çalışma günü, mesai ve net ödeme hazırlığı."
+        eyebrow="Personel yönetimi · aylık çalışma cetveli"
+        title="Puantaj"
+      />
 
       <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
         <Metric label="Açık Puantaj" value={String(summary.openCount)} />
@@ -255,8 +266,48 @@ export function TimesheetSurface({
         <Metric label="Net Ödeme" value={formatMoney(summary.netTotal)} />
       </div>
 
+      <section className="rounded-ui-panel border border-divider bg-surface-raised p-4 shadow-sm">
+        <div className="flex flex-col gap-3 xl:flex-row xl:items-end xl:justify-between">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-[0.14em] text-brand-primary">
+              Cetvel filtresi
+            </p>
+            <p className="mt-1 text-sm text-content-muted">
+              Özet, liste ve yazdırma yalnız görünür puantaj kayıtlarını esas alır.
+            </p>
+          </div>
+          <label className="flex min-w-0 flex-1 flex-col gap-1 text-xs font-semibold text-content-muted xl:max-w-sm">
+            Kayıt, şantiye, taşeron veya personel ara
+            <input
+              className="h-10 rounded-ui-control border border-divider bg-surface-raised px-3 text-sm font-normal text-content outline-none focus:border-brand-primary"
+              onChange={(event) => setSearch(event.target.value)}
+              placeholder="Puantaj no, şantiye veya personel"
+              type="search"
+              value={search}
+            />
+          </label>
+          <div className="flex flex-wrap gap-2" role="group" aria-label="Puantaj durumu filtresi">
+            {(["Tümü", "Taslak", "Kaydedildi", "İptal"] as const).map((status) => (
+              <button
+                aria-pressed={statusFilter === status}
+                className={
+                  statusFilter === status
+                    ? "h-10 rounded-ui-control bg-brand-primary px-3 text-sm font-semibold text-on-brand"
+                    : "h-10 rounded-ui-control border border-divider bg-surface-raised px-3 text-sm font-semibold text-content-muted hover:bg-surface-muted hover:text-content"
+                }
+                key={status}
+                onClick={() => setStatusFilter(status)}
+                type="button"
+              >
+                {status}
+              </button>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {isFormOpen ? (
-        <article className="rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)] p-4">
+        <article className="rounded-ui-panel border border-divider bg-surface-raised p-4">
           <h2 className="text-sm font-semibold">Puantaj Girişi</h2>
           <div className="mt-4 grid gap-3 md:grid-cols-4">
             <TextField
@@ -296,8 +347,8 @@ export function TimesheetSurface({
           </div>
 
           <div className="mt-4 overflow-x-auto">
-            <table className="min-w-[980px] w-full text-left text-sm">
-              <thead className="bg-[var(--surface-container-low)] text-xs uppercase text-[var(--on-surface-variant)]">
+            <table aria-label="Puantaj giriş satırı" className="min-w-[980px] w-full text-left text-sm">
+              <thead className="bg-surface-muted text-xs uppercase text-content-subtle">
                 <tr>
                   <th className="px-3 py-3">Personel</th>
                   <th className="px-3 py-3 text-right">Gün</th>
@@ -361,14 +412,14 @@ export function TimesheetSurface({
 
           <div className="mt-4 flex items-center justify-end gap-2">
             <button
-              className="h-10 rounded-[var(--radius-control)] border border-[var(--grid-border)] px-4 text-sm font-semibold"
+              className="h-10 rounded-ui-control border border-divider px-4 text-sm font-semibold"
               onClick={() => setIsFormOpen(false)}
               type="button"
             >
               Vazgeç
             </button>
             <button
-              className="h-10 rounded-[var(--radius-control)] bg-[var(--primary)] px-4 text-sm font-semibold text-white disabled:opacity-60"
+              className="h-10 rounded-ui-control bg-brand-primary px-4 text-sm font-semibold text-on-brand disabled:opacity-60"
               disabled={isPending || !canMutate}
               onClick={handleCreate}
               type="button"
@@ -381,19 +432,19 @@ export function TimesheetSurface({
 
       {message ? (
         <p
-          className="rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] px-3 py-2 text-sm font-semibold"
+          className="rounded-ui-control border border-divider bg-surface-muted px-3 py-2 text-sm font-semibold"
           role="status"
         >
           {message}
         </p>
       ) : null}
 
-      <article className="overflow-hidden rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)]">
-        <div className="flex flex-col gap-3 border-b border-[var(--grid-border)] px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
+      <article className="overflow-hidden rounded-ui-panel border border-divider bg-surface-raised">
+        <div className="flex flex-col gap-3 border-b border-divider px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
           <h2 className="text-sm font-semibold">Puantaj hareket listesi</h2>
           <button
-            className="h-9 rounded-[var(--radius-control)] border border-[var(--grid-border)] px-3 text-xs font-semibold disabled:opacity-50"
-            disabled={localRows.length === 0}
+            className="h-9 rounded-ui-control border border-divider px-3 text-xs font-semibold disabled:opacity-50"
+            disabled={visibleRows.length === 0}
             onClick={handlePrint}
             type="button"
           >
@@ -401,8 +452,8 @@ export function TimesheetSurface({
           </button>
         </div>
         <div className="overflow-x-auto">
-          <table className="min-w-[980px] w-full text-left text-sm">
-            <thead className="bg-[var(--surface-container-low)] text-xs uppercase text-[var(--on-surface-variant)]">
+          <table aria-label="Puantaj hareket listesi" className="min-w-[980px] w-full text-left text-sm">
+            <thead className="bg-surface-muted text-xs uppercase text-content-subtle">
               <tr>
                 <th className="px-4 py-3">Puantaj No</th>
                 <th className="px-4 py-3">Dönem</th>
@@ -414,19 +465,25 @@ export function TimesheetSurface({
                 <th className="px-4 py-3 text-right">İşlem</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[var(--grid-border)]">
-              {localRows.length === 0 ? (
+            <tbody className="divide-y divide-divider">
+              {visibleRows.length === 0 ? (
                 <tr>
                   <td className="px-4 py-10 text-center" colSpan={8}>
-                    <p className="font-semibold">Henüz puantaj kaydı yok</p>
-                    <p className="mt-1 text-sm text-[var(--on-surface-variant)]">
-                      Personel çalışma günleri girildiğinde liste dolacaktır.
+                    <p className="font-semibold">
+                      {localRows.length === 0
+                        ? "Henüz puantaj kaydı yok"
+                        : "Filtreyle eşleşen puantaj kaydı yok"}
+                    </p>
+                    <p className="mt-1 text-sm text-content-subtle">
+                      {localRows.length === 0
+                        ? "Personel çalışma günleri girildiğinde liste dolacaktır."
+                        : "Arama veya durum filtresini değiştirerek kayıtları görün."}
                     </p>
                   </td>
                 </tr>
               ) : (
-                localRows.map((row) => (
-                  <tr className="hover:bg-[var(--primary-fixed)]" key={row.id}>
+                visibleRows.map((row) => (
+                  <tr className="hover:bg-brand-primary-subtle" key={row.id}>
                     <td className="px-4 py-3 font-mono text-xs">
                       {row.documentNo}
                     </td>
@@ -445,7 +502,7 @@ export function TimesheetSurface({
                     <td className="px-4 py-3">
                       <div className="flex justify-end gap-2">
                         <button
-                          className="h-9 rounded-[var(--radius-control)] border border-[var(--grid-border)] px-3 text-xs font-semibold disabled:opacity-50"
+                          className="h-9 rounded-ui-control border border-divider px-3 text-xs font-semibold disabled:opacity-50"
                           disabled={
                             !canMutate ||
                             isPending ||
@@ -457,7 +514,7 @@ export function TimesheetSurface({
                           Kesinleştir
                         </button>
                         <button
-                          className="h-9 rounded-[var(--radius-control)] border border-[var(--grid-border)] px-3 text-xs font-semibold disabled:opacity-50"
+                          className="h-9 rounded-ui-control border border-divider px-3 text-xs font-semibold disabled:opacity-50"
                           disabled={
                             !canMutate ||
                             isPending ||
@@ -478,22 +535,22 @@ export function TimesheetSurface({
         </div>
       </article>
 
-      <article className="rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)] p-4">
+      <article className="rounded-ui-panel border border-divider bg-surface-raised p-4">
         <h2 className="text-sm font-semibold">İşlem Geçmişi</h2>
         <div className="mt-4 grid gap-3">
           {localRows.flatMap((row) =>
             (auditLogsByEntityId[row.id] ?? []).map((entry) => (
               <div
-                className="rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] p-3 text-sm"
+                className="rounded-ui-control border border-divider bg-surface-muted p-3 text-sm"
                 key={entry.id}
               >
                 <div className="flex flex-col gap-1 md:flex-row md:items-center md:justify-between">
                   <p className="font-semibold">{actionLabel(entry.action)}</p>
-                  <p className="font-mono text-xs text-[var(--on-surface-variant)]">
+                  <p className="font-mono text-xs text-content-subtle">
                     {formatDateTime(entry.occurredAt)}
                   </p>
                 </div>
-                <p className="mt-1 text-[var(--on-surface-variant)]">
+                <p className="mt-1 text-content-subtle">
                   {String(entry.metadata.statusFrom ?? "")}
                   {entry.metadata.statusFrom ? " -> " : ""}
                   {String(entry.metadata.statusTo ?? "")}
@@ -509,8 +566,8 @@ export function TimesheetSurface({
 
 function Metric({ label, value }: { label: string; value: string }) {
   return (
-    <article className="rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)] p-4">
-      <p className="text-sm font-semibold text-[var(--on-surface-variant)]">
+    <article className="rounded-ui-panel border border-divider bg-surface-raised p-4">
+      <p className="text-sm font-semibold text-content-subtle">
         {label}
       </p>
       <p className="mt-2 font-mono text-2xl font-semibold">{value}</p>
@@ -534,7 +591,7 @@ function TextField({
       <span>{label}</span>
       <input
         aria-label={label}
-        className="h-10 rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-white px-3 font-normal outline-none focus:border-[var(--primary)]"
+        className="h-10 rounded-ui-control border border-divider bg-surface-raised px-3 font-normal outline-none focus:border-brand-primary"
         onChange={(event) => onChange(event.target.value)}
         type={type}
         value={value}
@@ -559,7 +616,7 @@ function SelectField({
       <span>{label}</span>
       <select
         aria-label={label}
-        className="h-10 rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-white px-3 font-normal outline-none focus:border-[var(--primary)]"
+        className="h-10 rounded-ui-control border border-divider bg-surface-raised px-3 font-normal outline-none focus:border-brand-primary"
         onChange={(event) => onChange(event.target.value)}
         value={value}
       >
@@ -586,7 +643,7 @@ function NumberCell({
     <td className="px-3 py-3">
       <input
         aria-label={label}
-        className="h-10 w-full rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-white px-3 text-right font-mono outline-none focus:border-[var(--primary)]"
+        className="h-10 w-full rounded-ui-control border border-divider bg-surface-raised px-3 text-right font-mono outline-none focus:border-brand-primary"
         onChange={(event) => onChange(event.target.value)}
         type="number"
         value={value}

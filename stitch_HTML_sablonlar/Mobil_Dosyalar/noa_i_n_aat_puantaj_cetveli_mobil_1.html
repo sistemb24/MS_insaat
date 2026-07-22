@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+
+<html lang="tr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Puantaj Cetveli</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-surface-variant": "#464555",
+                      "primary-fixed-dim": "#c3c0ff",
+                      "surface-dim": "#d8dadc",
+                      "on-tertiary-fixed-variant": "#7b2f00",
+                      "tertiary-fixed": "#ffdbcc",
+                      "on-secondary-fixed": "#131b2e",
+                      "on-primary-fixed": "#0f0069",
+                      "border-slate": "#E2E8F0",
+                      "secondary-container": "#dae2fd",
+                      "outline-variant": "#c7c4d8",
+                      "on-error-container": "#93000a",
+                      "on-secondary": "#ffffff",
+                      "secondary-fixed": "#dae2fd",
+                      "on-background": "#191c1e",
+                      "on-surface": "#191c1e",
+                      "on-tertiary": "#ffffff",
+                      "surface-container-low": "#f2f4f6",
+                      "inverse-surface": "#2d3133",
+                      "surface-container-high": "#e6e8ea",
+                      "tertiary": "#7e3000",
+                      "secondary": "#565e74",
+                      "surface": "#f7f9fb",
+                      "secondary-fixed-dim": "#bec6e0",
+                      "warning-amber": "#F59E0B",
+                      "surface-container-lowest": "#ffffff",
+                      "primary": "#3525cd",
+                      "on-primary-container": "#dad7ff",
+                      "on-primary": "#ffffff",
+                      "error-container": "#ffdad6",
+                      "danger-rose": "#E11D48",
+                      "on-tertiary-fixed": "#351000",
+                      "inverse-on-surface": "#eff1f3",
+                      "surface-container-highest": "#e0e3e5",
+                      "primary-container": "#4f46e5",
+                      "on-error": "#ffffff",
+                      "error": "#ba1a1a",
+                      "decorative-navy": "#000080",
+                      "surface-bright": "#f7f9fb",
+                      "text-muted": "#64748B",
+                      "on-tertiary-container": "#ffd2be",
+                      "decorative-purple": "#800080",
+                      "background": "#f7f9fb",
+                      "surface-variant": "#e0e3e5",
+                      "on-secondary-fixed-variant": "#3f465c",
+                      "on-secondary-container": "#5c647a",
+                      "success-emerald": "#10B981",
+                      "surface-container": "#eceef0",
+                      "surface-white": "#FFFFFF",
+                      "on-primary-fixed-variant": "#3323cc",
+                      "tertiary-container": "#a44100",
+                      "surface-tint": "#4d44e3",
+                      "primary-fixed": "#e2dfff",
+                      "tertiary-fixed-dim": "#ffb695",
+                      "inverse-primary": "#c3c0ff",
+                      "outline": "#777587"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "stack-md": "1rem",
+                      "container-gap": "1.5rem",
+                      "stack-sm": "0.5rem",
+                      "sidebar-collapsed": "80px",
+                      "grid-cell-py": "0.5rem",
+                      "sidebar-width": "260px",
+                      "header-height": "64px",
+                      "grid-cell-px": "0.75rem"
+              },
+              "fontFamily": {
+                      "headline-sm": ["Inter"],
+                      "headline-md": ["Inter"],
+                      "headline-lg": ["Inter"],
+                      "body-sm": ["Inter"],
+                      "label-caps": ["Inter"],
+                      "body-lg": ["Inter"],
+                      "body-md": ["Inter"],
+                      "headline-lg-mobile": ["Inter"],
+                      "data-mono": ["JetBrains Mono"]
+              },
+              "fontSize": {
+                      "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                      "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                      "headline-lg": ["30px", { "lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                      "body-sm": ["13px", { "lineHeight": "18px", "fontWeight": "400" }],
+                      "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                      "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                      "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                      "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "700" }],
+                      "data-mono": ["13px", { "lineHeight": "16px", "fontWeight": "500" }]
+              }
+            }
+          }
+        }
+    </script>
+<style>
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface antialiased min-h-screen flex flex-col">
+<!-- TopAppBar from Shared Components JSON -->
+<header class="sticky top-0 z-50 flex items-center justify-between w-full h-header-height px-4 bg-surface dark:bg-on-background shadow-sm docked full-width top-0">
+<button aria-label="Geri" class="flex items-center justify-center p-2 rounded-full hover:bg-surface-container-low dark:hover:bg-surface-variant text-on-surface-variant dark:text-surface-variant transition-opacity duration-150 opacity-80">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<h1 class="text-headline-sm font-headline-sm font-bold text-primary dark:text-primary-fixed">Ayarlar</h1>
+<button aria-label="Seçenekler" class="flex items-center justify-center p-2 rounded-full hover:bg-surface-container-low dark:hover:bg-surface-variant text-on-surface-variant dark:text-surface-variant transition-opacity duration-150">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</header>
+<!-- Main Scrollable Content -->
+<main class="flex-1 pb-[160px] flex flex-col">
+<!-- Contextual Header (Overrides generic TopAppBar context) -->
+<div class="bg-surface-white px-4 py-6 border-b border-border-slate">
+<div class="flex items-center justify-between mb-2">
+<h2 class="text-headline-lg-mobile font-headline-lg-mobile text-on-surface">Puantaj Cetveli</h2>
+<div class="flex items-center gap-2 bg-surface-container-low rounded-lg p-1 border border-border-slate">
+<button class="p-1 rounded text-on-surface-variant hover:bg-surface-white"><span class="material-symbols-outlined text-[20px]">chevron_left</span></button>
+<span class="text-body-md font-body-md font-medium px-2">Kasım 2023</span>
+<button class="p-1 rounded text-on-surface-variant hover:bg-surface-white"><span class="material-symbols-outlined text-[20px]">chevron_right</span></button>
+</div>
+</div>
+<p class="text-body-sm font-body-sm text-text-muted">Merkez Şantiye - Saha Ekibi</p>
+</div>
+<!-- Summary Cards (Horizontal Scroll) -->
+<div class="px-4 py-4 border-b border-border-slate bg-surface-bright">
+<div class="flex overflow-x-auto gap-container-gap pb-2 hide-scrollbar snap-x">
+<div class="min-w-[140px] bg-surface-white p-3 rounded-xl shadow-sm border border-border-slate flex-shrink-0 snap-center">
+<div class="flex items-center gap-2 mb-1 text-text-muted">
+<span class="material-symbols-outlined text-[16px]">schedule</span>
+<span class="text-label-caps font-label-caps">TOPLAM SAAT</span>
+</div>
+<div class="text-headline-md font-headline-md text-on-surface">1,420<span class="text-body-sm font-body-sm text-text-muted ml-1">sa</span></div>
+</div>
+<div class="min-w-[140px] bg-surface-white p-3 rounded-xl shadow-sm border border-border-slate flex-shrink-0 snap-center">
+<div class="flex items-center gap-2 mb-1 text-text-muted">
+<span class="material-symbols-outlined text-[16px]">today</span>
+<span class="text-label-caps font-label-caps">TOPLAM GÜN</span>
+</div>
+<div class="text-headline-md font-headline-md text-on-surface">184<span class="text-body-sm font-body-sm text-text-muted ml-1">gün</span></div>
+</div>
+<div class="min-w-[160px] bg-surface-white p-3 rounded-xl shadow-sm border border-border-slate flex-shrink-0 snap-center">
+<div class="flex items-center gap-2 mb-1 text-text-muted">
+<span class="material-symbols-outlined text-[16px]">payments</span>
+<span class="text-label-caps font-label-caps">TAHMİNİ BÜTÇE</span>
+</div>
+<div class="text-headline-md font-headline-md text-primary font-data-mono font-data-mono">₺450K</div>
+</div>
+</div>
+</div>
+<!-- Legend / Status Types -->
+<div class="px-4 py-3 bg-surface-white border-b border-border-slate flex gap-3 overflow-x-auto hide-scrollbar">
+<div class="flex items-center gap-1.5 flex-shrink-0">
+<div class="w-4 h-4 rounded-full bg-secondary-container flex items-center justify-center text-[10px] font-bold text-on-secondary-container">X</div>
+<span class="text-label-caps font-label-caps text-text-muted">Tam Gün</span>
+</div>
+<div class="flex items-center gap-1.5 flex-shrink-0">
+<div class="w-4 h-4 rounded-full bg-tertiary-fixed flex items-center justify-center text-[10px] font-bold text-on-tertiary-fixed-variant">Y</div>
+<span class="text-label-caps font-label-caps text-text-muted">Yarım Gün</span>
+</div>
+<div class="flex items-center gap-1.5 flex-shrink-0">
+<div class="w-4 h-4 rounded-full bg-error-container flex items-center justify-center text-[10px] font-bold text-on-error-container">R</div>
+<span class="text-label-caps font-label-caps text-text-muted">Raporlu</span>
+</div>
+<div class="flex items-center gap-1.5 flex-shrink-0">
+<div class="w-4 h-4 rounded-full bg-primary-container flex items-center justify-center text-[10px] font-bold text-on-primary-container">İ</div>
+<span class="text-label-caps font-label-caps text-text-muted">İzinli</span>
+</div>
+<div class="flex items-center gap-1.5 flex-shrink-0">
+<div class="w-4 h-4 rounded-full bg-surface-container-highest flex items-center justify-center text-[10px] font-bold text-on-surface">H</div>
+<span class="text-label-caps font-label-caps text-text-muted">Tatil</span>
+</div>
+</div>
+<!-- Quick Search -->
+<div class="p-4 bg-surface-bright">
+<div class="relative w-full">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-text-muted text-[20px]">search</span>
+</div>
+<input class="w-full bg-surface-white border border-border-slate rounded-lg py-2 pl-10 pr-3 text-body-md font-body-md text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary shadow-sm placeholder-text-muted" placeholder="Personel Ara..." type="text"/>
+</div>
+</div>
+<!-- Personnel Cards List -->
+<div class="px-4 flex flex-col gap-4">
+<!-- Card 1 -->
+<div class="bg-surface-white rounded-xl shadow-sm border border-border-slate overflow-hidden">
+<div class="p-4 flex items-center gap-3 border-b border-border-slate">
+<img alt="Avatar" class="w-12 h-12 rounded-full object-cover border-2 border-surface-container-low" data-alt="A professional headshot of a middle-aged male construction site manager. He is wearing a clean white hard hat and a high-visibility yellow safety vest over a blue collared shirt. The background is a slightly blurred, bright outdoor construction site during daytime, emphasizing a realistic, clean, and safe working environment. Soft natural lighting highlights his experienced but approachable expression. The overall image has a modern, corporate aesthetic suitable for a professional ERP system." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDnrU76nQEnEodOaX2q67wQ4P3U_643RfI4TpxMMKhOABnRySUG04ui5D41L5G1dBRO384NoaVpFP9iGj98wuii_whXrCllDS8BF8F-itdOMxvYgyAIbcn5pM927UQTU2rrAiONL-Gus2wo3RNwFgDTmkR6tAgzs-_cFLfFWbnHuflhJ_SqAgwcJ2aV7JQN7IZuTWQIWu2FJBJ7ahB4_0sGkUyBLURuytyxhdpSy8FPcy7SG2T6oVpA"/>
+<div class="flex-1">
+<h3 class="text-body-lg font-body-lg font-semibold text-on-surface">Ahmet Yılmaz</h3>
+<p class="text-body-sm font-body-sm text-text-muted">Ustabaşı • Sicil: 1045</p>
+</div>
+<div class="flex flex-col items-end">
+<span class="text-label-caps font-label-caps text-success-emerald bg-success-emerald/10 px-2 py-0.5 rounded text-[10px]">AKTİF</span>
+</div>
+</div>
+<!-- Day Selector inside Card -->
+<div class="bg-surface-container-low px-4 py-2 flex justify-between items-center border-b border-border-slate">
+<button class="p-1 text-text-muted hover:text-on-surface"><span class="material-symbols-outlined text-[18px]">arrow_back_ios_new</span></button>
+<div class="flex gap-2 text-center">
+<div class="flex flex-col items-center opacity-50"><span class="text-[10px] text-text-muted uppercase">Pzt</span><span class="text-body-md font-data-mono font-data-mono">13</span></div>
+<div class="flex flex-col items-center opacity-50"><span class="text-[10px] text-text-muted uppercase">Sal</span><span class="text-body-md font-data-mono font-data-mono">14</span></div>
+<div class="flex flex-col items-center bg-primary text-on-primary rounded-lg px-2 py-0.5 shadow-sm transform scale-110"><span class="text-[10px] uppercase font-bold text-on-primary/80">Çar</span><span class="text-body-md font-bold font-data-mono font-data-mono">15</span></div>
+<div class="flex flex-col items-center opacity-50"><span class="text-[10px] text-text-muted uppercase">Per</span><span class="text-body-md font-data-mono font-data-mono">16</span></div>
+<div class="flex flex-col items-center opacity-50"><span class="text-[10px] text-text-muted uppercase">Cum</span><span class="text-body-md font-data-mono font-data-mono">17</span></div>
+</div>
+<button class="p-1 text-text-muted hover:text-on-surface"><span class="material-symbols-outlined text-[18px]">arrow_forward_ios</span></button>
+</div>
+<!-- Status Action Grid -->
+<div class="p-4 grid grid-cols-5 gap-2">
+<button class="flex flex-col items-center justify-center p-2 rounded-lg border-2 border-primary bg-primary/5 text-primary transition-all">
+<span class="text-headline-sm font-headline-sm mb-1">X</span>
+<span class="text-[9px] uppercase font-bold tracking-wider">Tam</span>
+</button>
+<button class="flex flex-col items-center justify-center p-2 rounded-lg border border-border-slate bg-surface-white text-text-muted hover:bg-surface-container-low transition-all">
+<span class="text-headline-sm font-headline-sm mb-1">Y</span>
+<span class="text-[9px] uppercase font-bold tracking-wider">Yarım</span>
+</button>
+<button class="flex flex-col items-center justify-center p-2 rounded-lg border border-border-slate bg-surface-white text-text-muted hover:bg-surface-container-low transition-all">
+<span class="text-headline-sm font-headline-sm mb-1">R</span>
+<span class="text-[9px] uppercase font-bold tracking-wider">Rapor</span>
+</button>
+<button class="flex flex-col items-center justify-center p-2 rounded-lg border border-border-slate bg-surface-white text-text-muted hover:bg-surface-container-low transition-all">
+<span class="text-headline-sm font-headline-sm mb-1">İ</span>
+<span class="text-[9px] uppercase font-bold tracking-wider">İzin</span>
+</button>
+<button class="flex flex-col items-center justify-center p-2 rounded-lg border border-border-slate bg-surface-white text-text-muted hover:bg-surface-container-low transition-all">
+<span class="text-headline-sm font-headline-sm mb-1">H</span>
+<span class="text-[9px] uppercase font-bold tracking-wider">Tatil</span>
+</button>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="bg-surface-white rounded-xl shadow-sm border border-border-slate overflow-hidden">
+<div class="p-4 flex items-center gap-3 border-b border-border-slate">
+<img alt="Avatar" class="w-12 h-12 rounded-full object-cover border-2 border-surface-container-low" data-alt="A professional portrait of a young female structural engineer. She is wearing standard safety gear including a modern white helmet and a fitted reflective vest. She has a confident, focused expression. The background features blurred steel frameworks and blueprints, indicating an active building project. The lighting is bright and even, typical of a sunny day on site. The photo style is high-resolution, clean, and professional, aligning with modern enterprise software UI." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBJtySZbDsn3flwuN9lqngc4JLo1EKk5Un-v2DMmX2EAPPkin_tYtPP9zsMbpZ414O7BAmFbghBYYZQAZWlaCTpbn18m_kIlgNMnxRlf2l6k9MOdPYWjH93cfS8bU8jN-uSzSHwcNLndyx6g6sWYwZoYiVOUB3q5juNH0r13NigASbkwUHRfK-dBaq2fcGZ4QZyg9HL4VfMHLHjOUelfV78Bio2qUmKFFj4IKSW7Ww3DT0xAYjK5_WJ"/>
+<div class="flex-1">
+<h3 class="text-body-lg font-body-lg font-semibold text-on-surface">Zeynep Kaya</h3>
+<p class="text-body-sm font-body-sm text-text-muted">Saha Mühendisi • Sicil: 2102</p>
+</div>
+<div class="flex flex-col items-end">
+<span class="text-label-caps font-label-caps text-success-emerald bg-success-emerald/10 px-2 py-0.5 rounded text-[10px]">AKTİF</span>
+</div>
+</div>
+<!-- Day Selector inside Card -->
+<div class="bg-surface-container-low px-4 py-2 flex justify-between items-center border-b border-border-slate">
+<button class="p-1 text-text-muted hover:text-on-surface"><span class="material-symbols-outlined text-[18px]">arrow_back_ios_new</span></button>
+<div class="flex gap-2 text-center">
+<div class="flex flex-col items-center opacity-50"><span class="text-[10px] text-text-muted uppercase">Pzt</span><span class="text-body-md font-data-mono font-data-mono">13</span></div>
+<div class="flex flex-col items-center opacity-50"><span class="text-[10px] text-text-muted uppercase">Sal</span><span class="text-body-md font-data-mono font-data-mono">14</span></div>
+<div class="flex flex-col items-center bg-primary text-on-primary rounded-lg px-2 py-0.5 shadow-sm transform scale-110"><span class="text-[10px] uppercase font-bold text-on-primary/80">Çar</span><span class="text-body-md font-bold font-data-mono font-data-mono">15</span></div>
+<div class="flex flex-col items-center opacity-50"><span class="text-[10px] text-text-muted uppercase">Per</span><span class="text-body-md font-data-mono font-data-mono">16</span></div>
+<div class="flex flex-col items-center opacity-50"><span class="text-[10px] text-text-muted uppercase">Cum</span><span class="text-body-md font-data-mono font-data-mono">17</span></div>
+</div>
+<button class="p-1 text-text-muted hover:text-on-surface"><span class="material-symbols-outlined text-[18px]">arrow_forward_ios</span></button>
+</div>
+<!-- Status Action Grid -->
+<div class="p-4 grid grid-cols-5 gap-2">
+<button class="flex flex-col items-center justify-center p-2 rounded-lg border border-border-slate bg-surface-white text-text-muted hover:bg-surface-container-low transition-all">
+<span class="text-headline-sm font-headline-sm mb-1">X</span>
+<span class="text-[9px] uppercase font-bold tracking-wider">Tam</span>
+</button>
+<button class="flex flex-col items-center justify-center p-2 rounded-lg border border-border-slate bg-surface-white text-text-muted hover:bg-surface-container-low transition-all">
+<span class="text-headline-sm font-headline-sm mb-1">Y</span>
+<span class="text-[9px] uppercase font-bold tracking-wider">Yarım</span>
+</button>
+<button class="flex flex-col items-center justify-center p-2 rounded-lg border-2 border-error bg-error-container text-on-error-container transition-all">
+<span class="text-headline-sm font-headline-sm mb-1">R</span>
+<span class="text-[9px] uppercase font-bold tracking-wider">Rapor</span>
+</button>
+<button class="flex flex-col items-center justify-center p-2 rounded-lg border border-border-slate bg-surface-white text-text-muted hover:bg-surface-container-low transition-all">
+<span class="text-headline-sm font-headline-sm mb-1">İ</span>
+<span class="text-[9px] uppercase font-bold tracking-wider">İzin</span>
+</button>
+<button class="flex flex-col items-center justify-center p-2 rounded-lg border border-border-slate bg-surface-white text-text-muted hover:bg-surface-container-low transition-all">
+<span class="text-headline-sm font-headline-sm mb-1">H</span>
+<span class="text-[9px] uppercase font-bold tracking-wider">Tatil</span>
+</button>
+</div>
+</div>
+</div>
+</main>
+<!-- Floating Action Buttons Container (above nav bar) -->
+<div class="fixed bottom-[72px] left-0 w-full p-4 bg-surface-white border-t border-border-slate shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] z-40 flex gap-3">
+<button class="flex-1 py-3 px-4 rounded-lg border border-outline text-on-surface font-body-lg font-medium flex items-center justify-center gap-2 hover:bg-surface-container-low transition-colors">
+<span class="material-symbols-outlined text-[20px]">download</span>
+            Excel'e Aktar
+        </button>
+<button class="flex-[1.5] py-3 px-4 rounded-lg bg-primary text-on-primary font-body-lg font-medium shadow-sm hover:opacity-90 transition-opacity flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[20px]">save</span>
+            Kaydet &amp; Kesinleştir
+        </button>
+</div>
+<!-- BottomNavBar from Shared Components JSON -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-2 bg-surface dark:bg-on-background border-t border-outline-variant dark:border-outline flat no shadows">
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-surface-variant px-3 py-1 hover:text-primary dark:hover:text-primary-fixed">
+<span class="material-symbols-outlined mb-1">dashboard</span>
+<span class="text-body-sm font-body-sm">Özet</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-surface-variant px-3 py-1 hover:text-primary dark:hover:text-primary-fixed">
+<span class="material-symbols-outlined mb-1">build</span>
+<span class="text-body-sm font-body-sm">Araçlar</span>
+</button>
+<button class="flex flex-col items-center justify-center bg-secondary-container dark:bg-on-secondary-fixed-variant text-on-secondary-container dark:text-secondary-fixed rounded-xl px-3 py-1 scale-95 transition-transform duration-200">
+<span class="material-symbols-outlined mb-1">group</span>
+<span class="text-body-sm font-body-sm">Personel</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant dark:text-surface-variant px-3 py-1 hover:text-primary dark:hover:text-primary-fixed">
+<span class="material-symbols-outlined mb-1">settings</span>
+<span class="text-body-sm font-body-sm">Ayarlar</span>
+</button>
+</nav>
+</body></html>

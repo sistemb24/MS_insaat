@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 
+import { PageHeader } from "@/components/ui";
 import {
   API_KEY_SCOPES,
   type ApiKeyOverview,
@@ -441,16 +442,9 @@ export function ApiKeyManagementSurface({
 
   return (
     <div className="space-y-6">
-      <section className="rounded-[28px] border border-slate-200 bg-white p-6 shadow-sm">
-        <div className="flex flex-wrap items-start justify-between gap-4">
-          <div>
-            <p className="text-xs font-bold uppercase tracking-[0.2em] text-sky-700">P2-S4 API altyapısı</p>
-            <h1 className="mt-2 text-2xl font-semibold text-slate-950">API Anahtar Yönetimi</h1>
-            <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-600">
-              Entegrasyon anahtarlarını kapsam, son kullanım tarihi ve saniyelik istek limitiyle yönetin.
-            </p>
-          </div>
-          <div className="grid grid-cols-2 gap-2 text-sm sm:grid-cols-6">
+      <PageHeader
+        actions={
+          <div className="grid grid-cols-2 gap-2 text-sm sm:grid-cols-3 xl:grid-cols-6">
             <Metric label="Toplam" value={summary.totalCount} />
             <Metric label="Aktif" value={summary.activeCount} />
             <Metric label="Süresi dolan" value={summary.expiredCount} />
@@ -458,19 +452,22 @@ export function ApiKeyManagementSurface({
             <Metric label="Kullanılan" value={usageSummary.usedCount} />
             <Metric label="Kullanılmayan" value={usageSummary.unusedCount} />
           </div>
-        </div>
-      </section>
+        }
+        description="Entegrasyon anahtarlarını kapsam, son kullanım tarihi ve saniyelik istek limitiyle yönetin."
+        eyebrow="Sistem · API altyapısı"
+        title="API Anahtar Yönetimi"
+      />
 
-      <section className="rounded-[28px] border border-slate-200 bg-white p-6 shadow-sm">
+      <section className="rounded-ui-panel border border-divider bg-surface-raised p-6 shadow-sm">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
-            <p className="text-xs font-bold uppercase tracking-[0.2em] text-sky-700">
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-brand-primary">
               P2-S4 webhook kayıtları
             </p>
-            <h2 className="mt-2 text-lg font-semibold text-slate-950">
+            <h2 className="mt-2 text-lg font-semibold text-content">
               Webhook Endpoint Kayıtları
             </h2>
-            <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-600">
+            <p className="mt-2 max-w-3xl text-sm leading-6 text-content-subtle">
               Tenant, firma ve dönem kapsamındaki outbound webhook endpointleri burada listelenecek.
             </p>
           </div>
@@ -483,21 +480,21 @@ export function ApiKeyManagementSurface({
         </div>
 
         <div className="mt-5 flex flex-wrap items-end gap-3">
-          <label className="grid gap-1 text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
+          <label className="grid gap-1 text-xs font-semibold uppercase tracking-[0.2em] text-content-muted">
             Arama
             <input
               aria-label="Webhook endpointlerinde ara"
-              className="min-h-9 rounded-xl border border-slate-300 px-3 py-2 text-sm font-medium text-slate-950"
+              className="min-h-9 rounded-ui-control border border-divider px-3 py-2 text-sm font-medium text-content"
               onChange={(event) => setWebhookEndpointSearchText(event.target.value)}
               placeholder="Ad, URL, olay, kullanıcı"
               value={webhookEndpointSearchText}
             />
           </label>
-          <label className="grid gap-1 text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
+          <label className="grid gap-1 text-xs font-semibold uppercase tracking-[0.2em] text-content-muted">
             Durum
             <select
               aria-label="Webhook endpoint durum filtresi"
-              className="min-h-9 rounded-xl border border-slate-300 px-3 py-2 text-sm font-medium text-slate-950"
+              className="min-h-9 rounded-ui-control border border-divider px-3 py-2 text-sm font-medium text-content"
               onChange={(event) =>
                 setWebhookEndpointStatusFilter(
                   event.target.value as "all" | "active" | "inactive",
@@ -510,11 +507,11 @@ export function ApiKeyManagementSurface({
               <option value="inactive">Pasif</option>
             </select>
           </label>
-          <label className="grid gap-1 text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
+          <label className="grid gap-1 text-xs font-semibold uppercase tracking-[0.2em] text-content-muted">
             Olay
             <select
               aria-label="Webhook endpoint olay filtresi"
-              className="min-h-9 rounded-xl border border-slate-300 px-3 py-2 text-sm font-medium text-slate-950"
+              className="min-h-9 rounded-ui-control border border-divider px-3 py-2 text-sm font-medium text-content"
               onChange={(event) =>
                 setWebhookEndpointEventTypeFilter(
                   event.target.value as "all" | (typeof WEBHOOK_DELIVERY_EVENT_TYPES)[number]["type"],
@@ -531,7 +528,7 @@ export function ApiKeyManagementSurface({
             </select>
           </label>
           <button
-            className="min-h-9 rounded-xl border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-700 disabled:cursor-not-allowed disabled:opacity-50"
+            className="min-h-9 rounded-ui-control border border-divider px-3 py-2 text-sm font-semibold text-content-subtle disabled:cursor-not-allowed disabled:opacity-50"
             disabled={!hasActiveWebhookEndpointFilters}
             onClick={() => {
               setWebhookEndpointSearchText("");
@@ -544,12 +541,12 @@ export function ApiKeyManagementSurface({
           </button>
         </div>
 
-        <p className="mt-3 text-xs font-semibold text-slate-600">
+        <p className="mt-3 text-xs font-semibold text-content-subtle">
           Gösterilen {filteredWebhookEndpointRows.length} / {webhookEndpointRows.length} webhook endpoint
         </p>
 
         {webhookEndpointRows.length === 0 ? (
-          <div className="mt-3 rounded-2xl border border-dashed border-sky-200 bg-sky-50 px-4 py-3 text-sm text-sky-900">
+          <div className="mt-3 rounded-ui-panel border border-dashed border-brand-primary/25 bg-brand-primary/5 px-4 py-3 text-sm text-content">
             <p className="font-semibold">Henüz webhook endpoint kaydı yok.</p>
             <p className="mt-1">
               İlk endpointi oluşturmak için aşağıdaki formu kullanın; kayıt eklendiğinde bu listede
@@ -559,7 +556,7 @@ export function ApiKeyManagementSurface({
         ) : null}
 
         {hasActiveWebhookEndpointFilters ? (
-          <p className="mt-3 text-xs font-semibold text-slate-600">
+          <p className="mt-3 text-xs font-semibold text-content-subtle">
             Aktif filtreler:{" "}
               {[
                 webhookEndpointSearchText.trim() ? `ara "${webhookEndpointSearchText.trim()}"` : "",
@@ -575,9 +572,9 @@ export function ApiKeyManagementSurface({
           </p>
         ) : null}
 
-        <div className="mt-5 overflow-hidden rounded-3xl border border-slate-200">
+        <div className="mt-5 overflow-hidden rounded-ui-panel border border-divider">
           <table className="w-full text-left text-sm" aria-label="Webhook endpoint kayıtları">
-            <thead className="bg-slate-50 text-xs uppercase tracking-[0.16em] text-slate-500">
+            <thead className="bg-surface-muted text-xs uppercase tracking-[0.16em] text-content-muted">
               <tr>
                 <th className="px-4 py-3">Ad</th>
                 <th className="px-4 py-3">URL</th>
@@ -590,18 +587,18 @@ export function ApiKeyManagementSurface({
                 <th className="px-4 py-3">İşlem</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-divider">
               {webhookEndpointRows.length === 0 ? (
                 <tr>
-                  <td className="px-4 py-5 text-sm text-slate-500" colSpan={9}>
+                  <td className="px-4 py-5 text-sm text-content-muted" colSpan={9}>
                     Webhook endpoint kaydı bulunamadı.
                   </td>
                 </tr>
               ) : filteredWebhookEndpointRows.length === 0 ? (
                 <tr>
-                  <td className="px-4 py-5 text-sm text-slate-500" colSpan={9}>
+                  <td className="px-4 py-5 text-sm text-content-muted" colSpan={9}>
                     <p>Filtreye uyan webhook endpoint bulunamadı.</p>
-                    <p className="mt-1 text-xs text-slate-400">
+                    <p className="mt-1 text-xs text-content-muted">
                       Filtreleri temizleyerek tüm webhook endpointlerini tekrar görün.
                     </p>
                   </td>
@@ -609,32 +606,32 @@ export function ApiKeyManagementSurface({
               ) : (
                 filteredWebhookEndpointRows.map((row) => (
                   <tr key={row.id} className="align-top">
-                    <td className="px-4 py-4 font-semibold text-slate-950">{row.name}</td>
-                    <td className="px-4 py-4 text-slate-600">{row.url}</td>
-                    <td className="px-4 py-4 text-slate-600">
+                    <td className="px-4 py-4 font-semibold text-content">{row.name}</td>
+                    <td className="px-4 py-4 text-content-subtle">{row.url}</td>
+                    <td className="px-4 py-4 text-content-subtle">
                       {row.eventTypes
                         .map((eventType) => formatWebhookDeliveryEventType(eventType))
                         .join(", ")}
                     </td>
-                    <td className="px-4 py-4 text-slate-600">{`${row.eventTypes.length} olay`}</td>
-                    <td className="px-4 py-4 text-slate-600">
+                    <td className="px-4 py-4 text-content-subtle">{`${row.eventTypes.length} olay`}</td>
+                    <td className="px-4 py-4 text-content-subtle">
                       {row.isActive ? "Aktif" : "Pasif"}
                     </td>
-                    <td className="px-4 py-4 text-slate-600">{formatDateCell(row.updatedAt)}</td>
-                    <td className="px-4 py-4 text-slate-600">{`${row.secretPrefix}...`}</td>
-                    <td className="px-4 py-4 text-slate-600">{row.createdBy}</td>
+                    <td className="px-4 py-4 text-content-subtle">{formatDateCell(row.updatedAt)}</td>
+                    <td className="px-4 py-4 text-content-subtle">{`${row.secretPrefix}...`}</td>
+                    <td className="px-4 py-4 text-content-subtle">{row.createdBy}</td>
                     <td className="px-4 py-4">
                       {canManage ? (
                         <div className="flex flex-wrap gap-2">
                           <button
-                            className="rounded-lg border border-sky-300 px-3 py-1.5 text-xs font-semibold text-sky-700"
+                            className="rounded-lg border border-info px-3 py-1.5 text-xs font-semibold text-brand-primary"
                             onClick={() => startEditingWebhookEndpoint(row)}
                             type="button"
                           >
                             Düzenle
                           </button>
                           <button
-                            className="rounded-lg border border-amber-300 px-3 py-1.5 text-xs font-semibold text-amber-700 disabled:cursor-not-allowed disabled:opacity-50"
+                            className="rounded-lg border border-warning px-3 py-1.5 text-xs font-semibold text-warning disabled:cursor-not-allowed disabled:opacity-50"
                             disabled={rotatePendingId === row.id}
                             onClick={() => handleRotateWebhookEndpointSecret(row.id)}
                             type="button"
@@ -643,7 +640,7 @@ export function ApiKeyManagementSurface({
                           </button>
                           {row.isActive ? (
                             <button
-                              className="rounded-lg border border-rose-300 px-3 py-1.5 text-xs font-semibold text-rose-700 disabled:cursor-not-allowed disabled:opacity-50"
+                              className="rounded-lg border border-danger px-3 py-1.5 text-xs font-semibold text-danger disabled:cursor-not-allowed disabled:opacity-50"
                               disabled={deactivatePendingId === row.id}
                               onClick={() => handleDeactivateWebhookEndpoint(row.id)}
                               type="button"
@@ -653,7 +650,7 @@ export function ApiKeyManagementSurface({
                           ) : null}
                           {!row.isActive ? (
                             <button
-                              className="rounded-lg border border-emerald-300 px-3 py-1.5 text-xs font-semibold text-emerald-700 disabled:cursor-not-allowed disabled:opacity-50"
+                              className="rounded-lg border border-success px-3 py-1.5 text-xs font-semibold text-success disabled:cursor-not-allowed disabled:opacity-50"
                               disabled={activatePendingId === row.id}
                               onClick={() => handleActivateWebhookEndpoint(row.id)}
                               type="button"
@@ -663,7 +660,7 @@ export function ApiKeyManagementSurface({
                           ) : null}
                         </div>
                       ) : (
-                        <span className="text-slate-400">-</span>
+                        <span className="text-content-muted">-</span>
                       )}
                     </td>
                   </tr>
@@ -674,34 +671,34 @@ export function ApiKeyManagementSurface({
         </div>
       </section>
 
-      <section className="rounded-[28px] border border-slate-200 bg-white p-6 shadow-sm">
+      <section className="rounded-ui-panel border border-divider bg-surface-raised p-6 shadow-sm">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
-            <p className="text-xs font-bold uppercase tracking-[0.2em] text-sky-700">
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-brand-primary">
               Yeni webhook kaydı
             </p>
-            <h2 className="mt-2 text-lg font-semibold text-slate-950">
+            <h2 className="mt-2 text-lg font-semibold text-content">
               Webhook Endpoint Oluştur
             </h2>
-            <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-600">
+            <p className="mt-2 max-w-3xl text-sm leading-6 text-content-subtle">
               Tenant, firma ve dönem kapsamı için yeni bir outbound endpoint tanımlayın.
             </p>
           </div>
-          <div className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-xs font-medium text-slate-600">
+          <div className="rounded-ui-panel border border-divider bg-surface-muted px-4 py-3 text-xs font-medium text-content-subtle">
             Secret yalnızca bir kez gösterilir.
           </div>
         </div>
         {!canManage ? (
-          <p className="mt-3 rounded-2xl bg-amber-50 px-4 py-3 text-sm text-amber-900">
+          <p className="mt-3 rounded-ui-panel bg-warning-subtle px-4 py-3 text-sm text-warning">
             Webhook endpoint oluşturma işlemleri yalnız admin rolündedir.
           </p>
         ) : null}
         <form className="mt-5 grid gap-5" onSubmit={handleCreateWebhookEndpoint}>
           <div className="grid gap-4 md:grid-cols-2">
-            <label className="grid gap-2 text-sm font-medium text-slate-700">
+            <label className="grid gap-2 text-sm font-medium text-content-subtle">
               Endpoint Adı
               <input
-                className="rounded-xl border border-slate-300 px-3 py-2 text-slate-950"
+                className="rounded-ui-control border border-divider px-3 py-2 text-content"
                 disabled={!canManage || endpointPending}
                 maxLength={80}
                 minLength={3}
@@ -710,10 +707,10 @@ export function ApiKeyManagementSurface({
                 value={endpointName}
               />
             </label>
-            <label className="grid gap-2 text-sm font-medium text-slate-700">
+            <label className="grid gap-2 text-sm font-medium text-content-subtle">
               Endpoint URL
               <input
-                className="rounded-xl border border-slate-300 px-3 py-2 text-slate-950"
+                className="rounded-ui-control border border-divider px-3 py-2 text-content"
                 disabled={!canManage || endpointPending}
                 onChange={(event) => setEndpointUrl(event.target.value)}
                 placeholder="https://hooks.example.com/webhooks/noa"
@@ -725,13 +722,13 @@ export function ApiKeyManagementSurface({
           </div>
 
           <fieldset disabled={!canManage || endpointPending}>
-            <legend className="text-sm font-semibold text-slate-800">
+            <legend className="text-sm font-semibold text-content">
               Desteklenen Olaylar
             </legend>
             <div className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
               {WEBHOOK_DELIVERY_EVENT_TYPES.map((eventType) => (
                 <label
-                  className="flex items-start gap-3 rounded-xl border border-slate-200 px-3 py-3 text-sm text-slate-700"
+                  className="flex items-start gap-3 rounded-ui-control border border-divider px-3 py-3 text-sm text-content-subtle"
                   key={eventType.type}
                 >
                   <input
@@ -746,10 +743,10 @@ export function ApiKeyManagementSurface({
                     type="checkbox"
                   />
                   <span>
-                    <span className="block font-medium text-slate-900">
+                    <span className="block font-medium text-content">
                       {eventType.label}
                     </span>
-                    <span className="block text-xs text-slate-500">
+                    <span className="block text-xs text-content-muted">
                       {eventType.type}
                     </span>
                   </span>
@@ -761,23 +758,23 @@ export function ApiKeyManagementSurface({
           {endpointErrors.length > 0 ? (
             <div
               aria-live="polite"
-              className="rounded-2xl bg-rose-50 px-4 py-3 text-sm text-rose-800"
+              className="rounded-ui-panel bg-danger-subtle px-4 py-3 text-sm text-danger"
               role="alert"
             >
               {endpointErrors.join(" ")}
             </div>
           ) : null}
           {endpointMessage ? (
-            <p aria-live="polite" className="text-sm font-medium text-emerald-700">
+            <p aria-live="polite" className="text-sm font-medium text-success">
               {endpointMessage}
             </p>
           ) : null}
           {revealedEndpointSecret ? (
-            <div className="rounded-2xl border border-amber-300 bg-amber-50 p-4" role="status">
-              <p className="text-sm font-semibold text-amber-950">
+            <div className="rounded-ui-panel border border-warning bg-warning-subtle p-4" role="status">
+              <p className="text-sm font-semibold text-warning">
                 Bu webhook secret yalnız bir kez gösterilir.
               </p>
-              <code className="mt-2 block break-all rounded-xl bg-slate-950 px-3 py-3 text-sm text-white">
+              <code className="mt-2 block break-all rounded-ui-control bg-surface-inverse px-3 py-3 text-sm text-on-surface-inverse">
                 {revealedEndpointSecret}
               </code>
             </div>
@@ -785,7 +782,7 @@ export function ApiKeyManagementSurface({
 
           <div>
             <button
-              className="rounded-xl bg-sky-700 px-4 py-2 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-50"
+              className="rounded-ui-control bg-info px-4 py-2 text-sm font-semibold text-on-info disabled:cursor-not-allowed disabled:opacity-50"
               disabled={!canManage || endpointPending}
               type="submit"
             >
@@ -796,21 +793,21 @@ export function ApiKeyManagementSurface({
       </section>
 
       {editingWebhookEndpointId ? (
-        <section className="rounded-[28px] border border-sky-200 bg-sky-50/60 p-6 shadow-sm">
+        <section className="rounded-ui-panel border border-brand-primary/25 bg-brand-primary/5/60 p-6 shadow-sm">
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div>
-              <p className="text-xs font-bold uppercase tracking-[0.2em] text-sky-700">
+              <p className="text-xs font-bold uppercase tracking-[0.2em] text-brand-primary">
                 Webhook düzenleme
               </p>
-              <h2 className="mt-2 text-lg font-semibold text-slate-950">
+              <h2 className="mt-2 text-lg font-semibold text-content">
                 Webhook Endpoint Düzenle
               </h2>
-              <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-600">
+              <p className="mt-2 max-w-3xl text-sm leading-6 text-content-subtle">
                 Endpoint adı, URL ve olay seçimlerini güncelleyin. Secret değeri korunur.
               </p>
             </div>
             <button
-              className="rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700"
+              className="rounded-ui-control border border-divider bg-surface-raised px-4 py-2 text-sm font-semibold text-content-subtle"
               onClick={cancelEditingWebhookEndpoint}
               type="button"
             >
@@ -824,10 +821,10 @@ export function ApiKeyManagementSurface({
             onSubmit={handleUpdateWebhookEndpoint}
           >
             <div className="grid gap-4 md:grid-cols-2">
-              <label className="grid gap-2 text-sm font-medium text-slate-700">
+              <label className="grid gap-2 text-sm font-medium text-content-subtle">
                 Endpoint Adı
                 <input
-                  className="rounded-xl border border-slate-300 px-3 py-2 text-slate-950"
+                  className="rounded-ui-control border border-divider px-3 py-2 text-content"
                   disabled={!canManage || editingEndpointPending}
                   maxLength={80}
                   minLength={3}
@@ -836,10 +833,10 @@ export function ApiKeyManagementSurface({
                   value={editingEndpointName}
                 />
               </label>
-              <label className="grid gap-2 text-sm font-medium text-slate-700">
+              <label className="grid gap-2 text-sm font-medium text-content-subtle">
                 Endpoint URL
                 <input
-                  className="rounded-xl border border-slate-300 px-3 py-2 text-slate-950"
+                  className="rounded-ui-control border border-divider px-3 py-2 text-content"
                   disabled={!canManage || editingEndpointPending}
                   onChange={(event) => setEditingEndpointUrl(event.target.value)}
                   placeholder="https://hooks.example.com/webhooks/noa"
@@ -851,13 +848,13 @@ export function ApiKeyManagementSurface({
             </div>
 
             <fieldset disabled={!canManage || editingEndpointPending}>
-              <legend className="text-sm font-semibold text-slate-800">
+              <legend className="text-sm font-semibold text-content">
                 Desteklenen Olaylar
               </legend>
               <div className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                 {WEBHOOK_DELIVERY_EVENT_TYPES.map((eventType) => (
                   <label
-                    className="flex items-start gap-3 rounded-xl border border-slate-200 px-3 py-3 text-sm text-slate-700"
+                    className="flex items-start gap-3 rounded-ui-control border border-divider px-3 py-3 text-sm text-content-subtle"
                     key={eventType.type}
                   >
                     <input
@@ -872,10 +869,10 @@ export function ApiKeyManagementSurface({
                       type="checkbox"
                     />
                     <span>
-                      <span className="block font-medium text-slate-900">
+                      <span className="block font-medium text-content">
                         {eventType.label}
                       </span>
-                      <span className="block text-xs text-slate-500">
+                      <span className="block text-xs text-content-muted">
                         {eventType.type}
                       </span>
                     </span>
@@ -887,28 +884,28 @@ export function ApiKeyManagementSurface({
             {editingEndpointErrors.length > 0 ? (
               <div
                 aria-live="polite"
-                className="rounded-2xl bg-rose-50 px-4 py-3 text-sm text-rose-800"
+                className="rounded-ui-panel bg-danger-subtle px-4 py-3 text-sm text-danger"
                 role="alert"
               >
                 {editingEndpointErrors.join(" ")}
               </div>
             ) : null}
             {editingEndpointMessage ? (
-              <p aria-live="polite" className="text-sm font-medium text-emerald-700">
+              <p aria-live="polite" className="text-sm font-medium text-success">
                 {editingEndpointMessage}
               </p>
             ) : null}
 
             <div className="flex flex-wrap gap-3">
               <button
-                className="rounded-xl bg-sky-700 px-4 py-2 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-50"
+                className="rounded-ui-control bg-info px-4 py-2 text-sm font-semibold text-on-info disabled:cursor-not-allowed disabled:opacity-50"
                 disabled={!canManage || editingEndpointPending}
                 type="submit"
               >
                 {editingEndpointPending ? "İşleniyor..." : "Webhook Endpoint Güncelle"}
               </button>
               <button
-                className="rounded-xl border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700"
+                className="rounded-ui-control border border-divider px-4 py-2 text-sm font-semibold text-content-subtle"
                 disabled={editingEndpointPending}
                 onClick={cancelEditingWebhookEndpoint}
                 type="button"
@@ -920,19 +917,19 @@ export function ApiKeyManagementSurface({
         </section>
       ) : null}
 
-      <section className="rounded-[28px] border border-slate-200 bg-white p-6 shadow-sm">
-        <h2 className="text-lg font-semibold text-slate-950">Yeni API Anahtarı</h2>
+      <section className="rounded-ui-panel border border-divider bg-surface-raised p-6 shadow-sm">
+        <h2 className="text-lg font-semibold text-content">Yeni API Anahtarı</h2>
         {!canManage ? (
-          <p className="mt-3 rounded-2xl bg-amber-50 px-4 py-3 text-sm text-amber-900">
+          <p className="mt-3 rounded-ui-panel bg-warning-subtle px-4 py-3 text-sm text-warning">
             API anahtarı oluşturma ve iptal etme işlemleri yalnız admin rolündedir.
           </p>
         ) : null}
         <form className="mt-5 grid gap-5" onSubmit={handleCreate}>
           <div className="grid gap-4 md:grid-cols-3">
-            <label className="grid gap-2 text-sm font-medium text-slate-700">
+            <label className="grid gap-2 text-sm font-medium text-content-subtle">
               Anahtar Adı
               <input
-                className="rounded-xl border border-slate-300 px-3 py-2 text-slate-950"
+                className="rounded-ui-control border border-divider px-3 py-2 text-content"
                 disabled={!canManage || pending}
                 maxLength={80}
                 minLength={3}
@@ -941,10 +938,10 @@ export function ApiKeyManagementSurface({
                 value={name}
               />
             </label>
-            <label className="grid gap-2 text-sm font-medium text-slate-700">
+            <label className="grid gap-2 text-sm font-medium text-content-subtle">
               Hız Limiti (istek/sn)
               <input
-                className="rounded-xl border border-slate-300 px-3 py-2 text-slate-950"
+                className="rounded-ui-control border border-divider px-3 py-2 text-content"
                 disabled={!canManage || pending}
                 max={100}
                 min={1}
@@ -954,10 +951,10 @@ export function ApiKeyManagementSurface({
                 value={rateLimit}
               />
             </label>
-            <label className="grid gap-2 text-sm font-medium text-slate-700">
+            <label className="grid gap-2 text-sm font-medium text-content-subtle">
               Son Kullanım Tarihi
               <input
-                className="rounded-xl border border-slate-300 px-3 py-2 text-slate-950"
+                className="rounded-ui-control border border-divider px-3 py-2 text-content"
                 disabled={!canManage || pending}
                 onChange={(event) => setExpiresAt(event.target.value)}
                 type="date"
@@ -967,10 +964,10 @@ export function ApiKeyManagementSurface({
           </div>
 
           <fieldset disabled={!canManage || pending}>
-            <legend className="text-sm font-semibold text-slate-800">API Kapsamları</legend>
+            <legend className="text-sm font-semibold text-content">API Kapsamları</legend>
             <div className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
               {API_KEY_SCOPES.map((scope) => (
-                <label className="flex items-center gap-3 rounded-xl border border-slate-200 px-3 py-3 text-sm text-slate-700" key={scope.key}>
+                <label className="flex items-center gap-3 rounded-ui-control border border-divider px-3 py-3 text-sm text-content-subtle" key={scope.key}>
                   <input
                     checked={scopes.includes(scope.key)}
                     onChange={(event) =>
@@ -989,56 +986,56 @@ export function ApiKeyManagementSurface({
           </fieldset>
 
           {errors.length > 0 ? (
-            <div aria-live="polite" className="rounded-2xl bg-rose-50 px-4 py-3 text-sm text-rose-800" role="alert">
+            <div aria-live="polite" className="rounded-ui-panel bg-danger-subtle px-4 py-3 text-sm text-danger" role="alert">
               {errors.join(" ")}
             </div>
           ) : null}
-          {message ? <p aria-live="polite" className="text-sm font-medium text-emerald-700">{message}</p> : null}
+          {message ? <p aria-live="polite" className="text-sm font-medium text-success">{message}</p> : null}
           {revealedSecret ? (
-            <div className="rounded-2xl border border-amber-300 bg-amber-50 p-4" role="status">
-              <p className="text-sm font-semibold text-amber-950">Bu anahtar yalnız bir kez gösterilir.</p>
-              <code className="mt-2 block break-all rounded-xl bg-slate-950 px-3 py-3 text-sm text-white">{revealedSecret}</code>
+            <div className="rounded-ui-panel border border-warning bg-warning-subtle p-4" role="status">
+              <p className="text-sm font-semibold text-warning">Bu anahtar yalnız bir kez gösterilir.</p>
+              <code className="mt-2 block break-all rounded-ui-control bg-surface-inverse px-3 py-3 text-sm text-on-surface-inverse">{revealedSecret}</code>
             </div>
           ) : null}
 
           <div>
-            <button className="rounded-xl bg-sky-700 px-4 py-2 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-50" disabled={!canManage || pending} type="submit">
+            <button className="rounded-ui-control bg-info px-4 py-2 text-sm font-semibold text-on-info disabled:cursor-not-allowed disabled:opacity-50" disabled={!canManage || pending} type="submit">
               {pending ? "İşleniyor..." : "API Anahtarı Oluştur"}
             </button>
           </div>
         </form>
       </section>
 
-      <section className="overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-sm">
-        <div className="border-b border-slate-200 px-6 py-5">
+      <section className="overflow-hidden rounded-ui-panel border border-divider bg-surface-raised shadow-sm">
+        <div className="border-b border-divider px-6 py-5">
           <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
             <div>
-              <h2 className="text-lg font-semibold text-slate-950">API Anahtarları</h2>
-              <p className="mt-1 text-sm text-slate-600">
+              <h2 className="text-lg font-semibold text-content">API Anahtarları</h2>
+              <p className="mt-1 text-sm text-content-subtle">
                 Anahtarları ad, önek, kapsam, son kullanım ve durumla ayıklayın.
               </p>
             </div>
-            <p className="text-sm font-semibold text-slate-600">
+            <p className="text-sm font-semibold text-content-subtle">
               {hasActiveFilters
                 ? `Son ${filteredRows.length} / ${rows.length} API anahtarı`
                 : `Son ${rows.length} API anahtarı`}
             </p>
             <div className="flex flex-wrap items-end gap-3">
-              <label className="grid gap-1 text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
+              <label className="grid gap-1 text-xs font-semibold uppercase tracking-[0.2em] text-content-muted">
                 Arama
                 <input
                   aria-label="API anahtarlarında ara"
-                  className="min-h-9 rounded-xl border border-slate-300 px-3 py-2 text-sm font-medium text-slate-950"
+                  className="min-h-9 rounded-ui-control border border-divider px-3 py-2 text-sm font-medium text-content"
                   onChange={(event) => setSearchText(event.target.value)}
                   placeholder="Ad, önek, kapsam, kullanıcı"
                   value={searchText}
                 />
               </label>
-              <label className="grid gap-1 text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
+              <label className="grid gap-1 text-xs font-semibold uppercase tracking-[0.2em] text-content-muted">
                 Durum
                 <select
                   aria-label="API anahtarı durum filtresi"
-                  className="min-h-9 rounded-xl border border-slate-300 px-3 py-2 text-sm font-medium text-slate-950"
+                  className="min-h-9 rounded-ui-control border border-divider px-3 py-2 text-sm font-medium text-content"
                   onChange={(event) =>
                     setStatusFilter(event.target.value as ApiKeyStatus | "all")
                   }
@@ -1050,11 +1047,11 @@ export function ApiKeyManagementSurface({
                   <option value="revoked">İptal</option>
                 </select>
               </label>
-              <label className="grid gap-1 text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
+              <label className="grid gap-1 text-xs font-semibold uppercase tracking-[0.2em] text-content-muted">
                 Kapsam
                 <select
                   aria-label="API anahtarı kapsam filtresi"
-                  className="min-h-9 rounded-xl border border-slate-300 px-3 py-2 text-sm font-medium text-slate-950"
+                  className="min-h-9 rounded-ui-control border border-divider px-3 py-2 text-sm font-medium text-content"
                   onChange={(event) =>
                     setScopeFilter(event.target.value as ApiKeyScope | "all")
                   }
@@ -1068,11 +1065,11 @@ export function ApiKeyManagementSurface({
                   ))}
                 </select>
               </label>
-              <label className="grid gap-1 text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
+              <label className="grid gap-1 text-xs font-semibold uppercase tracking-[0.2em] text-content-muted">
                 Kullanım
                 <select
                   aria-label="API anahtarı kullanım filtresi"
-                  className="min-h-9 rounded-xl border border-slate-300 px-3 py-2 text-sm font-medium text-slate-950"
+                  className="min-h-9 rounded-ui-control border border-divider px-3 py-2 text-sm font-medium text-content"
                   onChange={(event) =>
                     setUsageFilter(event.target.value as "all" | "used" | "unused")
                   }
@@ -1083,28 +1080,28 @@ export function ApiKeyManagementSurface({
                   <option value="unused">Kullanılmadı</option>
                 </select>
               </label>
-              <label className="grid gap-1 text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
+              <label className="grid gap-1 text-xs font-semibold uppercase tracking-[0.2em] text-content-muted">
                 Son kullanım başlangıcı
                 <input
                   aria-label="API anahtarı son kullanım başlangıcı"
-                  className="min-h-9 rounded-xl border border-slate-300 px-3 py-2 text-sm font-medium text-slate-950"
+                  className="min-h-9 rounded-ui-control border border-divider px-3 py-2 text-sm font-medium text-content"
                   onChange={(event) => setLastUsedStartDate(event.target.value)}
                   type="date"
                   value={lastUsedStartDate}
                 />
               </label>
-              <label className="grid gap-1 text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
+              <label className="grid gap-1 text-xs font-semibold uppercase tracking-[0.2em] text-content-muted">
                 Son kullanım bitişi
                 <input
                   aria-label="API anahtarı son kullanım bitişi"
-                  className="min-h-9 rounded-xl border border-slate-300 px-3 py-2 text-sm font-medium text-slate-950"
+                  className="min-h-9 rounded-ui-control border border-divider px-3 py-2 text-sm font-medium text-content"
                   onChange={(event) => setLastUsedEndDate(event.target.value)}
                   type="date"
                   value={lastUsedEndDate}
                 />
               </label>
               <button
-                className="min-h-9 rounded-xl border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-700 disabled:cursor-not-allowed disabled:opacity-50"
+                className="min-h-9 rounded-ui-control border border-divider px-3 py-2 text-sm font-semibold text-content-subtle disabled:cursor-not-allowed disabled:opacity-50"
                 disabled={!hasActiveFilters}
                 onClick={() => {
                   setSearchText("");
@@ -1120,7 +1117,7 @@ export function ApiKeyManagementSurface({
               </button>
             </div>
             {hasInvalidLastUsedDateRange ? (
-              <p className="text-xs font-semibold text-rose-700">
+              <p className="text-xs font-semibold text-danger">
                 Son kullanım başlangıcı bitiş tarihinden sonra olamaz.
               </p>
             ) : null}
@@ -1128,7 +1125,7 @@ export function ApiKeyManagementSurface({
         </div>
         <div className="overflow-x-auto">
           <table aria-label="P2 API Anahtarları" className="min-w-full text-left text-sm">
-            <thead className="bg-slate-50 text-xs uppercase tracking-wide text-slate-500">
+            <thead className="bg-surface-muted text-xs uppercase tracking-wide text-content-muted">
               <tr>
                 <th className="px-5 py-3">Ad</th>
                 <th className="px-5 py-3">Önek</th>
@@ -1139,23 +1136,23 @@ export function ApiKeyManagementSurface({
                 <th className="px-5 py-3">İşlem</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-divider">
               {rows.length === 0 ? (
-                <tr><td className="px-5 py-8 text-center text-slate-500" colSpan={7}>API anahtarı bulunamadı.</td></tr>
+                <tr><td className="px-5 py-8 text-center text-content-muted" colSpan={7}>API anahtarı bulunamadı.</td></tr>
               ) : filteredRows.length === 0 ? (
-                <tr><td className="px-5 py-8 text-center text-slate-500" colSpan={7}>Filtreye uyan API anahtarı bulunamadı.</td></tr>
+                <tr><td className="px-5 py-8 text-center text-content-muted" colSpan={7}>Filtreye uyan API anahtarı bulunamadı.</td></tr>
               ) : filteredRows.map((row) => (
                 <tr key={row.id}>
-                  <td className="px-5 py-4 font-semibold text-slate-900">{row.name}</td>
-                  <td className="px-5 py-4 font-mono text-xs text-slate-700">{row.keyPrefix}...</td>
-                  <td className="px-5 py-4 text-slate-600">{formatScopeLabels(row.scopes)}</td>
-                  <td className="px-5 py-4 text-slate-600">{row.rateLimitPerSecond}/sn</td>
-                  <td className="px-5 py-4 text-slate-600">{formatDateCell(row.lastUsedAt)}</td>
+                  <td className="px-5 py-4 font-semibold text-content">{row.name}</td>
+                  <td className="px-5 py-4 font-mono text-xs text-content-subtle">{row.keyPrefix}...</td>
+                  <td className="px-5 py-4 text-content-subtle">{formatScopeLabels(row.scopes)}</td>
+                  <td className="px-5 py-4 text-content-subtle">{row.rateLimitPerSecond}/sn</td>
+                  <td className="px-5 py-4 text-content-subtle">{formatDateCell(row.lastUsedAt)}</td>
                   <td className="px-5 py-4"><StatusBadge status={row.status} /></td>
                   <td className="px-5 py-4">
                     {row.status === "active" && canManage ? (
-                      <button className="rounded-lg border border-rose-300 px-3 py-1.5 text-xs font-semibold text-rose-700" onClick={() => setRevokeCandidate(row)} type="button">İptal Et</button>
-                    ) : <span className="text-slate-400">-</span>}
+                      <button className="rounded-lg border border-danger px-3 py-1.5 text-xs font-semibold text-danger" onClick={() => setRevokeCandidate(row)} type="button">İptal Et</button>
+                    ) : <span className="text-content-muted">-</span>}
                   </td>
                 </tr>
               ))}
@@ -1165,15 +1162,15 @@ export function ApiKeyManagementSurface({
       </section>
 
       {revokeCandidate ? (
-        <div aria-labelledby="api-key-revoke-title" aria-modal="true" className="fixed inset-0 z-50 grid place-items-center bg-slate-950/50 p-4" role="dialog">
-          <div className="w-full max-w-md rounded-3xl bg-white p-6 shadow-xl">
-            <h2 className="text-lg font-semibold text-slate-950" id="api-key-revoke-title">API anahtarını iptal et</h2>
-            <p className="mt-3 text-sm leading-6 text-slate-600">
+        <div aria-labelledby="api-key-revoke-title" aria-modal="true" className="fixed inset-0 z-[60] grid place-items-center bg-content/50 p-4" role="dialog">
+          <div className="w-full max-w-md rounded-ui-panel bg-surface-raised p-6 shadow-xl">
+            <h2 className="text-lg font-semibold text-content" id="api-key-revoke-title">API anahtarını iptal et</h2>
+            <p className="mt-3 text-sm leading-6 text-content-subtle">
               <strong>{revokeCandidate.name}</strong> anahtarı iptal edildiğinde bu anahtarı kullanan entegrasyonlar hemen erişimini kaybeder.
             </p>
             <div className="mt-6 flex justify-end gap-3">
-              <button className="rounded-xl border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700" disabled={pending} onClick={() => setRevokeCandidate(null)} type="button">Vazgeç</button>
-              <button className="rounded-xl bg-rose-700 px-4 py-2 text-sm font-semibold text-white" disabled={pending} onClick={handleRevoke} type="button">İptal Et</button>
+              <button className="rounded-ui-control border border-divider px-4 py-2 text-sm font-semibold text-content-subtle" disabled={pending} onClick={() => setRevokeCandidate(null)} type="button">Vazgeç</button>
+              <button className="rounded-ui-control bg-danger px-4 py-2 text-sm font-semibold text-on-danger" disabled={pending} onClick={handleRevoke} type="button">İptal Et</button>
             </div>
           </div>
         </div>
@@ -1183,12 +1180,12 @@ export function ApiKeyManagementSurface({
 }
 
 function Metric({ label, value }: { label: string; value: number }) {
-  return <div className="min-w-24 rounded-2xl bg-slate-50 px-3 py-2"><p className="text-xs text-slate-500">{label}</p><p className="text-lg font-semibold text-slate-950">{value}</p></div>;
+  return <div className="min-w-24 rounded-ui-control border border-divider bg-surface-muted px-3 py-2"><p className="text-xs font-semibold text-content-muted">{label}</p><p className="font-mono text-lg font-bold tabular-nums text-content">{value}</p></div>;
 }
 
 function StatusBadge({ status }: { status: ApiKeyRow["status"] }) {
   const label = status === "active" ? "Aktif" : status === "expired" ? "Süresi Doldu" : "İptal";
-  const className = status === "active" ? "bg-emerald-50 text-emerald-700" : status === "expired" ? "bg-amber-50 text-amber-700" : "bg-slate-100 text-slate-600";
+  const className = status === "active" ? "bg-success-subtle text-success" : status === "expired" ? "bg-warning-subtle text-warning" : "bg-surface-muted text-content-subtle";
   return <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${className}`}>{label}</span>;
 }
 

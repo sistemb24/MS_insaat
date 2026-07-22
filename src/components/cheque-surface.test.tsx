@@ -57,11 +57,42 @@ describe("ChequeSurface", () => {
   test("renders cheque portfolio workflow with totals and columns", () => {
     render(<ChequeSurface rows={[cheque]} />);
 
-    expect(screen.getByText("Çek İşlemleri")).toBeTruthy();
+    expect(screen.getByRole("heading", { level: 1, name: "Çek Yönetimi" })).toBeTruthy();
     expect(screen.getByText("Portföy Toplamı")).toBeTruthy();
     expect(screen.getByText("CEK-0001")).toBeTruthy();
     expect(screen.getByText("CK-0001")).toBeTruthy();
     expect(screen.getByText("ABC Beton A.Ş.")).toBeTruthy();
+  });
+
+  test("filters the portfolio with real status and search values", () => {
+    render(
+      <ChequeSurface
+        rows={[
+          cheque,
+          {
+            ...cheque,
+            id: "cheque-2",
+            documentNo: "CEK-0002",
+            checkNo: "CK-0002",
+            drawerName: "Delta Yapı A.Ş.",
+            status: "Tahsil Edildi",
+          },
+        ]}
+        today="2026-08-01"
+      />,
+    );
+
+    expect(screen.getByText("30 Gün İçinde Vade")).toBeTruthy();
+    fireEvent.change(screen.getByLabelText("Çek durum filtresi"), {
+      target: { value: "Tahsil Edildi" },
+    });
+    expect(screen.getByText("CEK-0002")).toBeTruthy();
+    expect(screen.queryByText("CEK-0001")).toBeNull();
+
+    fireEvent.change(screen.getByLabelText("Çek ara"), {
+      target: { value: "delta" },
+    });
+    expect(screen.getByText("Delta Yapı A.Ş.")).toBeTruthy();
   });
 
   test("shows the linked ledger document for a collected cheque", () => {

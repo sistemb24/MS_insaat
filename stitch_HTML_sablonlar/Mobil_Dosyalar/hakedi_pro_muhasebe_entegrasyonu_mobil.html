@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Muhasebe Entegrasyonu &amp; Hesap Eşleşmeleri</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "surface-container-high": "#e6e8ea",
+                        "on-error": "#ffffff",
+                        "secondary-container": "#dae2fd",
+                        "on-primary-container": "#dad7ff",
+                        "tertiary-fixed": "#ffdbcc",
+                        "secondary-fixed-dim": "#bec6e0",
+                        "surface": "#f7f9fb",
+                        "tertiary": "#7e3000",
+                        "primary-fixed": "#e2dfff",
+                        "tertiary-container": "#a44100",
+                        "border-slate": "#E2E8F0",
+                        "secondary-fixed": "#dae2fd",
+                        "on-tertiary-fixed-variant": "#7b2f00",
+                        "inverse-surface": "#2d3133",
+                        "on-secondary-fixed-variant": "#3f465c",
+                        "surface-container": "#eceef0",
+                        "primary-container": "#4f46e5",
+                        "inverse-on-surface": "#eff1f3",
+                        "on-tertiary-container": "#ffd2be",
+                        "surface-bright": "#f7f9fb",
+                        "on-error-container": "#93000a",
+                        "decorative-navy": "#000080",
+                        "warning-amber": "#F59E0B",
+                        "outline": "#777587",
+                        "on-secondary-container": "#5c647a",
+                        "surface-container-highest": "#e0e3e5",
+                        "on-primary-fixed": "#0f0069",
+                        "outline-variant": "#c7c4d8",
+                        "text-muted": "#64748B",
+                        "on-background": "#191c1e",
+                        "error": "#ba1a1a",
+                        "on-secondary": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "success-emerald": "#10B981",
+                        "primary": "#3525cd",
+                        "error-container": "#ffdad6",
+                        "on-tertiary": "#ffffff",
+                        "inverse-primary": "#c3c0ff",
+                        "tertiary-fixed-dim": "#ffb695",
+                        "surface-container-low": "#f2f4f6",
+                        "danger-rose": "#E11D48",
+                        "surface-dim": "#d8dadc",
+                        "on-tertiary-fixed": "#351000",
+                        "surface-tint": "#4d44e3",
+                        "on-secondary-fixed": "#131b2e",
+                        "on-primary": "#ffffff",
+                        "surface-white": "#FFFFFF",
+                        "decorative-purple": "#800080",
+                        "surface-variant": "#e0e3e5",
+                        "secondary": "#565e74",
+                        "on-surface": "#191c1e",
+                        "primary-fixed-dim": "#c3c0ff",
+                        "on-primary-fixed-variant": "#3323cc",
+                        "background": "#f7f9fb",
+                        "on-surface-variant": "#464555"
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    spacing: {
+                        "stack-md": "1rem",
+                        "container-gap": "1.5rem",
+                        "grid-cell-px": "0.75rem",
+                        "grid-cell-py": "0.5rem",
+                        "header-height": "64px",
+                        "sidebar-collapsed": "80px",
+                        "stack-sm": "0.5rem",
+                        "sidebar-width": "260px"
+                    },
+                    fontFamily: {
+                        "label-caps": ["Inter", "sans-serif"],
+                        "body-lg": ["Inter", "sans-serif"],
+                        "headline-md": ["Inter", "sans-serif"],
+                        "body-sm": ["Inter", "sans-serif"],
+                        "body-md": ["Inter", "sans-serif"],
+                        "headline-sm": ["Inter", "sans-serif"],
+                        "headline-lg": ["Inter", "sans-serif"],
+                        "data-mono": ["JetBrains Mono", "monospace"],
+                        "headline-lg-mobile": ["Inter", "sans-serif"]
+                    },
+                    fontSize: {
+                        "label-caps": ["12px", { lineHeight: "16px", letterSpacing: "0.05em", fontWeight: "700" }],
+                        "body-lg": ["16px", { lineHeight: "24px", fontWeight: "400" }],
+                        "headline-md": ["24px", { lineHeight: "32px", letterSpacing: "-0.01em", fontWeight: "600" }],
+                        "body-sm": ["13px", { lineHeight: "18px", fontWeight: "400" }],
+                        "body-md": ["14px", { lineHeight: "20px", fontWeight: "400" }],
+                        "headline-sm": ["20px", { lineHeight: "28px", fontWeight: "600" }],
+                        "headline-lg": ["30px", { lineHeight: "38px", letterSpacing: "-0.02em", fontWeight: "700" }],
+                        "data-mono": ["13px", { lineHeight: "16px", fontWeight: "500" }],
+                        "headline-lg-mobile": ["24px", { lineHeight: "32px", fontWeight: "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-background font-body-md text-on-background antialiased pt-header-height pb-24 md:hidden">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 shadow-sm bg-surface-white dark:bg-inverse-surface flex items-center justify-between px-grid-cell-px h-header-height">
+<button aria-label="Go Back" class="text-primary dark:text-primary-fixed active:scale-95 transition-transform p-2 rounded-full hover:bg-surface-container-low">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">arrow_back</span>
+</button>
+<h1 class="font-headline-sm text-headline-sm font-bold text-primary dark:text-primary-fixed truncate px-2">Muhasebe Entegrasyonu</h1>
+<button aria-label="Notifications" class="text-primary dark:text-primary-fixed active:scale-95 transition-transform p-2 rounded-full hover:bg-surface-container-low">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">notifications</span>
+</button>
+</header>
+<main class="px-4 py-4 flex flex-col gap-4">
+<!-- Context Info -->
+<div class="bg-surface-white rounded-lg p-3 border border-border-slate shadow-[0_1px_3px_rgba(79,70,229,0.08)] flex justify-between items-center">
+<div class="flex flex-col">
+<span class="font-label-caps text-label-caps text-text-muted">Proje</span>
+<span class="font-body-md text-body-md text-on-surface font-medium">İst. Finans Mer. Projesi</span>
+</div>
+<div class="flex flex-col text-right">
+<span class="font-label-caps text-label-caps text-text-muted">Hakediş</span>
+<span class="font-body-md text-body-md text-on-surface font-medium">No: 5</span>
+</div>
+</div>
+<!-- Summary Section (Horizontal Scroll) -->
+<div class="flex overflow-x-auto gap-3 pb-2 -mx-4 px-4 snap-x hide-scrollbar">
+<style>
+                .hide-scrollbar::-webkit-scrollbar { display: none; }
+                .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+            </style>
+<div class="min-w-[140px] bg-emerald-50 border border-emerald-100 rounded-xl p-3 flex items-center gap-3 snap-start shadow-[0_1px_3px_rgba(16,185,129,0.08)] shrink-0">
+<div class="bg-success-emerald rounded-full w-8 h-8 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-white text-[18px]">check_circle</span>
+</div>
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm text-success-emerald leading-tight">4</span>
+<span class="font-body-sm text-body-sm text-emerald-800">Eşleşti</span>
+</div>
+</div>
+<div class="min-w-[140px] bg-amber-50 border border-amber-100 rounded-xl p-3 flex items-center gap-3 snap-start shadow-[0_1px_3px_rgba(245,158,11,0.08)] shrink-0">
+<div class="bg-warning-amber rounded-full w-8 h-8 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-white text-[18px]">error</span>
+</div>
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm text-warning-amber leading-tight">1</span>
+<span class="font-body-sm text-body-sm text-amber-800">Bekliyor</span>
+</div>
+</div>
+</div>
+<!-- Section Title -->
+<h2 class="font-headline-md text-headline-md text-on-surface mt-2 mb-1">Hesap Eşleşmeleri</h2>
+<!-- Account Mapping List -->
+<div class="flex flex-col gap-3">
+<!-- Matched Card 1 -->
+<div class="bg-surface-white border border-border-slate rounded-xl p-4 shadow-[0_1px_3px_rgba(79,70,229,0.08)] flex flex-col gap-2 relative overflow-hidden">
+<div class="absolute top-0 left-0 w-1 h-full bg-success-emerald"></div>
+<div class="flex justify-between items-start">
+<div class="flex flex-col">
+<span class="font-body-md text-body-md font-medium text-on-surface">Hakediş Bedeli</span>
+<div class="font-data-mono text-data-mono text-text-muted mt-1">100.000,00 TL</div>
+</div>
+<span class="bg-surface-container-low text-text-muted font-label-caps text-label-caps px-2 py-1 rounded">ALACAK</span>
+</div>
+<div class="border-t border-dashed border-border-slate my-1"></div>
+<div class="flex items-center gap-2 text-success-emerald">
+<span class="material-symbols-outlined text-[18px]">check_circle</span>
+<span class="font-body-sm text-body-sm truncate">320.01 - Hizmet Üretim Maliyeti - Taşeron</span>
+</div>
+</div>
+<!-- Matched Card 2 -->
+<div class="bg-surface-white border border-border-slate rounded-xl p-4 shadow-[0_1px_3px_rgba(79,70,229,0.08)] flex flex-col gap-2 relative overflow-hidden">
+<div class="absolute top-0 left-0 w-1 h-full bg-success-emerald"></div>
+<div class="flex justify-between items-start">
+<div class="flex flex-col">
+<span class="font-body-md text-body-md font-medium text-on-surface">KDV %20</span>
+<div class="font-data-mono text-data-mono text-text-muted mt-1">20.000,00 TL</div>
+</div>
+<span class="bg-surface-container-low text-text-muted font-label-caps text-label-caps px-2 py-1 rounded">ALACAK</span>
+</div>
+<div class="border-t border-dashed border-border-slate my-1"></div>
+<div class="flex items-center gap-2 text-success-emerald">
+<span class="material-symbols-outlined text-[18px]">check_circle</span>
+<span class="font-body-sm text-body-sm truncate">391.18 - Hesaplanan KDV %18</span>
+</div>
+</div>
+<!-- Pending Card (Actionable) -->
+<div class="bg-amber-50 border-2 border-warning-amber rounded-xl p-4 shadow-[0_1px_3px_rgba(245,158,11,0.15)] flex flex-col gap-3 relative overflow-hidden">
+<div class="absolute top-0 left-0 w-1 h-full bg-warning-amber"></div>
+<div class="flex justify-between items-start">
+<div class="flex flex-col">
+<span class="font-body-md text-body-md font-bold text-amber-900">Stopaj Kesintisi %3</span>
+<div class="font-data-mono text-data-mono text-amber-800 mt-1">3.000,00 TL</div>
+</div>
+<span class="bg-white/50 text-amber-800 font-label-caps text-label-caps px-2 py-1 rounded border border-amber-200">BORÇ</span>
+</div>
+<div class="flex items-center gap-2 text-warning-amber bg-white p-2 rounded-lg border border-amber-200 mt-1">
+<span class="material-symbols-outlined text-[20px]">error</span>
+<span class="font-body-sm text-body-sm font-medium">Hesap Kodu Bulunamadı</span>
+</div>
+<button class="w-full bg-warning-amber text-white font-body-md text-body-md font-medium py-2 rounded-lg active:scale-[0.98] transition-transform shadow-sm flex items-center justify-center gap-2 mt-1">
+<span class="material-symbols-outlined text-[18px]">search</span>
+                    Hesap Eşleştir
+                </button>
+</div>
+<!-- Matched Card 3 -->
+<div class="bg-surface-white border border-border-slate rounded-xl p-4 shadow-[0_1px_3px_rgba(79,70,229,0.08)] flex flex-col gap-2 relative overflow-hidden">
+<div class="absolute top-0 left-0 w-1 h-full bg-success-emerald"></div>
+<div class="flex justify-between items-start">
+<div class="flex flex-col">
+<span class="font-body-md text-body-md font-medium text-on-surface">Nakit Kesintisi %5</span>
+<div class="font-data-mono text-data-mono text-text-muted mt-1">5.000,00 TL</div>
+</div>
+<span class="bg-surface-container-low text-text-muted font-label-caps text-label-caps px-2 py-1 rounded">BORÇ</span>
+</div>
+<div class="border-t border-dashed border-border-slate my-1"></div>
+<div class="flex items-center gap-2 text-success-emerald">
+<span class="material-symbols-outlined text-[18px]">check_circle</span>
+<span class="font-body-sm text-body-sm truncate">326.01 - Alınan Teminatlar - Taşeron</span>
+</div>
+</div>
+<!-- Matched Card 4 -->
+<div class="bg-surface-white border border-border-slate rounded-xl p-4 shadow-[0_1px_3px_rgba(79,70,229,0.08)] flex flex-col gap-2 relative overflow-hidden">
+<div class="absolute top-0 left-0 w-1 h-full bg-success-emerald"></div>
+<div class="flex justify-between items-start">
+<div class="flex flex-col">
+<span class="font-body-md text-body-md font-medium text-on-surface">Ödenecek Tutar</span>
+<div class="font-data-mono text-data-mono text-text-muted mt-1">112.000,00 TL</div>
+</div>
+<span class="bg-surface-container-low text-text-muted font-label-caps text-label-caps px-2 py-1 rounded">BORÇ</span>
+</div>
+<div class="border-t border-dashed border-border-slate my-1"></div>
+<div class="flex items-center gap-2 text-success-emerald">
+<span class="material-symbols-outlined text-[18px]">check_circle</span>
+<span class="font-body-sm text-body-sm truncate">102.01 - Garanti Bankası TL</span>
+</div>
+</div>
+</div>
+<!-- Journal Voucher Preview Summary Card -->
+<h2 class="font-headline-md text-headline-md text-on-surface mt-6 mb-1">Yevmiye Fişi Önizleme</h2>
+<div class="bg-surface-white border border-border-slate rounded-xl p-4 shadow-[0_1px_3px_rgba(79,70,229,0.08)] flex flex-col">
+<div class="flex justify-between items-center mb-3">
+<span class="font-body-md text-body-md text-text-muted">Toplam Fiş Tutarı</span>
+<span class="font-data-mono text-data-mono font-bold text-on-surface">120.000,00 TL</span>
+</div>
+<!-- Warning Alert -->
+<div class="bg-red-50 border border-red-200 rounded-lg p-3 flex items-start gap-2 mb-4">
+<span class="material-symbols-outlined text-danger-rose text-[20px] shrink-0 mt-0.5">warning</span>
+<div class="flex flex-col">
+<span class="font-body-sm text-body-sm font-semibold text-red-800">Denge Bekleniyor</span>
+<span class="text-[12px] text-red-700 mt-1">Eksik hesap eşleştirmesi nedeniyle fiş dengesizdir. Kaydetmeden önce hataları giderin.</span>
+</div>
+</div>
+<button class="w-full bg-surface-container border border-border-slate text-on-surface font-body-sm text-body-sm font-medium py-2 rounded-lg active:scale-[0.98] transition-transform shadow-sm flex items-center justify-center gap-2 hover:bg-surface-container-high">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+                Detayları Gör
+            </button>
+</div>
+<!-- Spacer for bottom elements -->
+<div class="h-16"></div>
+</main>
+<!-- Floating Action Button Cluster (Fixed Bottom Area before Nav) -->
+<div class="fixed bottom-[88px] left-0 w-full px-4 z-40">
+<div class="flex gap-2 w-full">
+<button class="flex-1 bg-surface-white border border-border-slate text-on-surface font-body-md text-body-md font-semibold py-3 rounded-xl shadow-md active:scale-95 transition-transform flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[20px]">save</span>
+                 Kaydet
+            </button>
+<button class="flex-[2] bg-primary-container text-on-primary font-body-md text-body-md font-semibold py-3 rounded-xl shadow-md active:scale-95 transition-transform flex items-center justify-center gap-2 opacity-50 cursor-not-allowed">
+<span class="material-symbols-outlined text-[20px]">send</span>
+                 Muhasebeye Gönder
+            </button>
+</div>
+</div>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 w-full z-50 rounded-t-xl border-t border-border-slate dark:border-outline-variant bg-surface-white dark:bg-inverse-surface shadow-[0_-1px_3px_rgba(79,70,229,0.08)]">
+<div class="fixed bottom-0 left-0 w-full flex justify-around items-center py-2 px-1 pb-safe">
+<a class="flex flex-col items-center justify-center text-on-secondary-container dark:text-secondary-fixed-dim px-3 py-1 hover:bg-surface-container-low rounded-xl" href="#">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 0;">dashboard</span>
+<span class="font-label-caps text-label-caps">Dashboard</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container dark:bg-primary dark:text-on-primary rounded-xl px-3 py-1 active:scale-90 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 1;">architecture</span>
+<span class="font-label-caps text-label-caps">Projects</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-secondary-container dark:text-secondary-fixed-dim px-3 py-1 hover:bg-surface-container-low rounded-xl" href="#">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 0;">engineering</span>
+<span class="font-label-caps text-label-caps">Personnel</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-secondary-container dark:text-secondary-fixed-dim px-3 py-1 hover:bg-surface-container-low rounded-xl" href="#">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 0;">description</span>
+<span class="font-label-caps text-label-caps">Docs</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-secondary-container dark:text-secondary-fixed-dim px-3 py-1 hover:bg-surface-container-low rounded-xl" href="#">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 0;">settings</span>
+<span class="font-label-caps text-label-caps">Settings</span>
+</a>
+</div>
+<!-- iOS safe area spacing -->
+<div class="h-[env(safe-area-inset-bottom)]"></div>
+</nav>
+</body></html>

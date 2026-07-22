@@ -227,6 +227,17 @@ export function calculateConstructionSupplementarySummary(input: {
   };
 }
 
+export function resolveConstructionLegacyAutomaticDeduction(input: {
+  calculatedAmount: number;
+  applications?: Array<{ ruleCode: string }>;
+}) {
+  const retentionApplied = (input.applications ?? []).some(
+    (application) =>
+      application.ruleCode.trim().toUpperCase() === "TEMINAT",
+  );
+  return retentionApplied ? 0 : roundMoney(input.calculatedAmount);
+}
+
 export function validateConstructionPaymentChain(input: {
   sequenceNo: number;
   kind: ConstructionPaymentKind;

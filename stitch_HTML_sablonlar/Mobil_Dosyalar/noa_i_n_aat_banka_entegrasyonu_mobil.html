@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Banka Entegrasyonu</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary": "#3525cd",
+                        "on-tertiary-fixed-variant": "#7b2f00",
+                        "tertiary": "#7e3000",
+                        "secondary-fixed-dim": "#bec6e0",
+                        "text-muted": "#64748B",
+                        "tertiary-fixed-dim": "#ffb695",
+                        "outline": "#777587",
+                        "primary-fixed": "#e2dfff",
+                        "inverse-surface": "#2d3133",
+                        "tertiary-container": "#a44100",
+                        "on-secondary-fixed": "#131b2e",
+                        "on-primary-container": "#dad7ff",
+                        "tertiary-fixed": "#ffdbcc",
+                        "on-primary-fixed-variant": "#3323cc",
+                        "on-primary-fixed": "#0f0069",
+                        "on-surface": "#191c1e",
+                        "warning-amber": "#F59E0B",
+                        "success-emerald": "#10B981",
+                        "background": "#f7f9fb",
+                        "on-secondary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "surface-container": "#eceef0",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary-container": "#ffd2be",
+                        "primary-fixed-dim": "#c3c0ff",
+                        "surface": "#f7f9fb",
+                        "on-secondary-fixed-variant": "#3f465c",
+                        "surface-container-high": "#e6e8ea",
+                        "on-error-container": "#93000a",
+                        "border-slate": "#E2E8F0",
+                        "on-tertiary": "#ffffff",
+                        "on-primary": "#ffffff",
+                        "danger-rose": "#E11D48",
+                        "surface-white": "#FFFFFF",
+                        "surface-variant": "#e0e3e5",
+                        "on-tertiary-fixed": "#351000",
+                        "inverse-on-surface": "#eff1f3",
+                        "surface-container-highest": "#e0e3e5",
+                        "on-surface-variant": "#464555",
+                        "on-secondary-container": "#5c647a",
+                        "surface-dim": "#d8dadc",
+                        "decorative-navy": "#000080",
+                        "surface-bright": "#f7f9fb",
+                        "secondary-container": "#dae2fd",
+                        "on-background": "#191c1e",
+                        "secondary": "#565e74",
+                        "inverse-primary": "#c3c0ff",
+                        "primary-container": "#4f46e5",
+                        "error": "#ba1a1a",
+                        "decorative-purple": "#800080",
+                        "error-container": "#ffdad6",
+                        "secondary-fixed": "#dae2fd",
+                        "surface-container-low": "#f2f4f6",
+                        "surface-tint": "#4d44e3",
+                        "outline-variant": "#c7c4d8"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "header-height": "64px",
+                        "grid-cell-py": "0.5rem",
+                        "sidebar-collapsed": "80px",
+                        "stack-sm": "0.5rem",
+                        "grid-cell-px": "0.75rem",
+                        "container-gap": "1.5rem",
+                        "stack-md": "1rem",
+                        "sidebar-width": "260px"
+                    },
+                    "fontFamily": {
+                        "body-md": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "data-mono": ["JetBrains Mono"],
+                        "body-lg": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "headline-sm": ["Inter"]
+                    },
+                    "fontSize": {
+                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "headline-lg": ["30px", { "lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-sm": ["13px", { "lineHeight": "18px", "fontWeight": "400" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "data-mono": ["13px", { "lineHeight": "16px", "fontWeight": "500" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "700" }],
+                        "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        /* Custom styles for switch */
+        .toggle-checkbox:checked {
+            right: 0;
+            border-color: #4f46e5;
+        }
+        .toggle-checkbox:checked + .toggle-label {
+            background-color: #4f46e5;
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface font-body-md antialiased min-h-screen pb-safe">
+<!-- TopAppBar -->
+<header class="w-full sticky top-0 z-50 shadow-sm bg-surface flex justify-between items-center h-header-height px-4 w-full transition-colors duration-200 ease-in-out">
+<button aria-label="Geri" class="p-2 text-on-surface-variant hover:bg-surface-container-low rounded-full">
+<span class="material-symbols-outlined" data-icon="arrow_back">arrow_back</span>
+</button>
+<h1 class="font-headline-sm text-headline-sm font-bold text-primary">Banka Entegrasyonu</h1>
+<div class="w-10"></div> <!-- Placeholder for balancing -->
+</header>
+<main class="p-4 space-y-6">
+<!-- Supported Banks Section -->
+<section class="space-y-3">
+<h2 class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider pl-1">Desteklenen Bankalar</h2>
+<div class="flex overflow-x-auto hide-scrollbar space-x-4 pb-2">
+<!-- VakıfBank -->
+<div class="flex-shrink-0 w-20 h-20 bg-surface-white rounded-xl shadow-[0_1px_3px_rgba(79,70,229,0.08)] flex flex-col items-center justify-center border border-border-slate gap-2">
+<img alt="VakıfBank" class="w-8 h-8 object-contain" data-alt="A clean, corporate minimalist logo of VakıfBank featuring simple geometric shapes in deep yellow and black on a pristine white background. High resolution, flat vector style, isolated." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDLnPqJU6sNAByDoqe2_zYpd4EbRy3pEZYswQj_vu1hb-C_pLd_MUaOazaslZD8Y7e2mN90jUFpRGqY9ygtxXYAn8ZEKIZnP9W3RKvRZceXfrdhuWfqhi17NUDiSlvKNxw0wVwrmaEHLR6TlwiZWKGLJirMNoVeFfHtmL5Gt7a6VT2NF2oIYtUodG7FBTVCI2P7iZuxdrRwIp2259iBJcHTCvVwxeWCCNFZ22ydWkCH1BbNczgEG1mp"/>
+<span class="font-body-sm text-body-sm text-on-surface text-xs text-center leading-tight">VakıfBank</span>
+</div>
+<!-- İş Bankası -->
+<div class="flex-shrink-0 w-20 h-20 bg-surface-white rounded-xl shadow-[0_1px_3px_rgba(79,70,229,0.08)] flex flex-col items-center justify-center border border-border-slate gap-2">
+<img alt="İş Bankası" class="w-8 h-8 object-contain" data-alt="A clean, corporate minimalist logo of İş Bankası featuring an iconic blue overlapping 'I' and 'B' symbol on a pristine white background. High resolution, flat vector style, isolated." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD_hKYUpWhS5lG5KVkYRwK2JXxQ_Biz_tE-3icnMKsKm5Y-SHP5WPPjFI-UT_ZvutvXUN5EhWP8ruFqksSg8b_KvjmhFQVPsDc1aFq2-fSlfF8Es-8T1HCe7y3L7PyVbmXUvEZFOXuMFwg6LGW9KYUP_QeYv2646LRULAVFgzjrYuKdjvjoQ3Yx0Qn2s6ouTbYIeel83mJCccO3L9cpoa-MWeRaxNy3w-63wkLj1LSgHjtfSUg08tVy"/>
+<span class="font-body-sm text-body-sm text-on-surface text-xs text-center leading-tight">İş Bankası</span>
+</div>
+<!-- QNB -->
+<div class="flex-shrink-0 w-20 h-20 bg-surface-white rounded-xl shadow-[0_1px_3px_rgba(79,70,229,0.08)] flex flex-col items-center justify-center border border-border-slate gap-2">
+<img alt="QNB" class="w-8 h-8 object-contain" data-alt="A clean, corporate minimalist logo of QNB featuring bold white letters inside a solid deep blue rectangle on a pristine white background. High resolution, flat vector style, isolated." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC9pNvxSPlFlJ5b2zJI5c7IMET9eZaZy8uiqlIkLn4FKz4CrgbeSP9Zdp7U4pGGctCSGBI11JIUpJdCf128ko4CU7pFQL1DwdM26nWoZlzk1mjyJPmyZR1pi1eSuY_9SfRmoRi0zltHVcIqKXlzCPy2QPBIrsdryDe94xQcOw2v6jI4ErD3MBVWlIIgoO5mcoFZFk_Su4HlSBNpSSQObKKEmNSvtvZOfOL6tIL5oQvNbIwAvWNHU6cA"/>
+<span class="font-body-sm text-body-sm text-on-surface text-xs text-center leading-tight">QNB</span>
+</div>
+<!-- Akbank -->
+<div class="flex-shrink-0 w-20 h-20 bg-surface-white rounded-xl shadow-[0_1px_3px_rgba(79,70,229,0.08)] flex flex-col items-center justify-center border border-border-slate gap-2">
+<img alt="Akbank" class="w-8 h-8 object-contain" data-alt="A clean, corporate minimalist logo of Akbank featuring a stylized white bird inside a vivid red square on a pristine white background. High resolution, flat vector style, isolated." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDsspOKpyPRdTvJi1ciNpsJhTXxQ9bS1qHlwFQitegpKtnF8BIY8rycmZ2prx4fxJ8_JWzJemmYyizEQvMFI7jhNjOVrNQ-kkKeP8JpdW1tpkpfeii0d9kJNB-LKGOask9RyKUxdwzIc6-f2nPg6vPb8sSNpBtC96sBgs-wVr9pU3IyNkgdqMRHA2KgNHLjtf2e7ZhYnUGTHyMRvzbfjHGK0hdl28ePRJZEmS4LKn56fhVNQPbVtQUG"/>
+<span class="font-body-sm text-body-sm text-on-surface text-xs text-center leading-tight">Akbank</span>
+</div>
+<!-- Ziraat -->
+<div class="flex-shrink-0 w-20 h-20 bg-surface-white rounded-xl shadow-[0_1px_3px_rgba(79,70,229,0.08)] flex flex-col items-center justify-center border border-border-slate gap-2">
+<img alt="Ziraat" class="w-8 h-8 object-contain" data-alt="A clean, corporate minimalist logo of Ziraat Bankası featuring interlocking wheat-like geometric red shapes on a pristine white background. High resolution, flat vector style, isolated." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAhqjx8nWrrQdu_U2JwQCq8V-jF1NYIvWjv-wpVvZwv21eF_Ren7aqIiTM_2X4jvCK1VzUIMmSyWgkGtjhVT_NFyZnkn9DVhNy3Ph0qcZDTKNM-pFCB9IB_afZdRZ2FFfuUVPyeHok5FMhEAW7sCOy-DG2riOWCA5S6nhWLM_YSXpBfSods09LKIt6kiyITGbaNDiGqMzWx85NboZKUTxi7ij0zzEnj0ExuKP7uhkRLq8tYnm5veaeq"/>
+<span class="font-body-sm text-body-sm text-on-surface text-xs text-center leading-tight">Ziraat</span>
+</div>
+</div>
+</section>
+<!-- Connection Settings Card -->
+<section class="bg-surface-white rounded-xl shadow-[0_1px_3px_rgba(79,70,229,0.08)] border border-border-slate p-5 space-y-5">
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Bağlantı Ayarları</h2>
+<div class="space-y-4">
+<!-- Bank Selection -->
+<div>
+<label class="block font-label-caps text-label-caps text-on-surface-variant mb-1 uppercase tracking-wider">Banka Seçimi</label>
+<div class="relative">
+<select class="block w-full rounded-lg border-border-slate bg-surface-container-lowest text-on-surface focus:border-primary focus:ring-primary font-body-md py-2.5 pl-3 pr-10 appearance-none shadow-sm">
+<option>İş Bankası (TR12 3456...)</option>
+<option>VakıfBank (TR98 7654...)</option>
+<option>Yeni Banka Ekle...</option>
+</select>
+<div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-[20px]" data-icon="expand_more">expand_more</span>
+</div>
+</div>
+</div>
+<!-- Consent Number -->
+<div>
+<label class="block font-label-caps text-label-caps text-on-surface-variant mb-1 uppercase tracking-wider">Rıza No (Consent Number)</label>
+<input class="block w-full rounded-lg border-border-slate bg-surface-container-lowest text-on-surface focus:border-primary focus:ring-primary font-data-mono text-data-mono py-2.5 px-3 shadow-sm placeholder:text-text-muted" placeholder="API Rıza Numarası girin" type="text" value="RIZA-9823-A4B7-C9X2"/>
+<p class="mt-1 font-body-sm text-body-sm text-text-muted text-[11px]">Bankanızın geliştirici portalından aldığınız aktif rıza numarasını girin.</p>
+</div>
+<!-- Live Environment Toggle -->
+<div class="flex items-center justify-between py-2">
+<div>
+<span class="block font-body-md text-body-md text-on-surface font-medium">Canlı Ortam (Live)</span>
+<span class="block font-body-sm text-body-sm text-text-muted text-[12px]">Sandbox yerine gerçek verileri kullan.</span>
+</div>
+<!-- Toggle Switch -->
+<div class="relative inline-block w-12 mr-2 align-middle select-none transition duration-200 ease-in">
+<input checked="" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer border-primary right-0 z-10 transition-all duration-300" id="toggle1" name="toggle" type="checkbox"/>
+<label class="toggle-label block overflow-hidden h-6 rounded-full bg-primary cursor-pointer transition-colors duration-300" for="toggle1"></label>
+</div>
+</div>
+<!-- Action Button -->
+<button class="w-full bg-primary text-on-primary font-headline-sm text-headline-sm rounded-xl py-3 mt-2 shadow-sm active:scale-[0.98] transition-transform flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[20px]" data-icon="link">link</span>
+                    Bağlantıyı Test Et
+                </button>
+</div>
+</section>
+<!-- Recent Bank Transactions List -->
+<section class="space-y-4">
+<div class="flex items-center justify-between pl-1 pr-1">
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Son İşlemler</h2>
+<button class="p-2 text-primary bg-primary-container/10 rounded-lg flex items-center gap-1 active:bg-primary-container/20 transition-colors">
+<span class="material-symbols-outlined text-[18px]" data-icon="sync">sync</span>
+<span class="font-label-caps text-label-caps">SENKRONİZE ET</span>
+</button>
+</div>
+<div class="space-y-3">
+<!-- Transaction Card 1 (Eşleşti) -->
+<div class="bg-surface-white rounded-xl shadow-[0_1px_3px_rgba(79,70,229,0.08)] border border-border-slate p-4 flex flex-col gap-3">
+<div class="flex justify-between items-start">
+<div class="flex items-center gap-2 text-text-muted font-body-sm text-body-sm">
+<span class="material-symbols-outlined text-[16px]" data-icon="calendar_today">calendar_today</span>
+<span>24 Eki 2023, 14:30</span>
+</div>
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold bg-success-emerald/10 text-success-emerald border border-success-emerald/20">
+                            Eşleşti
+                        </span>
+</div>
+<div class="flex justify-between items-center">
+<div class="flex-1 pr-4">
+<h3 class="font-body-md text-body-md font-semibold text-on-surface truncate">AKÇİMENTO SAN. A.Ş.</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-1">Gelen Havale - Fatura No: INV-2023-089</p>
+</div>
+<div class="text-right whitespace-nowrap">
+<span class="font-data-mono text-data-mono text-success-emerald block">+125.000,00 ₺</span>
+</div>
+</div>
+<div class="pt-2 border-t border-border-slate flex justify-end">
+<button class="text-primary font-label-caps text-label-caps flex items-center gap-1 py-1 px-2 hover:bg-surface-container-low rounded">
+<span class="material-symbols-outlined text-[16px]" data-icon="visibility">visibility</span>
+                            DETAY
+                        </button>
+</div>
+</div>
+<!-- Transaction Card 2 (Bekliyor) -->
+<div class="bg-surface-white rounded-xl shadow-[0_1px_3px_rgba(79,70,229,0.08)] border border-border-slate p-4 flex flex-col gap-3 relative overflow-hidden">
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-warning-amber"></div>
+<div class="flex justify-between items-start pl-2">
+<div class="flex items-center gap-2 text-text-muted font-body-sm text-body-sm">
+<span class="material-symbols-outlined text-[16px]" data-icon="calendar_today">calendar_today</span>
+<span>24 Eki 2023, 11:15</span>
+</div>
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold bg-warning-amber/10 text-warning-amber border border-warning-amber/20">
+                            Bekliyor
+                        </span>
+</div>
+<div class="flex justify-between items-center pl-2">
+<div class="flex-1 pr-4">
+<h3 class="font-body-md text-body-md font-semibold text-on-surface truncate">NURİ DEMİR (HIRDAVAT)</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-1">Giden EFT - Malzeme Alımı</p>
+</div>
+<div class="text-right whitespace-nowrap">
+<span class="font-data-mono text-data-mono text-danger-rose block">-8.450,00 ₺</span>
+</div>
+</div>
+<div class="pt-2 border-t border-border-slate flex justify-end gap-2 pl-2">
+<button class="text-text-muted font-label-caps text-label-caps flex items-center gap-1 py-1 px-2 hover:bg-surface-container-low rounded">
+<span class="material-symbols-outlined text-[16px]" data-icon="visibility">visibility</span>
+                            DETAY
+                        </button>
+<button class="text-primary font-label-caps text-label-caps flex items-center gap-1 py-1 px-3 bg-primary-container/10 rounded border border-primary-container/20">
+<span class="material-symbols-outlined text-[16px]" data-icon="link">link</span>
+                            EŞLEŞTİR
+                        </button>
+</div>
+</div>
+<!-- Transaction Card 3 (Yoksayıldı) -->
+<div class="bg-surface-white rounded-xl shadow-[0_1px_3px_rgba(79,70,229,0.08)] border border-border-slate p-4 flex flex-col gap-3 opacity-80 grayscale-[20%]">
+<div class="flex justify-between items-start">
+<div class="flex items-center gap-2 text-text-muted font-body-sm text-body-sm">
+<span class="material-symbols-outlined text-[16px]" data-icon="calendar_today">calendar_today</span>
+<span>23 Eki 2023, 09:00</span>
+</div>
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold bg-surface-container-high text-on-surface-variant border border-outline-variant">
+                            Yoksayıldı
+                        </span>
+</div>
+<div class="flex justify-between items-center">
+<div class="flex-1 pr-4">
+<h3 class="font-body-md text-body-md font-semibold text-on-surface truncate">HESAP İŞLETİM ÜCRETİ</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-1">Banka Kesintisi (Otomatik)</p>
+</div>
+<div class="text-right whitespace-nowrap">
+<span class="font-data-mono text-data-mono text-danger-rose block">-125,50 ₺</span>
+</div>
+</div>
+<div class="pt-2 border-t border-border-slate flex justify-end">
+<button class="text-text-muted font-label-caps text-label-caps flex items-center gap-1 py-1 px-2 hover:bg-surface-container-low rounded">
+<span class="material-symbols-outlined text-[16px]" data-icon="settings_backup_restore">settings_backup_restore</span>
+                            GERİ AL
+                        </button>
+</div>
+</div>
+</div>
+<div class="pt-2 pb-8 text-center">
+<button class="text-primary font-body-md text-body-md font-medium hover:underline">Tüm İşlemleri Gör</button>
+</div>
+</section>
+</main>
+</body></html>

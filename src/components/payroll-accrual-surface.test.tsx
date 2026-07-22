@@ -40,7 +40,7 @@ describe("PayrollAccrualSurface", () => {
     expect(screen.getByText("Maaş Tahakkuku")).toBeTruthy();
     expect(screen.getByText("PNT-2026-06-001")).toBeTruthy();
     expect(screen.getByText("MAAS-PNT-2026-06-001")).toBeTruthy();
-    expect(screen.getAllByText("31.500,00 TL")).toHaveLength(2);
+    expect(screen.getAllByText("31.500,00 TL")).toHaveLength(3);
     expect(screen.getByText("Bekleyen Puantaj")).toBeTruthy();
   });
 
@@ -280,6 +280,43 @@ describe("PayrollAccrualSurface", () => {
     fireEvent.click(
       screen.getByRole("button", { name: "Tahakkukları Yazdır" }),
     );
+
+    expect(print).toHaveBeenCalledTimes(1);
+    expect(screen.getByRole("status").textContent).toContain(
+      "Yazdırma kapsamı hazır: 1 tahakkuk.",
+    );
+  });
+
+  test("filters bordro metrics, list and print scope from the same rows", () => {
+    const print = vi.fn();
+    Object.defineProperty(window, "print", {
+      configurable: true,
+      value: print,
+    });
+
+    render(
+      <PayrollAccrualSurface
+        paymentMovements={[createPayrollPaymentMovement()]}
+        rows={[
+          createPayrollAccrualRow({ status: "Kaydedildi" }),
+          createPayrollAccrualRow({
+            documentNo: "MAAS-PNT-2026-06-002",
+            id: "payroll-accrual-2",
+            sourceTimesheetId: "timesheet-2",
+            sourceTimesheetNo: "PNT-2026-06-002",
+            status: "Taslak",
+          }),
+        ]}
+        sourceTimesheets={[]}
+      />,
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Ödenmiş" }));
+
+    expect(screen.getByText("MAAS-PNT-2026-06-001")).toBeTruthy();
+    expect(screen.queryByText("MAAS-PNT-2026-06-002")).toBeNull();
+    expectMetric("Tahakkuk", "1");
+    fireEvent.click(screen.getByRole("button", { name: "Tahakkukları Yazdır" }));
 
     expect(print).toHaveBeenCalledTimes(1);
     expect(screen.getByRole("status").textContent).toContain(

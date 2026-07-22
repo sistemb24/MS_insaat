@@ -1,7 +1,7 @@
 /**
  * @vitest-environment jsdom
  */
-import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { afterEach, describe, expect, test } from "vitest";
 
 import { ExpenseSurface } from "./expense-surface";
@@ -128,6 +128,82 @@ describe("ExpenseSurface", () => {
     expect(screen.getByText("Ödendi")).toBeTruthy();
     expect(screen.getByText("MERKEZ KASA")).toBeTruthy();
     expect(screen.getByText("Fiş: YVM-GDR-GDR-0001")).toBeTruthy();
+  });
+  test("derives v2 metrics and filters real expense rows by group and search", () => {
+    const rows = [
+      {
+        id: "expense-material",
+        tenantId: "tenant-noa-demo",
+        companyId: "company-demo-insaat",
+        periodId: "period-2026",
+        accountCode: "KASA-0001",
+        accountName: "MERKEZ KASA",
+        amount: 1_000,
+        counterpartyName: "Beton Tedarik",
+        currency: "TL",
+        description: "Demir ve beton malzemesi",
+        documentNo: "GDR-MAL-001",
+        expenseDate: "2026-07-10",
+        grandTotal: 1_200,
+        movementGroup: "Malzeme",
+        siteCode: "SANT-0001",
+        siteName: "MERKEZ ŞANTİYESİ",
+        status: "Kaydedildi",
+        vatRate: 20,
+        vatTotal: 200,
+        createdBy: "user-main",
+        updatedBy: "user-main",
+        createdAt: "2026-07-10T10:00:00.000Z",
+        updatedAt: "2026-07-10T10:00:00.000Z",
+      },
+      {
+        id: "expense-fuel",
+        tenantId: "tenant-noa-demo",
+        companyId: "company-demo-insaat",
+        periodId: "period-2026",
+        accountCode: "KASA-0001",
+        accountName: "MERKEZ KASA",
+        amount: 500,
+        counterpartyName: "Akaryakıt A.Ş.",
+        currency: "TL",
+        description: "Şantiye yakıtı",
+        documentNo: "GDR-YKT-001",
+        expenseDate: "2026-06-30",
+        grandTotal: 600,
+        movementGroup: "Yakıt",
+        siteCode: "SANT-0002",
+        siteName: "KONUT ŞANTİYESİ",
+        status: "Kaydedildi",
+        vatRate: 20,
+        vatTotal: 100,
+        createdBy: "user-main",
+        updatedBy: "user-main",
+        createdAt: "2026-06-30T10:00:00.000Z",
+        updatedAt: "2026-06-30T10:00:00.000Z",
+      },
+    ] as ExpenseRow[];
+
+    render(<ExpenseSurface rows={rows} today="2026-07-19" />);
+
+    expect(screen.getAllByRole("heading", { level: 1 })).toHaveLength(1);
+    expect(screen.getByRole("heading", { level: 1, name: "Gider Yönetimi" })).toBeDefined();
+    const metrics = screen.getByLabelText("Gider özet metrikleri");
+    expect(within(metrics).getByText("Toplam Gider")).toBeDefined();
+    expect(within(metrics).getByText("Bu Ay")).toBeDefined();
+    expect(within(metrics).getByText("KDV Toplamı")).toBeDefined();
+    expect(within(metrics).getByText("Ödeme Bağlantısı")).toBeDefined();
+    expect(within(metrics).getByText("1.800,00 TL")).toBeDefined();
+
+    fireEvent.change(screen.getByLabelText("Gider grubu filtresi"), {
+      target: { value: "Yakıt" },
+    });
+    expect(screen.getByText("GDR-YKT-001")).toBeTruthy();
+    expect(screen.queryByText("GDR-MAL-001")).toBeNull();
+
+    fireEvent.change(screen.getByLabelText("Gider ara"), {
+      target: { value: "akaryakıt" },
+    });
+    expect(screen.getByText("Akaryakıt A.Ş.")).toBeTruthy();
   });
 });
 

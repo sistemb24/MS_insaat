@@ -94,8 +94,10 @@ describe("SubscriptionSurface", () => {
     );
 
     expect(
-      screen.getByRole("heading", { name: "Abonelik ve Paket Yönetimi" }),
+      screen.getByRole("heading", { name: "Abonelik ve Paketler" }),
     ).toBeTruthy();
+    expect(document.querySelector('[data-subscription-workspace="true"]')).toBeTruthy();
+    expect(screen.getByText("Sandbox ödeme akışı · gerçek tahsilat yok")).toBeTruthy();
     expect(screen.getByText("Mevcut paket")).toBeTruthy();
     expect(screen.getAllByText("Profesyonel").length).toBeGreaterThanOrEqual(3);
     expect(screen.getByText("Otomatik yenileme açık")).toBeTruthy();
@@ -560,7 +562,7 @@ describe("SubscriptionSurface", () => {
 
     expect(
       screen.getByText("Otomatik yenileme kapalı").className,
-    ).toContain("bg-[var(--status-draft)]");
+    ).toContain("bg-[var(--ds-text-muted)]");
     expect(
       screen.getByText(
         "Otomatik tahsilat planlanmadı; yenileme manuel başlatılmalıdır.",

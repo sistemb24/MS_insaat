@@ -44,15 +44,15 @@ export function InvitationAcceptSurface({
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-[var(--surface)] px-4 py-10 text-[var(--on-surface)]">
-      <section className="w-full max-w-[460px] rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)] p-6 shadow-sm">
+    <main className="flex min-h-screen items-center justify-center bg-[var(--ds-surface)] px-4 py-10 text-content">
+      <section className="w-full max-w-[460px] rounded-ui-panel border border-divider bg-surface-raised p-6 shadow-sm">
         <div className="mb-6 flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-[var(--radius-panel)] bg-[var(--primary)] text-sm font-bold text-white">
+          <div className="flex h-10 w-10 items-center justify-center rounded-ui-panel bg-brand-primary text-sm font-bold text-on-brand">
             NOA
           </div>
           <div>
             <h1 className="text-lg font-semibold">Daveti Kabul Et</h1>
-            <p className="text-sm text-[var(--on-surface-variant)]">
+            <p className="text-sm text-content-subtle">
               NOA İnşaat hesabınızı oluşturun
             </p>
           </div>
@@ -60,7 +60,7 @@ export function InvitationAcceptSurface({
 
         {!token ? (
           <div
-            className="rounded-[var(--radius-panel)] border border-[var(--mandatory-indicator)] bg-red-50 p-3 text-sm font-semibold text-[var(--mandatory-indicator)]"
+            className="rounded-ui-panel border border-[var(--ds-danger)] bg-danger-subtle p-3 text-sm font-semibold text-[var(--ds-danger)]"
             role="alert"
           >
             Davet bağlantısı geçersiz veya eksik.
@@ -76,7 +76,7 @@ export function InvitationAcceptSurface({
             <input name="token" type="hidden" value={token} />
             {notice ? (
               <div
-                className="rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] p-3 text-sm font-semibold"
+                className="rounded-ui-panel border border-divider bg-surface-muted p-3 text-sm font-semibold"
                 role="status"
               >
                 {notice}
@@ -86,7 +86,7 @@ export function InvitationAcceptSurface({
               Ad Soyad
               <input
                 autoComplete="name"
-                className="h-10 w-full rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] px-3 text-sm font-semibold outline-none transition focus:border-[var(--primary)]"
+                className="h-10 w-full rounded-ui-control border border-divider bg-surface-muted px-3 text-sm font-semibold outline-none transition focus:border-brand-primary"
                 onChange={(event) => setFullName(event.target.value)}
                 type="text"
                 value={fullName}
@@ -96,7 +96,7 @@ export function InvitationAcceptSurface({
               Şifre
               <input
                 autoComplete="new-password"
-                className="h-10 w-full rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] px-3 text-sm font-semibold outline-none transition focus:border-[var(--primary)]"
+                className="h-10 w-full rounded-ui-control border border-divider bg-surface-muted px-3 text-sm font-semibold outline-none transition focus:border-brand-primary"
                 onChange={(event) => setPassword(event.target.value)}
                 type="password"
                 value={password}
@@ -106,14 +106,14 @@ export function InvitationAcceptSurface({
               Şifre Tekrar
               <input
                 autoComplete="new-password"
-                className="h-10 w-full rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] px-3 text-sm font-semibold outline-none transition focus:border-[var(--primary)]"
+                className="h-10 w-full rounded-ui-control border border-divider bg-surface-muted px-3 text-sm font-semibold outline-none transition focus:border-brand-primary"
                 onChange={(event) => setPasswordConfirm(event.target.value)}
                 type="password"
                 value={passwordConfirm}
               />
             </label>
             <button
-              className="h-10 w-full rounded-[var(--radius-control)] bg-[var(--primary)] px-4 text-sm font-semibold text-white transition hover:bg-[var(--primary-hover)]"
+              className="h-10 w-full rounded-ui-control bg-brand-primary px-4 text-sm font-semibold text-on-brand transition hover:bg-brand-primary-strong"
               type="submit"
             >
               Daveti Kabul Et

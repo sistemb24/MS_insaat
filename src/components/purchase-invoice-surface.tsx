@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, useTransition } from "react";
+import { useEffect, useMemo, useRef, useState, useTransition } from "react";
 
 import {
   calculateInvoiceTotals,
@@ -116,6 +116,7 @@ export type PurchaseInvoiceSurfaceProps = {
     >;
   };
   highlightedDocumentNo?: string;
+  embedded?: boolean;
   paymentMovements?: CashBankMovementRow[];
   rows: PurchaseInvoiceRow[];
   stockCardOptions?: StockCardLookupOption[];
@@ -154,6 +155,7 @@ export function PurchaseInvoiceSurface({
   accountOptions = [],
   auditLogsByEntityId = {},
   highlightedDocumentNo,
+  embedded = false,
   lookups = { sites: [], suppliers: [] },
   permissions = { canMutateInvoices: true },
   paymentMovements = [],
@@ -557,8 +559,8 @@ export function PurchaseInvoiceSurface({
 
   return (
     <section className="mx-auto flex max-w-7xl flex-col gap-4">
-      <header className="rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)] p-5">
-        <p className="text-xs font-semibold uppercase tracking-wide text-[var(--primary)]">
+      {!embedded ? <header className="rounded-ui-panel border border-divider bg-surface-raised p-5">
+        <p className="text-xs font-semibold uppercase tracking-wide text-brand-primary">
           {invoiceTypeLabel} ve çıktı
         </p>
         <div className="mt-2 flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
@@ -566,34 +568,34 @@ export function PurchaseInvoiceSurface({
             <h1 className="text-2xl font-semibold tracking-normal">
               Faturalar
             </h1>
-            <p className="mt-2 max-w-3xl text-sm leading-6 text-[var(--on-surface-variant)]">
+            <p className="mt-2 max-w-3xl text-sm leading-6 text-content-subtle">
               {counterpartyLabel} faturası başlığı, satır toplamları, KDV,
               yaşam döngüsü ve çıktı önizlemesi PostgreSQL üzerinde çalışır.
             </p>
           </div>
-          <span className="rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] px-3 py-2 text-xs font-semibold text-[var(--on-surface-variant)]">
+          <span className="rounded-ui-control border border-divider bg-surface-muted px-3 py-2 text-xs font-semibold text-content-subtle">
             {invoiceTypeLabel}
           </span>
         </div>
-      </header>
+      </header> : null}
 
       {!isSales ? (
-        <div className="rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)] p-3 text-sm text-[var(--on-surface-variant)]">
+        <div className="rounded-ui-panel border border-divider bg-surface-raised p-3 text-sm text-content-subtle">
           Kesinleşen alış faturası otomatik olarak 153 Ticari Mallar ve 191
           İndirilecek KDV borç, 320 Satıcılar alacak satırlarıyla muhasebeleştirilir.
           Kesinleşmiş fatura, ters kayıt akışı uygulanmadan iptal edilemez.
         </div>
       ) : (
-        <div className="rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)] p-3 text-sm text-[var(--on-surface-variant)]">
+        <div className="rounded-ui-panel border border-divider bg-surface-raised p-3 text-sm text-content-subtle">
           Kesinleşen satış faturası otomatik olarak 120 Alıcılar borç, 600 Yurtiçi
           Satışlar ve 391 Hesaplanan KDV alacak satırlarıyla muhasebeleştirilir.
           Kesinleşmiş fatura, ters kayıt akışı uygulanmadan iptal edilemez.
         </div>
       )}
 
-      <div className="flex flex-wrap items-center gap-2 rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)] p-2">
+      <div className="flex flex-wrap items-center gap-2 rounded-ui-panel border border-divider bg-surface-raised p-2">
         <button
-          className="rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] px-3 py-1.5 text-sm font-medium transition hover:bg-[var(--primary-fixed)]"
+          className="rounded-ui-control border border-divider bg-surface-muted px-3 py-1.5 text-sm font-medium transition hover:bg-brand-primary-subtle"
           disabled={!permissions.canMutateInvoices}
           onClick={startCreate}
           type="button"
@@ -601,7 +603,7 @@ export function PurchaseInvoiceSurface({
           Yeni
         </button>
         <button
-          className="rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] px-3 py-1.5 text-sm font-medium transition hover:bg-[var(--primary-fixed)] disabled:opacity-50"
+          className="rounded-ui-control border border-divider bg-surface-muted px-3 py-1.5 text-sm font-medium transition hover:bg-brand-primary-subtle disabled:opacity-50"
           disabled={!permissions.canMutateInvoices || !form || isSaving}
           onClick={saveForm}
           type="button"
@@ -610,7 +612,7 @@ export function PurchaseInvoiceSurface({
         </button>
         {["Sil", "Yazdır", "PDF Önizleme", "Yenile"].map((action) => (
           <button
-            className="rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] px-3 py-1.5 text-sm font-medium transition hover:bg-[var(--primary-fixed)]"
+            className="rounded-ui-control border border-divider bg-surface-muted px-3 py-1.5 text-sm font-medium transition hover:bg-brand-primary-subtle"
             key={action}
             onClick={() => handleToolbarAction(action)}
             type="button"
@@ -621,7 +623,7 @@ export function PurchaseInvoiceSurface({
       </div>
 
       {errors.length > 0 ? (
-        <div className="rounded-[var(--radius-panel)] border border-[var(--status-cancelled)] bg-[var(--surface-container-lowest)] p-3 text-sm text-[var(--status-cancelled)]">
+        <div className="rounded-ui-panel border border-[var(--ds-danger)] bg-surface-raised p-3 text-sm text-[var(--ds-danger)]">
           <p className="font-semibold">Fatura kaydedilemedi</p>
           <ul className="mt-2 list-disc pl-5">
             {errors.map((error) => (
@@ -632,14 +634,14 @@ export function PurchaseInvoiceSurface({
       ) : null}
 
       {paymentMessage ? (
-        <div className="rounded-[var(--radius-panel)] border border-[var(--status-posted)] bg-[var(--surface-container-lowest)] p-3 text-sm font-semibold text-[var(--status-posted)]">
+        <div className="rounded-ui-panel border border-[var(--ds-success)] bg-surface-raised p-3 text-sm font-semibold text-[var(--ds-success)]">
           {paymentMessage}
         </div>
       ) : null}
 
       {postingMessage ? (
         <div
-          className="rounded-[var(--radius-panel)] border border-[var(--status-posted)] bg-[var(--surface-container-lowest)] p-3 text-sm font-semibold text-[var(--status-posted)]"
+          className="rounded-ui-panel border border-[var(--ds-success)] bg-surface-raised p-3 text-sm font-semibold text-[var(--ds-success)]"
           role="status"
         >
           {postingMessage}
@@ -648,7 +650,7 @@ export function PurchaseInvoiceSurface({
 
       {printNotice ? (
         <div
-          className="rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)] p-3 text-sm font-semibold text-[var(--on-surface-variant)]"
+          className="rounded-ui-panel border border-divider bg-surface-raised p-3 text-sm font-semibold text-content-subtle"
           role="status"
         >
           {printNotice}
@@ -656,8 +658,8 @@ export function PurchaseInvoiceSurface({
       ) : null}
 
       {form ? (
-        <article className="rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)]">
-          <div className="border-b border-[var(--grid-border)] px-4 py-3">
+        <article className="rounded-ui-panel border border-divider bg-surface-raised">
+          <div className="border-b border-divider px-4 py-3">
             <h2 className="text-sm font-semibold">{invoiceTypeLabel} Ekle/Düzelt</h2>
           </div>
           <div className="grid gap-4 p-4 lg:grid-cols-[1fr_320px]">
@@ -724,20 +726,20 @@ export function PurchaseInvoiceSurface({
               <div className="flex items-center justify-between gap-3">
                 <h3 className="text-sm font-semibold">Fatura Satırları</h3>
                 <div className="flex flex-wrap items-center justify-end gap-2">
-                  <span className="rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] px-2 py-1 text-xs font-semibold text-[var(--on-surface-variant)]">
+                  <span className="rounded-ui-control border border-divider bg-surface-muted px-2 py-1 text-xs font-semibold text-content-subtle">
                     {baseCurrencyContext}
                   </span>
-                  <span className="rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] px-2 py-1 text-xs font-semibold text-[var(--on-surface-variant)]">
+                  <span className="rounded-ui-control border border-divider bg-surface-muted px-2 py-1 text-xs font-semibold text-content-subtle">
                     {currencyPolicyContext}
                   </span>
-                  <span className="rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] px-2 py-1 text-xs font-semibold text-[var(--on-surface-variant)]">
+                  <span className="rounded-ui-control border border-divider bg-surface-muted px-2 py-1 text-xs font-semibold text-content-subtle">
                     {defaultVatContext}
                   </span>
                 </div>
               </div>
-              <div className="overflow-x-auto rounded-[var(--radius-panel)] border border-[var(--grid-border)]">
-                <table className="min-w-[1040px] w-full text-left text-sm">
-                  <thead className="bg-[var(--surface-container-low)] text-xs uppercase text-[var(--on-surface-variant)]">
+              <div className="overflow-x-auto rounded-ui-panel border border-divider">
+                <table aria-label={invoiceTypeLabel + " giriş satırları"} className="min-w-[1040px] w-full text-left text-sm">
+                  <thead className="bg-surface-muted text-xs uppercase text-content-subtle">
                     <tr>
                       <th className="px-3 py-2">Stok Kartı</th>
                       <th className="px-3 py-2">Stok/Hizmet</th>
@@ -874,7 +876,7 @@ export function PurchaseInvoiceSurface({
                           </td>
                           <td className="px-3 py-2 text-center">
                             <button
-                              className="rounded-[var(--radius-control)] border border-[var(--grid-border)] px-2 py-1 text-xs font-semibold"
+                              className="rounded-ui-control border border-divider px-2 py-1 text-xs font-semibold"
                               onClick={() => removeLine(line.id)}
                               type="button"
                             >
@@ -889,7 +891,7 @@ export function PurchaseInvoiceSurface({
               </div>
               <div>
                 <button
-                  className="rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] px-3 py-1.5 text-sm font-medium transition hover:bg-[var(--primary-fixed)]"
+                  className="rounded-ui-control border border-divider bg-surface-muted px-3 py-1.5 text-sm font-medium transition hover:bg-brand-primary-subtle"
                   onClick={addLine}
                   type="button"
                 >
@@ -897,7 +899,7 @@ export function PurchaseInvoiceSurface({
                 </button>
               </div>
             </div>
-            <aside className="rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] p-4">
+            <aside className="rounded-ui-panel border border-divider bg-surface-muted p-4">
               <h3 className="text-sm font-semibold">Fatura Toplamları</h3>
               <SummaryRow label="Ara Toplam" value={draftTotals?.subtotal ?? 0} />
               <SummaryRow
@@ -918,19 +920,19 @@ export function PurchaseInvoiceSurface({
         </article>
       ) : null}
 
-      <div className="grid gap-3 md:grid-cols-3">
+      {!embedded ? <div className="grid gap-3 md:grid-cols-3">
         <Metric label="Net Toplam" value={formatMoney(totalNet)} />
         <Metric label="KDV Toplamı" value={formatMoney(totalVat)} />
         <Metric label="Genel Toplam" value={formatMoney(totalGrand)} />
-      </div>
+      </div> : null}
 
-      <article className="overflow-hidden rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)]">
-        <div className="border-b border-[var(--grid-border)] px-4 py-3">
+      <article className="overflow-hidden rounded-ui-panel border border-divider bg-surface-raised">
+        <div className="border-b border-divider px-4 py-3">
           <h2 className="text-sm font-semibold">{invoiceTypeLabel} hareket listesi</h2>
         </div>
         <div className="overflow-x-auto">
-          <table className="min-w-[980px] w-full text-left text-sm">
-            <thead className="bg-[var(--surface-container-low)] text-xs uppercase text-[var(--on-surface-variant)]">
+          <table aria-label={invoiceTypeLabel + " hareket listesi"} className="min-w-[980px] w-full text-left text-sm">
+            <thead className="bg-surface-muted text-xs uppercase text-content-subtle">
               <tr>
                 <th className="px-4 py-3 font-semibold">Evrak No</th>
                 <th className="px-4 py-3 font-semibold">Tarih</th>
@@ -944,12 +946,12 @@ export function PurchaseInvoiceSurface({
                 <th className="px-4 py-3 text-center font-semibold">İşlem</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[var(--grid-border)]">
+            <tbody className="divide-y divide-divider">
               {displayRows.length === 0 ? (
                 <tr>
                   <td className="px-4 py-10 text-center" colSpan={10}>
                     <p className="font-semibold">Henüz fatura kaydı yok</p>
-                    <p className="mt-1 text-sm text-[var(--on-surface-variant)]">
+                    <p className="mt-1 text-sm text-content-subtle">
                       Satır grid&apos;i stok kartı, depo, miktar, fiyat, iskonto ve
                       KDV alanlarıyla birlikte kullanılabilir.
                     </p>
@@ -1008,12 +1010,12 @@ export function PurchaseInvoiceSurface({
                           {row.status}
                         </span>
                         {row.ledgerDocumentNo ? (
-                          <span className="font-mono text-[10px] text-[var(--on-surface-variant)]">
+                          <span className="font-mono text-[10px] text-content-subtle">
                             Fiş: {row.ledgerDocumentNo}
                           </span>
                         ) : null}
                         {row.ledgerReversalDocumentNo ? (
-                          <span className="font-mono text-[10px] text-[var(--status-cancelled)]">
+                          <span className="font-mono text-[10px] text-[var(--ds-danger)]">
                             Ters fiş: {row.ledgerReversalDocumentNo}
                           </span>
                         ) : null}
@@ -1023,51 +1025,51 @@ export function PurchaseInvoiceSurface({
                       {isSales ? (
                         remainingCollectionTotal <= 0 ? (
                           <div className="grid gap-1">
-                            <span className="font-semibold text-[var(--status-posted)]">Tahsil Edildi</span>
-                            <span className="text-xs text-[var(--on-surface-variant)]">{collectionMovement?.accountName}</span>
+                            <span className="font-semibold text-[var(--ds-success)]">Tahsil Edildi</span>
+                            <span className="text-xs text-content-subtle">{collectionMovement?.accountName}</span>
                             <MovementLedgerDocuments movements={getInvoiceCollectionMovements(localPaymentMovements, row.id)} />
                           </div>
                         ) : isPosted ? (
                           <div className="grid gap-2">
-                          <span className="font-semibold text-[var(--on-surface-variant)]">Kalan: {formatMoney(remainingCollectionTotal)}</span>
+                          <span className="font-semibold text-content-subtle">Kalan: {formatMoney(remainingCollectionTotal)}</span>
                             <MovementLedgerDocuments movements={getInvoiceCollectionMovements(localPaymentMovements, row.id)} />
                             {accountOptions.length > 0 ? (
-                              <select className="h-8 rounded border border-[var(--grid-border)] bg-[var(--surface-container-lowest)] px-2 text-xs" onChange={(event) => setPaymentAccountCode(event.target.value)} value={paymentAccountCode}>
+                              <select className="h-8 rounded border border-divider bg-surface-raised px-2 text-xs" onChange={(event) => setPaymentAccountCode(event.target.value)} value={paymentAccountCode}>
                                 {accountOptions.map((account) => <option key={account.code} value={account.code}>{account.code} - {account.name}</option>)}
                               </select>
                             ) : null}
-                            <input className="h-8 rounded border border-[var(--grid-border)] px-2 text-xs" min="0.01" max={remainingCollectionTotal} placeholder={`Tam tahsilat: ${remainingCollectionTotal.toFixed(2)}`} step="0.01" type="number" value={collectionAmountById[row.id] ?? ""} onChange={(event) => setCollectionAmountById((current) => ({ ...current, [row.id]: event.target.value }))} />
-                            <button className="rounded border border-[var(--grid-border)] px-2 py-1 text-xs font-semibold disabled:opacity-50" disabled={cannotMutate || isProcessing || accountOptions.length === 0} onClick={() => collectInvoice(row)} type="button">
+                            <input className="h-8 rounded border border-divider px-2 text-xs" min="0.01" max={remainingCollectionTotal} placeholder={`Tam tahsilat: ${remainingCollectionTotal.toFixed(2)}`} step="0.01" type="number" value={collectionAmountById[row.id] ?? ""} onChange={(event) => setCollectionAmountById((current) => ({ ...current, [row.id]: event.target.value }))} />
+                            <button className="rounded border border-divider px-2 py-1 text-xs font-semibold disabled:opacity-50" disabled={cannotMutate || isProcessing || accountOptions.length === 0} onClick={() => collectInvoice(row)} type="button">
                               {collectingId === row.id ? "Tahsil ediliyor" : "Tahsilat Oluştur"}
                             </button>
                           </div>
                         ) : (
-                          <span className="text-xs text-[var(--on-surface-variant)]">Kesinleşince tahsil edilir</span>
+                          <span className="text-xs text-content-subtle">Kesinleşince tahsil edilir</span>
                         )
                       ) : isPaid && paymentMovement ? (
                         <div className="grid gap-1">
-                          <span className="font-semibold text-[var(--status-posted)]">
+                          <span className="font-semibold text-[var(--ds-success)]">
                             Ödendi
                           </span>
-                          <span className="text-xs text-[var(--on-surface-variant)]">
+                          <span className="text-xs text-content-subtle">
                             {paymentMovement.accountName}
                           </span>
-                          <span className="font-mono text-xs text-[var(--on-surface-variant)]">
+                          <span className="font-mono text-xs text-content-subtle">
                             {formatDate(paymentMovement.movementDate)}
                           </span>
                           <MovementLedgerDocuments movements={getInvoicePaymentMovements(localPaymentMovements, row.id)} />
                         </div>
                       ) : isPosted ? (
                         <div className="grid gap-2">
-                          <span className="font-semibold text-[var(--on-surface-variant)]">
+                          <span className="font-semibold text-content-subtle">
                             Kalan: {formatMoney(remainingPaymentTotal)}
                           </span>
                           <MovementLedgerDocuments movements={getInvoicePaymentMovements(localPaymentMovements, row.id)} />
                           {accountOptions.length > 0 ? (
-                            <label className="flex flex-col gap-1 text-xs font-semibold text-[var(--on-surface-variant)]">
+                            <label className="flex flex-col gap-1 text-xs font-semibold text-content-subtle">
                               <span>Ödeme hesabı</span>
                               <select
-                                className="h-8 rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)] px-2 text-xs font-semibold text-[var(--on-surface)]"
+                                className="h-8 rounded-ui-control border border-divider bg-surface-raised px-2 text-xs font-semibold text-content"
                                 onChange={(event) =>
                                   setPaymentAccountCode(event.target.value)
                                 }
@@ -1082,7 +1084,7 @@ export function PurchaseInvoiceSurface({
                             </label>
                           ) : null}
                           <input
-                            className="h-8 rounded-[var(--radius-control)] border border-[var(--grid-border)] px-2 text-xs"
+                            className="h-8 rounded-ui-control border border-divider px-2 text-xs"
                             max={remainingPaymentTotal}
                             min="0.01"
                             placeholder={`Tam ödeme: ${remainingPaymentTotal.toFixed(2)}`}
@@ -1092,7 +1094,7 @@ export function PurchaseInvoiceSurface({
                             onChange={(event) => setPaymentAmountById((current) => ({ ...current, [row.id]: event.target.value }))}
                           />
                           <button
-                            className="rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] px-2 py-1 text-xs font-semibold transition hover:bg-[var(--primary-fixed)] disabled:opacity-50"
+                            className="rounded-ui-control border border-divider bg-surface-muted px-2 py-1 text-xs font-semibold transition hover:bg-brand-primary-subtle disabled:opacity-50"
                             disabled={
                               cannotMutate ||
                               isCancelled ||
@@ -1106,7 +1108,7 @@ export function PurchaseInvoiceSurface({
                           </button>
                         </div>
                       ) : (
-                        <span className="text-xs text-[var(--on-surface-variant)]">
+                        <span className="text-xs text-content-subtle">
                           Kesinleşince ödenir
                         </span>
                       )}
@@ -1115,7 +1117,7 @@ export function PurchaseInvoiceSurface({
                       <div className="flex items-center justify-center gap-2">
                         <button
                           aria-label={`Düzenle ${row.documentNo}`}
-                          className="rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] px-2 py-1 text-xs font-semibold transition hover:bg-[var(--primary-fixed)] disabled:opacity-50"
+                          className="rounded-ui-control border border-divider bg-surface-muted px-2 py-1 text-xs font-semibold transition hover:bg-brand-primary-subtle disabled:opacity-50"
                           disabled={
                             cannotMutate || isCancelled || isPosted || isProcessing
                           }
@@ -1126,7 +1128,7 @@ export function PurchaseInvoiceSurface({
                         </button>
                         <button
                           aria-label={`Kesinleştir ${row.documentNo}`}
-                          className="rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] px-2 py-1 text-xs font-semibold transition hover:bg-[var(--primary-fixed)] disabled:opacity-50"
+                          className="rounded-ui-control border border-divider bg-surface-muted px-2 py-1 text-xs font-semibold transition hover:bg-brand-primary-subtle disabled:opacity-50"
                           disabled={
                             cannotMutate || isCancelled || isPosted || isProcessing
                           }
@@ -1137,7 +1139,7 @@ export function PurchaseInvoiceSurface({
                         </button>
                         <button
                           aria-label={`İptal ${row.documentNo}`}
-                          className="rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] px-2 py-1 text-xs font-semibold transition hover:bg-[var(--primary-fixed)] disabled:opacity-50"
+                          className="rounded-ui-control border border-divider bg-surface-muted px-2 py-1 text-xs font-semibold transition hover:bg-brand-primary-subtle disabled:opacity-50"
                           disabled={
                             cannotMutate ||
                             isCancelled ||
@@ -1190,8 +1192,8 @@ function isHighlightedDocument(
 
 function highlightedRowClass(isHighlighted: boolean) {
   return isHighlighted
-    ? "bg-[var(--primary-fixed)] ring-1 ring-inset ring-[var(--primary)]"
-    : "hover:bg-[var(--primary-fixed)]";
+    ? "bg-brand-primary-subtle ring-1 ring-inset ring-brand-primary"
+    : "hover:bg-brand-primary-subtle";
 }
 
 function PurchaseInvoiceAuditHistory({
@@ -1215,34 +1217,34 @@ function PurchaseInvoiceAuditHistory({
   }
 
   return (
-    <article className="rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)]">
-      <div className="border-b border-[var(--grid-border)] px-4 py-3">
+    <article className="rounded-ui-panel border border-divider bg-surface-raised">
+      <div className="border-b border-divider px-4 py-3">
         <h2 className="text-sm font-semibold">İşlem Geçmişi</h2>
       </div>
-      <div className="divide-y divide-[var(--grid-border)]">
+      <div className="divide-y divide-divider">
         {groups.map(({ logs, row }) => (
           <section className="grid gap-3 p-4 lg:grid-cols-[180px_1fr]" key={row.id}>
             <div>
               <p className="font-mono text-xs font-semibold">{row.documentNo}</p>
-              <p className="mt-1 text-xs text-[var(--on-surface-variant)]">
+              <p className="mt-1 text-xs text-content-subtle">
                 {row.counterpartyName}
               </p>
             </div>
             <ol className="grid gap-2">
               {logs.map((log) => (
                 <li
-                  className="rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] px-3 py-2"
+                  className="rounded-ui-control border border-divider bg-surface-muted px-3 py-2"
                   key={log.id}
                 >
                   <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
                     <p className="text-sm font-semibold">
                       {formatAuditAction(log.action, variant)}
                     </p>
-                    <time className="font-mono text-xs text-[var(--on-surface-variant)]">
+                    <time className="font-mono text-xs text-content-subtle">
                       {formatAuditDate(log.occurredAt)}
                     </time>
                   </div>
-                  <p className="mt-1 text-xs text-[var(--on-surface-variant)]">
+                  <p className="mt-1 text-xs text-content-subtle">
                     {formatAuditTransition(log.metadata)}
                   </p>
                 </li>
@@ -1315,32 +1317,82 @@ function InvoicePdfPreview({
   onClose: () => void;
   rows: PurchaseInvoiceRow[];
 }) {
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const previousFocus = document.activeElement as HTMLElement | null;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    closeButtonRef.current?.focus();
+
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        onClose();
+        return;
+      }
+
+      if (event.key !== "Tab") {
+        return;
+      }
+
+      const focusableElements = Array.from(
+        dialogRef.current?.querySelectorAll<HTMLElement>(
+          "button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex='-1'])",
+        ) ?? [],
+      );
+      const firstElement = focusableElements[0];
+      const lastElement = focusableElements.at(-1);
+
+      if (!firstElement || !lastElement) {
+        event.preventDefault();
+      } else if (event.shiftKey && document.activeElement === firstElement) {
+        event.preventDefault();
+        lastElement.focus();
+      } else if (!event.shiftKey && document.activeElement === lastElement) {
+        event.preventDefault();
+        firstElement.focus();
+      }
+    }
+
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener("keydown", handleKeyDown);
+      previousFocus?.focus();
+    };
+  }, [onClose]);
+
   return (
     <div
       aria-label={`${invoiceTypeLabel} PDF önizleme`}
       aria-modal="true"
-      className="fixed inset-0 z-50 overflow-y-auto bg-black/45 p-4 sm:p-8"
+      className="fixed inset-0 z-50 overflow-y-auto bg-scrim p-4 sm:p-8"
+      ref={dialogRef}
       role="dialog"
     >
-      <article className="mx-auto max-w-4xl rounded-[var(--radius-panel)] bg-white p-6 text-slate-950 shadow-2xl print:max-w-none print:rounded-none print:shadow-none">
-        <div className="mb-6 flex items-start justify-between gap-4 border-b border-slate-300 pb-4 print:hidden">
+      <article className="mx-auto max-w-4xl rounded-ui-panel bg-surface-raised p-6 text-content shadow-2xl print:max-w-none print:rounded-none print:shadow-none">
+        <div className="mb-6 flex items-start justify-between gap-4 border-b border-divider pb-4 print:hidden">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+            <p className="text-xs font-semibold uppercase tracking-wide text-content-muted">
               PDF Önizleme
             </p>
             <h2 className="mt-1 text-xl font-semibold">{invoiceTypeLabel}</h2>
           </div>
           <div className="flex gap-2">
             <button
-              className="rounded border border-slate-300 px-3 py-2 text-sm font-semibold"
+              className="rounded border border-divider px-3 py-2 text-sm font-semibold"
               onClick={() => window.print()}
               type="button"
             >
               PDF Olarak Yazdır
             </button>
             <button
-              className="rounded border border-slate-300 px-3 py-2 text-sm font-semibold"
+              className="rounded border border-divider px-3 py-2 text-sm font-semibold"
               onClick={onClose}
+              ref={closeButtonRef}
               type="button"
             >
               Kapat
@@ -1350,15 +1402,15 @@ function InvoicePdfPreview({
         <div className="mb-5 flex items-end justify-between gap-4">
           <div>
             <p className="text-lg font-bold">NOA İnşaat Yönetim</p>
-            <p className="text-sm text-slate-600">{invoiceTypeLabel} dökümü</p>
+            <p className="text-sm text-content-subtle">{invoiceTypeLabel} dökümü</p>
           </div>
-          <p className="text-sm text-slate-600">
+          <p className="text-sm text-content-subtle">
             {new Intl.DateTimeFormat("tr-TR").format(new Date())}
           </p>
         </div>
-        <table className="w-full border-collapse text-left text-sm">
+        <table aria-label={`${invoiceTypeLabel} döküm tablosu`} className="w-full border-collapse text-left text-sm">
           <thead>
-            <tr className="border-y border-slate-300 bg-slate-100">
+            <tr className="border-y border-divider bg-surface-muted">
               <th className="px-2 py-2">Evrak</th>
               <th className="px-2 py-2">Tarih</th>
               <th className="px-2 py-2">Cari</th>
@@ -1369,7 +1421,7 @@ function InvoicePdfPreview({
           </thead>
           <tbody>
             {rows.map((row) => (
-              <tr className="border-b border-slate-200" key={row.id}>
+              <tr className="border-b border-divider" key={row.id}>
                 <td className="px-2 py-2 font-mono text-xs">{row.documentNo}</td>
                 <td className="px-2 py-2">{formatDate(row.invoiceDate)}</td>
                 <td className="px-2 py-2">{row.counterpartyName}</td>
@@ -1380,7 +1432,7 @@ function InvoicePdfPreview({
             ))}
           </tbody>
           <tfoot>
-            <tr className="border-t-2 border-slate-500 font-bold">
+            <tr className="border-t-2 border-outline-strong font-bold">
               <td className="px-2 py-3 text-right" colSpan={5}>Genel Toplam</td>
               <td className="px-2 py-3 text-right font-mono">
                 {formatMoney(rows.filter((row) => row.status !== "İptal").reduce((sum, row) => sum + row.grandTotal, 0))}
@@ -1393,7 +1445,7 @@ function InvoicePdfPreview({
   );
 }
 const controlClass =
-  "h-10 w-full rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)] px-3 text-sm outline-none transition focus:border-[var(--primary)]";
+  "h-10 w-full rounded-ui-control border border-divider bg-surface-raised px-3 text-sm outline-none transition focus:border-brand-primary";
 
 function Field({
   children,
@@ -1422,7 +1474,7 @@ function SummaryRow({
   return (
     <div
       className={`mt-3 flex items-center justify-between gap-3 text-sm ${
-        strong ? "border-t border-[var(--grid-border)] pt-3 font-semibold" : ""
+        strong ? "border-t border-divider pt-3 font-semibold" : ""
       }`}
     >
       <span>{label}</span>
@@ -1466,8 +1518,8 @@ function LineInput({
 
 function Metric({ label, value }: { label: string; value: string }) {
   return (
-    <article className="rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)] p-4">
-      <p className="text-sm font-semibold text-[var(--on-surface-variant)]">
+    <article className="rounded-ui-panel border border-divider bg-surface-raised p-4">
+      <p className="text-sm font-semibold text-content-subtle">
         {label}
       </p>
       <p className="mt-2 font-mono text-2xl font-semibold">{value}</p>
@@ -1572,7 +1624,7 @@ function MovementLedgerDocuments({ movements }: { movements: CashBankMovementRow
   );
 
   return documents.map((documentNo) => (
-    <span className="font-mono text-xs text-[var(--on-surface-variant)]" key={documentNo}>
+    <span className="font-mono text-xs text-content-subtle" key={documentNo}>
       Muhasebe fişi: {documentNo}
     </span>
   ));
@@ -1581,10 +1633,10 @@ function MovementLedgerDocuments({ movements }: { movements: CashBankMovementRow
 function statusBadgeClass(status: PurchaseInvoiceRow["status"]) {
   const tone =
     status === "İptal"
-      ? "bg-[var(--status-cancelled)]"
-      : "bg-[var(--status-process)]";
+      ? "bg-[var(--ds-danger)]"
+      : "bg-[var(--ds-info)]";
 
-  return `rounded-[var(--radius-control)] ${tone} px-2 py-1 text-xs font-semibold text-white`;
+  return `rounded-ui-control ${tone} px-2 py-1 text-xs font-semibold text-on-status`;
 }
 
 function createValuesFromForm(form: FormState): PurchaseInvoiceCreateValues {

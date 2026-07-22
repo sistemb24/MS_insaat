@@ -40,6 +40,7 @@ type FormState = {
 export function DeliveryNoteSurface({
   auditLogsByEntityId = {},
   canMutate,
+  embedded = false,
   persistence,
   purchaseInvoices,
   rows,
@@ -50,6 +51,7 @@ export function DeliveryNoteSurface({
 }: {
   auditLogsByEntityId?: Record<string, AuditLogEntry[]>;
   canMutate: boolean;
+  embedded?: boolean;
   persistence: Persistence;
   purchaseInvoices: PurchaseInvoiceRow[];
   rows: DeliveryNoteRow[];
@@ -213,23 +215,23 @@ export function DeliveryNoteSurface({
 
   return (
     <section className="mx-auto grid max-w-7xl gap-4">
-      <header className="rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)] p-5">
-        <p className="text-xs font-semibold uppercase tracking-wide text-[var(--primary)]">Stok giriş belgesi</p>
+      {!embedded ? <header className="rounded-ui-panel border border-divider bg-surface-raised p-5">
+        <p className="text-xs font-semibold uppercase tracking-wide text-brand-primary">Stok giriş belgesi</p>
         <h1 className="mt-2 text-2xl font-semibold">Alış İrsaliyeleri</h1>
-        <p className="mt-2 text-sm text-[var(--on-surface-variant)]">Tedarikçi sevk belgesini şantiye ve depoya bağlayın; alış faturasından satırları devralın ve kesinleştirildiğinde stok girişini oluşturun.</p>
-      </header>
+        <p className="mt-2 text-sm text-content-subtle">Tedarikçi sevk belgesini şantiye ve depoya bağlayın; alış faturasından satırları devralın ve kesinleştirildiğinde stok girişini oluşturun.</p>
+      </header> : null}
 
-      <div className="flex flex-wrap gap-2 rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)] p-2">
+      <div className="flex flex-wrap gap-2 rounded-ui-panel border border-divider bg-surface-raised p-2">
         <button className={buttonClass} disabled={!canMutate} onClick={startCreate} type="button">Yeni İrsaliye</button>
         <button className={buttonClass} disabled={!form || isPending} onClick={save} type="button">{isPending ? "Kaydediliyor" : "Kaydet"}</button>
         <button className={buttonClass} onClick={() => window.print()} type="button">Yazdır</button>
       </div>
 
-      {errors.length > 0 ? <div className="rounded-[var(--radius-panel)] border border-[var(--status-cancelled)] p-3 text-sm text-[var(--status-cancelled)]"><p className="font-semibold">İrsaliye kaydedilemedi</p><ul className="mt-2 list-disc pl-5">{errors.map((error) => <li key={error}>{error}</li>)}</ul></div> : null}
-      {notice ? <div className="rounded-[var(--radius-panel)] border border-[var(--status-posted)] p-3 text-sm font-semibold text-[var(--status-posted)]" role="status">{notice}</div> : null}
+      {errors.length > 0 ? <div className="rounded-ui-panel border border-[var(--ds-danger)] p-3 text-sm text-[var(--ds-danger)]"><p className="font-semibold">İrsaliye kaydedilemedi</p><ul className="mt-2 list-disc pl-5">{errors.map((error) => <li key={error}>{error}</li>)}</ul></div> : null}
+      {notice ? <div className="rounded-ui-panel border border-[var(--ds-success)] p-3 text-sm font-semibold text-[var(--ds-success)]" role="status">{notice}</div> : null}
 
       {form ? (
-        <article className="rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)] p-4">
+        <article className="rounded-ui-panel border border-divider bg-surface-raised p-4">
           <h2 className="text-sm font-semibold">Alış İrsaliyesi Ekle/Düzelt</h2>
           <div className="mt-4 grid gap-3 md:grid-cols-3">
             <Field label="İrsaliye No"><input className={inputClass} onChange={(event) => setForm({ ...form, documentNo: event.target.value })} value={form.documentNo} /></Field>
@@ -239,15 +241,15 @@ export function DeliveryNoteSurface({
             <Field label="Şantiye"><select className={inputClass} disabled={Boolean(form.linkedPurchaseInvoiceId)} onChange={(event) => selectLookup("site", event.target.value)} value={form.siteCode}><option value="">Şantiye seç</option>{sites.map((row) => <option key={row.code} value={row.code}>{row.name}</option>)}</select></Field>
             <Field label="Açıklama"><input className={inputClass} onChange={(event) => setForm({ ...form, description: event.target.value })} value={form.description} /></Field>
           </div>
-          <div className="mt-4 overflow-x-auto rounded-[var(--radius-panel)] border border-[var(--grid-border)]">
-            <table className="min-w-[850px] w-full text-left text-sm"><thead className="bg-[var(--surface-container-low)]"><tr><th className="p-2">Stok Kartı</th><th className="p-2">Stok/Hizmet</th><th className="p-2">Depo</th><th className="p-2">Birim</th><th className="p-2 text-right">Miktar</th><th className="p-2">İşlem</th></tr></thead><tbody>{form.lines.map((line, index) => <tr key={line.id}><td className="p-2"><select aria-label={`Stok Kartı satır ${index + 1}`} className={inputClass} onChange={(event) => selectStock(line.id, event.target.value)} value={line.stockCode ?? ""}><option value="">Serbest giriş</option>{stockCards.map((stock) => <option key={stock.code} value={stock.code}>{stock.code} - {stock.name}</option>)}</select></td><td className="p-2"><input aria-label={`Stok/Hizmet satır ${index + 1}`} className={inputClass} onChange={(event) => updateLine(line.id, "stockName", event.target.value)} value={line.stockName} /></td><td className="p-2"><input aria-label={`Depo satır ${index + 1}`} className={inputClass} onChange={(event) => updateLine(line.id, "warehouse", event.target.value)} value={line.warehouse} /></td><td className="p-2"><input aria-label={`Birim satır ${index + 1}`} className={inputClass} onChange={(event) => updateLine(line.id, "unit", event.target.value)} value={line.unit} /></td><td className="p-2"><input aria-label={`Miktar satır ${index + 1}`} className={`${inputClass} text-right`} min="0" onChange={(event) => updateLine(line.id, "quantity", event.target.value)} type="number" value={line.quantity} /></td><td className="p-2"><button className={buttonClass} onClick={() => setForm({ ...form, lines: form.lines.filter((item) => item.id !== line.id) })} type="button">Sil</button></td></tr>)}</tbody></table>
+          <div className="mt-4 overflow-x-auto rounded-ui-panel border border-divider">
+            <table className="min-w-[850px] w-full text-left text-sm"><thead className="bg-surface-muted"><tr><th className="p-2">Stok Kartı</th><th className="p-2">Stok/Hizmet</th><th className="p-2">Depo</th><th className="p-2">Birim</th><th className="p-2 text-right">Miktar</th><th className="p-2">İşlem</th></tr></thead><tbody>{form.lines.map((line, index) => <tr key={line.id}><td className="p-2"><select aria-label={`Stok Kartı satır ${index + 1}`} className={inputClass} onChange={(event) => selectStock(line.id, event.target.value)} value={line.stockCode ?? ""}><option value="">Serbest giriş</option>{stockCards.map((stock) => <option key={stock.code} value={stock.code}>{stock.code} - {stock.name}</option>)}</select></td><td className="p-2"><input aria-label={`Stok/Hizmet satır ${index + 1}`} className={inputClass} onChange={(event) => updateLine(line.id, "stockName", event.target.value)} value={line.stockName} /></td><td className="p-2"><input aria-label={`Depo satır ${index + 1}`} className={inputClass} onChange={(event) => updateLine(line.id, "warehouse", event.target.value)} value={line.warehouse} /></td><td className="p-2"><input aria-label={`Birim satır ${index + 1}`} className={inputClass} onChange={(event) => updateLine(line.id, "unit", event.target.value)} value={line.unit} /></td><td className="p-2"><input aria-label={`Miktar satır ${index + 1}`} className={`${inputClass} text-right`} min="0" onChange={(event) => updateLine(line.id, "quantity", event.target.value)} type="number" value={line.quantity} /></td><td className="p-2"><button className={buttonClass} onClick={() => setForm({ ...form, lines: form.lines.filter((item) => item.id !== line.id) })} type="button">Sil</button></td></tr>)}</tbody></table>
           </div>
           <button className={`${buttonClass} mt-3`} onClick={() => setForm({ ...form, lines: [...form.lines, emptyLine()] })} type="button">Satır Ekle</button>
         </article>
       ) : null}
 
-      <div className="grid gap-3 sm:grid-cols-3"><Metric label="Toplam İrsaliye" value={String(displayRows.length)} /><Metric label="Kesinleşen" value={String(postedRows.length)} /><Metric label="Depoya Giren Miktar" value={formatQuantity(postedRows.reduce((sum, row) => sum + row.totalQuantity, 0))} /></div>
-      <article className="overflow-hidden rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)]"><div className="border-b border-[var(--grid-border)] px-4 py-3"><h2 className="text-sm font-semibold">İrsaliye Hareketleri</h2></div><div className="overflow-x-auto"><table className="min-w-[950px] w-full text-left text-sm"><thead className="bg-[var(--surface-container-low)]"><tr><th className="p-3">İrsaliye</th><th className="p-3">Tarih</th><th className="p-3">Tedarikçi</th><th className="p-3">Şantiye</th><th className="p-3">Bağlı Fatura</th><th className="p-3 text-right">Miktar</th><th className="p-3">Durum</th><th className="p-3">İşlem</th></tr></thead><tbody className="divide-y divide-[var(--grid-border)]">{displayRows.length === 0 ? <tr><td className="p-8 text-center" colSpan={8}>Henüz alış irsaliyesi yok.</td></tr> : displayRows.map((row) => <tr key={row.id}><td className="p-3 font-mono text-xs">{row.documentNo}</td><td className="p-3">{formatDate(row.deliveryDate)}</td><td className="p-3">{row.supplierName}</td><td className="p-3">{row.siteName}</td><td className="p-3">{row.linkedPurchaseInvoiceDocumentNo || "-"}</td><td className="p-3 text-right font-mono">{formatQuantity(row.totalQuantity)}</td><td className="p-3">{row.status}</td><td className="p-3"><div className="flex gap-2"><button aria-label={`Düzenle ${row.documentNo}`} className={buttonClass} disabled={!canMutate || row.status !== "Taslak" || processingId === row.id} onClick={() => startEdit(row)} type="button">Düzenle</button><button aria-label={`Kesinleştir ${row.documentNo}`} className={buttonClass} disabled={!canMutate || row.status !== "Taslak" || processingId === row.id} onClick={() => transition(row, "post")} type="button">Kesinleştir</button><button aria-label={`İptal ${row.documentNo}`} className={buttonClass} disabled={!canMutate || row.status === "İptal" || processingId === row.id} onClick={() => transition(row, "cancel")} type="button">İptal Et</button></div></td></tr>)}</tbody></table></div></article>
+      {!embedded ? <div className="grid gap-3 sm:grid-cols-3"><Metric label="Toplam İrsaliye" value={String(displayRows.length)} /><Metric label="Kesinleşen" value={String(postedRows.length)} /><Metric label="Depoya Giren Miktar" value={formatQuantity(postedRows.reduce((sum, row) => sum + row.totalQuantity, 0))} /></div> : null}
+      <article className="overflow-hidden rounded-ui-panel border border-divider bg-surface-raised"><div className="border-b border-divider px-4 py-3"><h2 className="text-sm font-semibold">İrsaliye Hareketleri</h2></div><div className="overflow-x-auto"><table className="min-w-[950px] w-full text-left text-sm"><thead className="bg-surface-muted"><tr><th className="p-3">İrsaliye</th><th className="p-3">Tarih</th><th className="p-3">Tedarikçi</th><th className="p-3">Şantiye</th><th className="p-3">Bağlı Fatura</th><th className="p-3 text-right">Miktar</th><th className="p-3">Durum</th><th className="p-3">İşlem</th></tr></thead><tbody className="divide-y divide-divider">{displayRows.length === 0 ? <tr><td className="p-8 text-center" colSpan={8}>Henüz alış irsaliyesi yok.</td></tr> : displayRows.map((row) => <tr key={row.id}><td className="p-3 font-mono text-xs">{row.documentNo}</td><td className="p-3">{formatDate(row.deliveryDate)}</td><td className="p-3">{row.supplierName}</td><td className="p-3">{row.siteName}</td><td className="p-3">{row.linkedPurchaseInvoiceDocumentNo || "-"}</td><td className="p-3 text-right font-mono">{formatQuantity(row.totalQuantity)}</td><td className="p-3">{row.status}</td><td className="p-3"><div className="flex gap-2"><button aria-label={`Düzenle ${row.documentNo}`} className={buttonClass} disabled={!canMutate || row.status !== "Taslak" || processingId === row.id} onClick={() => startEdit(row)} type="button">Düzenle</button><button aria-label={`Kesinleştir ${row.documentNo}`} className={buttonClass} disabled={!canMutate || row.status !== "Taslak" || processingId === row.id} onClick={() => transition(row, "post")} type="button">Kesinleştir</button><button aria-label={`İptal ${row.documentNo}`} className={buttonClass} disabled={!canMutate || row.status === "İptal" || processingId === row.id} onClick={() => transition(row, "cancel")} type="button">İptal Et</button></div></td></tr>)}</tbody></table></div></article>
       <AuditHistory logs={auditLogsByEntityId} rows={displayRows} />
     </section>
   );
@@ -255,15 +257,15 @@ export function DeliveryNoteSurface({
 
 function AuditHistory({ logs, rows }: { logs: Record<string, AuditLogEntry[]>; rows: DeliveryNoteRow[] }) {
   const visible = rows.flatMap((row) => (logs[row.id] ?? []).map((log) => ({ log, row })));
-  return visible.length > 0 ? <article className="rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)] p-4"><h2 className="text-sm font-semibold">İşlem Geçmişi</h2><ul className="mt-3 grid gap-2">{visible.map(({ log, row }) => <li className="flex justify-between gap-3 rounded border border-[var(--grid-border)] p-2 text-sm" key={log.id}><span>{row.documentNo} · {auditLabel(log.action)}</span><time className="font-mono text-xs">{new Intl.DateTimeFormat("tr-TR", { dateStyle: "short", timeStyle: "short" }).format(new Date(log.occurredAt))}</time></li>)}</ul></article> : null;
+  return visible.length > 0 ? <article className="rounded-ui-panel border border-divider bg-surface-raised p-4"><h2 className="text-sm font-semibold">İşlem Geçmişi</h2><ul className="mt-3 grid gap-2">{visible.map(({ log, row }) => <li className="flex justify-between gap-3 rounded border border-divider p-2 text-sm" key={log.id}><span>{row.documentNo} · {auditLabel(log.action)}</span><time className="font-mono text-xs">{new Intl.DateTimeFormat("tr-TR", { dateStyle: "short", timeStyle: "short" }).format(new Date(log.occurredAt))}</time></li>)}</ul></article> : null;
 }
 
 function Field({ children, label }: { children: React.ReactNode; label: string }) { return <label className="grid gap-1 text-sm font-semibold">{label}{children}</label>; }
-function Metric({ label, value }: { label: string; value: string }) { return <div className="rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)] p-4"><p className="text-sm text-[var(--on-surface-variant)]">{label}</p><p className="mt-2 font-mono text-2xl font-semibold">{value}</p></div>; }
+function Metric({ label, value }: { label: string; value: string }) { return <div className="rounded-ui-panel border border-divider bg-surface-raised p-4"><p className="text-sm text-content-subtle">{label}</p><p className="mt-2 font-mono text-2xl font-semibold">{value}</p></div>; }
 function emptyLine(): FormState["lines"][number] { return { id: newLineId(), quantity: 1, stockCode: "", stockName: "", unit: "Adet", warehouse: "" }; }
 function newLineId() { return `delivery-line-${Date.now()}-${Math.random().toString(16).slice(2)}`; }
 function formatDate(value: string) { return new Intl.DateTimeFormat("tr-TR").format(new Date(`${value}T00:00:00`)); }
 function formatQuantity(value: number) { return new Intl.NumberFormat("tr-TR", { maximumFractionDigits: 4 }).format(value); }
 function auditLabel(action: string) { return ({ "delivery-note.cancel": "İptal edildi", "delivery-note.create": "Oluşturuldu", "delivery-note.post": "Kesinleştirildi", "delivery-note.update": "Güncellendi" } as Record<string, string>)[action] ?? action; }
-const inputClass = "h-10 w-full rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)] px-3 text-sm";
-const buttonClass = "rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] px-3 py-2 text-sm font-semibold transition hover:bg-[var(--primary-fixed)] disabled:opacity-50";
+const inputClass = "h-10 w-full rounded-ui-control border border-divider bg-surface-raised px-3 text-sm";
+const buttonClass = "rounded-ui-control border border-divider bg-surface-muted px-3 py-2 text-sm font-semibold transition hover:bg-brand-primary-subtle disabled:opacity-50";

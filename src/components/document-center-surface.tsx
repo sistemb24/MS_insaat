@@ -69,14 +69,14 @@ const linkedModuleOptions = [
 ];
 
 const folderColorClass: Record<DocumentFolderColor, string> = {
-  Gri: "border-slate-300 bg-slate-100 text-slate-700",
-  Kırmızı: "border-rose-300 bg-rose-50 text-rose-700",
-  Lacivert: "border-blue-800 bg-blue-50 text-blue-900",
-  Mavi: "border-sky-300 bg-sky-50 text-sky-700",
-  Mor: "border-violet-300 bg-violet-50 text-violet-700",
-  Sarı: "border-amber-300 bg-amber-50 text-amber-700",
-  Turuncu: "border-orange-300 bg-orange-50 text-orange-700",
-  Yeşil: "border-emerald-300 bg-emerald-50 text-emerald-700",
+  Gri: "border-divider bg-surface-muted text-content-subtle",
+  Kırmızı: "border-danger bg-danger-subtle text-danger",
+  Lacivert: "border-info bg-info-subtle text-info",
+  Mavi: "border-info bg-brand-primary/5 text-brand-primary",
+  Mor: "border-accent-violet bg-accent-violet-subtle text-accent-violet",
+  Sarı: "border-warning bg-warning-subtle text-warning",
+  Turuncu: "border-accent-orange bg-accent-orange-subtle text-accent-orange",
+  Yeşil: "border-success bg-success-subtle text-success",
 };
 
 export function DocumentCenterSurface({
@@ -112,6 +112,7 @@ export function DocumentCenterSurface({
   const [uploadPanelOpen, setUploadPanelOpen] = useState(false);
   const [linkedModule, setLinkedModule] = useState("");
   const [linkedRecordLabel, setLinkedRecordLabel] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const summary = useMemo(
     () => summarizeDocumentCenter(folderRows),
@@ -143,14 +144,47 @@ export function DocumentCenterSurface({
     () => filterDocumentFilesByTab(documentFiles, activeTab, trashedFileIds),
     [activeTab, documentFiles, trashedFileIds],
   );
-  const visibleDocumentFiles = useMemo(
+  const normalizedSearchQuery = searchQuery.trim().toLocaleLowerCase("tr-TR");
+  const visibleFolderRows = useMemo(
     () =>
-      filterDocumentFilesByStorageVisibility(
-        filterDocumentFilesByType(activeTabFiles, activeFilter),
-        activeStorageVisibilityFilter,
-      ),
-    [activeFilter, activeStorageVisibilityFilter, activeTabFiles],
+      normalizedSearchQuery
+        ? folderRows.filter((folder) =>
+            [folder.name, folder.purpose, folder.createdBy].some((value) =>
+              value.toLocaleLowerCase("tr-TR").includes(normalizedSearchQuery),
+            ),
+          )
+        : folderRows,
+    [folderRows, normalizedSearchQuery],
   );
+  const visibleDocumentFiles = useMemo(() => {
+    const filteredFiles = filterDocumentFilesByStorageVisibility(
+      filterDocumentFilesByType(activeTabFiles, activeFilter),
+      activeStorageVisibilityFilter,
+    );
+
+    if (!normalizedSearchQuery) return filteredFiles;
+
+    return filteredFiles.filter((file) => {
+      const folderName = folderRows.find((folder) => folder.id === file.folderId)?.name ?? "";
+
+      return [
+        file.name,
+        file.createdBy,
+        file.linkedModule ?? "",
+        file.linkedRecordLabel ?? "",
+        folderName,
+      ].some((value) =>
+        value.toLocaleLowerCase("tr-TR").includes(normalizedSearchQuery),
+      );
+    });
+  }, [
+    activeFilter,
+    activeStorageVisibilityFilter,
+    activeTabFiles,
+    folderRows,
+    normalizedSearchQuery,
+  ]);
+  const activeFileCount = documentFiles.length - trashedFileIds.size;
 
   async function handleCreateFolder() {
     const values: DocumentUserFolderCreateValues = {
@@ -335,40 +369,35 @@ export function DocumentCenterSurface({
   }
 
   return (
-    <section className="mx-auto flex max-w-7xl flex-col gap-4">
-      <header className="rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)] p-5">
-        <p className="text-xs font-semibold uppercase tracking-wide text-[var(--primary)]">
-          P1 evrak merkezi
-        </p>
-        <div className="mt-2 flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
+    <section
+      className="mx-auto flex max-w-[1440px] flex-col gap-4"
+      data-document-center-workspace="true"
+    >
+      <header className="overflow-hidden rounded-ui-panel border border-divider bg-surface-raised shadow-sm">
+        <div className="border-b border-divider bg-gradient-to-r from-brand-primary/10 via-surface-raised to-surface-raised p-5 sm:p-6">
+          <p className="text-xs font-bold uppercase tracking-[0.16em] text-brand-primary">
+            Operasyon · Evrak yönetimi
+          </p>
+          <div className="mt-2 flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
           <div>
-            <h1 className="text-2xl font-semibold tracking-normal">
+            <h1 className="text-2xl font-bold tracking-tight text-content sm:text-3xl">
               Döküman / Evrak Merkezi
             </h1>
-            <p className="mt-2 max-w-3xl text-sm leading-6 text-[var(--on-surface-variant)]">
-              Sistem klasörleri, dosya türü filtreleri ve klasör görünüm
-              modlarıyla evrakların merkezi çalışma alanı.
+            <p className="mt-2 max-w-3xl text-sm leading-6 text-content-muted">
+              Proje evraklarını sistem klasörleri, kaynak kayıt bağlantıları ve
+              güvenli arşiv akışıyla tek merkezden yönetin.
             </p>
           </div>
           <div className="flex flex-wrap items-center gap-2">
-            <div className="rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] px-3 py-2 font-mono text-xs font-semibold">
-              {formatBytes(summary.usedBytes)} / {formatBytes(summary.limitBytes)}
-            </div>
             <button
-              className="h-10 rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] px-3 text-sm font-semibold hover:border-[var(--primary)] hover:bg-[var(--primary-fixed)]"
-              type="button"
-            >
-              +5GB · ₺790/ay
-            </button>
-            <button
-              className="h-10 rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] px-3 text-sm font-semibold hover:border-[var(--primary)] hover:bg-[var(--primary-fixed)]"
+              className="h-10 rounded-ui-control border border-divider bg-surface-raised px-4 text-sm font-semibold text-content shadow-sm hover:border-brand-primary hover:text-brand-primary"
               onClick={() => setFolderPanelOpen((isOpen) => !isOpen)}
               type="button"
             >
               Yeni Klasör
             </button>
             <button
-              className="h-10 rounded-[var(--radius-control)] bg-[var(--primary)] px-3 text-sm font-semibold text-[var(--on-primary)] hover:opacity-90"
+              className="h-10 rounded-ui-control bg-brand-primary px-4 text-sm font-semibold text-on-brand shadow-sm hover:opacity-90"
               onClick={() => setUploadPanelOpen((isOpen) => !isOpen)}
               type="button"
             >
@@ -376,11 +405,41 @@ export function DocumentCenterSurface({
             </button>
           </div>
         </div>
+        </div>
+        <div className="grid gap-4 p-5 sm:grid-cols-[minmax(260px,1fr)_minmax(280px,1.4fr)] sm:items-center sm:p-6">
+          <div>
+            <div className="flex items-center justify-between text-xs font-semibold text-content-muted">
+              <span>Depolama alanı</span>
+              <span className="font-mono text-content">
+                {formatBytes(summary.usedBytes)} / {formatBytes(summary.limitBytes)}
+              </span>
+            </div>
+            <div className="mt-2 h-2 overflow-hidden rounded-full bg-surface-muted">
+              <div
+                aria-label={`Depolama kullanımı yüzde ${summary.usedPercent}`}
+                className="h-full rounded-full bg-brand-primary"
+                style={{ width: `${Math.max(summary.usedPercent, summary.usedBytes > 0 ? 1 : 0)}%` }}
+              />
+            </div>
+          </div>
+          <label className="relative block">
+            <span className="sr-only">Dosya veya klasör ara</span>
+            <span aria-hidden="true" className="pointer-events-none absolute inset-y-0 left-3 flex items-center text-content-muted">⌕</span>
+            <input
+              aria-label="Dosya veya klasör ara"
+              className="h-11 w-full rounded-ui-control border border-divider bg-surface px-9 text-sm text-content outline-none placeholder:text-content-muted focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/15"
+              onChange={(event) => setSearchQuery(event.target.value)}
+              placeholder="Dosya, klasör veya bağlı kayıt ara"
+              type="search"
+              value={searchQuery}
+            />
+          </label>
+        </div>
       </header>
 
       {folderPanelOpen ? (
         <form
-          className="rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)] p-4"
+          className="rounded-ui-panel border border-divider bg-surface-raised p-4"
           onSubmit={(event) => {
             event.preventDefault();
             handleCreateFolder();
@@ -390,7 +449,7 @@ export function DocumentCenterSurface({
             <label className="grid gap-1 text-sm font-semibold">
               <span>Klasör adı</span>
               <input
-                className="h-10 rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] px-3 text-sm font-medium outline-none focus:border-[var(--primary)]"
+                className="h-10 rounded-ui-control border border-divider bg-surface-muted px-3 text-sm font-medium outline-none focus:border-brand-primary"
                 onChange={(event) => setFolderName(event.target.value)}
                 value={folderName}
               />
@@ -398,7 +457,7 @@ export function DocumentCenterSurface({
             <label className="grid gap-1 text-sm font-semibold">
               <span>Erişim</span>
               <select
-                className="h-10 rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] px-3 text-sm font-medium outline-none focus:border-[var(--primary)]"
+                className="h-10 rounded-ui-control border border-divider bg-surface-muted px-3 text-sm font-medium outline-none focus:border-brand-primary"
                 onChange={(event) =>
                   setFolderAccessLevel(
                     event.target.value === "restricted" ? "restricted" : "public",
@@ -411,7 +470,7 @@ export function DocumentCenterSurface({
               </select>
             </label>
             <button
-              className="h-10 rounded-[var(--radius-control)] bg-[var(--primary)] px-3 text-sm font-semibold text-[var(--on-primary)] hover:opacity-90"
+              className="h-10 rounded-ui-control bg-brand-primary px-3 text-sm font-semibold text-on-brand hover:opacity-90"
               type="submit"
             >
               Klasör Oluştur
@@ -421,12 +480,12 @@ export function DocumentCenterSurface({
       ) : null}
 
       {uploadPanelOpen ? (
-        <form className="rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)] p-4">
+        <form className="rounded-ui-panel border border-divider bg-surface-raised p-4">
           <div className="grid gap-3 lg:grid-cols-[240px_220px_minmax(0,1fr)_minmax(0,1fr)] lg:items-end">
             <label className="grid gap-1 text-sm font-semibold">
               <span>Hedef Klasör</span>
               <select
-                className="h-10 rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] px-3 text-sm font-medium outline-none focus:border-[var(--primary)]"
+                className="h-10 rounded-ui-control border border-divider bg-surface-muted px-3 text-sm font-medium outline-none focus:border-brand-primary"
                 onChange={(event) => setTargetFolderId(event.target.value)}
                 value={targetFolderId}
               >
@@ -440,7 +499,7 @@ export function DocumentCenterSurface({
             <label className="grid gap-1 text-sm font-semibold">
               <span>Bağlı Modül</span>
               <select
-                className="h-10 rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] px-3 text-sm font-medium outline-none focus:border-[var(--primary)]"
+                className="h-10 rounded-ui-control border border-divider bg-surface-muted px-3 text-sm font-medium outline-none focus:border-brand-primary"
                 onChange={(event) => setLinkedModule(event.target.value)}
                 value={linkedModule}
               >
@@ -454,7 +513,7 @@ export function DocumentCenterSurface({
             <label className="grid gap-1 text-sm font-semibold">
               <span>Evrak No / Kayıt</span>
               <input
-                className="h-10 rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] px-3 text-sm font-medium outline-none focus:border-[var(--primary)] disabled:cursor-not-allowed disabled:opacity-60"
+                className="h-10 rounded-ui-control border border-divider bg-surface-muted px-3 text-sm font-medium outline-none focus:border-brand-primary disabled:cursor-not-allowed disabled:opacity-60"
                 disabled={!linkedModule}
                 onChange={(event) => setLinkedRecordLabel(event.target.value)}
                 placeholder="FAT-0001 - ABC Beton"
@@ -463,7 +522,7 @@ export function DocumentCenterSurface({
             </label>
             <label
               aria-label="Dosya sürükle bırak alanı"
-              className="grid min-h-24 cursor-pointer place-items-center rounded-[var(--radius-panel)] border border-dashed border-[var(--grid-border)] bg-[var(--surface-container-low)] p-4 text-center text-sm font-semibold text-[var(--on-surface-variant)] hover:border-[var(--primary)] hover:bg-[var(--primary-fixed)]"
+              className="grid min-h-24 cursor-pointer place-items-center rounded-ui-panel border border-dashed border-divider bg-surface-muted p-4 text-center text-sm font-semibold text-content-subtle hover:border-brand-primary hover:bg-brand-primary-subtle"
               onDragOver={(event) => {
                 event.preventDefault();
               }}
@@ -488,25 +547,25 @@ export function DocumentCenterSurface({
 
       {folderNotice ? (
         <div
-          className="rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)] p-3 text-sm font-semibold text-[var(--on-surface-variant)]"
+          className="rounded-ui-panel border border-divider bg-surface-raised p-3 text-sm font-semibold text-content-subtle"
           role="status"
         >
           {folderNotice}
         </div>
       ) : null}
 
-      <div className="grid gap-3 md:grid-cols-4">
+      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
         <Metric label="Toplam Klasör" value={String(summary.folderCount)} />
         <Metric
           label="Sistem Klasörü"
           value={String(summary.systemFolderCount)}
         />
-        <Metric label="Dosya" value={String(summary.fileCount)} />
-        <Metric label="Depo Kullanımı" value={`%${summary.usedPercent}`} />
+        <Metric label="Aktif Dosya" value={String(activeFileCount)} />
+        <Metric label="Çöp Kutusu" value={String(trashedFileIds.size)} />
       </div>
 
-      <div className="rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)] p-3">
-        <div className="flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
+      <div className="rounded-ui-panel border border-divider bg-surface-raised p-3">
+        <div className="flex flex-col gap-3 2xl:flex-row 2xl:items-center 2xl:justify-between">
           <SegmentedControl
             activeValue={activeTab}
             ariaLabel="Döküman sekmeleri"
@@ -528,7 +587,7 @@ export function DocumentCenterSurface({
             />
             <div
               aria-label="Klasör görünümü"
-              className="inline-flex h-10 overflow-hidden rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-low)]"
+              className="inline-flex h-10 overflow-hidden rounded-ui-control border border-divider bg-surface-muted"
             >
               <button
                 aria-pressed={viewMode === "grid"}
@@ -552,22 +611,22 @@ export function DocumentCenterSurface({
       </div>
 
       {viewMode === "grid" ? (
-        <FolderGrid folders={folderRows} onDeleteFolder={handleDeleteFolder} onRenameFolder={handleRenameFolder} />
+        <FolderGrid folders={visibleFolderRows} onDeleteFolder={handleDeleteFolder} onRenameFolder={handleRenameFolder} />
       ) : (
-        <FolderTable folders={folderRows} onDeleteFolder={handleDeleteFolder} onRenameFolder={handleRenameFolder} />
+        <FolderTable folders={visibleFolderRows} onDeleteFolder={handleDeleteFolder} onRenameFolder={handleRenameFolder} />
       )}
 
       {documentFiles.length > 0 && visibleDocumentFiles.length === 0 ? (
         <div
-          className="rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)] p-4 text-sm font-semibold text-[var(--on-surface-variant)]"
+          className="rounded-ui-panel border border-divider bg-surface-raised p-4 text-sm font-semibold text-content-subtle"
           role="status"
         >
-          Seçili filtrelere uygun evrak bulunamadı.
+          Arama ve filtrelere uygun evrak bulunamadı.
         </div>
       ) : null}
 
       {activeTab === "Çöp Kutusu" ? (
-        <p className="rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] px-4 py-3 text-sm font-semibold text-[var(--on-surface-variant)]">
+        <p className="rounded-ui-panel border border-divider bg-surface-muted px-4 py-3 text-sm font-semibold text-content-subtle">
           Çöp kutusundaki dosyalar 30 gün sonra kalıcı olarak silinir.
         </p>
       ) : null}
@@ -603,7 +662,7 @@ function SegmentedControl({
   return (
     <div
       aria-label={ariaLabel}
-      className="inline-flex h-10 overflow-x-auto rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-low)]"
+      className="inline-flex h-10 overflow-x-auto rounded-ui-control border border-divider bg-surface-muted"
     >
       {options.map((option) => (
         <button
@@ -625,22 +684,22 @@ function FolderGrid({ folders, onDeleteFolder, onRenameFolder }: { folders: Docu
     <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
       {folders.map((folder) => (
         <article
-          className="rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)] p-4"
+          className="rounded-ui-panel border border-divider bg-surface-raised p-4"
           key={folder.id}
         >
           <div className="flex items-start justify-between gap-3">
             <div
-              className={`flex h-11 w-11 items-center justify-center rounded-[var(--radius-control)] border text-xs font-semibold ${folderColorClass[folder.color]}`}
+              className={`flex h-11 w-11 items-center justify-center rounded-ui-control border text-xs font-semibold ${folderColorClass[folder.color]}`}
             >
               {folder.name.slice(0, 2).toLocaleUpperCase("tr-TR")}
             </div>
             {folder.isSystem ? <SystemBadge /> : null}
           </div>
           <h2 className="mt-4 truncate text-sm font-semibold">{folder.name}</h2>
-          <p className="mt-1 min-h-10 text-sm text-[var(--on-surface-variant)]">
+          <p className="mt-1 min-h-10 text-sm text-content-subtle">
             {folder.purpose}
           </p>
-          <div className="mt-4 flex items-center justify-between gap-3 border-t border-[var(--grid-border)] pt-3 text-xs text-[var(--on-surface-variant)]">
+          <div className="mt-4 flex items-center justify-between gap-3 border-t border-divider pt-3 text-xs text-content-subtle">
             <span>{getAccessLevelLabel(folder.accessLevel)}</span>
             <button
               aria-label={
@@ -648,14 +707,14 @@ function FolderGrid({ folders, onDeleteFolder, onRenameFolder }: { folders: Docu
                   ? `${folder.name} sistem klasörü silinemez`
                   : `${folder.name} klasörünü sil`
               }
-              className="rounded-[var(--radius-control)] border border-[var(--grid-border)] px-2 py-1 font-semibold disabled:cursor-not-allowed disabled:opacity-55"
+              className="rounded-ui-control border border-divider px-2 py-1 font-semibold disabled:cursor-not-allowed disabled:opacity-55"
               disabled={!folder.canDelete}
               onClick={() => onDeleteFolder?.(folder)}
               type="button"
             >
               Sil
             </button>
-            <button className="rounded-[var(--radius-control)] border border-[var(--grid-border)] px-2 py-1 text-xs font-semibold disabled:cursor-not-allowed disabled:opacity-55" disabled={!folder.canRename} onClick={() => onRenameFolder?.(folder)} type="button">Adlandır</button>
+            <button className="rounded-ui-control border border-divider px-2 py-1 text-xs font-semibold disabled:cursor-not-allowed disabled:opacity-55" disabled={!folder.canRename} onClick={() => onRenameFolder?.(folder)} type="button">Adlandır</button>
           </div>
         </article>
       ))}
@@ -673,13 +732,13 @@ function FolderTable({
   onRenameFolder?: (folder: DocumentFolderRow) => void;
 }) {
   return (
-    <article className="overflow-hidden rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)]">
+    <article className="overflow-hidden rounded-ui-panel border border-divider bg-surface-raised">
       <div className="overflow-x-auto">
         <table
           aria-label="Döküman klasör listesi"
           className="min-w-[760px] w-full text-left text-sm"
         >
-          <thead className="bg-[var(--surface-container-low)] text-xs uppercase text-[var(--on-surface-variant)]">
+          <thead className="bg-surface-muted text-xs uppercase text-content-subtle">
             <tr>
               <th className="px-4 py-3 font-semibold">Ad</th>
               <th className="px-4 py-3 font-semibold">Etiketler</th>
@@ -689,14 +748,14 @@ function FolderTable({
               <th className="px-4 py-3 font-semibold">İşlem</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-[var(--grid-border)]">
+          <tbody className="divide-y divide-divider">
             {folders.map((folder) => (
-              <tr className="hover:bg-[var(--primary-fixed)]" key={folder.id}>
+              <tr className="hover:bg-brand-primary-subtle" key={folder.id}>
                 <td className="px-4 py-3 font-semibold">{folder.name}</td>
                 <td className="px-4 py-3">
                   <div className="flex flex-wrap items-center gap-2">
                     {folder.isSystem ? <SystemBadge /> : null}
-                    <span className="rounded-[var(--radius-control)] border border-[var(--grid-border)] px-2 py-1 text-xs font-semibold">
+                    <span className="rounded-ui-control border border-divider px-2 py-1 text-xs font-semibold">
                       {getAccessLevelLabel(folder.accessLevel)}
                     </span>
                   </div>
@@ -713,14 +772,14 @@ function FolderTable({
                         ? `${folder.name} sistem klasörü silinemez`
                         : `${folder.name} klasörünü sil`
                     }
-                    className="rounded-[var(--radius-control)] border border-[var(--grid-border)] px-2 py-1 text-xs font-semibold disabled:cursor-not-allowed disabled:opacity-55"
+                    className="rounded-ui-control border border-divider px-2 py-1 text-xs font-semibold disabled:cursor-not-allowed disabled:opacity-55"
                     disabled={!folder.canDelete}
                     onClick={() => onDeleteFolder?.(folder)}
                     type="button"
                   >
                     Sil
                   </button>
-                  <button className="ml-2 rounded-[var(--radius-control)] border border-[var(--grid-border)] px-2 py-1 text-xs font-semibold disabled:cursor-not-allowed disabled:opacity-55" disabled={!folder.canRename} onClick={() => onRenameFolder?.(folder)} type="button">Adlandır</button>
+                  <button className="ml-2 rounded-ui-control border border-divider px-2 py-1 text-xs font-semibold disabled:cursor-not-allowed disabled:opacity-55" disabled={!folder.canRename} onClick={() => onRenameFolder?.(folder)} type="button">Adlandır</button>
                 </td>
               </tr>
             ))}
@@ -749,13 +808,13 @@ function UploadedFileTable({
     Boolean(onMoveToTrash || onRestoreFromTrash);
 
   return (
-    <article className="overflow-hidden rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)]">
+    <article className="overflow-hidden rounded-ui-panel border border-divider bg-surface-raised">
       <div className="overflow-x-auto">
         <table
           aria-label="Yüklenen dosya listesi"
           className="min-w-[980px] w-full text-left text-sm"
         >
-          <thead className="bg-[var(--surface-container-low)] text-xs uppercase text-[var(--on-surface-variant)]">
+          <thead className="bg-surface-muted text-xs uppercase text-content-subtle">
             <tr>
               <th className="px-4 py-3 font-semibold">Dosya</th>
               <th className="px-4 py-3 font-semibold">Tür</th>
@@ -768,17 +827,17 @@ function UploadedFileTable({
               ) : null}
             </tr>
           </thead>
-          <tbody className="divide-y divide-[var(--grid-border)]">
+          <tbody className="divide-y divide-divider">
             {files.map((file) => (
-              <tr className="hover:bg-[var(--primary-fixed)]" key={file.id}>
+              <tr className="hover:bg-brand-primary-subtle" key={file.id}>
                 <td className="px-4 py-3">
                   <span className="block font-semibold">{file.name}</span>
-                  <span className="mt-1 inline-flex rounded-[var(--radius-control)] border border-[var(--grid-border)] px-2 py-0.5 text-xs font-semibold text-[var(--on-surface-variant)]">
+                  <span className="mt-1 inline-flex rounded-ui-control border border-divider px-2 py-0.5 text-xs font-semibold text-content-subtle">
                     {file.storageKey ? "Yerel Depo" : "Metaveri"}
                   </span>
                 </td>
                 <td className="px-4 py-3">
-                  <span className="rounded-[var(--radius-control)] border border-[var(--grid-border)] px-2 py-1 text-xs font-semibold">
+                  <span className="rounded-ui-control border border-divider px-2 py-1 text-xs font-semibold">
                     {getFileKindLabel(file.kind)}
                   </span>
                 </td>
@@ -796,7 +855,7 @@ function UploadedFileTable({
                     {file.storageKey ? (
                       <a
                         aria-label={`Dosyayı İndir ${file.name}`}
-                        className="mr-2 rounded-[var(--radius-control)] border border-[var(--grid-border)] px-2 py-1 text-xs font-semibold hover:border-[var(--primary)] hover:bg-[var(--primary-fixed)]"
+                        className="mr-2 rounded-ui-control border border-divider px-2 py-1 text-xs font-semibold hover:border-brand-primary hover:bg-brand-primary-subtle"
                         href={buildDocumentFileDownloadHref(file.id)}
                         download={file.name}
                       >
@@ -806,7 +865,7 @@ function UploadedFileTable({
                     {onMoveToTrash ? (
                       <button
                         aria-label={`${file.name} dosyasını çöp kutusuna taşı`}
-                        className="rounded-[var(--radius-control)] border border-[var(--grid-border)] px-2 py-1 text-xs font-semibold hover:border-[var(--primary)] hover:bg-[var(--primary-fixed)]"
+                        className="rounded-ui-control border border-divider px-2 py-1 text-xs font-semibold hover:border-brand-primary hover:bg-brand-primary-subtle"
                         onClick={() => onMoveToTrash(file)}
                         type="button"
                       >
@@ -816,7 +875,7 @@ function UploadedFileTable({
                     {onRenameFile ? (
                       <button
                         aria-label={`${file.name} dosyasını yeniden adlandır`}
-                        className="ml-2 rounded-[var(--radius-control)] border border-[var(--grid-border)] px-2 py-1 text-xs font-semibold hover:border-[var(--primary)] hover:bg-[var(--primary-fixed)]"
+                        className="ml-2 rounded-ui-control border border-divider px-2 py-1 text-xs font-semibold hover:border-brand-primary hover:bg-brand-primary-subtle"
                         onClick={() => onRenameFile(file)}
                         type="button"
                       >
@@ -826,7 +885,7 @@ function UploadedFileTable({
                     {onRestoreFromTrash ? (
                       <button
                         aria-label={`${file.name} dosyasını çöp kutusundan geri al`}
-                        className="rounded-[var(--radius-control)] border border-[var(--grid-border)] px-2 py-1 text-xs font-semibold hover:border-[var(--primary)] hover:bg-[var(--primary-fixed)]"
+                        className="rounded-ui-control border border-divider px-2 py-1 text-xs font-semibold hover:border-brand-primary hover:bg-brand-primary-subtle"
                         onClick={() => onRestoreFromTrash(file)}
                         type="button"
                       >
@@ -846,8 +905,8 @@ function UploadedFileTable({
 
 function Metric({ label, value }: { label: string; value: string }) {
   return (
-    <article className="rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)] p-4">
-      <p className="text-sm font-semibold text-[var(--on-surface-variant)]">
+    <article className="rounded-ui-panel border border-divider bg-surface-raised p-4">
+      <p className="text-sm font-semibold text-content-subtle">
         {label}
       </p>
       <p className="mt-2 font-mono text-2xl font-semibold">{value}</p>
@@ -857,7 +916,7 @@ function Metric({ label, value }: { label: string; value: string }) {
 
 function SystemBadge() {
   return (
-    <span className="rounded-[var(--radius-control)] bg-[var(--primary-fixed)] px-2 py-1 text-xs font-semibold text-[var(--primary)]">
+    <span className="rounded-ui-control bg-brand-primary-subtle px-2 py-1 text-xs font-semibold text-brand-primary">
       SİSTEM
     </span>
   );
@@ -901,7 +960,7 @@ function DocumentFileLink({ file }: { file: DocumentFileRow }) {
 
   return (
     <Link
-      className="font-semibold text-[var(--primary)] hover:underline"
+      className="font-semibold text-brand-primary hover:underline"
       href={`/${file.linkedModule}?${searchParams.toString()}`}
     >
       {moduleLabel} · {file.linkedRecordLabel}
@@ -972,8 +1031,8 @@ function filterDocumentFilesByStorageVisibility(
 function getSegmentButtonClass(isActive: boolean) {
   return `shrink-0 px-3 text-sm font-semibold ${
     isActive
-      ? "bg-[var(--primary)] text-[var(--on-primary)]"
-      : "text-[var(--on-surface-variant)] hover:bg-[var(--primary-fixed)] hover:text-[var(--on-surface)]"
+      ? "bg-brand-primary text-on-brand"
+      : "text-content-subtle hover:bg-brand-primary-subtle hover:text-content"
   }`;
 }
 

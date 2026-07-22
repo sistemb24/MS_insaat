@@ -33,6 +33,9 @@ describe("TimesheetSurface", () => {
   test("renders timesheet list and totals", () => {
     render(<TimesheetSurface rows={[createTimesheetRow()]} />);
 
+    expect(
+      screen.getByRole("table", { name: "Puantaj hareket listesi" }),
+    ).toBeTruthy();
     expect(screen.getByText("Puantaj")).toBeTruthy();
     expect(screen.getByText("Puantaj hareket listesi")).toBeTruthy();
     expect(screen.getByText("PNT-2026-06-001")).toBeTruthy();
@@ -66,7 +69,7 @@ describe("TimesheetSurface", () => {
       />,
     );
 
-    fireEvent.click(screen.getByRole("button", { name: "Yeni" }));
+    fireEvent.click(screen.getByRole("button", { name: "Yeni Puantaj" }));
     fireEvent.change(screen.getByLabelText("Puantaj No"), {
       target: { value: "PNT-2026-06-001" },
     });
@@ -152,13 +155,45 @@ describe("TimesheetSurface", () => {
       "Yazdırma kapsamı hazır: 1 puantaj.",
     );
   });
+
+  test("filters the summary, list and print scope with the visible rows", () => {
+    const print = vi.fn();
+    Object.defineProperty(window, "print", {
+      configurable: true,
+      value: print,
+    });
+
+    render(
+      <TimesheetSurface
+        rows={[
+          createTimesheetRow(),
+          createTimesheetRow({
+            documentNo: "PNT-2026-06-002",
+            id: "timesheet-2",
+            siteName: "ANTALYA KONYAALTI PROJESİ",
+            status: "Kaydedildi",
+          }),
+        ]}
+      />,
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Kaydedildi" }));
+
+    expect(screen.queryByText("PNT-2026-06-001")).toBeNull();
+    expect(screen.getByText("PNT-2026-06-002")).toBeTruthy();
+    expect(screen.getByText("1 kayıt görünür")).toBeTruthy();
+    fireEvent.click(screen.getByRole("button", { name: "Puantajları Yazdır" }));
+
+    expect(print).toHaveBeenCalledTimes(1);
+    expect(screen.getByRole("status").textContent).toContain(
+      "Yazdırma kapsamı hazır: 1 puantaj.",
+    );
+  });
 });
 
-function createTimesheetRow(
-  overrides: TimesheetCreateValues = {},
-): TimesheetRow {
+function createTimesheetRow(overrides: Partial<TimesheetRow> = {}): TimesheetRow {
   return {
-    id: "timesheet-1",
+    id: overrides.id ?? "timesheet-1",
     tenantId: "tenant-noa-demo",
     companyId: "company-demo-insaat",
     periodId: "period-2026",
@@ -187,7 +222,7 @@ function createTimesheetRow(
     netTotal: 20000,
     siteCode: overrides.siteCode ?? "SANT-0001",
     siteName: overrides.siteName ?? "ŞİRKET MERKEZ ŞANTİYESİ",
-    status: "Taslak",
+    status: overrides.status ?? "Taslak",
     totalOvertimeHours: 0,
     totalWorkedDays: 20,
     updatedAt: "2026-06-27T10:00:00.000Z",

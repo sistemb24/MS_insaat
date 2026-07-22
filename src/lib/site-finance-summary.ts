@@ -1,12 +1,16 @@
 import type { ExpenseRow } from "./expense-service";
+import type { PayrollAccrualRow } from "./payroll-accrual-service";
 import type { ProgressPaymentRow } from "./progress-payment-service";
 import type { PurchaseInvoiceRow } from "./purchase-invoice-service";
+import { buildOperationalSiteProfitRows } from "./reports-service";
 import type { SalesInvoiceRow } from "./sales-invoice-service";
+import type { TimesheetRow } from "./timesheet-service";
 
 export type SiteFinanceSummaryRow = {
   siteCode: string;
   siteName: string;
   incomeTotal: number;
+  laborTotal: number;
   expenseTotal: number;
   purchaseTotal: number;
   subcontractorTotal: number;
@@ -15,25 +19,39 @@ export type SiteFinanceSummaryRow = {
 
 export function buildSiteFinanceSummary(input: {
   expenses: ExpenseRow[];
+  payrollAccruals?: PayrollAccrualRow[];
   progressPayments: ProgressPaymentRow[];
   purchaseInvoices: PurchaseInvoiceRow[];
   salesInvoices?: SalesInvoiceRow[];
+  timesheets?: TimesheetRow[];
 }): SiteFinanceSummaryRow[] {
-  const rows = new Map<string, SiteFinanceSummaryRow>();
-  const ensure = (siteCode: string, siteName: string) => {
-    const key = siteCode.trim();
-    const current = rows.get(key) ?? { siteCode: key, siteName: siteName.trim(), incomeTotal: 0, expenseTotal: 0, purchaseTotal: 0, subcontractorTotal: 0, netTotal: 0 };
-    rows.set(key, current);
-    return current;
-  };
-  for (const row of input.expenses.filter((item) => item.status !== "İptal")) ensure(row.siteCode, row.siteName).expenseTotal += row.grandTotal;
-  for (const row of input.purchaseInvoices.filter((item) => item.status !== "İptal")) ensure(row.siteCode, row.siteName).purchaseTotal += row.grandTotal;
-  for (const row of (input.salesInvoices ?? []).filter((item) => item.status !== "İptal")) ensure(row.siteCode, row.siteName).incomeTotal += row.grandTotal;
-  for (const row of input.progressPayments.filter((item) => item.status !== "İptal")) {
-    const summary = ensure(row.siteCode, row.siteName);
-    if (row.paymentType === "Şantiye Geliri") summary.incomeTotal += row.grandTotal;
-    else summary.subcontractorTotal += row.grandTotal;
-  }
-  for (const row of rows.values()) row.netTotal = row.incomeTotal - row.expenseTotal - row.purchaseTotal - row.subcontractorTotal;
-  return [...rows.values()].sort((left, right) => left.siteCode.localeCompare(right.siteCode, "tr"));
+  return buildOperationalSiteProfitRows({
+    expenses: input.expenses.filter((row) => row.status === "Kaydedildi"),
+    payrollAccruals: (input.payrollAccruals ?? []).filter(
+      (row) => row.status === "Kaydedildi",
+    ),
+    progressPayments: input.progressPayments.filter(
+      (row) => row.status === "Kaydedildi",
+    ),
+    purchaseInvoices: input.purchaseInvoices.filter(
+      (row) => row.status === "Kaydedildi",
+    ),
+    salesInvoices: (input.salesInvoices ?? []).filter(
+      (row) => row.status === "Kaydedildi",
+    ),
+    timesheets: (input.timesheets ?? []).filter(
+      (row) => row.status === "Kaydedildi",
+    ),
+  })
+    .map((row) => ({
+      expenseTotal: row.expenseCostTotal,
+      incomeTotal: row.incomeTotal,
+      laborTotal: row.laborCostTotal,
+      netTotal: row.netProfit,
+      purchaseTotal: row.purchaseCostTotal,
+      siteCode: row.siteCode,
+      siteName: row.siteName,
+      subcontractorTotal: row.progressPaymentCostTotal,
+    }))
+    .sort((left, right) => left.siteCode.localeCompare(right.siteCode, "tr"));
 }

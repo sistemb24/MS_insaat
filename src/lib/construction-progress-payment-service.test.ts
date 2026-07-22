@@ -8,6 +8,7 @@ import {
   calculateConstructionSupplementarySummary,
   canTransitionConstructionPayment,
   reconcileConstructionPrimaryMeasurementQuantities,
+  resolveConstructionLegacyAutomaticDeduction,
   nextConstructionPaymentSequence,
   shouldCloseConstructionProject,
   validateConstructionPaymentChain,
@@ -142,6 +143,12 @@ describe("construction progress payment calculation", () => {
       cumulativeDeductionTotal: 1670,
       cumulativePayableTotal: 22330,
     });
+  });
+
+  it("cuts over legacy retention only after a TEMINAT rule application exists", () => {
+    expect(resolveConstructionLegacyAutomaticDeduction({ calculatedAmount: 500 })).toBe(500);
+    expect(resolveConstructionLegacyAutomaticDeduction({ calculatedAmount: 500, applications: [{ ruleCode: "DAMGA" }] })).toBe(500);
+    expect(resolveConstructionLegacyAutomaticDeduction({ calculatedAmount: 500, applications: [{ ruleCode: "teminat" }] })).toBe(0);
   });
 });
 

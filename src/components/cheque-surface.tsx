@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 
+import { Icon } from "@/components/ui";
 import type { AuditLogEntry } from "@/lib/audit-log";
 import type { CashBankAccountOption } from "@/lib/cash-bank-movement-service";
 import type { ChequeCreateValues, ChequeRow } from "@/lib/cheque-service";
@@ -79,6 +80,10 @@ export function ChequeSurface({
   const [isSaving, setIsSaving] = useState(false);
   const [printNotice, setPrintNotice] = useState("");
   const [errors, setErrors] = useState<string[]>([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState<"Tümü" | ChequeRow["status"]>(
+    "Tümü",
+  );
   const baseCurrencyContext = `Baz Para: ${getP0BaseCurrencyDisplayValue()}`;
   const currencyPolicyContext = getP0CurrencyPolicyDisplayValue();
   const p0ChequeCurrency = getP0BaseCurrencyTransactionValue();
@@ -86,6 +91,28 @@ export function ChequeSurface({
   const collectedRows = displayRows.filter((row) => row.status === "Tahsil Edildi");
   const portfolioTotal = portfolioRows.reduce((total, row) => total + row.amount, 0);
   const collectedTotal = collectedRows.reduce((total, row) => total + row.amount, 0);
+  const dueSoonRows = portfolioRows.filter((row) => {
+    const dueDate = new Date(`${row.dueDate}T00:00:00`).getTime();
+    const todayDate = new Date(`${today}T00:00:00`).getTime();
+    const thirtyDaysAfterToday = todayDate + 30 * 24 * 60 * 60 * 1000;
+
+    return dueDate >= todayDate && dueDate <= thirtyDaysAfterToday;
+  });
+  const visibleRows = displayRows.filter((row) => {
+    const normalizedQuery = searchQuery.trim().toLocaleLowerCase("tr-TR");
+    const matchesStatus = statusFilter === "Tümü" || row.status === statusFilter;
+    const matchesQuery =
+      normalizedQuery.length === 0 ||
+      [
+        row.documentNo,
+        row.checkNo,
+        row.bankName,
+        row.branchName,
+        row.drawerName,
+      ].some((value) => value.toLocaleLowerCase("tr-TR").includes(normalizedQuery));
+
+    return matchesStatus && matchesQuery;
+  });
 
   function startCreate() {
     if (!permissions.canMutateCheques) {
@@ -168,7 +195,7 @@ export function ChequeSurface({
 
   function handleToolbarAction(action: string) {
     if (action === "Yazdır") {
-      setPrintNotice(`Yazdırma kapsamı hazır: ${displayRows.length} çek.`);
+      setPrintNotice(`Yazdırma kapsamı hazır: ${visibleRows.length} çek.`);
       window.print();
       return;
     }
@@ -195,28 +222,28 @@ export function ChequeSurface({
   }
 
   return (
-    <section className="mx-auto flex max-w-7xl flex-col gap-4">
-      <header className="rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)] p-5">
-        <p className="text-xs font-semibold uppercase tracking-wide text-[var(--primary)]">
-          Portföy, vade ve tahsil
+    <section className="mx-auto flex max-w-[1440px] flex-col gap-5">
+      <header className="rounded-ui-panel border border-divider bg-surface-raised p-5 shadow-sm sm:p-6">
+        <p className="text-xs font-semibold uppercase tracking-[0.12em] text-brand-primary">
+          Finans · çek portföyü
         </p>
-        <div className="mt-2 flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
+        <div className="mt-3 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div>
-            <h1 className="text-2xl font-semibold tracking-normal">
-              Çek İşlemleri
+            <h1 className="text-2xl font-semibold tracking-tight text-content sm:text-3xl">
+              Çek Yönetimi
             </h1>
-            <p className="mt-2 max-w-3xl text-sm leading-6 text-[var(--on-surface-variant)]">
-              Gelen çek kaydı, portföy takibi ve tahsil durum geçişi ilk çek
-              işlem yüzeyi olarak PostgreSQL ve audit altyapısına bağlandı.
+            <p className="mt-2 max-w-3xl text-sm leading-6 text-content-muted">
+              Gelen çekleri portföy, vade ve tahsil durumlarıyla izleyin; her
+              tahsilat seçilen kasa veya banka hesabına gerçek hareket olarak işlenir.
             </p>
           </div>
-          <span className="rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] px-3 py-2 text-xs font-semibold text-[var(--on-surface-variant)]">
-            Gelen Çek
+          <span className="inline-flex items-center gap-2 rounded-full bg-brand-primary/10 px-3 py-2 text-xs font-semibold text-brand-primary">
+            <Icon name="wallet" size={16} /> Portföyde {portfolioRows.length} çek
           </span>
         </div>
       </header>
 
-      <div className="flex flex-wrap items-center gap-2 rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)] p-2">
+      <div className="flex flex-wrap items-center gap-2 rounded-ui-panel border border-divider bg-surface-raised p-2 shadow-sm">
         <button
           className={toolbarButtonClass}
           disabled={!permissions.canMutateCheques}
@@ -246,7 +273,7 @@ export function ChequeSurface({
       </div>
 
       {errors.length > 0 ? (
-        <div className="rounded-[var(--radius-panel)] border border-[var(--status-cancelled)] bg-[var(--surface-container-lowest)] p-3 text-sm text-[var(--status-cancelled)]">
+        <div className="rounded-ui-panel border border-[var(--ds-danger)] bg-surface-raised p-3 text-sm text-[var(--ds-danger)]">
           <p className="font-semibold">Çek işlemi kaydedilemedi</p>
           <ul className="mt-2 list-disc pl-5">
             {errors.map((error) => (
@@ -258,14 +285,14 @@ export function ChequeSurface({
 
       {printNotice ? (
         <div
-          className="rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)] p-3 text-sm font-semibold text-[var(--on-surface-variant)]"
+          className="rounded-ui-panel border border-divider bg-surface-raised p-3 text-sm font-semibold text-content-subtle"
           role="status"
         >
           {printNotice}
         </div>
       ) : null}
 
-      <label className="grid gap-1 rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)] p-3 text-sm font-medium md:max-w-md">
+      <label className="grid gap-1 rounded-ui-panel border border-divider bg-surface-raised p-3 text-sm font-medium shadow-sm md:max-w-md">
         Tahsil Hesabı
         <select
           className={controlClass}
@@ -281,14 +308,14 @@ export function ChequeSurface({
       </label>
 
       {form ? (
-        <article className="rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)]">
-          <div className="border-b border-[var(--grid-border)] px-4 py-3">
+        <article className="rounded-ui-panel border border-divider bg-surface-raised">
+          <div className="border-b border-divider px-4 py-3">
             <h2 className="text-sm font-semibold">Gelen Çek Ekle</h2>
-            <div className="mt-2 flex flex-wrap gap-2 text-xs font-semibold text-[var(--on-surface-variant)]">
-              <span className="rounded-[var(--radius-control)] bg-[var(--surface-container-low)] px-2 py-1">
+            <div className="mt-2 flex flex-wrap gap-2 text-xs font-semibold text-content-subtle">
+              <span className="rounded-ui-control bg-surface-muted px-2 py-1">
                 {baseCurrencyContext}
               </span>
-              <span className="rounded-[var(--radius-control)] bg-[var(--surface-container-low)] px-2 py-1">
+              <span className="rounded-ui-control bg-surface-muted px-2 py-1">
                 {currencyPolicyContext}
               </span>
             </div>
@@ -378,19 +405,35 @@ export function ChequeSurface({
         </article>
       ) : null}
 
-      <div className="grid gap-3 md:grid-cols-3">
+      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
         <Metric label="Portföy Toplamı" value={formatMoney(portfolioTotal)} />
         <Metric label="Tahsil Toplamı" value={formatMoney(collectedTotal)} />
         <Metric label="Portföy Adedi" value={String(portfolioRows.length)} />
+        <Metric label="30 Gün İçinde Vade" value={String(dueSoonRows.length)} />
       </div>
 
-      <article className="overflow-hidden rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)]">
-        <div className="border-b border-[var(--grid-border)] px-4 py-3">
-          <h2 className="text-sm font-semibold">Çek portföy listesi</h2>
+      <article className="overflow-hidden rounded-ui-panel border border-divider bg-surface-raised shadow-sm">
+        <div className="flex flex-col gap-3 border-b border-divider p-4 lg:flex-row lg:items-center lg:justify-between">
+          <div>
+            <h2 className="text-base font-semibold text-content">Çek portföy listesi</h2>
+            <p className="mt-1 text-sm text-content-muted">Gösterilen {visibleRows.length} / {displayRows.length} çek</p>
+          </div>
+          <div className="flex flex-col gap-2 sm:flex-row">
+            <div className="relative min-w-0 sm:w-72">
+              <Icon className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-content-muted" name="search" size={16} />
+              <input aria-label="Çek ara" className="h-10 w-full rounded-ui-control border border-divider bg-surface-raised py-2 pl-9 pr-3 text-sm text-content outline-none transition placeholder:text-content-muted focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/15" onChange={(event) => setSearchQuery(event.target.value)} placeholder="Evrak, çek no veya cari ara" value={searchQuery} />
+            </div>
+            <select aria-label="Çek durum filtresi" className="h-10 rounded-ui-control border border-divider bg-surface-raised px-3 text-sm text-content outline-none focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/15" onChange={(event) => setStatusFilter(event.target.value as typeof statusFilter)} value={statusFilter}>
+              <option value="Tümü">Tüm durumlar</option>
+              <option value="Portföyde">Portföyde</option>
+              <option value="Tahsil Edildi">Tahsil edildi</option>
+              <option value="İptal">İptal</option>
+            </select>
+          </div>
         </div>
         <div className="overflow-x-auto">
           <table className="min-w-[980px] w-full text-left text-sm">
-            <thead className="bg-[var(--surface-container-low)] text-xs uppercase text-[var(--on-surface-variant)]">
+            <thead className="bg-surface-muted text-xs uppercase text-content-subtle">
               <tr>
                 <th className="px-4 py-3 font-semibold">Evrak No</th>
                 <th className="px-4 py-3 font-semibold">Çek No</th>
@@ -402,24 +445,24 @@ export function ChequeSurface({
                 <th className="px-4 py-3 text-center font-semibold">İşlem</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[var(--grid-border)]">
-              {displayRows.length === 0 ? (
+            <tbody className="divide-y divide-divider">
+              {visibleRows.length === 0 ? (
                 <tr>
                   <td className="px-4 py-10 text-center" colSpan={8}>
-                    <p className="font-semibold">Henüz çek kaydı yok</p>
-                    <p className="mt-1 text-sm text-[var(--on-surface-variant)]">
-                      İlk gelen çek kaydı portföy ve tahsil akışını başlatır.
+                    <p className="font-semibold">Gösterilecek çek kaydı yok</p>
+                    <p className="mt-1 text-sm text-content-subtle">
+                      Filtreyi temizleyin veya ilk gelen çek kaydıyla portföy akışını başlatın.
                     </p>
                   </td>
                 </tr>
               ) : (
-                displayRows.map((row) => {
+                visibleRows.map((row) => {
                   const isCollecting = collectingId === row.id;
                   const canCollect =
                     permissions.canMutateCheques && row.status === "Portföyde";
 
                   return (
-                    <tr className="hover:bg-[var(--primary-fixed)]" key={row.id}>
+                    <tr className="hover:bg-brand-primary-subtle" key={row.id}>
                       <td className="px-4 py-3 font-mono text-xs">
                         {row.documentNo}
                       </td>
@@ -441,7 +484,7 @@ export function ChequeSurface({
                             {row.status}
                           </span>
                           {row.ledgerDocumentNo ? (
-                            <span className="font-mono text-[11px] text-[var(--on-surface-variant)]">
+                            <span className="font-mono text-[11px] text-content-subtle">
                               Fiş: {row.ledgerDocumentNo}
                             </span>
                           ) : null}
@@ -450,7 +493,7 @@ export function ChequeSurface({
                       <td className="px-4 py-3 text-center">
                         <button
                           aria-label={`Tahsil Et ${row.documentNo}`}
-                          className="rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] px-2 py-1 text-xs font-semibold transition hover:bg-[var(--primary-fixed)] disabled:opacity-50"
+                          className="rounded-ui-control border border-divider bg-surface-muted px-2 py-1 text-xs font-semibold transition hover:bg-brand-primary-subtle disabled:opacity-50"
                           disabled={!canCollect || isCollecting}
                           onClick={() => collectCheque(row)}
                           type="button"
@@ -494,34 +537,34 @@ function ChequeAuditHistory({
   }
 
   return (
-    <article className="rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)]">
-      <div className="border-b border-[var(--grid-border)] px-4 py-3">
+    <article className="rounded-ui-panel border border-divider bg-surface-raised">
+      <div className="border-b border-divider px-4 py-3">
         <h2 className="text-sm font-semibold">İşlem Geçmişi</h2>
       </div>
-      <div className="divide-y divide-[var(--grid-border)]">
+      <div className="divide-y divide-divider">
         {groups.map(({ logs, row }) => (
           <section className="grid gap-3 p-4 lg:grid-cols-[180px_1fr]" key={row.id}>
             <div>
               <p className="font-mono text-xs font-semibold">{row.documentNo}</p>
-              <p className="mt-1 text-xs text-[var(--on-surface-variant)]">
+              <p className="mt-1 text-xs text-content-subtle">
                 {row.checkNo}
               </p>
             </div>
             <ol className="grid gap-2">
               {logs.map((log) => (
                 <li
-                  className="rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] px-3 py-2"
+                  className="rounded-ui-control border border-divider bg-surface-muted px-3 py-2"
                   key={log.id}
                 >
                   <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
                     <p className="text-sm font-semibold">
                       {formatAuditAction(log.action)}
                     </p>
-                    <time className="font-mono text-xs text-[var(--on-surface-variant)]">
+                    <time className="font-mono text-xs text-content-subtle">
                       {formatAuditDate(log.occurredAt)}
                     </time>
                   </div>
-                  <p className="mt-1 text-xs text-[var(--on-surface-variant)]">
+                  <p className="mt-1 text-xs text-content-subtle">
                     {formatAuditTransition(log.metadata)}
                   </p>
                 </li>
@@ -551,11 +594,11 @@ function Field({
 
 function Metric({ label, value }: { label: string; value: string }) {
   return (
-    <article className="rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)] p-4">
-      <p className="text-sm font-semibold text-[var(--on-surface-variant)]">
+    <article className="rounded-ui-panel border border-divider bg-surface-raised p-4 shadow-sm">
+      <p className="text-sm font-semibold text-content-muted">
         {label}
       </p>
-      <p className="mt-2 font-mono text-2xl font-semibold">{value}</p>
+      <p className="mt-2 font-mono text-2xl font-semibold text-content">{value}</p>
     </article>
   );
 }
@@ -647,12 +690,12 @@ function formatDate(value: string) {
 function statusBadgeClass(status: ChequeRow["status"]) {
   const tone =
     status === "Tahsil Edildi"
-      ? "bg-[var(--status-complete)]"
+      ? "bg-[var(--ds-success)]"
       : status === "İptal"
-        ? "bg-[var(--status-cancelled)]"
-        : "bg-[var(--status-process)]";
+        ? "bg-[var(--ds-danger)]"
+        : "bg-[var(--ds-info)]";
 
-  return `rounded-[var(--radius-control)] ${tone} px-2 py-1 text-xs font-semibold text-white`;
+  return `rounded-ui-control ${tone} px-2 py-1 text-xs font-semibold text-on-status`;
 }
 
 function toNumber(value: string) {
@@ -662,7 +705,7 @@ function toNumber(value: string) {
 }
 
 const controlClass =
-  "h-10 w-full rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)] px-3 text-sm outline-none transition focus:border-[var(--primary)]";
+  "h-10 w-full rounded-ui-control border border-divider bg-surface-raised px-3 text-sm outline-none transition focus:border-brand-primary";
 
 const toolbarButtonClass =
-  "rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] px-3 py-1.5 text-sm font-medium transition hover:bg-[var(--primary-fixed)]";
+  "rounded-ui-control border border-divider bg-surface-muted px-3 py-1.5 text-sm font-medium transition hover:bg-brand-primary-subtle";

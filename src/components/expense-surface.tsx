@@ -13,6 +13,7 @@ import {
   getP0CurrencyPolicyDisplayValue,
   getP0DefaultVatRateInputValue,
 } from "@/lib/settings-contract";
+import { Icon, type IconName } from "@/components/ui";
 
 type ExpenseLookupOption = {
   code: string;
@@ -78,10 +79,20 @@ export function ExpenseSurface({
   const [isSaving, setIsSaving] = useState(false);
   const [errors, setErrors] = useState<string[]>([]);
   const [notice, setNotice] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [groupFilter, setGroupFilter] = useState("Tümü");
   const activeRows = displayRows.filter((row) => row.status !== "İptal");
-  const amountTotal = activeRows.reduce((total, row) => total + row.amount, 0);
   const vatTotal = activeRows.reduce((total, row) => total + row.vatTotal, 0);
   const grandTotal = activeRows.reduce((total, row) => total + row.grandTotal, 0);
+  const currentMonthTotal = activeRows.filter((row) => row.expenseDate.startsWith(today.slice(0, 7))).reduce((total, row) => total + row.grandTotal, 0);
+  const paymentLinkedCount = activeRows.filter((row) => Boolean(getExpensePayment(localPaymentMovements, row.id))).length;
+  const expenseGroups = buildExpenseGroups(activeRows);
+  const query = searchQuery.trim().toLocaleLowerCase("tr-TR");
+  const filteredRows = displayRows.filter((row) => {
+    const matchesGroup = groupFilter === "Tümü" || normalizeMovementGroup(row.movementGroup) === groupFilter;
+    const matchesQuery = !query || [row.documentNo, row.siteName, row.movementGroup, row.counterpartyName, row.description ?? ""].some((value) => value.toLocaleLowerCase("tr-TR").includes(query));
+    return matchesGroup && matchesQuery;
+  });
   const baseCurrencyContext = `Baz Para: ${getP0BaseCurrencyDisplayValue()}`;
   const currencyPolicyContext = getP0CurrencyPolicyDisplayValue();
 
@@ -148,26 +159,17 @@ export function ExpenseSurface({
   }
 
   return (
-    <section className="mx-auto flex max-w-7xl flex-col gap-4">
-      <header className="rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)] p-5">
-        <p className="text-xs font-semibold uppercase tracking-wide text-[var(--primary)]">
-          Şantiye, masraf ve ödeme
-        </p>
-        <div className="mt-2 flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
-          <div>
-            <h1 className="text-2xl font-semibold tracking-normal">Giderler</h1>
-            <p className="mt-2 max-w-3xl text-sm leading-6 text-[var(--on-surface-variant)]">
-              Şantiye/proje gideri kaydedildiğinde aynı akışta kasa/banka çıkış
-              hareketi oluşturulur ve gider maliyeti şantiye bağlamında izlenir.
-            </p>
-          </div>
-          <span className="rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] px-3 py-2 text-xs font-semibold text-[var(--on-surface-variant)]">
-            Gider Kaydı
-          </span>
+    <section className="mx-auto flex w-full max-w-[1440px] flex-col gap-6">
+      <header className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <div className="min-w-0">
+          <nav aria-label="İçerik yolu" className="text-xs font-semibold text-content-muted">Finans / Giderler</nav>
+          <h1 className="mt-2 text-3xl font-bold leading-[2.375rem] tracking-[-0.02em] text-content">Gider Yönetimi</h1>
+          <p className="mt-2 max-w-3xl text-sm leading-6 text-content-subtle">Şantiye ve ofis harcamalarını ödeme hesabı ve muhasebe fişi bağlantısıyla aynı çalışma alanında yönetin.</p>
         </div>
+        <span className="inline-flex items-center gap-2 rounded-ui-control border border-divider bg-surface-raised px-3 py-2 text-xs font-semibold text-content-subtle shadow-sm"><Icon name="receipt" size={18} /> {activeRows.length} aktif gider</span>
       </header>
 
-      <div className="flex flex-wrap items-center gap-2 rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)] p-2">
+      <div className="flex flex-wrap items-center gap-2 rounded-ui-panel border border-divider bg-surface-raised p-2">
         <button
           className={toolbarButtonClass}
           disabled={!permissions.canMutateExpenses}
@@ -189,8 +191,13 @@ export function ExpenseSurface({
         </button>
       </div>
 
+      <div className="flex flex-col gap-3 rounded-ui-panel border border-divider bg-surface-raised p-3 shadow-sm sm:flex-row sm:items-center sm:justify-between">
+        <div className="relative w-full sm:max-w-sm"><Icon className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-content-muted" name="search" size={16} /><input aria-label="Gider ara" className="h-10 w-full rounded-ui-control border border-divider bg-surface-raised py-2 pl-9 pr-3 text-sm text-content outline-none transition placeholder:text-content-muted focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/15" onChange={(event) => setSearchQuery(event.target.value)} placeholder="Evrak, şantiye veya cari ara" value={searchQuery} /></div>
+        <select aria-label="Gider grubu filtresi" className="h-10 rounded-ui-control border border-divider bg-surface-raised px-3 text-sm text-content outline-none focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/15" onChange={(event) => setGroupFilter(event.target.value)} value={groupFilter}><option value="Tümü">Tüm gruplar</option>{expenseGroups.map((group) => <option key={group.name} value={group.name}>{group.name}</option>)}</select>
+      </div>
+
       {errors.length > 0 ? (
-        <div className="rounded-[var(--radius-panel)] border border-[var(--status-cancelled)] bg-[var(--surface-container-lowest)] p-3 text-sm text-[var(--status-cancelled)]">
+        <div className="rounded-ui-panel border border-[var(--ds-danger)] bg-surface-raised p-3 text-sm text-[var(--ds-danger)]">
           <p className="font-semibold">Gider kaydedilemedi</p>
           <ul className="mt-2 list-disc pl-5">
             {errors.map((error) => (
@@ -202,7 +209,7 @@ export function ExpenseSurface({
 
       {notice ? (
         <div
-          className="rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)] p-3 text-sm font-semibold text-[var(--on-surface-variant)]"
+          className="rounded-ui-panel border border-divider bg-surface-raised p-3 text-sm font-semibold text-content-subtle"
           role="status"
         >
           {notice}
@@ -210,14 +217,14 @@ export function ExpenseSurface({
       ) : null}
 
       {form ? (
-        <article className="rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)]">
-          <div className="border-b border-[var(--grid-border)] px-4 py-3">
+        <article className="rounded-ui-panel border border-divider bg-surface-raised">
+          <div className="border-b border-divider bg-surface-muted px-4 py-4 sm:px-5">
             <h2 className="text-sm font-semibold">Gider Kaydı Ekle</h2>
-            <div className="mt-2 flex flex-wrap gap-2 text-xs font-semibold text-[var(--on-surface-variant)]">
-              <span className="rounded-[var(--radius-control)] bg-[var(--surface-container-low)] px-2 py-1">
+            <div className="mt-2 flex flex-wrap gap-2 text-xs font-semibold text-content-subtle">
+              <span className="rounded-ui-control bg-surface-muted px-2 py-1">
                 {baseCurrencyContext}
               </span>
-              <span className="rounded-[var(--radius-control)] bg-[var(--surface-container-low)] px-2 py-1">
+              <span className="rounded-ui-control bg-surface-muted px-2 py-1">
                 {currencyPolicyContext}
               </span>
             </div>
@@ -309,19 +316,20 @@ export function ExpenseSurface({
         </article>
       ) : null}
 
-      <div className="grid gap-3 md:grid-cols-3">
-        <Metric label="Gider Tutarı" value={formatMoney(amountTotal)} />
-        <Metric label="KDV Toplamı" value={formatMoney(vatTotal)} />
-        <Metric label="Ödenen Toplam" value={formatMoney(grandTotal)} />
+      <div aria-label="Gider özet metrikleri" className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <Metric icon="wallet" label="Toplam Gider" tone="warning" value={formatMoney(grandTotal)} />
+        <Metric icon="calendar" label="Bu Ay" value={formatMoney(currentMonthTotal)} />
+        <Metric detail={`${activeRows.length} aktif kayıt`} icon="receipt" label="KDV Toplamı" tone="success" value={formatMoney(vatTotal)} />
+        <Metric detail={`${paymentLinkedCount}/${activeRows.length} ödeme bağlantılı`} icon="bank" label="Ödeme Bağlantısı" value={String(paymentLinkedCount)} />
       </div>
 
-      <article className="overflow-hidden rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)]">
-        <div className="border-b border-[var(--grid-border)] px-4 py-3">
-          <h2 className="text-sm font-semibold">Gider hareket listesi</h2>
+      <article className="overflow-hidden rounded-ui-panel border border-divider bg-surface-raised shadow-sm">
+        <div className="border-b border-divider bg-surface-muted px-4 py-4 sm:px-5">
+          <div><h2 className="text-lg font-semibold text-content">Son Giderler</h2><p className="mt-1 text-sm text-content-subtle">{filteredRows.length} kayıt gösteriliyor</p></div>
         </div>
         <div className="overflow-x-auto">
-          <table className="min-w-[980px] w-full text-left text-sm">
-            <thead className="bg-[var(--surface-container-low)] text-xs uppercase text-[var(--on-surface-variant)]">
+          <table aria-label="Gider hareketleri tablosu" className="min-w-[980px] w-full text-left text-sm">
+            <thead className="border-b border-divider bg-surface-muted text-xs uppercase tracking-wide text-content-muted">
               <tr>
                 <th className="px-4 py-3 font-semibold">Evrak No</th>
                 <th className="px-4 py-3 font-semibold">Tarih</th>
@@ -334,19 +342,19 @@ export function ExpenseSurface({
                 <th className="px-4 py-3 font-semibold">Ödeme</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[var(--grid-border)]">
-              {displayRows.length === 0 ? (
+            <tbody className="divide-y divide-divider">
+              {filteredRows.length === 0 ? (
                 <tr>
                   <td className="px-4 py-10 text-center" colSpan={9}>
                     <p className="font-semibold">Henüz gider kaydı yok</p>
-                    <p className="mt-1 text-sm text-[var(--on-surface-variant)]">
+                    <p className="mt-1 text-sm text-content-subtle">
                       İlk gider kaydı şantiye maliyeti ve kasa/banka çıkışını
                       aynı anda başlatır.
                     </p>
                   </td>
                 </tr>
               ) : (
-                displayRows.map((row) => {
+                filteredRows.map((row) => {
                   const paymentMovement = getExpensePayment(
                     localPaymentMovements,
                     row.id,
@@ -365,7 +373,7 @@ export function ExpenseSurface({
                       <td className="px-4 py-3 font-mono text-xs">
                         {row.documentNo}
                         {row.ledgerDocumentNo ? (
-                          <span className="mt-1 block text-[11px] text-[var(--on-surface-variant)]">
+                          <span className="mt-1 block text-[11px] text-content-subtle">
                             Fiş: {row.ledgerDocumentNo}
                           </span>
                         ) : null}
@@ -386,18 +394,18 @@ export function ExpenseSurface({
                       <td className="px-4 py-3">
                         {paymentMovement ? (
                           <div className="grid gap-1">
-                            <span className="font-semibold text-[var(--status-posted)]">
+                            <span className="font-semibold text-[var(--ds-success)]">
                               Ödendi
                             </span>
-                            <span className="text-xs text-[var(--on-surface-variant)]">
+                            <span className="text-xs text-content-subtle">
                               {paymentMovement.accountName}
                             </span>
-                            <span className="font-mono text-xs text-[var(--on-surface-variant)]">
+                            <span className="font-mono text-xs text-content-subtle">
                               {paymentMovement.documentNo}
                             </span>
                           </div>
                         ) : (
-                          <span className="text-xs text-[var(--on-surface-variant)]">
+                          <span className="text-xs text-content-subtle">
                             Ödeme hareketi bekleniyor
                           </span>
                         )}
@@ -410,6 +418,16 @@ export function ExpenseSurface({
           </table>
         </div>
       </article>
+
+      <section aria-label="Gider dağılımı" className="rounded-ui-panel border border-divider bg-surface-raised p-5 shadow-sm">
+        <div className="flex items-start justify-between gap-3"><div><p className="text-xs font-semibold uppercase tracking-[0.08em] text-brand-primary">Finansal analiz</p><h2 className="mt-1 text-lg font-semibold text-content">Gider Dağılımı</h2><p className="mt-1 text-sm text-content-subtle">Aktif giderlerin mevcut hareket grubuna göre dağılımı</p></div><Icon className="text-brand-primary" name="chart" size={21} /></div>
+        <div className="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+          {expenseGroups.length === 0 ? <p className="text-sm text-content-subtle">Dağılım için aktif gider kaydı yok.</p> : expenseGroups.map((group) => {
+            const percentage = grandTotal > 0 ? (group.amount / grandTotal) * 100 : 0;
+            return <article className="rounded-ui-control border border-divider bg-surface-muted p-4" key={group.name}><div className="flex items-center justify-between gap-3"><span className="truncate font-semibold text-content">{group.name}</span><span className="font-mono text-xs text-content-subtle">{percentage.toFixed(0)}%</span></div><div className="mt-3 h-2 overflow-hidden rounded-full bg-surface-raised"><div className="h-full rounded-full bg-brand-primary" style={{ width: `${percentage}%` }} /></div><p className="mt-2 font-mono text-sm font-semibold tabular-nums text-content">{formatMoney(group.amount)}</p></article>;
+          })}
+        </div>
+      </section>
     </section>
   );
 }
@@ -429,15 +447,30 @@ function Field({
   );
 }
 
-function Metric({ label, value }: { label: string; value: string }) {
+function Metric({ detail, icon, label, tone = "brand", value }: { detail?: string; icon: IconName; label: string; tone?: "brand" | "success" | "warning"; value: string }) {
+  const toneClasses = { brand: "bg-brand-primary-subtle text-brand-primary", success: "bg-success-subtle text-success", warning: "bg-warning-subtle text-warning" }[tone];
+
   return (
-    <article className="rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)] p-4">
-      <p className="text-sm font-semibold text-[var(--on-surface-variant)]">
-        {label}
-      </p>
-      <p className="mt-2 font-mono text-2xl font-semibold">{value}</p>
+    <article className="rounded-ui-panel border border-divider bg-surface-raised p-5 shadow-sm">
+      <div className="flex items-start justify-between gap-3">
+        <div><p className="text-xs font-semibold uppercase tracking-[0.08em] text-content-muted">{label}</p><p className="mt-4 font-mono text-xl font-bold tabular-nums text-content">{value}</p>{detail ? <p className="mt-1 text-xs text-content-subtle">{detail}</p> : null}</div>
+        <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-ui-control ${toneClasses}`}><Icon name={icon} size={19} /></span>
+      </div>
     </article>
   );
+}
+
+function buildExpenseGroups(rows: ExpenseRow[]) {
+  const totals = new Map<string, number>();
+  for (const row of rows) {
+    const name = normalizeMovementGroup(row.movementGroup);
+    totals.set(name, (totals.get(name) ?? 0) + row.grandTotal);
+  }
+  return [...totals.entries()].map(([name, amount]) => ({ name, amount })).sort((left, right) => right.amount - left.amount);
+}
+
+function normalizeMovementGroup(value: string) {
+  return value.trim() || "Grupsuz";
 }
 
 function createValuesFromForm(
@@ -486,8 +519,8 @@ function isHighlightedDocument(
 
 function highlightedRowClass(isHighlighted: boolean) {
   return isHighlighted
-    ? "bg-[var(--primary-fixed)] ring-1 ring-inset ring-[var(--primary)]"
-    : "hover:bg-[var(--primary-fixed)]";
+    ? "bg-brand-primary-subtle ring-1 ring-inset ring-brand-primary"
+    : "hover:bg-brand-primary-subtle";
 }
 
 function toNumber(value: string) {
@@ -508,7 +541,7 @@ function formatDate(value: string) {
 }
 
 const controlClass =
-  "h-10 w-full rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)] px-3 text-sm outline-none transition focus:border-[var(--primary)]";
+  "h-10 w-full rounded-ui-control border border-divider bg-surface-raised px-3 text-sm outline-none transition focus:border-brand-primary";
 
 const toolbarButtonClass =
-  "rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] px-3 py-1.5 text-sm font-medium transition hover:bg-[var(--primary-fixed)]";
+  "inline-flex min-h-10 items-center justify-center rounded-ui-control border border-divider bg-surface-raised px-3 text-sm font-semibold text-content transition-colors hover:bg-surface-muted";

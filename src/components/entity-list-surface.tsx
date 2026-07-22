@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 
+import { Icon, StatusBadge, type IconName } from "@/components/ui";
 import type { EntityDefinition, EntityDraft, EntityRow } from "@/lib/entities";
 import {
   buildEntityImportErrorReportCsvFileName,
@@ -51,11 +52,17 @@ const maxXlsxImportFileSizeBytes = 15 * 1024 * 1024;
 
 export type EntityListSurfaceProps = {
   definition: EntityDefinition;
+  hideHeader?: boolean;
   initialRows?: EntityRow[];
   persistence?: EntityListPersistence;
   scope?: TenantScope;
   statementRows?: OperationalReportCounterpartyStatementDetailRow[];
   cashBankAccountOptions?: CashBankAccountOption[];
+  visualVariant?:
+    | "customer"
+    | "site"
+    | "subcontractor"
+    | "supplier";
 };
 
 type EntityActionResult =
@@ -96,17 +103,28 @@ export type EntityListPersistence = {
 };
 
 const buttonClass =
-  "rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] px-3 py-1.5 text-sm font-medium transition hover:border-[var(--primary)] hover:bg-[var(--primary-fixed)] disabled:cursor-not-allowed disabled:border-[var(--grid-border)] disabled:opacity-40";
+  "rounded-ui-control border border-divider bg-surface-muted px-3 py-1.5 text-sm font-medium transition hover:border-brand-primary hover:bg-brand-primary-subtle disabled:cursor-not-allowed disabled:border-divider disabled:opacity-40";
 const primaryButtonClass =
-  "rounded-[var(--radius-control)] border border-[var(--primary)] bg-[var(--primary)] px-3 py-1.5 text-sm font-semibold text-white transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-40";
+  "rounded-ui-control border border-brand-primary bg-brand-primary px-3 py-1.5 text-sm font-semibold text-on-brand transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-40";
 const demoSeedIso = "2026-06-24T00:00:00.000Z";
 
 function getStatusClass(status: string) {
   if (status === "Pasif") {
-    return "rounded-[var(--radius-control)] bg-[var(--status-cancelled)] px-2 py-1 text-xs font-semibold text-white";
+    return "rounded-ui-control bg-[var(--ds-danger)] px-2 py-1 text-xs font-semibold text-on-status";
   }
 
-  return "rounded-[var(--radius-control)] bg-[var(--status-approved)] px-2 py-1 text-xs font-semibold text-white";
+  return "rounded-ui-control bg-[var(--ds-success)] px-2 py-1 text-xs font-semibold text-on-status";
+}
+
+function getEntityActionIcon(
+  action: (typeof standardEntityActions)[number],
+): IconName {
+  if (action === "Yeni") return "plus";
+  if (action === "Düzenle") return "receipt";
+  if (action === "Pasifleştir") return "close";
+  if (action === "Yenile") return "loader";
+  if (action === "İçe Aktar") return "file";
+  return "file";
 }
 
 function buildInitialXlsxHeaderMapping(
@@ -131,12 +149,32 @@ function getSelectedXlsxHeaderValues(
 
 export function EntityListSurface({
   definition,
+  hideHeader = false,
   initialRows,
   persistence,
   scope = defaultTenantScope,
   statementRows = [],
   cashBankAccountOptions = [],
+  visualVariant,
 }: EntityListSurfaceProps) {
+  const isSupplierVariant = visualVariant === "supplier";
+  const isSubcontractorVariant = visualVariant === "subcontractor";
+  const isSiteVariant = visualVariant === "site";
+  const isTemplateVariant =
+    visualVariant === "customer" ||
+    isSiteVariant ||
+    isSupplierVariant ||
+    isSubcontractorVariant;
+  const counterpartySingularLabel = isSiteVariant
+    ? "Şantiye"
+    : isSubcontractorVariant
+    ? "Taşeron"
+    : isSupplierVariant
+      ? "Tedarikçi"
+      : "Müşteri";
+  const entityTableLabel = isSiteVariant
+    ? "Şantiye proje kartları tablosu"
+    : `${counterpartySingularLabel} cari kartları tablosu`;
   const [rows, setRows] = useState<EntityRow[]>(() =>
     initialRows
       ? initialRows.map((row) => ({ ...row }))
@@ -147,6 +185,13 @@ export function EntityListSurface({
         }),
   );
   const [query, setQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState<"Aktif" | "Pasif" | "Tümü">(
+    "Tümü",
+  );
+  const [categoryFilter, setCategoryFilter] = useState("Tümü");
+  const [contractFilter, setContractFilter] = useState<
+    "Sözleşmeli" | "Sözleşmesiz" | "Tümü"
+  >("Tümü");
   const [selectedCode, setSelectedCode] = useState<string | undefined>(
     initialRows ? initialRows[0]?.code : definition.sampleRows[0]?.code,
   );
@@ -231,8 +276,39 @@ export function EntityListSurface({
   const [counterpartyMovementPending, setCounterpartyMovementPending] = useState(false);
 
   const filteredRows = useMemo(
-    () => filterEntityRows(definition, displayRows, query),
-    [definition, displayRows, query],
+    () =>
+      filterEntityRows(definition, displayRows, query).filter(
+        (row) =>
+          (!isTemplateVariant ||
+            statusFilter === "Tümü" ||
+            row.status === statusFilter) &&
+          (!isSupplierVariant ||
+            categoryFilter === "Tümü" ||
+            row.category === categoryFilter) &&
+          (!isSubcontractorVariant ||
+            contractFilter === "Tümü" ||
+            (contractFilter === "Sözleşmeli"
+              ? Boolean(row.contractNo?.trim())
+              : !row.contractNo?.trim())),
+      ),
+    [
+      categoryFilter,
+      contractFilter,
+      definition,
+      displayRows,
+      isTemplateVariant,
+      isSubcontractorVariant,
+      isSupplierVariant,
+      query,
+      statusFilter,
+    ],
+  );
+  const supplierCategories = useMemo(
+    () =>
+      [...new Set(displayRows.map((row) => row.category).filter(Boolean))].sort(
+        (left, right) => left.localeCompare(right, "tr-TR"),
+      ),
+    [displayRows],
   );
 
   const selectedRow = displayRows.find((row) => row.code === selectedCode);
@@ -250,6 +326,9 @@ export function EntityListSurface({
   const selectedStatementCsvFileName = buildCounterpartyStatementCsvFileName(
     selectedRow?.name ?? "tum-cariler",
   );
+  const counterpartyControlClass = isTemplateVariant
+    ? "mt-1 h-10 w-full rounded-ui-control border border-divider bg-surface-muted px-3 text-sm font-normal text-content outline-none focus:border-brand-primary focus:bg-surface-raised"
+    : "mt-1 h-9 w-full rounded border border-divider bg-surface-raised px-2 text-sm";
   const entityRowsCsvHref = buildEntityRowsCsvHref(definition, filteredRows);
   const entityRowsCsvFileName = buildEntityRowsCsvFileName(definition);
   const entityTemplateXlsxHref = buildEntityImportTemplateXlsxHref(definition);
@@ -829,95 +908,242 @@ export function EntityListSurface({
   }
 
   return (
-    <section className="mx-auto flex max-w-7xl flex-col gap-4">
-      <header className="rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)] p-5">
-        <p className="text-xs font-semibold uppercase tracking-wide text-[var(--primary)]">
-          Tanımlar standardı · {definition.codePrefix}
-        </p>
-        <h1 className="mt-2 text-2xl font-semibold tracking-normal">
-          {definition.title}
-        </h1>
-        <p className="mt-2 max-w-3xl text-sm leading-6 text-[var(--on-surface-variant)]">
-          {definition.description}
-        </p>
-        <div className="mt-4 flex flex-wrap gap-2 text-xs text-[var(--on-surface-variant)]">
-          <span className="rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] px-2 py-1">
-            {getTenantScopeLabel(scope)}
-          </span>
-          <span className="rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] px-2 py-1 font-mono">
-            {buildTenantScopeKey(scope)}
-          </span>
-        </div>
-      </header>
+    <section
+      className={
+        isTemplateVariant
+          ? "flex min-w-0 flex-col gap-5"
+          : "mx-auto flex max-w-7xl flex-col gap-4"
+      }
+    >
+      {!isTemplateVariant && !hideHeader ? (
+        <header className="rounded-ui-panel border border-divider bg-surface-raised p-5">
+          <p className="text-xs font-semibold uppercase tracking-wide text-brand-primary">
+            Tanımlar standardı · {definition.codePrefix}
+          </p>
+          <h1 className="mt-2 text-2xl font-semibold tracking-normal">
+            {definition.title}
+          </h1>
+          <p className="mt-2 max-w-3xl text-sm leading-6 text-content-subtle">
+            {definition.description}
+          </p>
+          <div className="mt-4 flex flex-wrap gap-2 text-xs text-content-subtle">
+            <span className="rounded-ui-control border border-divider bg-surface-muted px-2 py-1">
+              {getTenantScopeLabel(scope)}
+            </span>
+            <span className="rounded-ui-control border border-divider bg-surface-muted px-2 py-1 font-mono">
+              {buildTenantScopeKey(scope)}
+            </span>
+          </div>
+        </header>
+      ) : null}
 
-      <div className="flex flex-wrap items-center justify-between gap-3 rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)] p-2">
-        <div className="flex flex-wrap gap-2">
-          {standardEntityActions.map((action) =>
-            action === "Şablon" || action === "Excel" ? (
-              <a
-                className={buttonClass}
-                download={
-                  action === "Şablon"
-                    ? entityTemplateXlsxFileName
-                    : entityRowsCsvFileName
-                }
-                href={
-                  action === "Şablon"
-                    ? entityTemplateXlsxHref
-                    : entityRowsCsvHref
-                }
-                key={action}
-              >
-                {action}
-              </a>
-            ) : (
-              <button
-                className={
-                  action === "Yeni" ? primaryButtonClass : buttonClass
-                }
-                disabled={
-                  isSaving ||
-                  ((action === "Düzenle" || action === "Pasifleştir") &&
-                    !selectedRow)
-                }
-                key={action}
-                onClick={() => handleAction(action)}
-                type="button"
-              >
-                {action}
-              </button>
-            ),
+      <div
+        className={
+          isTemplateVariant
+            ? "overflow-hidden rounded-ui-panel border border-divider bg-surface-raised shadow-sm"
+            : "flex flex-wrap items-center justify-between gap-3 rounded-ui-panel border border-divider bg-surface-raised p-2"
+        }
+      >
+        <div
+          className={
+            isTemplateVariant
+              ? "flex flex-wrap items-center justify-between gap-3 border-b border-divider px-4 py-3"
+              : "flex flex-wrap gap-2"
+          }
+        >
+          <div className="flex flex-wrap gap-2">
+            {standardEntityActions.map((action) =>
+              action === "Şablon" || action === "Excel" ? (
+                <a
+                  className={
+                    isTemplateVariant
+                      ? "inline-flex min-h-9 items-center justify-center gap-2 rounded-ui-control border border-divider bg-surface-raised px-3 py-1.5 text-xs font-semibold text-content transition-colors hover:border-outline-strong hover:bg-surface-muted"
+                      : buttonClass
+                  }
+                  download={
+                    action === "Şablon"
+                      ? entityTemplateXlsxFileName
+                      : entityRowsCsvFileName
+                  }
+                  href={
+                    action === "Şablon"
+                      ? entityTemplateXlsxHref
+                      : entityRowsCsvHref
+                  }
+                  key={action}
+                >
+                  {isTemplateVariant ? <Icon name="file" size={16} /> : null}
+                  {action}
+                </a>
+              ) : (
+                <button
+                  className={
+                    isTemplateVariant
+                      ? action === "Yeni"
+                        ? "inline-flex min-h-9 items-center justify-center gap-2 rounded-ui-control border border-brand-primary bg-brand-primary px-3 py-1.5 text-xs font-semibold text-on-brand transition-colors hover:bg-brand-primary-strong disabled:cursor-not-allowed disabled:opacity-40"
+                        : "inline-flex min-h-9 items-center justify-center gap-2 rounded-ui-control border border-divider bg-surface-raised px-3 py-1.5 text-xs font-semibold text-content transition-colors hover:border-outline-strong hover:bg-surface-muted disabled:cursor-not-allowed disabled:opacity-40"
+                      : action === "Yeni"
+                        ? primaryButtonClass
+                        : buttonClass
+                  }
+                  disabled={
+                    isSaving ||
+                    ((action === "Düzenle" || action === "Pasifleştir") &&
+                      !selectedRow)
+                  }
+                  key={action}
+                  onClick={() => handleAction(action)}
+                  type="button"
+                >
+                  {isTemplateVariant ? (
+                    <Icon name={getEntityActionIcon(action)} size={16} />
+                  ) : null}
+                  {isTemplateVariant && action === "Yeni"
+                    ? `Yeni ${counterpartySingularLabel}`
+                    : action}
+                </button>
+              ),
+            )}
+          </div>
+          {isTemplateVariant ? (
+            <div className="flex flex-wrap gap-2 text-xs text-content-subtle">
+              <span className="rounded-ui-control bg-surface-muted px-2 py-1">
+                {getTenantScopeLabel(scope)}
+              </span>
+              <span className="rounded-ui-control bg-surface-muted px-2 py-1 font-mono">
+                {buildTenantScopeKey(scope)}
+              </span>
+            </div>
+          ) : (
+            <label className="min-w-60 text-sm">
+              <span className="sr-only">Arama</span>
+              <input
+                className="w-full rounded-ui-control border border-divider bg-surface-muted px-3 py-1.5 outline-none"
+                onChange={(event) => setQuery(event.target.value)}
+                placeholder="Kod, tanım veya yetkili ara"
+                type="search"
+                value={query}
+              />
+            </label>
           )}
         </div>
-        <label className="min-w-60 text-sm">
-          <span className="sr-only">Arama</span>
-          <input
-            className="w-full rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] px-3 py-1.5 outline-none"
-            onChange={(event) => setQuery(event.target.value)}
-            placeholder="Kod, tanım veya yetkili ara"
-            type="search"
-            value={query}
-          />
-        </label>
+
+        {isTemplateVariant ? (
+          <div className="flex flex-col gap-3 bg-surface-raised px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex flex-wrap items-center gap-2">
+              {isSupplierVariant ? (
+                <label className="relative">
+                  <span className="sr-only">Tedarikçi kategorisi</span>
+                  <select
+                    className="h-10 rounded-ui-control border border-divider bg-surface-muted px-3 pr-8 text-sm font-semibold text-content outline-none focus:border-brand-primary"
+                    onChange={(event) => setCategoryFilter(event.target.value)}
+                    value={categoryFilter}
+                  >
+                    <option value="Tümü">Tüm Kategoriler</option>
+                    {supplierCategories.map((category) => (
+                      <option key={category} value={category}>{category}</option>
+                    ))}
+                  </select>
+                </label>
+              ) : null}
+              {isSubcontractorVariant ? (
+                <label className="relative">
+                  <span className="sr-only">Taşeron sözleşme filtresi</span>
+                  <select
+                    className="h-10 rounded-ui-control border border-divider bg-surface-muted px-3 pr-8 text-sm font-semibold text-content outline-none focus:border-brand-primary"
+                    onChange={(event) =>
+                      setContractFilter(
+                        event.target.value as "Sözleşmeli" | "Sözleşmesiz" | "Tümü",
+                      )
+                    }
+                    value={contractFilter}
+                  >
+                    <option value="Tümü">Tüm Sözleşmeler</option>
+                    <option value="Sözleşmeli">Sözleşmeli</option>
+                    <option value="Sözleşmesiz">Sözleşmesiz</option>
+                  </select>
+                </label>
+              ) : null}
+              <div
+                aria-label={`${counterpartySingularLabel} durum filtresi`}
+                className="inline-flex overflow-hidden rounded-ui-control border border-divider bg-surface-muted"
+                role="group"
+              >
+                {(["Tümü", "Aktif", "Pasif"] as const).map((status) => {
+                  const count =
+                    status === "Tümü"
+                      ? displayRows.length
+                      : displayRows.filter((row) => row.status === status).length;
+
+                  return (
+                    <button
+                      aria-pressed={statusFilter === status}
+                      className={
+                        "inline-flex min-h-9 items-center gap-2 px-3 text-sm font-semibold transition-colors " +
+                        (statusFilter === status
+                          ? "bg-brand-primary text-on-brand"
+                          : "text-content-subtle hover:bg-brand-primary-subtle hover:text-content")
+                      }
+                      key={status}
+                      onClick={() => setStatusFilter(status)}
+                      type="button"
+                    >
+                      {status}
+                      <span
+                        className={
+                          "rounded-full px-1.5 py-0.5 font-mono text-[10px] " +
+                          (statusFilter === status
+                            ? "bg-surface-raised/20 text-on-brand"
+                            : "bg-surface-selected text-content-subtle")
+                        }
+                      >
+                        {count}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+            <label className="relative w-full sm:w-80">
+              <span className="sr-only">{counterpartySingularLabel} ara</span>
+              <Icon
+                className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-content-muted"
+                name="search"
+                size={17}
+              />
+              <input
+                className="h-10 w-full rounded-ui-control border border-divider bg-surface-muted pl-9 pr-3 text-sm text-content outline-none transition-colors placeholder:text-content-muted focus:border-brand-primary focus:bg-surface-raised"
+                onChange={(event) => setQuery(event.target.value)}
+                placeholder="Kod, tanım veya yetkili ara"
+                type="search"
+                value={query}
+              />
+            </label>
+          </div>
+        ) : null}
       </div>
 
       <p
-        className="rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] px-3 py-2 text-sm text-[var(--on-surface-variant)]"
+        className={
+          isTemplateVariant
+            ? "rounded-ui-control border border-divider bg-surface-muted px-3 py-2 text-sm text-content-subtle"
+            : "rounded-ui-panel border border-divider bg-surface-muted px-3 py-2 text-sm text-content-subtle"
+        }
         role="status"
       >
         {notice}
       </p>
 
       {importResult ? (
-        <section className="rounded-[var(--radius-panel)] border border-[var(--status-approved)] bg-[var(--surface-container-lowest)] px-3 py-2 text-sm">
-          <h2 className="font-semibold text-[var(--status-approved)]">
+        <section className="rounded-ui-panel border border-[var(--ds-success)] bg-surface-raised px-3 py-2 text-sm">
+          <h2 className="font-semibold text-[var(--ds-success)]">
             İçe aktarım sonucu
           </h2>
-          <div className="mt-2 flex flex-wrap gap-2 text-[var(--on-surface-variant)]">
-            <span className="rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] px-2 py-1">
+          <div className="mt-2 flex flex-wrap gap-2 text-content-subtle">
+            <span className="rounded-ui-control border border-divider bg-surface-muted px-2 py-1">
               Eklenen kayıt: {importResult.importedCount}
             </span>
-            <span className="rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] px-2 py-1">
+            <span className="rounded-ui-control border border-divider bg-surface-muted px-2 py-1">
               Atlanan hatalı satır: {importResult.skippedCount}
             </span>
             {importResult.errorReportHref && importResult.errorReportFileName ? (
@@ -934,7 +1160,7 @@ export function EntityListSurface({
       ) : null}
       {isSaving && pendingAction ? (
         <div
-          className="rounded-[var(--radius-panel)] border border-[var(--primary)] bg-[var(--primary-fixed)] px-3 py-2 text-sm font-semibold text-[var(--primary)]"
+          className="rounded-ui-panel border border-brand-primary bg-brand-primary-subtle px-3 py-2 text-sm font-semibold text-brand-primary"
           role="status"
         >
           Sunucu işlemi sürüyor: {pendingAction}
@@ -943,7 +1169,7 @@ export function EntityListSurface({
 
       {serverErrors.length > 0 ? (
         <div
-          className="rounded-[var(--radius-panel)] border border-[var(--mandatory-indicator)] bg-red-50 px-3 py-2 text-sm text-[var(--mandatory-indicator)]"
+          className="rounded-ui-panel border border-[var(--ds-danger)] bg-danger-subtle px-3 py-2 text-sm text-[var(--ds-danger)]"
           role="alert"
         >
           <p className="font-semibold">Sunucu işlemi tamamlanamadı</p>
@@ -957,7 +1183,12 @@ export function EntityListSurface({
 
       {draft ? (
         <form
-          className="rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)] p-4"
+          aria-label={isTemplateVariant ? `${counterpartySingularLabel} kayıt paneli` : undefined}
+          className={
+            isTemplateVariant
+              ? "rounded-ui-panel border border-divider bg-surface-raised p-4 shadow-sm sm:p-5"
+              : "rounded-ui-panel border border-divider bg-surface-raised p-4"
+          }
           onSubmit={(event) => {
             event.preventDefault();
             void saveDraft();
@@ -965,12 +1196,22 @@ export function EntityListSurface({
           ref={editorFormRef}
         >
           <div className="flex flex-wrap items-center justify-between gap-3">
-            <h2 className="text-base font-semibold">
-              {draft.mode === "create" ? "Yeni Kayıt" : "Kayıt Düzenle"}
+            <h2 className={isTemplateVariant ? "text-xl font-semibold" : "text-base font-semibold"}>
+              {isTemplateVariant
+                ? draft.mode === "create"
+                  ? `Yeni ${counterpartySingularLabel}`
+                  : `${counterpartySingularLabel} Düzenle`
+                : draft.mode === "create"
+                  ? "Yeni Kayıt"
+                  : "Kayıt Düzenle"}
             </h2>
             <div className="flex gap-2">
               <button
-                className={primaryButtonClass}
+                className={
+                  isTemplateVariant
+                    ? "min-h-10 rounded-ui-control bg-brand-primary px-4 text-sm font-semibold text-on-brand hover:bg-brand-primary-strong disabled:opacity-40"
+                    : primaryButtonClass
+                }
                 disabled={isSaving}
                 type="submit"
               >
@@ -992,7 +1233,7 @@ export function EntityListSurface({
           </div>
 
           {errors.length > 0 ? (
-            <ul className="mt-3 rounded-[var(--radius-control)] border border-[var(--mandatory-indicator)] bg-red-50 px-3 py-2 text-sm text-[var(--mandatory-indicator)]">
+            <ul className="mt-3 rounded-ui-control border border-[var(--ds-danger)] bg-danger-subtle px-3 py-2 text-sm text-[var(--ds-danger)]">
               {errors.map((error) => (
                 <li key={error}>{error}</li>
               ))}
@@ -1005,7 +1246,7 @@ export function EntityListSurface({
                 <span>{column.label}</span>
                 {column.key === "status" ? (
                   <select
-                    className="mt-1 w-full rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] px-3 py-2 font-normal outline-none"
+                    className="mt-1 w-full rounded-ui-control border border-divider bg-surface-muted px-3 py-2 font-normal outline-none"
                     onChange={(event) =>
                       updateDraftValue(column.key, event.target.value)
                     }
@@ -1016,7 +1257,7 @@ export function EntityListSurface({
                   </select>
                 ) : (
                   <input
-                    className="mt-1 w-full rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] px-3 py-2 font-normal outline-none"
+                    className="mt-1 w-full rounded-ui-control border border-divider bg-surface-muted px-3 py-2 font-normal outline-none"
                     onChange={(event) =>
                       updateDraftValue(column.key, event.target.value)
                     }
@@ -1030,7 +1271,14 @@ export function EntityListSurface({
       ) : null}
 
       {isImportOpen ? (
-        <section className="rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)] p-4">
+        <section
+          aria-label={isTemplateVariant ? `${counterpartySingularLabel} içe aktarım paneli` : undefined}
+          className={
+            isTemplateVariant
+              ? "rounded-ui-panel border border-divider bg-surface-raised p-4 shadow-sm sm:p-5"
+              : "rounded-ui-panel border border-divider bg-surface-raised p-4"
+          }
+        >
           <div className="flex flex-wrap items-center justify-between gap-3">
             <h2 className="text-base font-semibold">CSV İçe Aktar</h2>
             <div className="flex gap-2">
@@ -1052,7 +1300,11 @@ export function EntityListSurface({
                 Geçerli Satırları Uygula
               </button>
               <button
-                className={buttonClass}
+                className={
+                  isTemplateVariant
+                    ? "min-h-10 rounded-ui-control border border-divider bg-surface-raised px-4 text-sm font-semibold text-content hover:bg-surface-muted"
+                    : buttonClass
+                }
                 onClick={() => {
                   setIsImportOpen(false);
                   setXlsxImportState(undefined);
@@ -1070,22 +1322,22 @@ export function EntityListSurface({
               </button>
             </div>
           </div>
-          <div className="mt-4 rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] px-3 py-3 text-sm">
+          <div className="mt-4 rounded-ui-control border border-divider bg-surface-muted px-3 py-3 text-sm">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div>
                 <h3 className="font-semibold">XLSX içe aktar sihirbazı</h3>
-                <p className="mt-1 text-[var(--on-surface-variant)]">
+                <p className="mt-1 text-content-subtle">
                   Excel şablonu, kolon eşleme ve kalıcı import adımları için hazırlık alanı.
                 </p>
               </div>
-              <div className="flex flex-wrap gap-2 text-xs text-[var(--on-surface-variant)]">
-                <span className="rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)] px-2 py-1">
+              <div className="flex flex-wrap gap-2 text-xs text-content-subtle">
+                <span className="rounded-ui-control border border-divider bg-surface-raised px-2 py-1">
                   1. Şablon
                 </span>
-                <span className="rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)] px-2 py-1">
+                <span className="rounded-ui-control border border-divider bg-surface-raised px-2 py-1">
                   2. Ön kontrol
                 </span>
-                <span className="rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)] px-2 py-1">
+                <span className="rounded-ui-control border border-divider bg-surface-raised px-2 py-1">
                   3. Sonuç
                 </span>
               </div>
@@ -1094,7 +1346,7 @@ export function EntityListSurface({
               <span>XLSX dosyası seç</span>
               <input
                 accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-                className="mt-1 block w-full rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)] px-3 py-2 text-sm file:mr-3 file:rounded-[var(--radius-control)] file:border-0 file:bg-[var(--primary-fixed)] file:px-3 file:py-1.5 file:text-sm file:font-semibold file:text-[var(--primary)]"
+                className="mt-1 block w-full rounded-ui-control border border-divider bg-surface-raised px-3 py-2 text-sm file:mr-3 file:rounded-ui-control file:border-0 file:bg-brand-primary-subtle file:px-3 file:py-1.5 file:text-sm file:font-semibold file:text-brand-primary"
                 onChange={(event) => {
                   void handleXlsxImportFileChange(event.target.files?.[0]);
                 }}
@@ -1103,7 +1355,7 @@ export function EntityListSurface({
             </label>
             <div
               aria-label="XLSX dosyasını sürükle bırak"
-              className="mt-3 rounded-[var(--radius-control)] border border-dashed border-[var(--grid-border)] bg-[var(--surface-container-lowest)] px-3 py-5 text-center text-sm text-[var(--on-surface-variant)] transition hover:border-[var(--primary)] hover:bg-[var(--primary-fixed)]"
+              className="mt-3 rounded-ui-control border border-dashed border-divider bg-surface-raised px-3 py-5 text-center text-sm text-content-subtle transition hover:border-brand-primary hover:bg-brand-primary-subtle"
               onDragOver={(event) => {
                 event.preventDefault();
               }}
@@ -1117,25 +1369,25 @@ export function EntityListSurface({
               XLSX dosyasını buraya bırak
             </div>
             {xlsxImportState?.fileName ? (
-              <p className="mt-3 rounded-[var(--radius-control)] border border-[var(--status-approved)] bg-[var(--surface-container-lowest)] px-2 py-1 text-[var(--status-approved)]">
+              <p className="mt-3 rounded-ui-control border border-[var(--ds-success)] bg-surface-raised px-2 py-1 text-[var(--ds-success)]">
                 Dosya ön kontrolü hazır: {xlsxImportState.fileName}
               </p>
             ) : null}
             {typeof xlsxImportState?.validRows === "number" ? (
-              <p className="mt-2 rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)] px-2 py-1 text-[var(--on-surface-variant)]">
+              <p className="mt-2 rounded-ui-control border border-divider bg-surface-raised px-2 py-1 text-content-subtle">
                 XLSX önizleme: {xlsxImportState.validRows} geçerli,{" "}
                 {xlsxImportState.invalidRows} hatalı.
               </p>
             ) : null}
             {xlsxImportState?.fileErrors?.length ? (
-              <ul className="mt-2 rounded-[var(--radius-control)] border border-[var(--mandatory-indicator)] bg-red-50 px-2 py-1 text-[var(--mandatory-indicator)]">
+              <ul className="mt-2 rounded-ui-control border border-[var(--ds-danger)] bg-danger-subtle px-2 py-1 text-[var(--ds-danger)]">
                 {xlsxImportState.fileErrors.map((error) => (
                   <li key={error}>{error}</li>
                 ))}
               </ul>
             ) : null}
             {xlsxImportState?.error ? (
-              <p className="mt-3 rounded-[var(--radius-control)] border border-[var(--mandatory-indicator)] bg-red-50 px-2 py-1 text-[var(--mandatory-indicator)]">
+              <p className="mt-3 rounded-ui-control border border-[var(--ds-danger)] bg-danger-subtle px-2 py-1 text-[var(--ds-danger)]">
                 {xlsxImportState.error}
               </p>
             ) : null}
@@ -1144,7 +1396,7 @@ export function EntityListSurface({
                 <span>Çalışma sayfası</span>
                 <select
                   aria-label="XLSX çalışma sayfası"
-                  className="mt-1 block w-full rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)] px-3 py-2 text-sm outline-none"
+                  className="mt-1 block w-full rounded-ui-control border border-divider bg-surface-raised px-3 py-2 text-sm outline-none"
                   onChange={(event) => selectXlsxImportSheet(event.target.value)}
                   value={xlsxImportSheetName}
                 >
@@ -1159,11 +1411,11 @@ export function EntityListSurface({
             {xlsxImportState?.fileErrors?.length &&
             xlsxImportWorkbookData &&
             xlsxImportSourceHeaders.length > 0 ? (
-              <div className="mt-4 rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)] px-3 py-3">
+              <div className="mt-4 rounded-ui-control border border-divider bg-surface-raised px-3 py-3">
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <div>
                     <h4 className="font-semibold">XLSX kolon eşleme</h4>
-                    <p className="mt-1 text-[var(--on-surface-variant)]">
+                    <p className="mt-1 text-content-subtle">
                       Kaynak başlıklar tanım kolonlarıyla birebir eşleşmiyor.
                       Her hedef kolon için bir kaynak başlık seçin.
                     </p>
@@ -1185,7 +1437,7 @@ export function EntityListSurface({
                       <span>{column.label} için XLSX kolonu</span>
                       <select
                         aria-label={`${column.label} için XLSX kolonu`}
-                        className="mt-1 block w-full rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] px-3 py-2 text-sm outline-none"
+                        className="mt-1 block w-full rounded-ui-control border border-divider bg-surface-muted px-3 py-2 text-sm outline-none"
                         value={xlsxImportHeaderMapping[column.label] ?? ""}
                         onChange={(event) => {
                           const nextHeader = event.target.value;
@@ -1206,7 +1458,7 @@ export function EntityListSurface({
                     </label>
                   ))}
                 </div>
-                <p className="mt-3 text-xs text-[var(--on-surface-variant)]">
+                <p className="mt-3 text-xs text-content-subtle">
                   Seçili kaynak başlıklar:{" "}
                   {getSelectedXlsxHeaderValues(
                     definition,
@@ -1222,7 +1474,7 @@ export function EntityListSurface({
             <span>CSV dosyası seç</span>
             <input
               accept=".csv,text/csv"
-              className="mt-1 block w-full rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] px-3 py-2 text-sm file:mr-3 file:rounded-[var(--radius-control)] file:border-0 file:bg-[var(--primary-fixed)] file:px-3 file:py-1.5 file:text-sm file:font-semibold file:text-[var(--primary)]"
+              className="mt-1 block w-full rounded-ui-control border border-divider bg-surface-muted px-3 py-2 text-sm file:mr-3 file:rounded-ui-control file:border-0 file:bg-brand-primary-subtle file:px-3 file:py-1.5 file:text-sm file:font-semibold file:text-brand-primary"
               onChange={(event) => {
                 void handleImportFileChange(event.target.files?.[0]);
               }}
@@ -1232,7 +1484,7 @@ export function EntityListSurface({
           <label className="mt-4 block text-sm font-medium">
             <span>CSV içe aktar verisi</span>
             <textarea
-              className="mt-1 min-h-36 w-full rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] px-3 py-2 font-mono text-xs outline-none"
+              className="mt-1 min-h-36 w-full rounded-ui-control border border-divider bg-surface-muted px-3 py-2 font-mono text-xs outline-none"
               onChange={(event) => {
                 setImportCsvText(event.target.value);
                 setImportPreview(undefined);
@@ -1241,24 +1493,24 @@ export function EntityListSurface({
             />
           </label>
           {importPreview ? (
-            <div className="mt-4 rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] px-3 py-2 text-sm">
+            <div className="mt-4 rounded-ui-control border border-divider bg-surface-muted px-3 py-2 text-sm">
               <p className="font-semibold">
                 İçe aktarım önizlemesi: {importPreview.summary.validRows} geçerli, {importPreview.summary.invalidRows} hatalı.
               </p>
               {importPreview.fileErrors.length > 0 ? (
-                <ul className="mt-2 text-[var(--mandatory-indicator)]">
+                <ul className="mt-2 text-[var(--ds-danger)]">
                   {importPreview.fileErrors.map((error) => (
                     <li key={error}>{error}</li>
                   ))}
                 </ul>
               ) : null}
               {importPreview.rows.length > 0 ? (
-                <div className="mt-3 overflow-x-auto rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)]">
+                <div className="mt-3 overflow-x-auto rounded-ui-control border border-divider bg-surface-raised">
                   <table
                     aria-label="İçe aktarım satır durumları"
                     className="min-w-[720px] w-full text-left text-xs"
                   >
-                    <thead className="bg-[var(--surface-container-low)] text-[var(--on-surface-variant)]">
+                    <thead className="bg-surface-muted text-content-subtle">
                       <tr>
                         <th className="px-3 py-2 font-semibold">Satır</th>
                         <th className="px-3 py-2 font-semibold">Kod</th>
@@ -1267,7 +1519,7 @@ export function EntityListSurface({
                         <th className="px-3 py-2 font-semibold">Uyarı</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-[var(--grid-border)]">
+                    <tbody className="divide-y divide-divider">
                       {importPreview.rows.map((row) => {
                         const isInvalid = row.errors.length > 0;
 
@@ -1275,8 +1527,8 @@ export function EntityListSurface({
                           <tr
                             className={
                               isInvalid
-                                ? "border-l-4 border-[var(--mandatory-indicator)] bg-red-50 text-[var(--mandatory-indicator)]"
-                                : "border-l-4 border-[var(--status-approved)] bg-green-50 text-[var(--status-approved)]"
+                                ? "border-l-4 border-[var(--ds-danger)] bg-danger-subtle text-[var(--ds-danger)]"
+                                : "border-l-4 border-[var(--ds-success)] bg-success-subtle text-[var(--ds-success)]"
                             }
                             key={row.rowNumber}
                           >
@@ -1303,7 +1555,7 @@ export function EntityListSurface({
                 </div>
               ) : null}
               {importPreview.rows.some((row) => row.errors.length > 0) ? (
-                <ul className="mt-3 space-y-1 text-[var(--mandatory-indicator)]">
+                <ul className="mt-3 space-y-1 text-[var(--ds-danger)]">
                   {importPreview.rows
                     .filter((row) => row.errors.length > 0)
                     .map((row) => (
@@ -1327,17 +1579,36 @@ export function EntityListSurface({
           ) : null}
         </section>
       ) : null}
-      <div className="overflow-hidden rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)]">
+      <div
+        className={
+          isTemplateVariant
+            ? "overflow-hidden rounded-ui-panel border border-divider bg-surface-raised shadow-sm"
+            : "overflow-hidden rounded-ui-panel border border-divider bg-surface-raised"
+        }
+      >
         <div className="overflow-x-auto">
-          <table className="min-w-full border-collapse text-sm">
-            <thead className="bg-[var(--surface-container-low)] text-left">
+          <table
+            aria-label={isTemplateVariant ? entityTableLabel : undefined}
+            className={
+              isTemplateVariant
+                ? "w-full min-w-[980px] border-collapse text-sm text-content"
+                : "min-w-full border-collapse text-sm"
+            }
+          >
+            <thead
+              className={
+                isTemplateVariant
+                  ? "bg-surface-muted text-left text-xs uppercase tracking-wide text-content-subtle"
+                  : "bg-surface-muted text-left"
+              }
+            >
               <tr>
-                <th className="h-[var(--data-row-height)] border-b border-[var(--grid-border)] px-3 font-semibold">
+                <th className="h-[var(--ds-data-row-height)] border-b border-divider px-3 font-semibold">
                   Seç
                 </th>
                 {definition.columns.map((column) => (
                   <th
-                    className="h-[var(--data-row-height)] border-b border-[var(--grid-border)] px-3 font-semibold"
+                    className="h-[var(--ds-data-row-height)] border-b border-divider px-3 font-semibold"
                     key={column.key}
                   >
                     {column.label}
@@ -1349,11 +1620,11 @@ export function EntityListSurface({
               {filteredRows.length === 0 ? (
                 <tr>
                   <td
-                    className="border-b border-[var(--grid-border)] px-3 py-8 text-center"
+                    className="border-b border-divider px-3 py-8 text-center"
                     colSpan={definition.columns.length + 1}
                   >
                     <p className="font-semibold">Henüz kayıt yok</p>
-                    <p className="mt-1 text-sm text-[var(--on-surface-variant)]">
+                    <p className="mt-1 text-sm text-content-subtle">
                       Yeni butonu ile ilk tanım kaydını oluşturabilirsiniz.
                     </p>
                   </td>
@@ -1365,15 +1636,26 @@ export function EntityListSurface({
                 return (
                   <tr
                     className={
-                      isSelected
-                        ? "bg-[var(--primary-fixed)]"
-                        : "hover:bg-[var(--primary-fixed)]"
+                      isTemplateVariant
+                        ? isSelected
+                          ? "bg-brand-primary-subtle"
+                          : "hover:bg-surface-muted"
+                        : isSelected
+                          ? "bg-brand-primary-subtle"
+                          : "hover:bg-brand-primary-subtle"
                     }
                     key={row.code}
                   >
-                    <td className="h-[var(--data-row-height)] border-b border-[var(--grid-border)] px-3">
+                    <td className="h-[var(--ds-data-row-height)] border-b border-divider px-3">
                       <button
-                        className={buttonClass}
+                        aria-pressed={isSelected}
+                        className={
+                          isTemplateVariant
+                            ? isSelected
+                              ? "min-h-8 rounded-ui-control bg-brand-primary px-2.5 text-xs font-semibold text-on-brand"
+                              : "min-h-8 rounded-ui-control border border-divider bg-surface-raised px-2.5 text-xs font-semibold text-content hover:border-brand-primary"
+                            : buttonClass
+                        }
                         onClick={() => {
                           setSelectedCode(row.code);
                           setServerErrors([]);
@@ -1386,14 +1668,22 @@ export function EntityListSurface({
                     </td>
                     {definition.columns.map((column) => (
                       <td
-                        className="h-[var(--data-row-height)] border-b border-[var(--grid-border)] px-3"
+                        className="h-[var(--ds-data-row-height)] border-b border-divider px-3"
                         key={column.key}
                         style={{ textAlign: column.align ?? "left" }}
                       >
                         {column.key === "status" ? (
-                          <span className={getStatusClass(row[column.key])}>
-                            {row[column.key]}
-                          </span>
+                          isTemplateVariant ? (
+                            <StatusBadge
+                              tone={row[column.key] === "Pasif" ? "neutral" : "success"}
+                            >
+                              {row[column.key]}
+                            </StatusBadge>
+                          ) : (
+                            <span className={getStatusClass(row[column.key])}>
+                              {row[column.key]}
+                            </span>
+                          )
                         ) : (
                           row[column.key]
                         )}
@@ -1405,7 +1695,13 @@ export function EntityListSurface({
             </tbody>
           </table>
         </div>
-        <footer className="flex items-center justify-between bg-[var(--surface-container-low)] px-3 py-2 text-xs text-[var(--on-surface-variant)]">
+        <footer
+          className={
+            isTemplateVariant
+              ? "flex flex-col gap-1 border-t border-divider bg-surface-muted px-4 py-3 text-xs text-content-subtle sm:flex-row sm:items-center sm:justify-between"
+              : "flex items-center justify-between bg-surface-muted px-3 py-2 text-xs text-content-subtle"
+          }
+        >
           <span>
             {filteredRows.length}/{rows.length} kayıt
           </span>
@@ -1414,32 +1710,162 @@ export function EntityListSurface({
       </div>
 
       {showCounterpartyMovementPanel ? (
-        <article className="rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)] p-4">
-          <h2 className="text-sm font-semibold">Cari Tahsilat / Ödeme</h2>
-          <div className="mt-3 grid gap-3 md:grid-cols-3">
-            <label className="text-xs font-semibold">Hareket tipi<select className="mt-1 h-9 w-full rounded border border-[var(--grid-border)] bg-white px-2 text-sm" value={counterpartyMovementType} onChange={(event) => setCounterpartyMovementType(event.target.value as "Tahsilat" | "Ödeme")}><option value="Tahsilat">Tahsilat</option><option value="Ödeme">Ödeme</option></select></label>
-            <label className="text-xs font-semibold">Kasa/Banka hesabı<select className="mt-1 h-9 w-full rounded border border-[var(--grid-border)] bg-white px-2 text-sm" value={counterpartyMovementAccountCode} onChange={(event) => setCounterpartyMovementAccountCode(event.target.value)}>{cashBankAccountOptions.map((option) => <option key={option.code} value={option.code}>{option.name} ({option.code})</option>)}</select></label>
-            <label className="text-xs font-semibold">İşlem tarihi<input className="mt-1 h-9 w-full rounded border border-[var(--grid-border)] bg-white px-2 text-sm" type="date" value={counterpartyMovementDate} onChange={(event) => setCounterpartyMovementDate(event.target.value)} /></label>
-            <label className="text-xs font-semibold">Tutar<input className="mt-1 h-9 w-full rounded border border-[var(--grid-border)] bg-white px-2 text-sm" min="0.01" step="0.01" type="number" value={counterpartyMovementAmount} onChange={(event) => setCounterpartyMovementAmount(event.target.value)} /></label>
-            <label className="text-xs font-semibold">Evrak No<input className="mt-1 h-9 w-full rounded border border-[var(--grid-border)] bg-white px-2 text-sm" value={counterpartyMovementDocumentNo} onChange={(event) => setCounterpartyMovementDocumentNo(event.target.value)} /></label>
-            <label className="text-xs font-semibold">Açıklama<input className="mt-1 h-9 w-full rounded border border-[var(--grid-border)] bg-white px-2 text-sm" value={counterpartyMovementDescription} onChange={(event) => setCounterpartyMovementDescription(event.target.value)} /></label>
+        <article
+          aria-label={isTemplateVariant ? `Seçili ${counterpartySingularLabel.toLocaleLowerCase("tr-TR")} tahsilat ödeme paneli` : undefined}
+          className={
+            isTemplateVariant
+              ? "rounded-ui-panel border border-divider bg-surface-raised p-4 shadow-sm sm:p-5"
+              : "rounded-ui-panel border border-divider bg-surface-raised p-4"
+          }
+        >
+          <div>
+            <h2 className={isTemplateVariant ? "text-xl font-semibold" : "text-sm font-semibold"}>
+              Cari Tahsilat / Ödeme
+            </h2>
+            {isTemplateVariant ? (
+              <p className="mt-1 text-sm text-content-subtle">
+                {selectedRow
+                  ? selectedRow.name + " için gerçek kasa/banka hareketi oluşturun."
+                  : `İşlem oluşturmak için ${counterpartySingularLabel.toLocaleLowerCase("tr-TR")} seçin.`}
+              </p>
+            ) : null}
           </div>
-          <button className={`${buttonClass} mt-4`} disabled={counterpartyMovementPending || cashBankAccountOptions.length === 0} onClick={submitCounterpartyMovement} type="button">{counterpartyMovementPending ? "Kaydediliyor..." : "Tahsilat/Ödeme Kaydet"}</button>
-          {cashBankAccountOptions.length === 0 ? <p className="mt-2 text-xs text-[var(--status-cancelled)]">Önce aktif bir kasa/banka hesabı tanımlayın.</p> : null}
+          <div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+            <label className="text-xs font-semibold text-content-subtle">
+              Hareket tipi
+              <select
+                className={counterpartyControlClass}
+                onChange={(event) =>
+                  setCounterpartyMovementType(
+                    event.target.value as "Tahsilat" | "Ödeme",
+                  )
+                }
+                value={counterpartyMovementType}
+              >
+                <option value="Tahsilat">Tahsilat</option>
+                <option value="Ödeme">Ödeme</option>
+              </select>
+            </label>
+            <label className="text-xs font-semibold text-content-subtle">
+              Kasa/Banka hesabı
+              <select
+                className={counterpartyControlClass}
+                onChange={(event) =>
+                  setCounterpartyMovementAccountCode(event.target.value)
+                }
+                value={counterpartyMovementAccountCode}
+              >
+                {cashBankAccountOptions.map((option) => (
+                  <option key={option.code} value={option.code}>
+                    {option.name} ({option.code})
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label className="text-xs font-semibold text-content-subtle">
+              İşlem tarihi
+              <input
+                className={counterpartyControlClass}
+                onChange={(event) => setCounterpartyMovementDate(event.target.value)}
+                type="date"
+                value={counterpartyMovementDate}
+              />
+            </label>
+            <label className="text-xs font-semibold text-content-subtle">
+              Tutar
+              <input
+                className={counterpartyControlClass}
+                min="0.01"
+                onChange={(event) => setCounterpartyMovementAmount(event.target.value)}
+                step="0.01"
+                type="number"
+                value={counterpartyMovementAmount}
+              />
+            </label>
+            <label className="text-xs font-semibold text-content-subtle">
+              Evrak No
+              <input
+                className={counterpartyControlClass}
+                onChange={(event) =>
+                  setCounterpartyMovementDocumentNo(event.target.value)
+                }
+                value={counterpartyMovementDocumentNo}
+              />
+            </label>
+            <label className="text-xs font-semibold text-content-subtle">
+              Açıklama
+              <input
+                className={counterpartyControlClass}
+                onChange={(event) =>
+                  setCounterpartyMovementDescription(event.target.value)
+                }
+                value={counterpartyMovementDescription}
+              />
+            </label>
+          </div>
+          <button
+            className={
+              isTemplateVariant
+                ? "mt-4 min-h-10 rounded-ui-control bg-brand-primary px-4 text-sm font-semibold text-on-brand transition-colors hover:bg-brand-primary-strong disabled:cursor-not-allowed disabled:opacity-40"
+                : buttonClass + " mt-4"
+            }
+            disabled={
+              counterpartyMovementPending || cashBankAccountOptions.length === 0
+            }
+            onClick={submitCounterpartyMovement}
+            type="button"
+          >
+            {counterpartyMovementPending
+              ? "Kaydediliyor..."
+              : "Tahsilat/Ödeme Kaydet"}
+          </button>
+          {cashBankAccountOptions.length === 0 ? (
+            <p className="mt-2 text-xs text-danger">
+              Önce aktif bir kasa/banka hesabı tanımlayın.
+            </p>
+          ) : null}
         </article>
       ) : null}
 
       {statementRows.length > 0 || showCounterpartyMovementPanel ? (
-        <article className="overflow-hidden rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)]">
-          <div className="flex flex-col gap-3 border-b border-[var(--grid-border)] px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
-            <h2 className="text-sm font-semibold">Hesap Ekstresi</h2>
+        <article
+          className={
+            isTemplateVariant
+              ? "overflow-hidden rounded-ui-panel border border-divider bg-surface-raised shadow-sm"
+              : "overflow-hidden rounded-ui-panel border border-divider bg-surface-raised"
+          }
+        >
+          <div
+            className={
+              isTemplateVariant
+                ? "flex flex-col gap-3 border-b border-divider px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-5"
+                : "flex flex-col gap-3 border-b border-divider px-4 py-3 sm:flex-row sm:items-center sm:justify-between"
+            }
+          >
+            <div>
+              <h2 className={isTemplateVariant ? "text-xl font-semibold" : "text-sm font-semibold"}>
+                Hesap Ekstresi
+              </h2>
+              {isTemplateVariant ? (
+                <p className="mt-1 text-sm text-content-subtle">
+                  {selectedRow
+                    ? `${selectedRow.name} için kronolojik cari hareketler ve yürüyen bakiye.`
+                    : `Ekstreyi görüntülemek için ${counterpartySingularLabel.toLocaleLowerCase("tr-TR")} seçin.`}
+                </p>
+              ) : null}
+            </div>
             {selectedStatementRows.length > 0 ? (
               <a
                 aria-label="Seçili cari hesap ekstresi CSV indir"
-                className="inline-flex h-9 items-center justify-center rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] px-3 text-xs font-semibold text-[var(--on-surface)] transition hover:bg-[var(--primary-fixed)]"
+                className={
+                  isTemplateVariant
+                    ? "inline-flex min-h-10 items-center justify-center gap-2 rounded-ui-control border border-divider bg-surface-raised px-4 text-sm font-semibold text-content transition-colors hover:bg-surface-muted"
+                    : "inline-flex h-9 items-center justify-center rounded-ui-control border border-divider bg-surface-muted px-3 text-xs font-semibold text-content transition hover:bg-brand-primary-subtle"
+                }
                 download={selectedStatementCsvFileName}
                 href={selectedStatementCsvHref}
               >
+                {isTemplateVariant ? <Icon aria-hidden name="download" size={16} /> : null}
                 CSV
               </a>
             ) : null}
@@ -1449,7 +1875,13 @@ export function EntityListSurface({
               aria-label="Seçili cari hesap ekstresi"
               className="min-w-[920px] w-full text-left text-sm"
             >
-              <thead className="bg-[var(--surface-container-low)] text-xs uppercase text-[var(--on-surface-variant)]">
+              <thead
+                className={
+                  isTemplateVariant
+                    ? "bg-surface-muted text-xs uppercase tracking-wide text-content-subtle"
+                    : "bg-surface-muted text-xs uppercase text-content-subtle"
+                }
+              >
                 <tr>
                   <th className="px-4 py-3 font-semibold">Tarih</th>
                   <th className="px-4 py-3 font-semibold">Kaynak</th>
@@ -1462,14 +1894,20 @@ export function EntityListSurface({
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[var(--grid-border)]">
+              <tbody className={isTemplateVariant ? "divide-y divide-divider" : "divide-y divide-divider"}>
                 {selectedStatementRows.length === 0 ? (
                   <tr>
                     <td className="px-4 py-10 text-center" colSpan={7}>
                       <p className="font-semibold">
                         Seçili cari için hareket yok
                       </p>
-                      <p className="mt-1 text-sm text-[var(--on-surface-variant)]">
+                      <p
+                        className={
+                          isTemplateVariant
+                            ? "mt-1 text-sm text-content-subtle"
+                            : "mt-1 text-sm text-content-subtle"
+                        }
+                      >
                         Fatura, hakediş, maaş veya kasa/banka hareketleri
                         oluştuğunda bu tablo dolacaktır.
                       </p>
@@ -1478,7 +1916,7 @@ export function EntityListSurface({
                 ) : (
                   selectedStatementRows.map((row) => (
                     <tr
-                      className="hover:bg-[var(--primary-fixed)]"
+                      className={isTemplateVariant ? "hover:bg-surface-muted" : "hover:bg-brand-primary-subtle"}
                       key={`${row.counterpartyName}-${row.source}-${row.documentNo}-${row.date}`}
                     >
                       <td className="px-4 py-3">{formatDate(row.date)}</td>
@@ -1486,7 +1924,11 @@ export function EntityListSurface({
                       <td className="px-4 py-3 font-mono text-xs">
                         <Link
                           aria-label={`${row.documentNo} evrakına git`}
-                          className="font-semibold text-[var(--primary)] underline-offset-2 hover:underline"
+                          className={
+                            isTemplateVariant
+                              ? "font-semibold text-brand-primary underline-offset-2 hover:underline"
+                              : "font-semibold text-brand-primary underline-offset-2 hover:underline"
+                          }
                           href={row.targetHref}
                         >
                           {row.documentNo}
@@ -1499,8 +1941,8 @@ export function EntityListSurface({
                       <td
                         className={`px-4 py-3 text-right font-mono font-semibold ${
                           row.amount >= 0
-                            ? "text-[var(--status-approved)]"
-                            : "text-[var(--status-cancelled)]"
+                            ? "text-[var(--ds-success)]"
+                            : "text-[var(--ds-danger)]"
                         }`}
                       >
                         {formatMoney(row.amount)}
@@ -1508,8 +1950,8 @@ export function EntityListSurface({
                       <td
                         className={`px-4 py-3 text-right font-mono font-semibold ${
                           row.balanceAfter >= 0
-                            ? "text-[var(--status-approved)]"
-                            : "text-[var(--status-cancelled)]"
+                            ? "text-[var(--ds-success)]"
+                            : "text-[var(--ds-danger)]"
                         }`}
                       >
                         {formatMoney(row.balanceAfter)}
@@ -1523,19 +1965,21 @@ export function EntityListSurface({
         </article>
       ) : null}
 
-      <aside className="rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)] p-4">
-        <h2 className="text-sm font-semibold">Kaynak HTML şablonları</h2>
-        <div className="mt-3 flex flex-wrap gap-2">
-          {definition.templateSources.map((source) => (
-            <span
-              className="rounded-[var(--radius-control)] bg-[var(--primary-fixed)] px-2 py-1 font-mono text-xs text-[var(--primary)]"
-              key={source}
-            >
-              {source}
-            </span>
-          ))}
-        </div>
-      </aside>
+      {!isTemplateVariant ? (
+        <aside className="rounded-ui-panel border border-divider bg-surface-raised p-4">
+          <h2 className="text-sm font-semibold">Kaynak HTML şablonları</h2>
+          <div className="mt-3 flex flex-wrap gap-2">
+            {definition.templateSources.map((source) => (
+              <span
+                className="rounded-ui-control bg-brand-primary-subtle px-2 py-1 font-mono text-xs text-brand-primary"
+                key={source}
+              >
+                {source}
+              </span>
+            ))}
+          </div>
+        </aside>
+      ) : null}
     </section>
   );
 }

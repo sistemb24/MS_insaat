@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+
+<html lang="tr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>API Yönetimi - NOA</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-primary-fixed-variant": "#3323cc",
+                    "on-primary-fixed": "#0f0069",
+                    "warning-amber": "#F59E0B",
+                    "on-surface": "#191c1e",
+                    "inverse-surface": "#2d3133",
+                    "tertiary-container": "#a44100",
+                    "on-secondary-fixed": "#131b2e",
+                    "primary-fixed": "#e2dfff",
+                    "tertiary-fixed": "#ffdbcc",
+                    "on-primary-container": "#dad7ff",
+                    "text-muted": "#64748B",
+                    "tertiary-fixed-dim": "#ffb695",
+                    "tertiary": "#7e3000",
+                    "secondary-fixed-dim": "#bec6e0",
+                    "outline": "#777587",
+                    "primary": "#3525cd",
+                    "on-tertiary-fixed-variant": "#7b2f00",
+                    "surface-container-high": "#e6e8ea",
+                    "on-error-container": "#93000a",
+                    "on-tertiary": "#ffffff",
+                    "border-slate": "#E2E8F0",
+                    "surface-container-lowest": "#ffffff",
+                    "on-tertiary-container": "#ffd2be",
+                    "surface": "#f7f9fb",
+                    "on-secondary-fixed-variant": "#3f465c",
+                    "primary-fixed-dim": "#c3c0ff",
+                    "on-secondary": "#ffffff",
+                    "on-error": "#ffffff",
+                    "surface-container": "#eceef0",
+                    "success-emerald": "#10B981",
+                    "background": "#f7f9fb",
+                    "surface-dim": "#d8dadc",
+                    "decorative-navy": "#000080",
+                    "secondary-container": "#dae2fd",
+                    "surface-bright": "#f7f9fb",
+                    "surface-container-highest": "#e0e3e5",
+                    "on-surface-variant": "#464555",
+                    "on-secondary-container": "#5c647a",
+                    "surface-variant": "#e0e3e5",
+                    "on-tertiary-fixed": "#351000",
+                    "inverse-on-surface": "#eff1f3",
+                    "on-primary": "#ffffff",
+                    "surface-white": "#FFFFFF",
+                    "danger-rose": "#E11D48",
+                    "surface-container-low": "#f2f4f6",
+                    "secondary-fixed": "#dae2fd",
+                    "outline-variant": "#c7c4d8",
+                    "surface-tint": "#4d44e3",
+                    "primary-container": "#4f46e5",
+                    "error-container": "#ffdad6",
+                    "error": "#ba1a1a",
+                    "decorative-purple": "#800080",
+                    "on-background": "#191c1e",
+                    "inverse-primary": "#c3c0ff",
+                    "secondary": "#565e74"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "grid-cell-px": "0.75rem",
+                    "container-gap": "1.5rem",
+                    "stack-md": "1rem",
+                    "sidebar-width": "260px",
+                    "stack-sm": "0.5rem",
+                    "header-height": "64px",
+                    "grid-cell-py": "0.5rem",
+                    "sidebar-collapsed": "80px"
+            },
+            "fontFamily": {
+                    "body-md": ["Inter"],
+                    "headline-lg-mobile": ["Inter"],
+                    "headline-sm": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "body-sm": ["Inter"],
+                    "label-caps": ["Inter"],
+                    "headline-md": ["Inter"],
+                    "data-mono": ["JetBrains Mono"],
+                    "body-lg": ["Inter"]
+            },
+            "fontSize": {
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                    "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "headline-lg": ["30px", {"lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-sm": ["13px", {"lineHeight": "18px", "fontWeight": "400"}],
+                    "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "data-mono": ["13px", {"lineHeight": "16px", "fontWeight": "500"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        /* Hide scrollbar for horizontal scroll areas */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface antialiased min-h-screen relative pb-24">
+<!-- TopAppBar -->
+<header class="sticky top-0 w-full z-50 flex items-center justify-between px-4 h-header-height bg-surface shadow-sm">
+<button aria-label="Menu" class="w-11 h-11 flex items-center justify-center text-primary rounded-full hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">menu</span>
+</button>
+<h1 class="font-headline-md text-headline-md font-bold text-primary">API Yönetimi</h1>
+<button aria-label="Search" class="w-11 h-11 flex items-center justify-center text-primary rounded-full hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">search</span>
+</button>
+</header>
+<main class="p-4 space-y-6">
+<!-- Summary Section -->
+<section>
+<div class="flex overflow-x-auto space-x-3 pb-2 no-scrollbar snap-x">
+<!-- Card 1 -->
+<div class="min-w-[140px] bg-surface-white rounded-xl shadow-sm border border-border-slate p-4 snap-start flex flex-col gap-2">
+<div class="flex items-center justify-between">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">key</span>
+<span class="material-symbols-outlined text-success-emerald text-sm" style="font-variation-settings: 'FILL' 0;">trending_up</span>
+</div>
+<div>
+<p class="font-body-sm text-body-sm text-text-muted">Aktif Anahtarlar</p>
+<p class="font-headline-sm text-headline-sm text-on-surface">8</p>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="min-w-[140px] bg-surface-white rounded-xl shadow-sm border border-border-slate p-4 snap-start flex flex-col gap-2">
+<div class="flex items-center justify-between">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">swap_vert</span>
+<span class="material-symbols-outlined text-success-emerald text-sm" style="font-variation-settings: 'FILL' 0;">trending_up</span>
+</div>
+<div>
+<p class="font-body-sm text-body-sm text-text-muted">Toplam İstek</p>
+<p class="font-headline-sm text-headline-sm text-on-surface">14.2K</p>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="min-w-[140px] bg-surface-white rounded-xl shadow-sm border border-border-slate p-4 snap-start flex flex-col gap-2">
+<div class="flex items-center justify-between">
+<span class="material-symbols-outlined text-warning-amber" style="font-variation-settings: 'FILL' 1;">warning</span>
+<span class="material-symbols-outlined text-danger-rose text-sm" style="font-variation-settings: 'FILL' 0;">trending_down</span>
+</div>
+<div>
+<p class="font-body-sm text-body-sm text-text-muted">Hata Oranı</p>
+<p class="font-headline-sm text-headline-sm text-on-surface">0.4%</p>
+</div>
+</div>
+</div>
+</section>
+<!-- API Keys Section -->
+<section>
+<div class="flex items-center justify-between mb-3">
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Aktif API Anahtarları</h2>
+</div>
+<div class="space-y-3">
+<!-- Key Card 1 -->
+<div class="bg-surface-white rounded-xl shadow-sm border border-border-slate p-4 flex flex-col gap-3">
+<div class="flex justify-between items-start">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 0;">account_balance</span>
+</div>
+<h3 class="font-body-md text-body-md font-semibold text-on-surface">Muhasebe Entegrasyonu</h3>
+</div>
+<button class="text-text-muted hover:text-on-surface">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</div>
+<div class="flex items-center justify-between bg-surface-container-low px-3 py-2 rounded-lg border border-border-slate">
+<span class="font-data-mono text-data-mono text-text-muted">noa_live_a7f9...</span>
+<button class="text-text-muted hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[18px]">content_copy</span>
+</button>
+</div>
+<div class="flex items-center justify-between mt-1">
+<div class="flex gap-2">
+<span class="bg-surface-container px-2 py-1 rounded-md font-label-caps text-label-caps text-on-surface-variant">e-Fatura</span>
+<span class="bg-surface-container px-2 py-1 rounded-md font-label-caps text-label-caps text-on-surface-variant">Cari</span>
+</div>
+<div class="flex items-center gap-1.5 bg-surface-container-lowest px-2 py-1 rounded-md border border-border-slate">
+<div class="w-2 h-2 rounded-full bg-success-emerald"></div>
+<span class="font-label-caps text-label-caps text-success-emerald">Aktif</span>
+</div>
+</div>
+</div>
+<!-- Key Card 2 -->
+<div class="bg-surface-white rounded-xl shadow-sm border border-border-slate p-4 flex flex-col gap-3">
+<div class="flex justify-between items-start">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 0;">badge</span>
+</div>
+<h3 class="font-body-md text-body-md font-semibold text-on-surface">İK Portalı</h3>
+</div>
+<button class="text-text-muted hover:text-on-surface">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</div>
+<div class="flex items-center justify-between bg-surface-container-low px-3 py-2 rounded-lg border border-border-slate">
+<span class="font-data-mono text-data-mono text-text-muted">noa_live_b2x4...</span>
+<button class="text-text-muted hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[18px]">content_copy</span>
+</button>
+</div>
+<div class="flex items-center justify-between mt-1">
+<div class="flex gap-2">
+<span class="bg-surface-container px-2 py-1 rounded-md font-label-caps text-label-caps text-on-surface-variant">Personel</span>
+<span class="bg-surface-container px-2 py-1 rounded-md font-label-caps text-label-caps text-on-surface-variant">Puantaj</span>
+</div>
+<div class="flex items-center gap-1.5 bg-surface-container-lowest px-2 py-1 rounded-md border border-border-slate">
+<div class="w-2 h-2 rounded-full bg-success-emerald"></div>
+<span class="font-label-caps text-label-caps text-success-emerald">Aktif</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Webhook Endpoints Section -->
+<section>
+<h2 class="font-headline-sm text-headline-sm text-on-surface mb-3">Webhook Endpoints</h2>
+<div class="space-y-3">
+<!-- Endpoint 1 -->
+<div class="bg-surface-white rounded-xl shadow-sm border border-border-slate p-4 flex flex-col gap-2">
+<div class="flex justify-between items-center">
+<span class="font-body-sm text-body-sm font-semibold text-on-surface">Fatura Bildirimleri</span>
+<div class="flex items-center gap-1.5">
+<div class="w-2 h-2 rounded-full bg-success-emerald"></div>
+<span class="font-label-caps text-label-caps text-success-emerald">Sağlıklı</span>
+</div>
+</div>
+<div class="font-data-mono text-data-mono text-text-muted break-all text-[11px] bg-surface-container-low p-2 rounded">
+                        https://api.sirket.com/webhooks/noa
+                    </div>
+<div class="flex gap-2 mt-1">
+<span class="text-[10px] uppercase font-bold tracking-wide text-primary bg-primary-fixed px-2 py-0.5 rounded">invoice.created</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Documentation CTA -->
+<section>
+<div class="bg-primary text-on-primary rounded-xl p-5 flex items-center justify-between shadow-md relative overflow-hidden">
+<!-- Decorative background elements -->
+<div class="absolute -right-4 -top-4 w-24 h-24 bg-white opacity-10 rounded-full blur-xl"></div>
+<div class="absolute -left-4 -bottom-4 w-16 h-16 bg-white opacity-10 rounded-full blur-lg"></div>
+<div class="relative z-10 flex flex-col gap-3 items-start">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[28px]" style="font-variation-settings: 'FILL' 1;">menu_book</span>
+<h2 class="font-headline-sm text-headline-sm">API Dokümantasyonu</h2>
+</div>
+<p class="font-body-sm text-body-sm opacity-90 max-w-[200px]">Tüm endpoint detayları ve entegrasyon rehberleri.</p>
+<button class="mt-2 bg-surface-white text-primary px-4 py-2 rounded-lg font-body-sm font-semibold shadow-sm hover:bg-surface-container transition-colors">
+                        Dokümanlara Git
+                    </button>
+</div>
+</div>
+</section>
+</main>
+<!-- FAB -->
+<button aria-label="Yeni API Anahtarı" class="fixed right-4 bottom-[90px] w-14 h-14 bg-primary text-on-primary rounded-2xl shadow-lg flex items-center justify-center z-40 hover:bg-on-primary-fixed-variant transition-colors active:scale-95">
+<span class="material-symbols-outlined text-[28px]">add</span>
+</button>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-2 py-2 bg-surface-white border-t border-border-slate shadow-lg">
+<button class="flex flex-col items-center justify-center text-on-surface-variant p-2 hover:text-primary transition-colors min-w-[64px]">
+<span class="material-symbols-outlined mb-1">dashboard</span>
+<span class="font-label-caps text-label-caps">Dashboard</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant p-2 hover:text-primary transition-colors min-w-[64px]">
+<span class="material-symbols-outlined mb-1">construction</span>
+<span class="font-label-caps text-label-caps">Şantiyeler</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant p-2 hover:text-primary transition-colors min-w-[64px]">
+<span class="material-symbols-outlined mb-1">groups</span>
+<span class="font-label-caps text-label-caps">Personel</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant p-2 hover:text-primary transition-colors min-w-[64px]">
+<span class="material-symbols-outlined mb-1">description</span>
+<span class="font-label-caps text-label-caps">Belgeler</span>
+</button>
+<!-- Active State for API Management (Settings context) -->
+<button class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-xl p-2 scale-90 transition-transform duration-150 min-w-[64px]">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 1;">settings</span>
+<span class="font-label-caps text-label-caps">Ayarlar</span>
+</button>
+</nav>
+</body></html>

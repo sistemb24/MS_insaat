@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 
+import { Icon, type IconName } from "@/components/ui";
 import {
   TENDER_STATUSES,
   buildTenderBoqSummary,
@@ -89,15 +90,16 @@ type TenderSiteConversionFormValues = {
 };
 
 const statusClass: Record<TenderStatus, string> = {
-  Hazırlanıyor: "border-blue-200 bg-blue-50 text-blue-700",
-  Kazanıldı: "border-emerald-200 bg-emerald-50 text-emerald-700",
-  Kaybedildi: "border-red-200 bg-red-50 text-red-700",
-  Sunuldu: "border-amber-200 bg-amber-50 text-amber-700",
-  Takip: "border-slate-200 bg-slate-50 text-slate-700",
-  İptal: "border-zinc-200 bg-zinc-100 text-zinc-700",
+  Hazırlanıyor: "border-info bg-info-subtle text-info",
+  Kazanıldı: "border-success bg-success-subtle text-success",
+  Kaybedildi: "border-danger bg-danger-subtle text-danger",
+  Sunuldu: "border-warning bg-warning-subtle text-warning",
+  Takip: "border-divider bg-surface-muted text-content-subtle",
+  İptal: "border-divider bg-surface-muted text-content-subtle",
 };
 
 type TenderDeadlineFilter = "all" | "overdue" | "upcoming";
+type TenderView = "analysis" | "kanban" | "list";
 
 const tenderDeadlineFilters: TenderDeadlineFilter[] = [
   "all",
@@ -187,10 +189,28 @@ export function TenderManagementSurface({
   >("all");
   const [activeDeadlineFilter, setActiveDeadlineFilter] =
     useState<TenderDeadlineFilter>("all");
-  const [activeView, setActiveView] = useState<"analysis" | "list">("list");
+  const [activeView, setActiveView] = useState<TenderView>("list");
+  const [query, setQuery] = useState("");
   const summary = summarizeTenders(displayRows, today);
   const filteredRows =
     displayRows.filter((row) => {
+      const normalizedQuery = query.trim().toLocaleLowerCase("tr-TR");
+
+      if (
+        normalizedQuery &&
+        ![
+          row.authorityName,
+          row.city,
+          row.ikn,
+          row.tenderNo,
+          row.title,
+        ].some((value) =>
+          value?.toLocaleLowerCase("tr-TR").includes(normalizedQuery),
+        )
+      ) {
+        return false;
+      }
+
       if (activeStatusFilter !== "all" && row.status !== activeStatusFilter) {
         return false;
       }
@@ -371,6 +391,10 @@ export function TenderManagementSurface({
     );
   }
 
+  function changeView(view: TenderView) {
+    setActiveView(view);
+  }
+
   async function transitionTenderStatus(tenderId: string, status: TenderStatus) {
     setSurfaceError("");
     setSurfaceNotice("");
@@ -537,103 +561,173 @@ export function TenderManagementSurface({
   }
 
   return (
-    <section className="mx-auto flex max-w-7xl flex-col gap-4">
-      <header className="rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)] p-5">
-        <p className="text-xs font-semibold uppercase tracking-wide text-[var(--primary)]">
-          P1-S3 temel modül
-        </p>
-        <div className="mt-2 flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
-          <div>
-            <h1 className="text-2xl font-semibold tracking-normal">
-              İhale Yönetimi
-            </h1>
-            <p className="mt-2 max-w-3xl text-sm leading-6 text-[var(--on-surface-variant)]">
-              EKAP/İKN odaklı ihale takibi; kazanılırsa şantiye açılış
-              akışına bağlanacak teklif, takvim, durum ve analiz çalışma alanı.
-            </p>
-          </div>
-          <div className="rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] px-3 py-2 text-xs text-[var(--on-surface-variant)]">
-            Görsel kaynak: İhale Yönetimi 5 ekran
-          </div>
+    <section className="mx-auto flex w-full max-w-[1440px] flex-col gap-6">
+      <header className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <div className="min-w-0">
+          <nav
+            aria-label="İçerik yolu"
+            className="text-xs font-semibold text-content-muted"
+          >
+            Operasyon / İhale Yönetimi
+          </nav>
+          <h1 className="mt-2 text-3xl font-bold leading-[2.375rem] tracking-[-0.02em] text-content">
+            İhale Yönetimi
+          </h1>
+          <p className="mt-2 max-w-3xl text-sm leading-6 text-content-subtle">
+            EKAP/İKN takibini, teklif takvimini, BOQ kârlılığını ve kazanılan
+            ihaleden şantiye açılışını tek çalışma alanında yönetin.
+          </p>
+        </div>
+        <div className="inline-flex items-center gap-2 rounded-ui-control border border-divider bg-surface-raised px-3 py-2 text-xs font-semibold text-content-subtle shadow-sm">
+          <Icon name="gavel" size={18} />
+          {summary.statusCounts.Takip +
+            summary.statusCounts.Hazırlanıyor +
+            summary.statusCounts.Sunuldu}{" "}
+          açık ihale
         </div>
       </header>
 
-      <div className="grid gap-3 md:grid-cols-4">
-        <Metric label="Kazanma Oranı" value={`%${summary.winRate}`} />
-        <Metric label="Toplam İhale" value={String(summary.totalCount)} />
+      <div
+        aria-label="İhale özet metrikleri"
+        className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4"
+      >
         <Metric
+          icon="chart"
+          label="Kazanma Oranı"
+          tone="brand"
+          value={`%${summary.winRate}`}
+        />
+        <Metric
+          icon="gavel"
+          label="Toplam İhale"
+          value={String(summary.totalCount)}
+        />
+        <Metric
+          compact
+          icon="check"
           label="Kazanılan Değer"
+          tone="success"
           value={formatMoney(summary.wonBidTotal)}
         />
         <Metric
+          compact
+          icon="receipt"
           label="Sözleşme Bedeli"
+          tone="warning"
           value={formatMoney(summary.contractTotal)}
         />
       </div>
 
-      <article className="rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)] p-4">
-        <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+      <article className="overflow-hidden rounded-ui-panel border border-divider bg-surface-raised shadow-sm">
+        <div className="flex flex-col gap-3 border-b border-divider px-4 py-3 xl:flex-row xl:items-center xl:justify-between">
           <ul
             aria-label="İhale durum sayaçları"
-            className="grid gap-2 sm:grid-cols-3 xl:grid-cols-6"
+            className="grid flex-1 gap-2 sm:grid-cols-3 xl:grid-cols-6"
             role="list"
           >
             {TENDER_STATUSES.map((status) => (
               <li
-                className={`rounded-[var(--radius-control)] border px-3 py-2 text-sm ${statusClass[status]}`}
+                className={`rounded-ui-control border text-sm transition-shadow ${
+                  statusClass[status]
+                } ${activeStatusFilter === status ? "ring-2 ring-brand-primary ring-offset-1" : ""}`}
                 key={status}
               >
                 <button
                   aria-label={`${status} ${summary.statusCounts[status]}`}
                   aria-pressed={activeStatusFilter === status}
-                  className="grid w-full grid-cols-[1fr_auto] items-center gap-2 text-left"
+                  className="grid min-h-11 w-full grid-cols-[1fr_auto] items-center gap-2 px-3 py-2 text-left"
                   onClick={() => toggleStatusFilter(status)}
                   type="button"
                 >
                   <span className="text-xs font-semibold">{status}</span>
-                  <span className="font-mono text-lg font-semibold">
+                  <span className="font-mono text-base font-semibold">
                     {summary.statusCounts[status]}
                   </span>
                 </button>
               </li>
             ))}
           </ul>
-          <div className="flex flex-wrap gap-2">
-            {[
-              "Ara",
-              "Excel",
-              "PDF",
-              activeView === "analysis" ? "Listeye Dön" : "Analiz Panosu",
-              "+ Yeni İhale",
-            ].map((action) => (
-              <button
-                className="h-9 rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] px-3 text-sm font-semibold transition hover:bg-[var(--primary-fixed)]"
-                key={action}
-                onClick={
-                  action === "+ Yeni İhale"
-                    ? openDraftForm
-                    : action === "Analiz Panosu" || action === "Listeye Dön"
-                      ? toggleAnalysisView
-                      : undefined
-                }
-                type="button"
-              >
-                {action}
-              </button>
-            ))}
+          <button
+            aria-label="+ Yeni İhale"
+            className="inline-flex min-h-10 items-center justify-center gap-2 rounded-ui-control bg-brand-primary px-4 text-sm font-semibold text-on-brand transition-colors hover:bg-brand-primary-strong"
+            onClick={openDraftForm}
+            type="button"
+          >
+            <Icon name="plus" size={17} />
+            Yeni İhale
+          </button>
+        </div>
+
+        <div className="grid gap-3 bg-surface-raised px-4 py-3 lg:grid-cols-[minmax(240px,1fr)_auto_auto] lg:items-center">
+          <label className="relative w-full max-w-xl">
+            <span className="sr-only">İhale ara</span>
+            <Icon
+              className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-content-muted"
+              name="search"
+              size={17}
+            />
+            <input
+              className="h-10 w-full rounded-ui-control border border-divider bg-surface-muted pl-9 pr-3 text-sm text-content outline-none transition-colors placeholder:text-content-muted focus:border-brand-primary focus:bg-surface-raised"
+              onChange={(event) => setQuery(event.target.value)}
+              placeholder="İhale no, İKN, başlık veya kurum ara"
+              type="search"
+              value={query}
+            />
+          </label>
+
+          <div
+            aria-label="İhale görünümü"
+            className="inline-flex overflow-hidden rounded-ui-control border border-divider bg-surface-muted"
+            role="group"
+          >
+            <ViewButton
+              active={activeView === "list"}
+              label="Liste"
+              onClick={() => changeView("list")}
+            />
+            <ViewButton
+              active={activeView === "kanban"}
+              label="Kanban"
+              onClick={() => changeView("kanban")}
+            />
+            <ViewButton
+              active={activeView === "analysis"}
+              label={activeView === "analysis" ? "Listeye Dön" : "Analiz Panosu"}
+              onClick={toggleAnalysisView}
+            />
+          </div>
+
+          <div className="flex flex-wrap gap-2 lg:justify-end">
+            <a
+              className="inline-flex min-h-10 items-center justify-center gap-2 rounded-ui-control border border-divider bg-surface-raised px-3 text-sm font-semibold text-content transition-colors hover:bg-surface-muted"
+              download="ihale-listesi.csv"
+              href={buildTenderCsvHref(filteredRows)}
+            >
+              <Icon name="download" size={16} />
+              CSV
+            </a>
+            <button
+              className="inline-flex min-h-10 items-center justify-center gap-2 rounded-ui-control border border-divider bg-surface-raised px-3 text-sm font-semibold text-content transition-colors hover:bg-surface-muted"
+              onClick={() => window.print()}
+              type="button"
+            >
+              <Icon name="file" size={16} />
+              Yazdır / PDF
+            </button>
           </div>
         </div>
-        <div className="mt-3 flex flex-wrap items-center gap-2">
-          <span className="text-xs font-semibold uppercase tracking-wide text-[var(--on-surface-variant)]">
-            Son teklif filtresi
+
+        <div className="flex flex-wrap items-center gap-2 border-t border-divider bg-surface-muted px-4 py-3">
+          <span className="mr-1 text-xs font-semibold uppercase tracking-wide text-content-subtle">
+            Son teklif
           </span>
           {tenderDeadlineFilters.map((filter) => (
             <button
               aria-pressed={activeDeadlineFilter === filter}
-              className={`h-8 rounded-[var(--radius-control)] border px-3 text-xs font-semibold transition ${
+              className={`min-h-8 rounded-ui-control border px-3 text-xs font-semibold transition-colors ${
                 activeDeadlineFilter === filter
-                  ? "border-[var(--primary)] bg-[var(--primary-fixed)] text-[var(--primary)]"
-                  : "border-[var(--grid-border)] bg-[var(--surface-container-low)] text-[var(--on-surface-variant)] hover:bg-[var(--primary-fixed)]"
+                  ? "border-brand-primary bg-brand-primary text-on-brand"
+                  : "border-divider bg-surface-raised text-content-subtle hover:border-brand-primary hover:bg-brand-primary-subtle"
               }`}
               key={filter}
               onClick={() => toggleDeadlineFilter(filter)}
@@ -642,6 +736,9 @@ export function TenderManagementSurface({
               {tenderDeadlineFilterLabels[filter]}
             </button>
           ))}
+          <span className="ml-auto font-mono text-xs text-content-subtle">
+            {filteredRows.length}/{displayRows.length} kayıt
+          </span>
         </div>
       </article>
 
@@ -652,6 +749,7 @@ export function TenderManagementSurface({
           notice={formNotice}
           onBoqLineAdd={addBoqLine}
           onBoqLineChange={updateBoqLineValue}
+          onClose={() => setIsFormOpen(false)}
           onSave={saveDraftTender}
           onTabChange={setActiveFormTab}
           onValueChange={updateFormValue}
@@ -688,10 +786,10 @@ export function TenderManagementSurface({
 
       {surfaceError || surfaceNotice ? (
         <p
-          className={`rounded-[var(--radius-control)] border px-3 py-2 text-sm font-semibold ${
+          className={`rounded-ui-control border px-3 py-2 text-sm font-semibold ${
             surfaceError
-              ? "border-red-200 bg-red-50 text-red-700"
-              : "border-emerald-200 bg-emerald-50 text-emerald-700"
+              ? "border-danger bg-danger-subtle text-danger"
+              : "border-success bg-success-subtle text-success"
           }`}
           role={surfaceError ? "alert" : "status"}
         >
@@ -701,8 +799,15 @@ export function TenderManagementSurface({
 
       {activeView === "analysis" ? (
         <TenderAnalysisBoard rows={displayRows} summary={summary} />
+      ) : activeView === "kanban" ? (
+        <TenderKanbanBoard
+          onEditBoq={openBoqEditor}
+          onTransitionStatus={transitionTenderStatus}
+          rows={filteredRows}
+          today={today}
+        />
       ) : (
-        <div className="grid gap-4 xl:grid-cols-[1fr_360px]">
+        <div className="flex flex-col gap-4">
           <TenderList
             activeStatusFilter={activeStatusFilter}
             activeDeadlineFilter={activeDeadlineFilter}
@@ -726,6 +831,7 @@ function TenderDraftForm({
   notice,
   onBoqLineAdd,
   onBoqLineChange,
+  onClose,
   onSave,
   onTabChange,
   onValueChange,
@@ -740,6 +846,7 @@ function TenderDraftForm({
     field: Field,
     value: TenderBoqLineFormValues[Field],
   ) => void;
+  onClose: () => void;
   onSave: () => void;
   onTabChange: (tab: "general" | "cost" | "boq") => void;
   onValueChange: <Field extends keyof TenderDraftFormValues>(
@@ -749,37 +856,53 @@ function TenderDraftForm({
   values: TenderDraftFormValues;
 }) {
   return (
-    <article className="rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)]">
-      <div className="flex flex-col gap-3 border-b border-[var(--grid-border)] px-4 py-3 lg:flex-row lg:items-center lg:justify-between">
+    <article
+      aria-label="Yeni ihale formu"
+      className="overflow-hidden rounded-ui-panel border border-divider bg-surface-raised shadow-sm"
+    >
+      <div className="flex flex-col gap-3 border-b border-divider px-4 py-4 lg:flex-row lg:items-center lg:justify-between lg:px-5">
         <div>
-          <p className="text-xs font-semibold uppercase tracking-wide text-[var(--primary)]">
-            3 sekmeli taslak
+          <p className="text-xs font-semibold uppercase tracking-wide text-brand-primary">
+            Üç adımlı ihale kaydı
           </p>
-          <h2 className="mt-1 text-lg font-semibold">Yeni İhale</h2>
+          <h2 className="mt-1 text-xl font-semibold text-content">Yeni İhale</h2>
+          <p className="mt-1 text-sm text-content-subtle">
+            Genel takvim, maliyet teklifi ve BOQ satırlarını tek taslakta yönetin.
+          </p>
         </div>
-        <div className="flex flex-wrap gap-2" role="tablist">
-          <FormTab
-            active={activeTab === "general"}
-            label="Genel & Takvim"
-            onClick={() => onTabChange("general")}
-          />
-          <FormTab
-            active={activeTab === "cost"}
-            label="Maliyet & Teklif"
-            onClick={() => onTabChange("cost")}
-          />
-          <FormTab
-            active={activeTab === "boq"}
-            label="BOQ / Poz"
-            onClick={() => onTabChange("boq")}
-          />
+        <div className="flex flex-wrap items-center gap-2">
+          <div className="flex flex-wrap gap-2" role="tablist">
+            <FormTab
+              active={activeTab === "general"}
+              label="Genel & Takvim"
+              onClick={() => onTabChange("general")}
+            />
+            <FormTab
+              active={activeTab === "cost"}
+              label="Maliyet & Teklif"
+              onClick={() => onTabChange("cost")}
+            />
+            <FormTab
+              active={activeTab === "boq"}
+              label="BOQ / Poz"
+              onClick={() => onTabChange("boq")}
+            />
+          </div>
+          <button
+            aria-label="Yeni ihale formunu kapat"
+            className="min-h-10 rounded-ui-control border border-divider bg-surface-raised px-3 text-sm font-semibold text-content transition-colors hover:bg-surface-muted"
+            onClick={onClose}
+            type="button"
+          >
+            Vazgeç
+          </button>
         </div>
       </div>
 
-      <div className="p-4">
+      <div className="p-4 sm:p-5">
         {error ? (
           <p
-            className="mb-3 rounded-[var(--radius-control)] border border-red-200 bg-red-50 px-3 py-2 text-sm font-semibold text-red-700"
+            className="mb-3 rounded-ui-control border border-danger bg-danger-subtle px-3 py-2 text-sm font-semibold text-danger"
             role="alert"
           >
             {error}
@@ -787,7 +910,7 @@ function TenderDraftForm({
         ) : null}
         {notice ? (
           <p
-            className="mb-3 rounded-[var(--radius-control)] border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm font-semibold text-emerald-700"
+            className="mb-3 rounded-ui-control border border-success bg-success-subtle px-3 py-2 text-sm font-semibold text-success"
             role="status"
           >
             {notice}
@@ -812,9 +935,9 @@ function TenderDraftForm({
           />
         )}
 
-        <div className="mt-4 flex flex-wrap justify-end gap-2 border-t border-[var(--grid-border)] pt-4">
+        <div className="mt-5 flex flex-wrap justify-end gap-2 border-t border-divider pt-4">
           <button
-            className="h-9 rounded-[var(--radius-control)] bg-[var(--primary)] px-4 text-sm font-semibold text-white transition hover:bg-[var(--primary-hover)]"
+            className="min-h-10 rounded-ui-control bg-brand-primary px-4 text-sm font-semibold text-on-brand transition-colors hover:bg-brand-primary-strong"
             onClick={onSave}
             type="button"
           >
@@ -838,13 +961,39 @@ function FormTab({
   return (
     <button
       aria-selected={active}
-      className={`h-9 rounded-[var(--radius-control)] border px-3 text-sm font-semibold ${
+      className={`min-h-10 rounded-ui-control border px-3 text-sm font-semibold transition-colors ${
         active
-          ? "border-[var(--primary)] bg-[var(--primary)] text-white"
-          : "border-[var(--grid-border)] bg-[var(--surface-container-low)]"
+          ? "border-brand-primary bg-brand-primary text-on-brand"
+          : "border-divider bg-surface-muted text-content-subtle hover:border-brand-primary hover:bg-brand-primary-subtle"
       }`}
       onClick={onClick}
       role="tab"
+      type="button"
+    >
+      {label}
+    </button>
+  );
+}
+
+function ViewButton({
+  active,
+  label,
+  onClick,
+}: {
+  active: boolean;
+  label: string;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      aria-pressed={active}
+      className={
+        "min-h-10 px-3 text-sm font-semibold transition-colors " +
+        (active
+          ? "bg-brand-primary text-on-brand"
+          : "text-content-subtle hover:bg-brand-primary-subtle hover:text-content")
+      }
+      onClick={onClick}
       type="button"
     >
       {label}
@@ -865,6 +1014,7 @@ function GeneralTenderFields({
   return (
     <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
       <TextInput
+        autoFocus
         label="Başlık"
         onChange={(value) => onValueChange("title", value)}
         required
@@ -888,7 +1038,7 @@ function GeneralTenderFields({
       <label className="flex flex-col gap-2 text-sm font-semibold">
         <span>İhale Usulü</span>
         <select
-          className="h-10 rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-white px-3 font-normal outline-none focus:border-[var(--primary)]"
+          className="h-10 rounded-ui-control border border-divider bg-surface-muted px-3 font-normal text-content outline-none transition-colors focus:border-brand-primary focus:bg-surface-raised"
           onChange={(event) =>
             onValueChange("procedure", event.target.value as TenderProcedure)
           }
@@ -937,7 +1087,7 @@ function GeneralTenderFields({
       <label className="flex flex-col gap-2 text-sm font-semibold md:col-span-2 xl:col-span-3">
         <span>Açıklama</span>
         <textarea
-          className="min-h-24 rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-white px-3 py-2 font-normal outline-none focus:border-[var(--primary)]"
+          className="min-h-24 rounded-ui-control border border-divider bg-surface-muted px-3 py-2 font-normal text-content outline-none transition-colors focus:border-brand-primary focus:bg-surface-raised"
           onChange={(event) => onValueChange("description", event.target.value)}
           value={values.description}
         />
@@ -961,7 +1111,7 @@ function CostTenderFields({
       <label className="flex flex-col gap-2 text-sm font-semibold">
         <span>Para Birimi</span>
         <select
-          className="h-10 rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-white px-3 font-normal outline-none focus:border-[var(--primary)]"
+          className="h-10 rounded-ui-control border border-divider bg-surface-muted px-3 font-normal text-content outline-none transition-colors focus:border-brand-primary focus:bg-surface-raised"
           onChange={(event) =>
             onValueChange(
               "currency",
@@ -1041,7 +1191,7 @@ function BoqTenderFields({
       <div className="flex flex-col gap-2 lg:flex-row lg:items-center lg:justify-between">
         <div>
           <h3 className="text-base font-semibold">{title}</h3>
-          <p className="mt-1 text-sm text-[var(--on-surface-variant)]">
+          <p className="mt-1 text-sm text-content-subtle">
             Poz satırı bazında birim maliyet, teklif toplamı ve kârlılık
             simülasyonu.
           </p>
@@ -1049,7 +1199,7 @@ function BoqTenderFields({
         <div className="flex flex-wrap gap-2">
           {onApplyBoqBidTotal ? (
             <button
-              className="h-9 rounded-[var(--radius-control)] border border-[var(--primary)] bg-[var(--primary-fixed)] px-3 text-sm font-semibold text-[var(--primary)] transition hover:bg-[var(--surface-container-low)]"
+              className="min-h-9 rounded-ui-control border border-brand-primary bg-brand-primary-subtle px-3 text-sm font-semibold text-brand-primary transition-colors hover:bg-surface-selected"
               onClick={() => onApplyBoqBidTotal(simulation.boqBidTotal)}
               type="button"
             >
@@ -1057,7 +1207,7 @@ function BoqTenderFields({
             </button>
           ) : null}
           <button
-            className="h-9 rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] px-3 text-sm font-semibold transition hover:bg-[var(--primary-fixed)]"
+            className="min-h-9 rounded-ui-control border border-divider bg-surface-raised px-3 text-sm font-semibold text-content transition-colors hover:border-brand-primary hover:bg-surface-muted"
             onClick={onBoqLineAdd}
             type="button"
           >
@@ -1066,9 +1216,9 @@ function BoqTenderFields({
         </div>
       </div>
 
-      <div className="overflow-x-auto rounded-[var(--radius-control)] border border-[var(--grid-border)]">
+      <div className="overflow-x-auto rounded-ui-control border border-divider">
         <div className={canManageRows ? "min-w-[1240px]" : "min-w-[1120px]"}>
-          <div className={`grid ${gridColumns} gap-2 border-b border-[var(--grid-border)] bg-[var(--surface-container-low)] px-3 py-2 text-xs font-semibold uppercase text-[var(--on-surface-variant)]`}>
+          <div className={`grid ${gridColumns} gap-2 border-b border-divider bg-surface-muted px-3 py-2 text-xs font-semibold uppercase tracking-wide text-content-subtle`}>
             <span>Poz</span>
             <span>İş Kalemi</span>
             <span>Birim</span>
@@ -1081,7 +1231,7 @@ function BoqTenderFields({
             <span>Birim Teklif</span>
             {canManageRows ? <span>İşlem</span> : null}
           </div>
-          <div className="divide-y divide-[var(--grid-border)]">
+          <div className="divide-y divide-divider">
             {values.boqLines.map((line, index) => (
               <div
                 className={`grid ${gridColumns} gap-2 px-3 py-2`}
@@ -1161,7 +1311,7 @@ function BoqTenderFields({
                     {onBoqLineCopy ? (
                       <button
                         aria-label={`Satır Kopyala ${index + 1}`}
-                        className="h-9 rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] px-2 text-xs font-semibold transition hover:bg-[var(--primary-fixed)]"
+                        className="h-9 rounded-ui-control border border-divider bg-surface-muted px-2 text-xs font-semibold text-content transition-colors hover:border-brand-primary"
                         onClick={() => onBoqLineCopy(index)}
                         type="button"
                       >
@@ -1171,7 +1321,7 @@ function BoqTenderFields({
                     {onBoqLineDelete ? (
                       <button
                         aria-label={`Satır Sil ${index + 1}`}
-                        className="h-9 rounded-[var(--radius-control)] border border-red-200 bg-red-50 px-2 text-xs font-semibold text-red-700 transition hover:bg-red-100"
+                        className="h-9 rounded-ui-control border border-danger bg-danger-subtle px-2 text-xs font-semibold text-danger transition-colors hover:brightness-95"
                         onClick={() => onBoqLineDelete(index)}
                         type="button"
                       >
@@ -1223,26 +1373,26 @@ function SiteConversionWizard({
   values: TenderSiteConversionFormValues;
 }) {
   return (
-    <article className="rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)]">
-      <div className="flex flex-col gap-2 border-b border-[var(--grid-border)] px-4 py-3 lg:flex-row lg:items-center lg:justify-between">
+    <article className="overflow-hidden rounded-ui-panel border border-divider bg-surface-raised shadow-sm">
+      <div className="flex flex-col gap-2 border-b border-divider px-4 py-4 lg:flex-row lg:items-center lg:justify-between lg:px-5">
         <div>
-          <p className="text-xs font-semibold uppercase tracking-wide text-[var(--primary)]">
+          <p className="text-xs font-semibold uppercase tracking-wide text-brand-primary">
             {tender.tenderNo}
           </p>
-          <h2 className="mt-1 text-lg font-semibold">
+          <h2 className="mt-1 text-xl font-semibold text-content">
             İhaleden Şantiye Oluştur
           </h2>
         </div>
         <div className="flex flex-wrap gap-2">
           <button
-            className="h-9 rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] px-3 text-sm font-semibold transition hover:bg-[var(--primary-fixed)]"
+            className="min-h-10 rounded-ui-control border border-divider bg-surface-raised px-3 text-sm font-semibold text-content transition-colors hover:bg-surface-muted"
             onClick={onClose}
             type="button"
           >
             Kapat
           </button>
           <button
-            className="h-9 rounded-[var(--radius-control)] bg-[var(--primary)] px-4 text-sm font-semibold text-white transition hover:bg-[var(--primary-hover)]"
+            className="min-h-10 rounded-ui-control bg-brand-primary px-4 text-sm font-semibold text-on-brand transition-colors hover:bg-brand-primary-strong"
             onClick={onSave}
             type="button"
           >
@@ -1307,24 +1457,24 @@ function ExistingTenderBoqEditor({
   const values = tenderRowToBoqDraftFormValues(tender, lines, bidValue);
 
   return (
-    <article className="rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)]">
-      <div className="flex flex-col gap-2 border-b border-[var(--grid-border)] px-4 py-3 lg:flex-row lg:items-center lg:justify-between">
+    <article className="overflow-hidden rounded-ui-panel border border-divider bg-surface-raised shadow-sm">
+      <div className="flex flex-col gap-2 border-b border-divider px-4 py-4 lg:flex-row lg:items-center lg:justify-between lg:px-5">
         <div>
-          <p className="text-xs font-semibold uppercase tracking-wide text-[var(--primary)]">
+          <p className="text-xs font-semibold uppercase tracking-wide text-brand-primary">
             {tender.tenderNo}
           </p>
-          <h2 className="mt-1 text-lg font-semibold">BOQ Düzenle</h2>
+          <h2 className="mt-1 text-xl font-semibold text-content">BOQ Düzenle</h2>
         </div>
         <div className="flex flex-wrap gap-2">
           <button
-            className="h-9 rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] px-3 text-sm font-semibold transition hover:bg-[var(--primary-fixed)]"
+            className="min-h-10 rounded-ui-control border border-divider bg-surface-raised px-3 text-sm font-semibold text-content transition-colors hover:bg-surface-muted"
             onClick={onClose}
             type="button"
           >
             Kapat
           </button>
           <button
-            className="h-9 rounded-[var(--radius-control)] bg-[var(--primary)] px-4 text-sm font-semibold text-white transition hover:bg-[var(--primary-hover)]"
+            className="min-h-10 rounded-ui-control bg-brand-primary px-4 text-sm font-semibold text-on-brand transition-colors hover:bg-brand-primary-strong"
             onClick={onSave}
             type="button"
           >
@@ -1361,7 +1511,7 @@ function BoqInput({
   return (
     <input
       aria-label={label}
-      className="h-9 min-w-0 rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-white px-2 text-sm outline-none focus:border-[var(--primary)]"
+      className="h-9 min-w-0 rounded-ui-control border border-divider bg-surface-muted px-2 text-sm text-content outline-none transition-colors focus:border-brand-primary focus:bg-surface-raised"
       inputMode={numeric ? "decimal" : undefined}
       onChange={(event) => onChange(event.target.value)}
       type={numeric ? "number" : "text"}
@@ -1372,21 +1522,23 @@ function BoqInput({
 
 function BoqMetric({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] px-3 py-2">
-      <p className="text-xs font-semibold text-[var(--on-surface-variant)]">
+    <div className="rounded-ui-control border border-divider bg-surface-muted px-3 py-3">
+      <p className="text-xs font-semibold text-content-subtle">
         {label}
       </p>
-      <p className="mt-1 font-mono text-lg font-semibold">{value}</p>
+      <p className="mt-1 font-mono text-lg font-semibold text-content">{value}</p>
     </div>
   );
 }
 
 function TextInput({
+  autoFocus = false,
   label,
   onChange,
   required = false,
   value,
 }: {
+  autoFocus?: boolean;
   label: string;
   onChange: (value: string) => void;
   required?: boolean;
@@ -1397,12 +1549,13 @@ function TextInput({
       <span>
         {label}
         {required ? (
-          <span className="ml-1 text-[var(--mandatory-indicator)]">*</span>
+          <span className="ml-1 text-[var(--ds-danger)]">*</span>
         ) : null}
       </span>
       <input
         aria-label={label}
-        className="h-10 rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-white px-3 font-normal outline-none focus:border-[var(--primary)]"
+        autoFocus={autoFocus}
+        className="h-10 rounded-ui-control border border-divider bg-surface-muted px-3 font-normal text-content outline-none transition-colors focus:border-brand-primary focus:bg-surface-raised"
         onChange={(event) => onChange(event.target.value)}
         value={value}
       />
@@ -1424,7 +1577,7 @@ function DateInput({
       <span>{label}</span>
       <input
         aria-label={label}
-        className="h-10 rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-white px-3 font-normal outline-none focus:border-[var(--primary)]"
+        className="h-10 rounded-ui-control border border-divider bg-surface-muted px-3 font-normal text-content outline-none transition-colors focus:border-brand-primary focus:bg-surface-raised"
         onChange={(event) => onChange(event.target.value)}
         type="date"
         value={value}
@@ -1447,7 +1600,7 @@ function DateTimeInput({
       <span>{label}</span>
       <input
         aria-label={label}
-        className="h-10 rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-white px-3 font-normal outline-none focus:border-[var(--primary)]"
+        className="h-10 rounded-ui-control border border-divider bg-surface-muted px-3 font-normal text-content outline-none transition-colors focus:border-brand-primary focus:bg-surface-raised"
         onChange={(event) => onChange(event.target.value)}
         type="datetime-local"
         value={value}
@@ -1470,7 +1623,7 @@ function NumberInput({
       <span>{label}</span>
       <input
         aria-label={label}
-        className="h-10 rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-white px-3 font-normal outline-none focus:border-[var(--primary)]"
+        className="h-10 rounded-ui-control border border-divider bg-surface-muted px-3 font-normal text-content outline-none transition-colors focus:border-brand-primary focus:bg-surface-raised"
         inputMode="decimal"
         onChange={(event) => onChange(event.target.value)}
         type="number"
@@ -1594,9 +1747,12 @@ function TenderAnalysisBoard({
   const authorityRows = summarizeTenderAuthorities(rows);
 
   return (
-    <section className="grid gap-4 xl:grid-cols-[1fr_360px]">
-      <article className="rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)] p-4">
-        <h2 className="text-sm font-semibold">İhale Analiz Panosu</h2>
+    <section className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_380px]">
+      <article className="rounded-ui-panel border border-divider bg-surface-raised p-4 shadow-sm sm:p-5">
+        <h2 className="text-xl font-semibold text-content">İhale Analiz Panosu</h2>
+        <p className="mt-1 text-sm text-content-subtle">
+          Durum, sonuç ve son teklif risklerini mevcut ihale kayıtlarından türetir.
+        </p>
         <div className="mt-4 grid gap-3 md:grid-cols-3">
           <AnalysisMetric
             label="Açık İhale"
@@ -1619,10 +1775,13 @@ function TenderAnalysisBoard({
             value={String(summary.overdueOpenRows.length)}
           />
         </div>
-        <div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+        <div
+          aria-label="İhale durum dağılımı"
+          className="mt-5 grid gap-3 md:grid-cols-2 xl:grid-cols-3"
+        >
           {TENDER_STATUSES.map((status) => (
             <div
-              className={`rounded-[var(--radius-control)] border px-3 py-2 text-sm ${statusClass[status]}`}
+              className={`rounded-ui-control border px-3 py-3 text-sm ${statusClass[status]}`}
               key={status}
             >
               <span className="block text-xs font-semibold">{status}</span>
@@ -1634,19 +1793,24 @@ function TenderAnalysisBoard({
         </div>
       </article>
 
-      <article className="rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)] p-4">
-        <h2 className="text-sm font-semibold">En Çok İhale Açan Kurumlar</h2>
+      <article className="rounded-ui-panel border border-divider bg-surface-raised p-4 shadow-sm sm:p-5">
+        <h2 className="text-xl font-semibold text-content">
+          En Çok İhale Açan Kurumlar
+        </h2>
+        <p className="mt-1 text-sm text-content-subtle">
+          Portföydeki gerçek ihale sayısı ve kazanım dağılımı.
+        </p>
         <div className="mt-3 space-y-2 text-sm">
           {authorityRows.length === 0 ? (
-            <p className="text-[var(--on-surface-variant)]">Kurum kaydı yok.</p>
+            <p className="text-content-subtle">Kurum kaydı yok.</p>
           ) : (
             authorityRows.map((row) => (
               <div
-                className="rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] p-3"
+                className="rounded-ui-control border border-divider bg-surface-muted p-3"
                 key={row.authorityName}
               >
                 <p className="font-semibold">{row.authorityName}</p>
-                <p className="font-mono text-xs text-[var(--on-surface-variant)]">
+                <p className="mt-1 font-mono text-xs text-content-subtle">
                   {row.totalCount} ihale / {row.wonCount} kazanıldı
                 </p>
               </div>
@@ -1654,6 +1818,122 @@ function TenderAnalysisBoard({
           )}
         </div>
       </article>
+    </section>
+  );
+}
+
+function TenderKanbanBoard({
+  onEditBoq,
+  onTransitionStatus,
+  rows,
+  today,
+}: {
+  onEditBoq: (row: TenderRow) => void;
+  onTransitionStatus: (tenderId: string, status: TenderStatus) => void;
+  rows: TenderRow[];
+  today: string;
+}) {
+  return (
+    <section
+      aria-label="İhale Kanban panosu"
+      className="overflow-hidden rounded-ui-panel border border-divider bg-surface-raised shadow-sm"
+    >
+      <div className="border-b border-divider px-4 py-4 sm:px-5">
+        <h2 className="text-xl font-semibold text-content">İhale Kanban</h2>
+        <p className="mt-1 text-sm text-content-subtle">
+          İhaleleri gerçek durumlarına göre izleyin; izin verilen sonraki duruma
+          kart üzerinden geçirin.
+        </p>
+      </div>
+      <div className="overflow-x-auto bg-surface-muted p-4">
+        <div className="grid min-w-[1560px] grid-cols-6 gap-3">
+          {TENDER_STATUSES.map((status) => {
+            const statusRows = rows.filter((row) => row.status === status);
+
+            return (
+              <section
+                aria-label={`${status} ihaleleri`}
+                className="min-w-0 rounded-ui-panel border border-divider bg-surface-raised"
+                key={status}
+              >
+                <header
+                  className={`flex items-center justify-between gap-2 rounded-t-ui-panel border-b px-3 py-3 ${statusClass[status]}`}
+                >
+                  <h3 className="text-sm font-semibold">{status}</h3>
+                  <span className="rounded-full bg-surface-raised/70 px-2 py-0.5 font-mono text-xs font-semibold">
+                    {statusRows.length}
+                  </span>
+                </header>
+                <div className="space-y-3 p-3">
+                  {statusRows.length === 0 ? (
+                    <p className="rounded-ui-control border border-dashed border-divider px-3 py-6 text-center text-xs text-content-muted">
+                      Bu durumda ihale yok
+                    </p>
+                  ) : (
+                    statusRows.map((row) => (
+                      <article
+                        className="rounded-ui-control border border-divider bg-surface-raised p-3 shadow-sm"
+                        key={row.id}
+                      >
+                        <div className="flex items-start justify-between gap-2">
+                          <p className="font-mono text-xs font-semibold text-brand-primary">
+                            {row.tenderNo}
+                          </p>
+                          {isTenderDeadlineOverdue(row, today) ? (
+                            <span className="rounded-full bg-danger-subtle px-2 py-0.5 text-[10px] font-semibold text-danger">
+                              Süre doldu
+                            </span>
+                          ) : isTenderDeadlineUpcoming(row, today) ? (
+                            <span className="rounded-full bg-warning-subtle px-2 py-0.5 text-[10px] font-semibold text-warning">
+                              Yaklaşıyor
+                            </span>
+                          ) : null}
+                        </div>
+                        <h4 className="mt-2 text-sm font-semibold leading-5 text-content">
+                          {row.title}
+                        </h4>
+                        <p className="mt-1 line-clamp-2 text-xs leading-5 text-content-subtle">
+                          {row.authorityName || "İhale makamı belirtilmedi"}
+                        </p>
+                        <dl className="mt-3 space-y-1 border-t border-divider pt-3 text-xs">
+                          <div className="flex justify-between gap-2">
+                            <dt className="text-content-muted">Son teklif</dt>
+                            <dd className="font-mono font-semibold text-content">
+                              {formatDateTime(row.submissionDeadline)}
+                            </dd>
+                          </div>
+                          <div className="flex justify-between gap-2">
+                            <dt className="text-content-muted">Yaklaşık bedel</dt>
+                            <dd className="font-mono font-semibold text-content">
+                              {formatMoney(row.estimatedValue)}
+                            </dd>
+                          </div>
+                        </dl>
+                        <div className="mt-3 flex flex-wrap gap-1 border-t border-divider pt-3">
+                          <button
+                            aria-label={`BOQ Düzenle ${row.tenderNo}`}
+                            className="min-h-8 rounded-ui-control border border-divider bg-surface-muted px-2 text-xs font-semibold text-content hover:border-brand-primary"
+                            onClick={() => onEditBoq(row)}
+                            type="button"
+                          >
+                            BOQ
+                          </button>
+                          <TenderStatusActions
+                            onTransition={(nextStatus) =>
+                              onTransitionStatus(row.id, nextStatus)
+                            }
+                            status={row.status}
+                          />
+                        </div>
+                      </article>
+                    ))
+                  )}
+                </div>
+              </section>
+            );
+          })}
+        </div>
+      </div>
     </section>
   );
 }
@@ -1686,11 +1966,11 @@ function summarizeTenderAuthorities(rows: TenderRow[]) {
 
 function AnalysisMetric({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] px-3 py-2">
-      <p className="text-xs font-semibold text-[var(--on-surface-variant)]">
+    <div className="rounded-ui-control border border-divider bg-surface-muted px-3 py-3">
+      <p className="text-xs font-semibold text-content-subtle">
         {label}
       </p>
-      <p className="mt-1 font-mono text-xl font-semibold">{value}</p>
+      <p className="mt-1 font-mono text-xl font-semibold text-content">{value}</p>
     </div>
   );
 }
@@ -1715,18 +1995,26 @@ function TenderList({
   today: string;
 }) {
   return (
-    <article className="overflow-hidden rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)]">
-      <div className="flex flex-col gap-1 border-b border-[var(--grid-border)] px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
-        <h2 className="text-sm font-semibold">İhale Listesi</h2>
+    <article className="overflow-hidden rounded-ui-panel border border-divider bg-surface-raised shadow-sm">
+      <div className="flex flex-col gap-1 border-b border-divider px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-5">
+        <div>
+          <h2 className="text-xl font-semibold text-content">İhale Listesi</h2>
+          <p className="mt-1 text-sm text-content-subtle">
+            Teklif takvimi, bedeller, durum geçişleri ve BOQ işlemleri.
+          </p>
+        </div>
         {activeStatusFilter !== "all" || activeDeadlineFilter !== "all" ? (
-          <p className="text-xs font-semibold text-[var(--on-surface-variant)]">
+          <p className="text-xs font-semibold text-content-subtle">
             {allRowCount} kayıt içinden {rows.length} gösteriliyor.
           </p>
         ) : null}
       </div>
       <div className="overflow-x-auto">
-        <table className="min-w-[980px] w-full text-left text-sm">
-          <thead className="bg-[var(--surface-container-low)] text-xs uppercase text-[var(--on-surface-variant)]">
+        <table
+          aria-label="İhale listesi tablosu"
+          className="min-w-[1100px] w-full text-left text-sm text-content"
+        >
+          <thead className="bg-surface-muted text-xs uppercase tracking-wide text-content-subtle">
             <tr>
               <th className="px-4 py-3 font-semibold">NO / İKN</th>
               <th className="px-4 py-3 font-semibold">BAŞLIK</th>
@@ -1739,24 +2027,36 @@ function TenderList({
               <th className="px-4 py-3 text-right font-semibold">İŞLEMLER</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-[var(--grid-border)]">
+          <tbody className="divide-y divide-divider">
+            {rows.length === 0 ? (
+              <tr>
+                <td className="px-4 py-10 text-center" colSpan={7}>
+                  <p className="font-semibold text-content">
+                    Filtrelerle eşleşen ihale yok
+                  </p>
+                  <p className="mt-1 text-sm text-content-subtle">
+                    Arama veya durum/son teklif filtrelerini değiştirin.
+                  </p>
+                </td>
+              </tr>
+            ) : null}
             {rows.map((row) => (
-              <tr className="hover:bg-[var(--primary-fixed)]" key={row.id}>
+              <tr className="hover:bg-surface-muted" key={row.id}>
                 <td className="px-4 py-3">
                   <span className="block font-mono text-xs font-semibold">
                     {row.tenderNo}
                   </span>
-                  <span className="block font-mono text-xs text-[var(--on-surface-variant)]">
+                  <span className="block font-mono text-xs text-content-subtle">
                     {row.ikn}
                   </span>
                 </td>
                 <td className="px-4 py-3">
                   <span className="block font-semibold">{row.title}</span>
-                  <span className="text-xs text-[var(--on-surface-variant)]">
+                  <span className="text-xs text-content-subtle">
                     {row.procedure} usul
                   </span>
                   {row.convertedSiteCode ? (
-                    <span className="mt-1 block font-mono text-xs font-semibold text-[var(--primary)]">
+                    <span className="mt-1 block font-mono text-xs font-semibold text-brand-primary">
                       {row.convertedSiteCode}
                     </span>
                   ) : null}
@@ -1770,11 +2070,11 @@ function TenderList({
                     {formatDateTime(row.submissionDeadline)}
                   </span>
                   {isTenderDeadlineOverdue(row, today) ? (
-                    <span className="mt-1 inline-flex rounded-[var(--radius-control)] bg-[var(--status-cancelled)] px-2 py-0.5 text-xs font-semibold text-white">
+                    <span className="mt-1 inline-flex rounded-ui-control bg-[var(--ds-danger)] px-2 py-0.5 text-xs font-semibold text-on-status">
                       Süre doldu
                     </span>
                   ) : isTenderDeadlineUpcoming(row, today) ? (
-                    <span className="mt-1 inline-flex rounded-[var(--radius-control)] bg-[var(--status-process)] px-2 py-0.5 text-xs font-semibold text-white">
+                    <span className="mt-1 inline-flex rounded-ui-control bg-[var(--ds-info)] px-2 py-0.5 text-xs font-semibold text-on-status">
                       Yaklaşıyor
                     </span>
                   ) : null}
@@ -1786,7 +2086,7 @@ function TenderList({
                   <div className="flex flex-wrap justify-end gap-1">
                     <button
                       aria-label={`BOQ Düzenle ${row.tenderNo}`}
-                      className="h-8 rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] px-2 text-xs font-semibold transition hover:bg-[var(--primary-fixed)]"
+                      className="h-8 rounded-ui-control border border-divider bg-surface-muted px-2 text-xs font-semibold text-content transition-colors hover:border-brand-primary"
                       onClick={() => onEditBoq(row)}
                       type="button"
                     >
@@ -1795,7 +2095,7 @@ function TenderList({
                     {row.status === "Kazanıldı" && !row.convertedSiteCode ? (
                       <button
                         aria-label={`Şantiye Aç ${row.tenderNo}`}
-                        className="h-8 rounded-[var(--radius-control)] border border-[var(--primary)] bg-[var(--primary-fixed)] px-2 text-xs font-semibold text-[var(--primary)] transition hover:bg-[var(--surface-container-low)]"
+                        className="h-8 rounded-ui-control border border-brand-primary bg-brand-primary-subtle px-2 text-xs font-semibold text-brand-primary transition-colors hover:bg-surface-selected"
                         onClick={() => onConvertToSite(row)}
                         type="button"
                       >
@@ -1828,7 +2128,7 @@ function TenderStatusActions({
 
   if (nextStatuses.length === 0) {
     return (
-      <span className="text-xs font-semibold text-[var(--on-surface-variant)]">
+      <span className="text-xs font-semibold text-content-subtle">
         Sonuçlandı
       </span>
     );
@@ -1838,7 +2138,7 @@ function TenderStatusActions({
     <div className="flex flex-wrap justify-end gap-1">
       {nextStatuses.map((nextStatus) => (
         <button
-          className="h-8 rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] px-2 text-xs font-semibold transition hover:bg-[var(--primary-fixed)]"
+          className="h-8 rounded-ui-control border border-divider bg-surface-muted px-2 text-xs font-semibold text-content transition-colors hover:border-brand-primary hover:bg-brand-primary-subtle"
           key={nextStatus}
           onClick={() => onTransition(nextStatus)}
           type="button"
@@ -1856,33 +2156,45 @@ function TenderAlerts({
   summary: ReturnType<typeof summarizeTenders>;
 }) {
   return (
-    <aside className="flex flex-col gap-4">
-      <article className="rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)] p-4">
-        <h2 className="text-sm font-semibold">Yaklaşan son teklif</h2>
+    <aside className="grid gap-4 md:grid-cols-2">
+      <article className="rounded-ui-panel border border-divider bg-surface-raised p-4 shadow-sm">
+        <div className="flex items-center gap-2">
+          <span className="flex h-9 w-9 items-center justify-center rounded-ui-control bg-warning-subtle text-warning">
+            <Icon name="calendar" size={18} />
+          </span>
+          <h2 className="text-lg font-semibold text-content">
+            Yaklaşan son teklif
+          </h2>
+        </div>
         <div className="mt-3 space-y-2 text-sm">
           {summary.upcomingDeadlineRows.length === 0 ? (
-            <p className="text-[var(--on-surface-variant)]">
+            <p className="text-content-subtle">
               7 gün içinde son teklif tarihi yok.
             </p>
           ) : (
             summary.upcomingDeadlineRows.map((row) => (
               <div
-                className="rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] p-3"
+                className="rounded-ui-control border border-divider bg-surface-muted p-3"
                 key={row.id}
               >
                 <p className="font-semibold">{row.tenderNo}</p>
-                <p className="text-[var(--on-surface-variant)]">{row.title}</p>
+                <p className="mt-1 text-content-subtle">{row.title}</p>
               </div>
             ))
           )}
         </div>
       </article>
-      <article className="rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)] p-4">
-        <h2 className="text-sm font-semibold">Sonuç bekleyen</h2>
-        <p className="mt-2 text-sm text-[var(--on-surface-variant)]">
+      <article className="rounded-ui-panel border border-divider bg-surface-raised p-4 shadow-sm">
+        <div className="flex items-center gap-2">
+          <span className="flex h-9 w-9 items-center justify-center rounded-ui-control bg-danger-subtle text-danger">
+            <Icon name="warning" size={18} />
+          </span>
+          <h2 className="text-lg font-semibold text-content">Sonuç bekleyen</h2>
+        </div>
+        <p className="mt-3 text-sm text-content-subtle">
           Sunuldu durumunda olup süresi dolan ihaleler burada takip edilir.
         </p>
-        <p className="mt-3 font-mono text-2xl font-semibold">
+        <p className="mt-3 font-mono text-2xl font-semibold text-content">
           {summary.overdueOpenRows.length}
         </p>
       </article>
@@ -1890,13 +2202,46 @@ function TenderAlerts({
   );
 }
 
-function Metric({ label, value }: { label: string; value: string }) {
+function Metric({
+  compact = false,
+  icon,
+  label,
+  tone = "neutral",
+  value,
+}: {
+  compact?: boolean;
+  icon: IconName;
+  label: string;
+  tone?: "brand" | "neutral" | "success" | "warning";
+  value: string;
+}) {
+  const toneClasses = {
+    brand: "bg-brand-primary-subtle text-brand-primary",
+    neutral: "bg-surface-muted text-content-subtle",
+    success: "bg-success-subtle text-success",
+    warning: "bg-warning-subtle text-warning",
+  }[tone];
+
   return (
-    <article className="rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)] p-4">
-      <p className="text-sm font-semibold text-[var(--on-surface-variant)]">
-        {label}
+    <article className="rounded-ui-panel border border-divider bg-surface-raised p-5 shadow-sm">
+      <div className="flex items-start justify-between gap-3">
+        <p className="text-xs font-semibold uppercase tracking-[0.08em] text-content-subtle">
+          {label}
+        </p>
+        <span
+          className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-ui-control ${toneClasses}`}
+        >
+          <Icon name={icon} size={19} />
+        </span>
+      </div>
+      <p
+        className={
+          "mt-5 font-mono font-semibold tabular-nums text-content " +
+          (compact ? "text-lg leading-7" : "text-2xl")
+        }
+      >
+        {value}
       </p>
-      <p className="mt-2 font-mono text-2xl font-semibold">{value}</p>
     </article>
   );
 }
@@ -1904,7 +2249,7 @@ function Metric({ label, value }: { label: string; value: string }) {
 function StatusBadge({ status }: { status: TenderStatus }) {
   return (
     <span
-      className={`inline-flex rounded-[var(--radius-control)] border px-2 py-1 text-xs font-semibold ${statusClass[status]}`}
+      className={`inline-flex rounded-ui-control border px-2 py-1 text-xs font-semibold ${statusClass[status]}`}
     >
       {status}
     </span>
@@ -1939,4 +2284,38 @@ function formatDateTime(value: string) {
     month: "2-digit",
     year: "numeric",
   }).format(date);
+}
+
+function buildTenderCsvHref(rows: TenderRow[]) {
+  const headers = [
+    "İhale No",
+    "EKAP / İKN",
+    "Başlık",
+    "İhale Makamı",
+    "Durum",
+    "Son Teklif",
+    "Yaklaşık Bedel",
+    "Teklif Bedeli",
+    "Sözleşme Bedeli",
+  ];
+  const csvRows = rows.map((row) => [
+    row.tenderNo,
+    row.ikn,
+    row.title,
+    row.authorityName,
+    row.status,
+    row.submissionDeadline,
+    String(row.estimatedValue),
+    String(row.bidValue),
+    String(row.contractValue),
+  ]);
+  const csv = [headers, ...csvRows]
+    .map((values) => values.map(escapeCsvValue).join(";"))
+    .join("\r\n");
+
+  return `data:text/csv;charset=utf-8,${encodeURIComponent(`\uFEFF${csv}`)}`;
+}
+
+function escapeCsvValue(value: string) {
+  return `"${value.replaceAll('"', '""')}"`;
 }

@@ -32,6 +32,8 @@ model Tenant {
   constructionMeasurementSheets ConstructionMeasurementSheet[]
   constructionExtraWorks ConstructionExtraWork[]
   constructionDeductionMovements ConstructionDeductionMovement[]
+  constructionDeductionRules ConstructionDeductionRule[]
+  constructionDeductionRuleApplications ConstructionDeductionRuleApplication[]
   constructionFinancialMovements ConstructionFinancialMovement[]
   constructionPriceRevisions ConstructionContractItemPriceRevision[]
   expenses                   Expense[]
@@ -90,6 +92,8 @@ model Company {
   constructionMeasurementSheets ConstructionMeasurementSheet[]
   constructionExtraWorks ConstructionExtraWork[]
   constructionDeductionMovements ConstructionDeductionMovement[]
+  constructionDeductionRules ConstructionDeductionRule[]
+  constructionDeductionRuleApplications ConstructionDeductionRuleApplication[]
   constructionFinancialMovements ConstructionFinancialMovement[]
   constructionPriceRevisions ConstructionContractItemPriceRevision[]
   expenses                   Expense[]
@@ -152,6 +156,8 @@ model Period {
   constructionMeasurementSheets ConstructionMeasurementSheet[]
   constructionExtraWorks ConstructionExtraWork[]
   constructionDeductionMovements ConstructionDeductionMovement[]
+  constructionDeductionRules ConstructionDeductionRule[]
+  constructionDeductionRuleApplications ConstructionDeductionRuleApplication[]
   constructionFinancialMovements ConstructionFinancialMovement[]
   constructionPriceRevisions ConstructionContractItemPriceRevision[]
   expenses                   Expense[]
@@ -1329,6 +1335,7 @@ model ConstructionProject {
   period          Period   @relation(fields: [periodId], references: [id], onDelete: Cascade)
   contractItems   ConstructionContractItem[]
   progressPayments ConstructionProgressPayment[]
+  deductionRules  ConstructionDeductionRule[]
 
   @@unique([tenantId, companyId, periodId, code])
   @@index([tenantId, companyId, periodId, status])
@@ -1417,6 +1424,7 @@ model ConstructionProgressPayment {
   measurementSheets     ConstructionMeasurementSheet[]
   extraWorks            ConstructionExtraWork[]
   deductionMovements    ConstructionDeductionMovement[]
+  deductionRuleApplications ConstructionDeductionRuleApplication[]
   financialMovements    ConstructionFinancialMovement[]
 
   @@unique([projectId, sequenceNo])
@@ -1532,8 +1540,94 @@ model ConstructionDeductionMovement {
   company           Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
   period            Period   @relation(fields: [periodId], references: [id], onDelete: Cascade)
   progressPayment   ConstructionProgressPayment @relation(fields: [progressPaymentId], references: [id], onDelete: Cascade)
+  ruleApplication   ConstructionDeductionRuleApplication?
 
   @@index([tenantId, companyId, periodId, progressPaymentId, category])
+}
+
+model ConstructionDeductionRule {
+  id                String   @id @default(cuid())
+  tenantId          String
+  companyId         String
+  periodId          String
+  projectId         String
+  ruleKey           String
+  code              String
+  name              String
+  category          String
+  description       String?
+  revisionNo        Int
+  calculationType   String
+  baseType          String?
+  rate              Decimal? @db.Decimal(9, 4)
+  fixedAmount       Decimal? @db.Decimal(18, 2)
+  minimumAmount     Decimal? @db.Decimal(18, 2)
+  maximumAmount     Decimal? @db.Decimal(18, 2)
+  taxMode           String   @default("NONE")
+  taxRate           Decimal  @db.Decimal(5, 2) @default(0)
+  priority          Int      @default(0)
+  effectiveFrom     DateTime
+  effectiveTo       DateTime?
+  isActive          Boolean  @default(true)
+  autoApply         Boolean  @default(false)
+  supersedesRuleId  String?  @unique
+  createdBy         String
+  updatedBy         String
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  tenant            Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company           Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  period            Period   @relation(fields: [periodId], references: [id], onDelete: Cascade)
+  project           ConstructionProject @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  supersedesRule    ConstructionDeductionRule? @relation("ConstructionDeductionRuleRevisions", fields: [supersedesRuleId], references: [id])
+  nextRevisions     ConstructionDeductionRule[] @relation("ConstructionDeductionRuleRevisions")
+  applications      ConstructionDeductionRuleApplication[]
+
+  @@unique([projectId, ruleKey, revisionNo])
+  @@unique([projectId, code, revisionNo])
+  @@index([tenantId, companyId, periodId, projectId, isActive])
+  @@index([projectId, effectiveFrom, effectiveTo])
+}
+
+model ConstructionDeductionRuleApplication {
+  id                  String   @id @default(cuid())
+  tenantId            String
+  companyId           String
+  periodId            String
+  progressPaymentId   String
+  deductionRuleId     String
+  deductionMovementId String   @unique
+  ruleKey             String
+  ruleCode            String
+  ruleName            String
+  ruleRevisionNo      Int
+  calculationType     String
+  baseType            String?
+  baseAmount          Decimal  @db.Decimal(18, 2)
+  rate                Decimal? @db.Decimal(9, 4)
+  fixedAmount         Decimal? @db.Decimal(18, 2)
+  minimumAmount       Decimal? @db.Decimal(18, 2)
+  maximumAmount       Decimal? @db.Decimal(18, 2)
+  taxMode             String
+  taxRate             Decimal  @db.Decimal(5, 2)
+  taxAmount           Decimal  @db.Decimal(18, 2)
+  netAmount           Decimal  @db.Decimal(18, 2)
+  totalAmount         Decimal  @db.Decimal(18, 2)
+  applicationKey      String   @unique
+  appliedBy           String
+  updatedBy           String
+  appliedAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+  tenant              Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company             Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  period              Period   @relation(fields: [periodId], references: [id], onDelete: Cascade)
+  progressPayment     ConstructionProgressPayment @relation(fields: [progressPaymentId], references: [id], onDelete: Cascade)
+  deductionRule       ConstructionDeductionRule @relation(fields: [deductionRuleId], references: [id], onDelete: Restrict)
+  deductionMovement   ConstructionDeductionMovement @relation(fields: [deductionMovementId], references: [id], onDelete: Cascade)
+
+  @@unique([progressPaymentId, ruleKey])
+  @@index([tenantId, companyId, periodId, progressPaymentId])
+  @@index([deductionRuleId])
 }
 
 model ConstructionFinancialMovement {

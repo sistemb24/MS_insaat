@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+
+<html class="light" lang="tr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>NOA İnşaat - Ayarlar</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary": "#ffffff",
+                        "text-muted": "#64748B",
+                        "on-tertiary-fixed": "#351000",
+                        "on-background": "#191c1e",
+                        "outline-variant": "#c7c4d8",
+                        "error": "#ba1a1a",
+                        "surface-variant": "#e0e3e5",
+                        "on-secondary-fixed-variant": "#3f465c",
+                        "tertiary-fixed-dim": "#ffb695",
+                        "danger-rose": "#E11D48",
+                        "decorative-purple": "#800080",
+                        "inverse-on-surface": "#eff1f3",
+                        "primary-fixed-dim": "#c3c0ff",
+                        "surface-container-highest": "#e0e3e5",
+                        "tertiary": "#7e3000",
+                        "surface-bright": "#f7f9fb",
+                        "surface-tint": "#4d44e3",
+                        "warning-amber": "#F59E0B",
+                        "on-tertiary-fixed-variant": "#7b2f00",
+                        "on-primary": "#ffffff",
+                        "primary-fixed": "#e2dfff",
+                        "on-tertiary-container": "#ffd2be",
+                        "error-container": "#ffdad6",
+                        "secondary-fixed": "#dae2fd",
+                        "on-error": "#ffffff",
+                        "secondary-fixed-dim": "#bec6e0",
+                        "primary": "#3525cd",
+                        "success-emerald": "#10B981",
+                        "tertiary-fixed": "#ffdbcc",
+                        "inverse-primary": "#c3c0ff",
+                        "on-error-container": "#93000a",
+                        "surface-dim": "#d8dadc",
+                        "on-primary-container": "#dad7ff",
+                        "surface-container-high": "#e6e8ea",
+                        "surface-container": "#eceef0",
+                        "on-surface-variant": "#464555",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-fixed": "#0f0069",
+                        "outline": "#777587",
+                        "decorative-navy": "#000080",
+                        "on-secondary-fixed": "#131b2e",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary-container": "#5c647a",
+                        "surface-white": "#FFFFFF",
+                        "secondary-container": "#dae2fd",
+                        "border-slate": "#E2E8F0",
+                        "background": "#f7f9fb",
+                        "secondary": "#565e74",
+                        "on-primary-fixed-variant": "#3323cc",
+                        "on-surface": "#191c1e",
+                        "tertiary-container": "#a44100",
+                        "surface": "#f7f9fb",
+                        "inverse-surface": "#2d3133",
+                        "primary-container": "#4f46e5",
+                        "surface-container-low": "#f2f4f6"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-sm": "0.5rem",
+                        "grid-cell-px": "0.75rem",
+                        "sidebar-width": "260px",
+                        "header-height": "64px",
+                        "sidebar-collapsed": "80px",
+                        "stack-md": "1rem",
+                        "grid-cell-py": "0.5rem",
+                        "container-gap": "1.5rem"
+                    },
+                    "fontFamily": {
+                        "headline-lg-mobile": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "headline-sm": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "data-mono": ["JetBrains Mono"],
+                        "label-caps": ["Inter"],
+                        "headline-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "700" }],
+                        "body-sm": ["13px", { "lineHeight": "18px", "fontWeight": "400" }],
+                        "headline-lg": ["30px", { "lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "data-mono": ["13px", { "lineHeight": "16px", "fontWeight": "500" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            background-color: theme('colors.background');
+            color: theme('colors.on-background');
+        }
+        /* Custom scrollbar for webkit */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: theme('colors.outline-variant');
+            border-radius: theme('borderRadius.full');
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: theme('colors.outline');
+        }
+
+        .soft-shadow {
+            box-shadow: 0 1px 3px rgba(79, 70, 229, 0.08), 0 1px 2px rgba(79, 70, 229, 0.04);
+        }
+    </style>
+</head>
+<body class="font-body-md text-body-md md:hidden antialiased flex flex-col min-h-screen relative pb-20">
+<!-- TopAppBar Component -->
+<header class="sticky top-0 z-50 flex items-center justify-between w-full h-header-height px-4 bg-surface dark:bg-on-background shadow-sm">
+<button aria-label="Geri" class="p-2 text-primary dark:text-primary-fixed hover:bg-surface-container-low dark:hover:bg-surface-variant rounded-full transition-colors active:opacity-80 transition-opacity duration-150">
+<span class="material-symbols-outlined" data-icon="arrow_back">arrow_back</span>
+</button>
+<h1 class="text-headline-sm font-headline-sm font-bold text-primary dark:text-primary-fixed truncate px-4 flex-1 text-center">
+            Ayarlar
+        </h1>
+<button aria-label="Daha fazla seçenek" class="p-2 text-primary dark:text-primary-fixed hover:bg-surface-container-low dark:hover:bg-surface-variant rounded-full transition-colors active:opacity-80 transition-opacity duration-150">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-1 p-4 space-y-container-gap overflow-y-auto">
+<!-- Section 1: Firma Profil Bilgileri -->
+<section class="bg-surface-white rounded-xl soft-shadow p-5 space-y-5">
+<div class="flex items-center space-x-3 border-b border-surface-container-highest pb-3">
+<span class="material-symbols-outlined text-primary" data-icon="domain" style="font-variation-settings: 'FILL' 1;">domain</span>
+<h2 class="text-headline-sm font-headline-sm text-on-surface">Firma Profili</h2>
+</div>
+<div class="space-y-4">
+<div class="flex flex-col space-y-1.5">
+<label class="text-label-caps font-label-caps text-on-surface-variant" for="companyName">Firma Adı</label>
+<input class="w-full px-3 py-2 bg-surface-container-lowest border border-border-slate rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-container focus:border-transparent transition-shadow text-body-md font-body-md text-on-surface placeholder-text-muted" id="companyName" type="text" value="NOA İnşaat A.Ş."/>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="flex flex-col space-y-1.5">
+<label class="text-label-caps font-label-caps text-on-surface-variant" for="taxNumber">Vergi Numarası</label>
+<input class="w-full px-3 py-2 bg-surface-container-lowest border border-border-slate rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-container focus:border-transparent transition-shadow text-body-md font-body-md text-on-surface font-data-mono" id="taxNumber" type="text" value="6310123456"/>
+</div>
+<div class="flex flex-col space-y-1.5">
+<label class="text-label-caps font-label-caps text-on-surface-variant" for="taxOffice">Vergi Dairesi</label>
+<input class="w-full px-3 py-2 bg-surface-container-lowest border border-border-slate rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-container focus:border-transparent transition-shadow text-body-md font-body-md text-on-surface" id="taxOffice" type="text" value="Şişli V.D."/>
+</div>
+</div>
+<div class="flex flex-col space-y-1.5">
+<label class="text-label-caps font-label-caps text-on-surface-variant" for="address">Adres</label>
+<textarea class="w-full px-3 py-2 bg-surface-container-lowest border border-border-slate rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-container focus:border-transparent transition-shadow text-body-md font-body-md text-on-surface resize-none" id="address" rows="3">Büyükdere Cad. No: 123
+Şişli, İstanbul</textarea>
+</div>
+</div>
+</section>
+<!-- Section 2: Finansal Tercihler -->
+<section class="bg-surface-white rounded-xl soft-shadow p-5 space-y-5 mb-8">
+<div class="flex items-center space-x-3 border-b border-surface-container-highest pb-3">
+<span class="material-symbols-outlined text-primary" data-icon="account_balance_wallet" style="font-variation-settings: 'FILL' 1;">account_balance_wallet</span>
+<h2 class="text-headline-sm font-headline-sm text-on-surface">Finansal Tercihler</h2>
+</div>
+<div class="space-y-5">
+<div class="flex flex-col space-y-1.5">
+<label class="text-label-caps font-label-caps text-on-surface-variant" for="baseCurrency">Baz Para Birimi</label>
+<div class="relative">
+<select class="w-full px-3 py-2 bg-surface-container-lowest border border-border-slate rounded-lg appearance-none focus:outline-none focus:ring-2 focus:ring-primary-container focus:border-transparent transition-shadow text-body-md font-body-md text-on-surface pr-10" id="baseCurrency">
+<option selected="" value="TRY">TRY - Türk Lirası</option>
+<option value="USD">USD - Amerikan Doları</option>
+<option value="EUR">EUR - Euro</option>
+</select>
+<div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="expand_more">expand_more</span>
+</div>
+</div>
+</div>
+<div class="flex items-center justify-between py-2 border-b border-surface-container border-dashed">
+<div class="flex flex-col">
+<span class="text-body-md font-body-md font-medium text-on-surface">Çoklu Dövize İzin Ver</span>
+<span class="text-body-sm font-body-sm text-text-muted">İşlemlerde farklı kurlar kullanılabilir.</span>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-surface-container-high peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary-container rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-container"></div>
+</label>
+</div>
+<div class="flex items-center justify-between py-2">
+<div class="flex flex-col">
+<span class="text-body-md font-body-md font-medium text-on-surface">KDV Dağılımı Göster</span>
+<span class="text-body-sm font-body-sm text-text-muted">Listelerde detaylı vergi kırılımı.</span>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-surface-container-high peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary-container rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-container"></div>
+</label>
+</div>
+</div>
+</section>
+<!-- Save Button Area -->
+<div class="pt-4 pb-8 flex justify-center">
+<button class="w-full md:w-auto bg-primary-container text-on-primary font-body-md font-medium py-3 px-6 rounded-lg shadow-sm hover:opacity-90 active:scale-[0.98] transition-all flex items-center justify-center space-x-2">
+<span class="material-symbols-outlined" data-icon="save">save</span>
+<span>Değişiklikleri Kaydet</span>
+</button>
+</div>
+</main>
+<!-- BottomNavBar Component -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-2 bg-surface dark:bg-on-background border-t border-outline-variant dark:border-outline md:hidden">
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-surface-variant px-3 py-1 hover:text-primary dark:hover:text-primary-fixed group w-16" href="#">
+<div class="px-4 py-1 rounded-full group-hover:bg-surface-container-low transition-colors duration-200">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+</div>
+<span class="text-label-caps font-label-caps mt-1">Özet</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-surface-variant px-3 py-1 hover:text-primary dark:hover:text-primary-fixed group w-16" href="#">
+<div class="px-4 py-1 rounded-full group-hover:bg-surface-container-low transition-colors duration-200">
+<span class="material-symbols-outlined" data-icon="build">build</span>
+</div>
+<span class="text-label-caps font-label-caps mt-1">Araçlar</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-surface-variant px-3 py-1 hover:text-primary dark:hover:text-primary-fixed group w-16" href="#">
+<div class="px-4 py-1 rounded-full group-hover:bg-surface-container-low transition-colors duration-200">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+</div>
+<span class="text-label-caps font-label-caps mt-1">Personel</span>
+</a>
+<a aria-current="page" class="flex flex-col items-center justify-center bg-secondary-container dark:bg-on-secondary-fixed-variant text-on-secondary-container dark:text-secondary-fixed rounded-xl px-3 py-1 scale-95 transition-transform duration-200 w-16" href="#">
+<div class="px-4 py-1 rounded-full">
+<span class="material-symbols-outlined" data-icon="settings" style="font-variation-settings: 'FILL' 1;">settings</span>
+</div>
+<span class="text-label-caps font-label-caps mt-1 font-bold">Ayarlar</span>
+</a>
+</nav>
+</body></html>

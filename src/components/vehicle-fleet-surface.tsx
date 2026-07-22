@@ -480,30 +480,46 @@ export function VehicleFleetSurface({
     setFormErrors(result.errors);
   }
   return (
-    <section className="mx-auto flex max-w-7xl flex-col gap-4">
-      <header className="rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)] p-5">
-        <p className="text-xs font-semibold uppercase tracking-wide text-[var(--primary)]">
-          P2 araç ve GPS
-        </p>
-        <div className="mt-2 flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
-          <div>
-            <h1 className="text-2xl font-semibold tracking-normal">
-              Araç / Filo Yönetimi
-            </h1>
-            <p className="mt-2 max-w-3xl text-sm leading-6 text-[var(--on-surface-variant)]">
-              Araç kartı, GPS konumu, son hareket zamanı, yakıt seviyesi ve
-              bakım uyarısı iş akışları için Arvento sandbox read-model yüzeyi.
-            </p>
+    <section
+      className="mx-auto flex max-w-[1440px] flex-col gap-4"
+      data-vehicle-fleet-workspace="true"
+    >
+      <header className="overflow-hidden rounded-ui-panel border border-divider bg-surface-raised shadow-sm">
+        <div className="bg-gradient-to-r from-brand-primary/10 via-surface-raised to-surface-raised p-5 sm:p-6">
+          <p className="text-xs font-bold uppercase tracking-[0.16em] text-brand-primary">
+            Operasyon · Araç ve filo
+          </p>
+          <div className="mt-2 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+            <div>
+              <h1 className="text-2xl font-bold tracking-tight text-content sm:text-3xl">
+                Araç ve Filo Yönetimi
+              </h1>
+              <p className="mt-2 max-w-3xl text-sm leading-6 text-content-muted">
+                Araç kartları, saha atamaları, bakım takvimi, operasyon
+                uyarıları ve sandbox telemetri görünümü tek çalışma alanında.
+              </p>
+            </div>
+            <div className="rounded-ui-control border border-warning/30 bg-warning-subtle px-3 py-2 text-xs font-semibold text-warning">
+              Arvento sandbox · canlı GPS bağlantısı yok
+            </div>
           </div>
-          <span className="rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] px-3 py-2 text-xs font-semibold text-[var(--on-surface-variant)]">
-            Canlı API kapalı
-          </span>
+          <nav aria-label="Araç çalışma alanı bölümleri" className="mt-5 flex flex-wrap gap-2">
+            <a className="rounded-ui-control bg-brand-primary px-3 py-2 text-xs font-semibold text-on-brand" href="#vehicle-tracking">
+              Filo Takibi
+            </a>
+            <a className="rounded-ui-control border border-divider bg-surface-raised px-3 py-2 text-xs font-semibold text-content" href="#vehicle-alerts">
+              Bakım ve Uyarılar
+            </a>
+            <a className="rounded-ui-control border border-divider bg-surface-raised px-3 py-2 text-xs font-semibold text-content" href="#vehicle-history">
+              İşlem Geçmişi
+            </a>
+          </nav>
         </div>
       </header>
 
       {createVehicleCard ? (
-        <section className="overflow-hidden rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)]">
-          <div className="border-b border-[var(--grid-border)] px-4 py-3">
+        <section className="overflow-hidden rounded-ui-panel border border-divider bg-surface-raised">
+          <div className="border-b border-divider px-4 py-3">
             <h2 className="text-sm font-semibold">
               {editingVehicleId ? "Araç Kartı Düzenle" : "Araç Kartı"}
             </h2>
@@ -672,7 +688,7 @@ export function VehicleFleetSurface({
             <div className="flex items-end gap-2">
               {editingVehicleId ? (
                 <button
-                  className="min-h-10 rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] px-3 py-2 text-sm font-semibold text-[var(--on-surface)] disabled:cursor-not-allowed disabled:opacity-60"
+                  className="min-h-10 rounded-ui-control border border-divider bg-surface-muted px-3 py-2 text-sm font-semibold text-content disabled:cursor-not-allowed disabled:opacity-60"
                   disabled={isPending}
                   onClick={handleVehicleCardEditCancel}
                   type="button"
@@ -681,7 +697,7 @@ export function VehicleFleetSurface({
                 </button>
               ) : null}
               <button
-                className="min-h-10 w-full rounded-[var(--radius-control)] bg-[var(--primary)] px-4 py-2 text-sm font-semibold text-[var(--on-primary)] disabled:cursor-not-allowed disabled:opacity-60"
+                className="min-h-10 w-full rounded-ui-control bg-brand-primary px-4 py-2 text-sm font-semibold text-on-brand disabled:cursor-not-allowed disabled:opacity-60"
                 disabled={isPending}
                 type="submit"
               >
@@ -696,20 +712,20 @@ export function VehicleFleetSurface({
             </div>
           </form>
           {statusMessage || formErrors.length > 0 ? (
-            <div className="border-t border-[var(--grid-border)] px-4 py-3 text-sm">
+            <div className="border-t border-divider px-4 py-3 text-sm">
               {statusMessage ? (
-                <p className="font-semibold text-emerald-700">{statusMessage}</p>
+                <p className="font-semibold text-success">{statusMessage}</p>
               ) : null}
               {formErrors.length > 0 ? (
                 <>
-                  <ul className="space-y-1 font-semibold text-red-700">
+                  <ul className="space-y-1 font-semibold text-danger">
                     {formErrors.map((error) => (
                       <li key={error}>{error}</li>
                     ))}
                   </ul>
                   {hasVehicleUpdateConflict ? (
                     <button
-                      className="mt-3 min-h-9 rounded-[var(--radius-control)] border border-red-200 bg-red-50 px-3 py-2 text-sm font-semibold text-red-700"
+                      className="mt-3 min-h-9 rounded-ui-control border border-danger bg-danger-subtle px-3 py-2 text-sm font-semibold text-danger"
                       onClick={handleVehicleUpdateConflictReload}
                       type="button"
                     >
@@ -723,12 +739,12 @@ export function VehicleFleetSurface({
         </section>
       ) : null}
       {!createVehicleCard && (statusMessage || formErrors.length > 0) ? (
-        <section className="rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)] px-4 py-3 text-sm">
+        <section className="rounded-ui-panel border border-divider bg-surface-raised px-4 py-3 text-sm">
           {statusMessage ? (
-            <p className="font-semibold text-emerald-700">{statusMessage}</p>
+            <p className="font-semibold text-success">{statusMessage}</p>
           ) : null}
           {formErrors.length > 0 ? (
-            <ul className="space-y-1 font-semibold text-red-700">
+            <ul className="space-y-1 font-semibold text-danger">
               {formErrors.map((error) => (
                 <li key={error}>{error}</li>
               ))}
@@ -737,11 +753,11 @@ export function VehicleFleetSurface({
         </section>
       ) : null}
       {activateVehicleCard && passiveVehicleCards.length > 0 ? (
-        <section className="overflow-hidden rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)]">
-          <div className="flex flex-col gap-3 border-b border-[var(--grid-border)] px-4 py-3 md:flex-row md:items-center md:justify-between">
+        <section className="overflow-hidden rounded-ui-panel border border-divider bg-surface-raised">
+          <div className="flex flex-col gap-3 border-b border-divider px-4 py-3 md:flex-row md:items-center md:justify-between">
             <div className="flex flex-wrap items-center gap-2">
               <h2 className="text-sm font-semibold">Pasif Araç Kartları</h2>
-              <span className="rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] px-2 py-1 text-xs font-semibold text-[var(--on-surface-variant)]">
+              <span className="rounded-ui-control border border-divider bg-surface-muted px-2 py-1 text-xs font-semibold text-content-subtle">
                 {passiveVehicleSearchTerm
                   ? `${filteredPassiveVehicleCards.length} / ${passiveVehicleCards.length} pasif kart`
                   : `${passiveVehicleCards.length} pasif kart`}
@@ -751,17 +767,17 @@ export function VehicleFleetSurface({
               {passiveVehicleSearchTerm ? (
                 <button
                   aria-label="Pasif araç aramasını temizle"
-                  className="inline-flex min-h-8 items-center rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] px-3 py-1 text-xs font-semibold text-[var(--on-surface)]"
+                  className="inline-flex min-h-8 items-center rounded-ui-control border border-divider bg-surface-muted px-3 py-1 text-xs font-semibold text-content"
                   onClick={clearPassiveVehicleSearch}
                   type="button"
                 >
                   Pasif Aramayı Temizle
                 </button>
               ) : null}
-              <label className="flex w-full flex-col gap-1 text-xs font-semibold text-[var(--on-surface-variant)] md:max-w-xs">
+              <label className="flex w-full flex-col gap-1 text-xs font-semibold text-content-subtle md:max-w-xs">
                 Pasif araçlarda ara
                 <input
-                  className="min-h-9 rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)] px-3 py-2 text-sm font-medium text-[var(--on-surface)] outline-none focus:border-[var(--primary)]"
+                  className="min-h-9 rounded-ui-control border border-divider bg-surface-raised px-3 py-2 text-sm font-medium text-content outline-none focus:border-brand-primary"
                   onChange={(event) => setPassiveVehicleSearch(event.target.value)}
                   placeholder="Plaka, araç, şantiye, sürücü"
                   type="search"
@@ -775,7 +791,7 @@ export function VehicleFleetSurface({
               aria-label="P2 Pasif Araç Kartları"
               className="min-w-[920px] w-full text-left text-sm"
             >
-              <thead className="bg-[var(--surface-container-low)] text-xs uppercase text-[var(--on-surface-variant)]">
+              <thead className="bg-surface-muted text-xs uppercase text-content-subtle">
                 <tr>
                   <th className="px-4 py-3 font-semibold">Plaka</th>
                   <th className="px-4 py-3 font-semibold">Araç</th>
@@ -794,7 +810,7 @@ export function VehicleFleetSurface({
                 <th className="px-4 py-3 font-semibold">İşlem</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[var(--grid-border)]">
+              <tbody className="divide-y divide-divider">
                 {filteredPassiveVehicleCards.map((vehicleCard) => (
                   <tr key={vehicleCard.id}>
                     <td className="px-4 py-3 font-mono text-xs font-semibold">
@@ -855,7 +871,7 @@ export function VehicleFleetSurface({
                       {updateVehicleCard ? (
                         <button
                           aria-label={`${vehicleCard.plate} düzenle`}
-                          className="min-h-8 rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] px-3 py-1 text-xs font-semibold text-[var(--on-surface)] disabled:cursor-not-allowed disabled:opacity-60"
+                          className="min-h-8 rounded-ui-control border border-divider bg-surface-muted px-3 py-1 text-xs font-semibold text-content disabled:cursor-not-allowed disabled:opacity-60"
                           disabled={isPending}
                           onClick={() => handleVehicleCardEdit(vehicleCard)}
                           type="button"
@@ -865,7 +881,7 @@ export function VehicleFleetSurface({
                       ) : null}
                       <button
                         aria-label={`${vehicleCard.plate} aktifleştir`}
-                        className="min-h-8 rounded-[var(--radius-control)] border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700 disabled:cursor-not-allowed disabled:opacity-60"
+                        className="min-h-8 rounded-ui-control border border-success bg-success-subtle px-3 py-1 text-xs font-semibold text-success disabled:cursor-not-allowed disabled:opacity-60"
                         disabled={isPending}
                         onClick={() =>
                           handleActivateVehicleCardRequest({
@@ -885,7 +901,7 @@ export function VehicleFleetSurface({
                 {filteredPassiveVehicleCards.length === 0 ? (
                   <tr>
                     <td
-                      className="px-4 py-6 text-center text-sm font-semibold text-[var(--on-surface-variant)]"
+                      className="px-4 py-6 text-center text-sm font-semibold text-content-subtle"
                     colSpan={15}
                   >
                     Pasif araç bulunamadı.
@@ -897,28 +913,27 @@ export function VehicleFleetSurface({
           </div>
         </section>
       ) : null}
-      <div className="grid gap-3 md:grid-cols-3 xl:grid-cols-10">
-        <Metric label="Toplam araç" value={String(summary.vehicleCount)} />
-        <Metric label="Hareket" value={String(summary.movingCount)} />
-        <Metric label="Park" value={String(summary.parkedCount)} />
+      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+        <Metric emphasized label="Toplam araç" value={String(summary.vehicleCount)} />
+        <Metric emphasized label="Hareket" value={String(summary.movingCount)} />
+        <Metric emphasized label="Park" value={String(summary.parkedCount)} />
+        <Metric emphasized label="Kritik uyarı" value={String(summary.criticalAlertCount)} />
+      </div>
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
         <Metric label="Sinyal kaybı" value={String(summary.signalLostCount)} />
         <Metric label="Uyarı" value={String(summary.alertCount)} />
-        <Metric label="Kritik uyarı" value={String(summary.criticalAlertCount)} />
         <Metric label="Sigorta uyarısı" value={String(summary.insuranceAlertCount)} />
         <Metric label="Muayene uyarısı" value={String(summary.inspectionAlertCount)} />
         <Metric label="Bakım uyarısı" value={String(summary.maintenanceAlertCount)} />
-        <Metric
-          label="Ortalama yakıt"
-          value={`${summary.averageFuelLevelPercent}%`}
-        />
+        <Metric label="Ortalama yakıt" value={`${summary.averageFuelLevelPercent}%`} />
       </div>
 
-      <section className="overflow-hidden rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)]">
-        <div className="border-b border-[var(--grid-border)] px-4 py-3">
+      <section className="scroll-mt-20 overflow-hidden rounded-ui-panel border border-divider bg-surface-raised shadow-sm" id="vehicle-alerts">
+        <div className="border-b border-divider px-4 py-3">
           <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
             <h2 className="text-sm font-semibold">Arvento Araç Uyarıları</h2>
             <div className="flex flex-wrap items-center justify-end gap-2">
-              <span className="text-xs font-semibold text-[var(--on-surface-variant)]">
+              <span className="text-xs font-semibold text-content-subtle">
                 {alertSearchTerm || alertTypeFilter !== "all"
                   ? `${filteredAlerts.length} / ${alerts.length} uyarı`
                   : `Son ${alerts.length} uyarı`}
@@ -926,28 +941,28 @@ export function VehicleFleetSurface({
               {alertSearchTerm || alertTypeFilter !== "all" ? (
                 <button
                   aria-label="Uyarı aramasını temizle"
-                  className="inline-flex min-h-8 items-center rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] px-3 py-1 text-xs font-semibold text-[var(--on-surface)]"
+                  className="inline-flex min-h-8 items-center rounded-ui-control border border-divider bg-surface-muted px-3 py-1 text-xs font-semibold text-content"
                   onClick={clearAlertSearch}
                   type="button"
                 >
                   Uyarı Aramasını Temizle
                 </button>
               ) : null}
-              <label className="flex w-full flex-col gap-1 text-xs font-semibold text-[var(--on-surface-variant)] md:max-w-sm">
+              <label className="flex w-full flex-col gap-1 text-xs font-semibold text-content-subtle md:max-w-sm">
                 Uyarılarda ara
                 <input
-                  className="min-h-9 rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)] px-3 py-2 text-sm font-medium text-[var(--on-surface)] outline-none focus:border-[var(--primary)]"
+                  className="min-h-9 rounded-ui-control border border-divider bg-surface-raised px-3 py-2 text-sm font-medium text-content outline-none focus:border-brand-primary"
                   onChange={(event) => setAlertSearch(event.target.value)}
                   placeholder="Öncelik, uyarı, plaka, not"
                   type="search"
                   value={alertSearch}
                 />
               </label>
-              <label className="flex w-full flex-col gap-1 text-xs font-semibold text-[var(--on-surface-variant)] md:max-w-xs">
+              <label className="flex w-full flex-col gap-1 text-xs font-semibold text-content-subtle md:max-w-xs">
                 Uyarı türü
                 <select
                   aria-label="Uyarı türü filtresi"
-                  className="min-h-9 rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)] px-3 py-2 text-sm font-medium text-[var(--on-surface)] outline-none focus:border-[var(--primary)]"
+                  className="min-h-9 rounded-ui-control border border-divider bg-surface-raised px-3 py-2 text-sm font-medium text-content outline-none focus:border-brand-primary"
                   onChange={(event) =>
                     setAlertTypeFilter(event.target.value as VehicleAlertTypeFilter)
                   }
@@ -969,7 +984,7 @@ export function VehicleFleetSurface({
             aria-label="P2 Arvento Araç Uyarıları"
             className="min-w-[860px] w-full text-left text-sm"
           >
-            <thead className="bg-[var(--surface-container-low)] text-xs uppercase text-[var(--on-surface-variant)]">
+            <thead className="bg-surface-muted text-xs uppercase text-content-subtle">
               <tr>
                 <th className="px-4 py-3 font-semibold">Öncelik</th>
                 <th className="px-4 py-3 font-semibold">Uyarı</th>
@@ -978,12 +993,12 @@ export function VehicleFleetSurface({
                 <th className="px-4 py-3 font-semibold">Operasyon Notu</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[var(--grid-border)]">
+            <tbody className="divide-y divide-divider">
               {filteredAlerts.map((alert) => (
                 <tr key={alert.id}>
                   <td className="px-4 py-3">
                     <span
-                      className={`inline-flex rounded-[var(--radius-control)] border px-2 py-1 text-xs font-semibold ${getSeverityClassName(
+                      className={`inline-flex rounded-ui-control border px-2 py-1 text-xs font-semibold ${getSeverityClassName(
                         alert.severity,
                       )}`}
                     >
@@ -997,7 +1012,7 @@ export function VehicleFleetSurface({
                   <td className="px-4 py-3 font-mono text-xs">
                     {alert.dueDate ?? "-"}
                   </td>
-                  <td className="px-4 py-3 text-[var(--on-surface-variant)]">
+                  <td className="px-4 py-3 text-content-subtle">
                     {alert.detail}
                   </td>
                 </tr>
@@ -1005,7 +1020,7 @@ export function VehicleFleetSurface({
               {filteredAlerts.length === 0 ? (
                 <tr>
                   <td
-                    className="px-4 py-6 text-center text-sm font-semibold text-[var(--on-surface-variant)]"
+                    className="px-4 py-6 text-center text-sm font-semibold text-content-subtle"
                     colSpan={5}
                   >
                     Uyarı bulunamadı.
@@ -1017,12 +1032,12 @@ export function VehicleFleetSurface({
         </div>
       </section>
 
-      <section className="overflow-hidden rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)]">
-        <div className="border-b border-[var(--grid-border)] px-4 py-3">
+      <section className="scroll-mt-20 overflow-hidden rounded-ui-panel border border-divider bg-surface-raised shadow-sm" id="vehicle-tracking">
+        <div className="border-b border-divider px-4 py-3">
           <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
             <h2 className="text-sm font-semibold">Arvento Araç Takip Listesi</h2>
             <div className="flex flex-wrap items-center justify-end gap-2">
-              <span className="text-xs font-semibold text-[var(--on-surface-variant)]">
+              <span className="text-xs font-semibold text-content-subtle">
                 {activeVehicleSearchTerm
                   ? `${filteredRows.length} / ${rows.length} araç`
                   : `Son ${rows.length} araç`}
@@ -1030,17 +1045,17 @@ export function VehicleFleetSurface({
               {activeVehicleSearchTerm ? (
                 <button
                   aria-label="Aktif araç aramasını temizle"
-                  className="inline-flex min-h-8 items-center rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] px-3 py-1 text-xs font-semibold text-[var(--on-surface)]"
+                  className="inline-flex min-h-8 items-center rounded-ui-control border border-divider bg-surface-muted px-3 py-1 text-xs font-semibold text-content"
                   onClick={clearActiveVehicleSearch}
                   type="button"
                 >
                   Aktif Aramayı Temizle
                 </button>
               ) : null}
-              <label className="flex w-full flex-col gap-1 text-xs font-semibold text-[var(--on-surface-variant)] md:max-w-sm">
+              <label className="flex w-full flex-col gap-1 text-xs font-semibold text-content-subtle md:max-w-sm">
                 Aktif araçlarda ara
                 <input
-                  className="min-h-9 rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)] px-3 py-2 text-sm font-medium text-[var(--on-surface)] outline-none focus:border-[var(--primary)]"
+                  className="min-h-9 rounded-ui-control border border-divider bg-surface-raised px-3 py-2 text-sm font-medium text-content outline-none focus:border-brand-primary"
                   onChange={(event) => setActiveVehicleSearch(event.target.value)}
                   placeholder="Plaka, araç, şantiye, sürücü, konum"
                   type="search"
@@ -1055,7 +1070,7 @@ export function VehicleFleetSurface({
             aria-label="P2 Arvento Araç Takip Listesi"
             className="min-w-[1460px] w-full text-left text-sm"
           >
-            <thead className="bg-[var(--surface-container-low)] text-xs uppercase text-[var(--on-surface-variant)]">
+            <thead className="bg-surface-muted text-xs uppercase text-content-subtle">
               <tr>
                 <th className="px-4 py-3 font-semibold">Plaka</th>
                 <th className="px-4 py-3 font-semibold">Araç</th>
@@ -1082,7 +1097,7 @@ export function VehicleFleetSurface({
                 ) : null}
               </tr>
             </thead>
-            <tbody className="divide-y divide-[var(--grid-border)]">
+            <tbody className="divide-y divide-divider">
               {filteredRows.map((row) => (
                 <tr key={row.id}>
                   <td className="px-4 py-3 font-mono text-xs font-semibold">
@@ -1167,7 +1182,7 @@ export function VehicleFleetSurface({
                         {updateVehicleCard && vehicleCardsById.has(row.id) ? (
                           <button
                             aria-label={`${row.plate} düzenle`}
-                            className="min-h-8 rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] px-3 py-1 text-xs font-semibold text-[var(--on-surface)] disabled:cursor-not-allowed disabled:opacity-60"
+                            className="min-h-8 rounded-ui-control border border-divider bg-surface-muted px-3 py-1 text-xs font-semibold text-content disabled:cursor-not-allowed disabled:opacity-60"
                             disabled={isPending}
                             onClick={() =>
                               handleVehicleCardEdit(vehicleCardsById.get(row.id)!)
@@ -1180,7 +1195,7 @@ export function VehicleFleetSurface({
                         {deactivateVehicleCard ? (
                           <button
                             aria-label={`${row.plate} pasife al`}
-                            className="min-h-8 rounded-[var(--radius-control)] border border-red-200 bg-red-50 px-3 py-1 text-xs font-semibold text-red-700 disabled:cursor-not-allowed disabled:opacity-60"
+                            className="min-h-8 rounded-ui-control border border-danger bg-danger-subtle px-3 py-1 text-xs font-semibold text-danger disabled:cursor-not-allowed disabled:opacity-60"
                             disabled={isPending}
                             onClick={() =>
                               handleDeactivateVehicleCardRequest({
@@ -1203,7 +1218,7 @@ export function VehicleFleetSurface({
               {filteredRows.length === 0 ? (
                 <tr>
                   <td
-                    className="px-4 py-6 text-center text-sm font-semibold text-[var(--on-surface-variant)]"
+                    className="px-4 py-6 text-center text-sm font-semibold text-content-subtle"
                     colSpan={updateVehicleCard || deactivateVehicleCard ? 21 : 20}
                   >
                     Aktif araç bulunamadı.
@@ -1214,19 +1229,19 @@ export function VehicleFleetSurface({
           </table>
         </div>
       </section>
-      <section className="overflow-hidden rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)]">
-        <div className="flex flex-col gap-3 border-b border-[var(--grid-border)] px-4 py-3">
+      <section className="scroll-mt-20 overflow-hidden rounded-ui-panel border border-divider bg-surface-raised shadow-sm" id="vehicle-history">
+        <div className="flex flex-col gap-3 border-b border-divider px-4 py-3">
           <div className="flex items-center justify-between gap-3">
             <h2 className="text-sm font-semibold">Araç İşlem Geçmişi</h2>
             <div className="flex flex-wrap items-center justify-end gap-2">
-              <span className="text-xs font-semibold text-[var(--on-surface-variant)]">
+              <span className="text-xs font-semibold text-content-subtle">
                 {hasActiveAuditFilter
                   ? `${filteredAuditEntries.length} / ${auditEntries.length} işlem`
                   : `Son ${auditEntries.length} işlem`}
               </span>
               {hasActiveAuditFilter ? (
                 <button
-                  className="inline-flex min-h-8 items-center rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] px-3 py-1 text-xs font-semibold text-[var(--on-surface)]"
+                  className="inline-flex min-h-8 items-center rounded-ui-control border border-divider bg-surface-muted px-3 py-1 text-xs font-semibold text-content"
                   onClick={clearAuditFilters}
                   type="button"
                 >
@@ -1235,7 +1250,7 @@ export function VehicleFleetSurface({
               ) : null}
               {filteredAuditEntries.length > 0 ? (
                 <a
-                  className="inline-flex min-h-8 items-center rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] px-3 py-1 text-xs font-semibold text-[var(--on-surface)]"
+                  className="inline-flex min-h-8 items-center rounded-ui-control border border-divider bg-surface-muted px-3 py-1 text-xs font-semibold text-content"
                   download={buildVehicleAuditCsvFileName()}
                   href={buildVehicleAuditCsvHref(filteredAuditEntries)}
                 >
@@ -1244,7 +1259,7 @@ export function VehicleFleetSurface({
               ) : (
                 <span
                   aria-disabled="true"
-                  className="inline-flex min-h-8 items-center rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] px-3 py-1 text-xs font-semibold text-[var(--on-surface-variant)] opacity-60"
+                  className="inline-flex min-h-8 items-center rounded-ui-control border border-divider bg-surface-muted px-3 py-1 text-xs font-semibold text-content-subtle opacity-60"
                 >
                   CSV Dışa Aktar
                 </span>
@@ -1252,20 +1267,20 @@ export function VehicleFleetSurface({
             </div>
           </div>
           <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-5">
-            <label className="flex flex-col gap-1 text-xs font-semibold text-[var(--on-surface-variant)]">
+            <label className="flex flex-col gap-1 text-xs font-semibold text-content-subtle">
               Plakaya göre filtrele
               <input
-                className="min-h-9 rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)] px-3 py-2 text-sm font-medium text-[var(--on-surface)] outline-none focus:border-[var(--primary)]"
+                className="min-h-9 rounded-ui-control border border-divider bg-surface-raised px-3 py-2 text-sm font-medium text-content outline-none focus:border-brand-primary"
                 onChange={(event) => setAuditPlateFilter(event.target.value)}
                 placeholder="Örn. 34 NOA"
                 type="search"
                 value={auditPlateFilter}
               />
             </label>
-            <label className="flex flex-col gap-1 text-xs font-semibold text-[var(--on-surface-variant)]">
+            <label className="flex flex-col gap-1 text-xs font-semibold text-content-subtle">
               İşleme göre filtrele
               <select
-                className="min-h-9 rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)] px-3 py-2 text-sm font-medium text-[var(--on-surface)] outline-none focus:border-[var(--primary)]"
+                className="min-h-9 rounded-ui-control border border-divider bg-surface-raised px-3 py-2 text-sm font-medium text-content outline-none focus:border-brand-primary"
                 onChange={(event) => setAuditActionFilter(event.target.value)}
                 value={auditActionFilter}
               >
@@ -1277,29 +1292,29 @@ export function VehicleFleetSurface({
                 ))}
               </select>
             </label>
-            <label className="flex flex-col gap-1 text-xs font-semibold text-[var(--on-surface-variant)]">
+            <label className="flex flex-col gap-1 text-xs font-semibold text-content-subtle">
               Kullanıcıya göre filtrele
               <input
-                className="min-h-9 rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)] px-3 py-2 text-sm font-medium text-[var(--on-surface)] outline-none focus:border-[var(--primary)]"
+                className="min-h-9 rounded-ui-control border border-divider bg-surface-raised px-3 py-2 text-sm font-medium text-content outline-none focus:border-brand-primary"
                 onChange={(event) => setAuditUserFilter(event.target.value)}
                 placeholder="Kullanıcı kimliği"
                 type="search"
                 value={auditUserFilter}
               />
             </label>
-            <label className="flex flex-col gap-1 text-xs font-semibold text-[var(--on-surface-variant)]">
+            <label className="flex flex-col gap-1 text-xs font-semibold text-content-subtle">
               Başlangıç tarihi
               <input
-                className="min-h-9 rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)] px-3 py-2 text-sm font-medium text-[var(--on-surface)] outline-none focus:border-[var(--primary)]"
+                className="min-h-9 rounded-ui-control border border-divider bg-surface-raised px-3 py-2 text-sm font-medium text-content outline-none focus:border-brand-primary"
                 onChange={(event) => setAuditStartDate(event.target.value)}
                 type="date"
                 value={auditStartDate}
               />
             </label>
-            <label className="flex flex-col gap-1 text-xs font-semibold text-[var(--on-surface-variant)]">
+            <label className="flex flex-col gap-1 text-xs font-semibold text-content-subtle">
               Bitiş tarihi
               <input
-                className="min-h-9 rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)] px-3 py-2 text-sm font-medium text-[var(--on-surface)] outline-none focus:border-[var(--primary)]"
+                className="min-h-9 rounded-ui-control border border-divider bg-surface-raised px-3 py-2 text-sm font-medium text-content outline-none focus:border-brand-primary"
                 onChange={(event) => setAuditEndDate(event.target.value)}
                 type="date"
                 value={auditEndDate}
@@ -1307,7 +1322,7 @@ export function VehicleFleetSurface({
             </label>
           </div>
           {hasInvalidAuditDateRange ? (
-            <p className="text-sm font-semibold text-red-700" role="alert">
+            <p className="text-sm font-semibold text-danger" role="alert">
               Başlangıç tarihi bitiş tarihinden sonra olamaz.
             </p>
           ) : null}
@@ -1317,7 +1332,7 @@ export function VehicleFleetSurface({
             aria-label="P2 Araç İşlem Geçmişi"
             className="min-w-[860px] w-full text-left text-sm"
           >
-            <thead className="bg-[var(--surface-container-low)] text-xs uppercase text-[var(--on-surface-variant)]">
+            <thead className="bg-surface-muted text-xs uppercase text-content-subtle">
               <tr>
                 <th className="px-4 py-3 font-semibold">Zaman</th>
                 <th className="px-4 py-3 font-semibold">Plaka</th>
@@ -1327,7 +1342,7 @@ export function VehicleFleetSurface({
                 <th className="px-4 py-3 font-semibold">Kullanıcı</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[var(--grid-border)]">
+            <tbody className="divide-y divide-divider">
               {filteredAuditEntries.map((entry) => (
                 <tr key={entry.id}>
                   <td className="px-4 py-3 font-mono text-xs">
@@ -1342,7 +1357,7 @@ export function VehicleFleetSurface({
                   <td className="px-4 py-3">
                     {getVehicleAuditStatus(entry.metadata)}
                   </td>
-                  <td className="px-4 py-3 text-[var(--on-surface-variant)]">
+                  <td className="px-4 py-3 text-content-subtle">
                     {getVehicleAuditChanges(entry.metadata)}
                   </td>
                   <td className="px-4 py-3 font-mono text-xs">
@@ -1353,7 +1368,7 @@ export function VehicleFleetSurface({
               {filteredAuditEntries.length === 0 ? (
                 <tr>
                   <td
-                    className="px-4 py-6 text-center font-semibold text-[var(--on-surface-variant)]"
+                    className="px-4 py-6 text-center font-semibold text-content-subtle"
                     colSpan={6}
                   >
                     {hasInvalidAuditDateRange
@@ -1372,28 +1387,28 @@ export function VehicleFleetSurface({
         <div
           aria-labelledby="vehicle-activation-confirmation-title"
           aria-modal="true"
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 p-4"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-scrim p-4"
           role="dialog"
         >
-          <section className="w-full max-w-md rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)] p-5 shadow-xl">
+          <section className="w-full max-w-md rounded-ui-panel border border-divider bg-surface-raised p-5 shadow-xl">
             <h2
               className="text-base font-semibold"
               id="vehicle-activation-confirmation-title"
             >
               Araç aktifleştirme onayı
             </h2>
-            <p className="mt-3 text-sm text-[var(--on-surface-variant)]">
+            <p className="mt-3 text-sm text-content-subtle">
               {activationConfirmation.plate} aktifleştirilecek.
             </p>
-            <div className="mt-3 rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] px-3 py-2 text-sm">
+            <div className="mt-3 rounded-ui-control border border-divider bg-surface-muted px-3 py-2 text-sm">
               <p className="font-semibold">{activationConfirmation.vehicleLabel}</p>
-              <p className="mt-1 text-[var(--on-surface-variant)]">
+              <p className="mt-1 text-content-subtle">
                 {activationConfirmation.siteName}
               </p>
             </div>
             <div className="mt-5 flex justify-end gap-2">
               <button
-                className="min-h-9 rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] px-3 py-2 text-sm font-semibold text-[var(--on-surface)] disabled:cursor-not-allowed disabled:opacity-60"
+                className="min-h-9 rounded-ui-control border border-divider bg-surface-muted px-3 py-2 text-sm font-semibold text-content disabled:cursor-not-allowed disabled:opacity-60"
                 disabled={isPending}
                 onClick={() => setActivationConfirmation(null)}
                 type="button"
@@ -1401,7 +1416,7 @@ export function VehicleFleetSurface({
                 Vazgeç
               </button>
               <button
-                className="min-h-9 rounded-[var(--radius-control)] bg-emerald-700 px-3 py-2 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-60"
+                className="min-h-9 rounded-ui-control bg-success px-3 py-2 text-sm font-semibold text-on-success disabled:cursor-not-allowed disabled:opacity-60"
                 disabled={isPending}
                 onClick={handleActivateVehicleCardConfirm}
                 type="button"
@@ -1416,28 +1431,28 @@ export function VehicleFleetSurface({
         <div
           aria-labelledby="vehicle-deactivation-confirmation-title"
           aria-modal="true"
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 p-4"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-scrim p-4"
           role="dialog"
         >
-          <section className="w-full max-w-md rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)] p-5 shadow-xl">
+          <section className="w-full max-w-md rounded-ui-panel border border-divider bg-surface-raised p-5 shadow-xl">
             <h2
               className="text-base font-semibold"
               id="vehicle-deactivation-confirmation-title"
             >
               Araç pasife alma onayı
             </h2>
-            <p className="mt-3 text-sm text-[var(--on-surface-variant)]">
+            <p className="mt-3 text-sm text-content-subtle">
               {deactivationConfirmation.plate} pasife alınacak.
             </p>
-            <div className="mt-3 rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] px-3 py-2 text-sm">
+            <div className="mt-3 rounded-ui-control border border-divider bg-surface-muted px-3 py-2 text-sm">
               <p className="font-semibold">{deactivationConfirmation.vehicleLabel}</p>
-              <p className="mt-1 text-[var(--on-surface-variant)]">
+              <p className="mt-1 text-content-subtle">
                 {deactivationConfirmation.siteName}
               </p>
             </div>
             <div className="mt-5 flex justify-end gap-2">
               <button
-                className="min-h-9 rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] px-3 py-2 text-sm font-semibold text-[var(--on-surface)] disabled:cursor-not-allowed disabled:opacity-60"
+                className="min-h-9 rounded-ui-control border border-divider bg-surface-muted px-3 py-2 text-sm font-semibold text-content disabled:cursor-not-allowed disabled:opacity-60"
                 disabled={isPending}
                 onClick={() => setDeactivationConfirmation(null)}
                 type="button"
@@ -1445,7 +1460,7 @@ export function VehicleFleetSurface({
                 Vazgeç
               </button>
               <button
-                className="min-h-9 rounded-[var(--radius-control)] bg-red-700 px-3 py-2 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-60"
+                className="min-h-9 rounded-ui-control bg-danger px-3 py-2 text-sm font-semibold text-on-danger disabled:cursor-not-allowed disabled:opacity-60"
                 disabled={isPending}
                 onClick={handleDeactivateVehicleCardConfirm}
                 type="button"
@@ -1681,10 +1696,10 @@ function VehicleTextField({
   value: string;
 }) {
   return (
-    <label className="flex flex-col gap-1 text-xs font-semibold text-[var(--on-surface-variant)]">
+    <label className="flex flex-col gap-1 text-xs font-semibold text-content-subtle">
       <span>{label}</span>
       <input
-        className="min-h-10 rounded-[var(--radius-control)] border border-[var(--grid-border)] bg-[var(--surface-container-low)] px-3 py-2 text-sm font-semibold text-[var(--on-surface)] outline-none transition focus:border-[var(--primary)] focus:bg-[var(--surface-container-lowest)]"
+        className="min-h-10 rounded-ui-control border border-divider bg-surface-muted px-3 py-2 text-sm font-semibold text-content outline-none transition focus:border-brand-primary focus:bg-surface-raised"
         disabled={disabled}
         inputMode={inputMode}
         list={listId}
@@ -1719,23 +1734,33 @@ function getVehicleAuditLocalDateKey(value: string) {
 
 function getSeverityClassName(severity: "Kritik" | "Uyarı" | "Bilgi") {
   if (severity === "Kritik") {
-    return "border-red-200 bg-red-50 text-red-700";
+    return "border-danger bg-danger-subtle text-danger";
   }
 
   if (severity === "Uyarı") {
-    return "border-amber-200 bg-amber-50 text-amber-700";
+    return "border-warning bg-warning-subtle text-warning";
   }
 
-  return "border-sky-200 bg-sky-50 text-sky-700";
+  return "border-brand-primary/25 bg-brand-primary/5 text-brand-primary";
 }
 
-function Metric({ label, value }: { label: string; value: string }) {
+function Metric({
+  emphasized = false,
+  label,
+  value,
+}: {
+  emphasized?: boolean;
+  label: string;
+  value: string;
+}) {
   return (
-    <article className="rounded-[var(--radius-panel)] border border-[var(--grid-border)] bg-[var(--surface-container-lowest)] p-4">
-      <h2 className="text-sm font-semibold text-[var(--on-surface-variant)]">
+    <article
+      className={`rounded-ui-panel border border-divider bg-surface-raised shadow-sm ${emphasized ? "border-l-4 border-l-brand-primary p-5" : "p-4"}`}
+    >
+      <h2 className="text-xs font-bold uppercase tracking-wide text-content-muted">
         {label}
       </h2>
-      <p className="mt-2 font-mono text-2xl font-semibold">{value}</p>
+      <p className={`${emphasized ? "text-3xl" : "text-2xl"} mt-2 font-mono font-bold text-content`}>{value}</p>
     </article>
   );
 }

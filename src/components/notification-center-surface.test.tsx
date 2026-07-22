@@ -50,6 +50,8 @@ describe("NotificationCenterSurface", () => {
     render(<NotificationCenterSurface rows={rows} today="2026-07-02" />);
 
     expect(screen.getByRole("heading", { name: "Bildirim Merkezi" })).toBeTruthy();
+    expect(document.querySelector('[data-notification-center-workspace="true"]')).toBeTruthy();
+    expect(screen.getByLabelText("Bildirimlerde ara")).toBeTruthy();
     expect(within(screen.getByLabelText("Toplam Bildirim")).getByText("2")).toBeTruthy();
     expect(within(screen.getByLabelText("Okunmamış")).getByText("1")).toBeTruthy();
     expect(within(screen.getByLabelText("Bugün")).getByText("1")).toBeTruthy();
@@ -61,6 +63,26 @@ describe("NotificationCenterSurface", () => {
         .getByRole("link", { name: "CEK-2026-001 kaydına git" })
         .getAttribute("href"),
     ).toBe("/cek?evrak=CEK-2026-001");
+  });
+
+  test("filters notifications by search text and read state", () => {
+    render(<NotificationCenterSurface rows={rows} today="2026-07-02" />);
+
+    fireEvent.change(screen.getByLabelText("Bildirimlerde ara"), {
+      target: { value: "CEK-2026-001" },
+    });
+
+    expect(screen.getByText("Çek vadesi yaklaşıyor")).toBeTruthy();
+    expect(screen.queryByText("Minimum stok seviyesi aşıldı")).toBeNull();
+    expect(within(screen.getByLabelText("Toplam Bildirim")).getByText("1")).toBeTruthy();
+
+    fireEvent.change(screen.getByLabelText("Bildirimlerde ara"), {
+      target: { value: "" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Okundu" }));
+
+    expect(screen.queryByText("Çek vadesi yaklaşıyor")).toBeNull();
+    expect(screen.getByText("Minimum stok seviyesi aşıldı")).toBeTruthy();
   });
 
   test("hides notifications when their category is disabled", () => {
@@ -116,6 +138,28 @@ describe("NotificationCenterSurface", () => {
     });
     await waitFor(() => {
       expect(screen.queryByText("okunmamış")).toBeNull();
+      expect(within(screen.getByLabelText("Okunmamış")).getByText("0")).toBeTruthy();
+    });
+  });
+
+  test("marks every visible unread notification as read through existing actions", async () => {
+    const markAsRead = vi.fn().mockResolvedValue({ ok: true });
+
+    render(
+      <NotificationCenterSurface
+        persistence={{ markAsRead }}
+        rows={rows}
+        today="2026-07-02"
+      />,
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Tümünü Okundu İşaretle" }));
+
+    await waitFor(() => {
+      expect(markAsRead).toHaveBeenCalledTimes(1);
+      expect(markAsRead).toHaveBeenCalledWith("notification-due-cheque");
+    });
+    await waitFor(() => {
       expect(within(screen.getByLabelText("Okunmamış")).getByText("0")).toBeTruthy();
     });
   });

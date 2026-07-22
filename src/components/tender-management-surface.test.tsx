@@ -77,6 +77,70 @@ describe("TenderManagementSurface", () => {
     expect(screen.getByText("Yaklaşan son teklif")).toBeTruthy();
   });
 
+  test("filters the real tender rows, exports the filtered list and renders Kanban", () => {
+    render(
+      <TenderManagementSurface
+        rows={[
+          createTender({
+            id: "tender-road",
+            status: "Takip",
+            tenderNo: "IHL-ROAD",
+            title: "Kuzey aksı yol yapım işi",
+          }),
+          createTender({
+            authorityName: "İl Milli Eğitim Müdürlüğü",
+            id: "tender-school",
+            status: "Sunuldu",
+            tenderNo: "IHL-SCHOOL",
+            title: "Okul güçlendirme inşaatı",
+          }),
+        ]}
+        today="2026-07-01T09:00:00"
+      />,
+    );
+
+    const search = screen.getByRole("searchbox", { name: "İhale ara" });
+    fireEvent.change(search, { target: { value: "milli eğitim" } });
+
+    const table = screen.getByRole("table", { name: "İhale listesi tablosu" });
+    expect(within(table).getByText("Okul güçlendirme inşaatı")).toBeTruthy();
+    expect(within(table).queryByText("Kuzey aksı yol yapım işi")).toBeNull();
+
+    const csvLink = screen.getByRole("link", { name: "CSV" });
+    expect(csvLink.getAttribute("download")).toBe("ihale-listesi.csv");
+    expect(decodeURIComponent(csvLink.getAttribute("href") ?? "")).toContain(
+      "IHL-SCHOOL",
+    );
+    expect(decodeURIComponent(csvLink.getAttribute("href") ?? "")).not.toContain(
+      "IHL-ROAD",
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Kanban" }));
+
+    const kanban = screen.getByLabelText("İhale Kanban panosu");
+    expect(within(kanban).getByText("Okul güçlendirme inşaatı")).toBeTruthy();
+    expect(within(kanban).queryByText("Kuzey aksı yol yapım işi")).toBeNull();
+    expect(
+      screen.getByRole("button", { name: "Kanban" }).getAttribute("aria-pressed"),
+    ).toBe("true");
+  });
+
+  test("opens, focuses and dismisses the canonical three-tab tender form", () => {
+    render(<TenderManagementSurface rows={[]} today="2026-07-01T09:00:00" />);
+
+    fireEvent.click(screen.getByRole("button", { name: "+ Yeni İhale" }));
+
+    expect(screen.getByLabelText("Yeni ihale formu")).toBeTruthy();
+    expect(document.activeElement).toBe(screen.getByLabelText("Başlık"));
+    expect(screen.getAllByRole("tab")).toHaveLength(3);
+
+    fireEvent.click(
+      screen.getByRole("button", { name: "Yeni ihale formunu kapat" }),
+    );
+
+    expect(screen.queryByLabelText("Yeni ihale formu")).toBeNull();
+  });
+
   test("opens the new tender form and saves a draft from step 1 and step 2", () => {
     render(
       <TenderManagementSurface
