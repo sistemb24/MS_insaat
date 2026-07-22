@@ -89,9 +89,10 @@ Bu kararlar olmadan header arama input'u gösterilmeyecektir.
 
 ### F2-02 — Kesinti kuralı ve şablonu
 
-> Durum (22.07.2026): `Docs/RFC-F8-01-kesinti-kurallari.md` içindeki on
-> varsayım onaylandı; Dilim 1 Domain Çekirdeği ve Dilim 2 Şema/Repository
-> tamamlandı. Sıradaki dilim Önizleme ve Uygulama'dır.
+> Durum (22.07.2026): Docs/RFC-F8-01-kesinti-kurallari.md kapsamındaki
+> domain, şema/repository, önizleme/uygulama, UI ve gerçek veri kabul dilimleri
+> tamamlandı. F2-02 artık uygulanan işlevdir; kural tabanı bu RFC sınırı dışında
+> otomatik genişletilmez.
 
 Mevcut `ConstructionDeductionMovement` gerçekleşmiş hareketi tutar; tekrar kullanılabilir kural tanımı değildir. Olası yeni model ancak şu ihtiyaç kanıtlanırsa değerlendirilir:
 
@@ -167,3 +168,15 @@ Yedi yüzey test dosyasındaki 74 kapanış testi geçti. Yeni F1 boşluğu bulu
 tamamlanmış Faz 5/6 yüzeyleri yeniden tasarlanmadı. Bu kayıtla Faz 7 kapanır.
 F2-01–F2-05 kararları Faz 8'de ayrı mini-RFC ve kullanıcı onayı gerektirmeye
 devam eder.
+
+## 8. Faz 9 Nihai Gap Durumu
+
+| F2 kapısı | Nihai durum |
+|---|---|
+| F2-01 Global scoped arama | Bekliyor; ayrı mini-RFC ve indeks/yetki kararı gerekir. |
+| F2-02 Kesinti kuralı ve şablonu | RFC-F8-01 sınırında tamamlandı ve gerçek veriyle kabul edildi. |
+| F2-03 Kalıcı simülasyon senaryosu | Bekliyor; mevcut simülasyon geçici hesap olarak kalır. |
+| F2-04 Kalıcı import staging/geçmişi | Bekliyor; mevcut aktarım önizleme ve onaylı import ile sınırlıdır. |
+| F2-05 Gerçek dış entegrasyonlar | Bekliyor; kimlik bilgisi/provider olmadan sandbox/plan sınırı korunur. |
+
+Faz 9 kapanışı bu bekleyen kapıları otomatik olarak onaylamaz. Yeni işlev talebi ilgili mini-RFC, veri yaşam döngüsü, RBAC, audit ve migration kararıyla ayrı bir fazda ele alınır.

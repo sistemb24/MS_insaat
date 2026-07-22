@@ -449,3 +449,13 @@ Faz 2'de tüm sayfaların class'ları topluca değiştirilmez; AppShell dönüş
 - Print görünümü koyu tema seçimini açık semantic palete sıfırlar, global shell ve interaktif aksiyonları gizler, tablo başlıkları ile sayfa kırılma davranışını korur.
 - Ayrıntılı matris ve kanıt `Docs/UI-baseline/Faz9-route-matrix-kabul-20260722.md` içindedir.
 - Domain, DB, RBAC, scope, audit ve ledger davranışları değiştirilmedi.
+
+## 24. Faz 9 Nihai Dokümantasyon Sözleşmesi — 22.07.2026
+
+- Canlı 22 route ile 76 kaynak HTML eşleştirmesinin nihai durumu `Docs/HTML-template-page-matrix.md` içinde tutulur.
+- Son kullanıcı işlemleri, roller, ana iş akışları, mobil/print davranışı ve sandbox sınırları `Docs/NOA-kullanici-rehberi.md` içinde tutulur.
+- Yeni route veya ana surface eklendiğinde hem nihai route matrisi hem kullanıcı rehberi aynı dilimde güncellenir.
+- Kullanıcı rehberi parola, secret veya kişisel kimlik bilgisi içermez; demo erişim bilgileri ayrı kontrollü belgede kalır.
+- Şablon adı kullanıcı dokümantasyonunda iş akışının yerine geçmez; kullanıcı dili canlı ürün route ve terimlerini esas alır.
+- Bekleyen F2 kapıları tamamlandı gösterilmez; gerçek dış entegrasyonlar sandbox/plan etiketi olmadan belgelenmez.
+- Bu sözleşmeyle Faz 9 tasarım sistemi, route matrisi ve kullanıcı dokümantasyonu birlikte kapanır.

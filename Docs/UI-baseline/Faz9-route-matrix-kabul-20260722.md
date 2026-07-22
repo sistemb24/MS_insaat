@@ -49,4 +49,4 @@
 
 ## Sonraki dilim
 
-Faz 9 sonraki bağımsız dilimi nihai sayfa matrisi ile kullanıcı dokümantasyonunun kapatılmasıdır.
+Nihai sayfa matrisi `Docs/HTML-template-page-matrix.md` içinde, kullanıcı rehberi `Docs/NOA-kullanici-rehberi.md` içinde tamamlandı. Faz 9 kabul zinciri kapanmıştır.

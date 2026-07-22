@@ -1,8 +1,9 @@
 # NOA İnşaat — HTML Şablon / Route / Surface Eşleştirme Matrisi
 
-> Faz: 1
+> Faz: 1 envanteri + Faz 9 nihai kabul
 > Tarih: 18.07.2026
-> Durum: Tamamlandı
+> Son güncelleme: 22.07.2026
+> Durum: **Nihai route matrisi tamamlandı**
 > Kapsam: `stitch_HTML_sablonlar/` altındaki 76 HTML dosyasının tamamı
 
 ## 1. Amaç
@@ -149,3 +150,62 @@ Ortak teknik bulgular:
 - Route'u olmayan şablon: 0; content-only şablonlar mevcut route içinde alt görünüm olarak eşlendi.
 - Doğrudan yeni Prisma modeli zorunlu bulunan şablon: 0.
 - F2 karar kapısına alınan işlev kümeleri: kesinti kuralı, kalıcı simülasyon senaryosu ve kalıcı import staging/geçmişi.
+
+## 7. Faz 9 Nihai Route Matrisi
+
+Bu tablo, Faz 1 envanterindeki 76 kaynak şablonu canlı uygulamadaki 22 korumalı route ile uzlaştırır. `Tamamlandı` durumu; route yüzeyinin standart AppShell, gerçek action akışı, semantic light/dark tema, responsive yerleşim ve erişilebilirlik sözleşmesi altında çalıştığını ifade eder. Print yalnız gerçek çıktı üreten yüzeylerde etkinleştirilir.
+
+| Grup | Route | Canlı surface | Ana kompozisyon | İşlevsel kapsam | Nihai durum |
+|---|---|---|---|---|---|
+| Genel | `/` | `DashboardSurface` | Dashboard + firmalar dashboard | Gerçek finans/operasyon metrikleri ve üç erişilebilir grafik | Tamamlandı |
+| Genel | `/santiyeler` | `SiteManagementSurface` | Şantiyeler + finans panosu | Kart/liste, finans read-model ve kârlılık | Tamamlandı |
+| Genel | `/ihale-yonetimi` | `TenderManagementSurface` | İhale liste/Kanban + üç aşamalı form | CRUD, BOQ, durum, analiz, simülasyon ve şantiyeye dönüşüm | Tamamlandı |
+| Genel | `/dokuman-merkezi` | `DocumentCenterSurface` | Genişletilmiş doküman merkezi | Klasör, yükleme, taşıma, çöp ve geri yükleme | Tamamlandı |
+| Genel | `/bildirimler` | `NotificationCenterSurface` | Bildirim merkezi + tercihler | Liste, okunmamış, okundu ve kategori tercihi | Tamamlandı |
+| Finans | `/tedarikciler` | `CounterpartyManagementSurface` | Tedarikçi listesi + ekstre | Cari kart, alış bağlantısı ve scoped ekstre | Tamamlandı |
+| Finans | `/musteriler` | `CounterpartyManagementSurface` | Yoğun müşteri tablosu + ekstre | Cari kart, satış bağlantısı ve scoped ekstre | Tamamlandı |
+| Finans | `/taseronlar` | `CounterpartyManagementSurface` | Taşeron listesi | Cari kart, hakediş ve ödeme bağlantısı | Tamamlandı |
+| Finans | `/kasa-banka` | `CashBankSurface` | Kasa/Banka workspace | Hareket, virman, kaynak/ters kayıt ve ledger | Tamamlandı |
+| Finans | `/giderler` | `ExpenseSurface` | Gider yönetimi + kayıt paneli | Gider oluşturma, ödeme aracı ve analiz | Tamamlandı |
+| Finans | `/faturalar` | `InvoiceManagementSurface` | Fatura/irsaliye workspace | Alış, satış, irsaliye, kesinleştirme, ödeme/tahsilat ve PDF | Tamamlandı |
+| Finans | `/hakedis` | `ProgressPaymentSurface`, `ConstructionProgressPaymentSurface` | NOA Hakediş + 26 Hakediş Pro şablonu | Finansal hakediş ile proje/poz/metraj/onay/kesinti/muhasebe zinciri | Tamamlandı |
+| Finans | `/cek` | `ChequeSurface` | Çek yönetimi | Oluşturma, vade, tahsil ve ledger bağlantısı | Tamamlandı |
+| Operasyon | `/personel` | Personel, zimmet ve `PayrollAccrualSurface` | Personel/maaş kompozisyonu | Personel kartı, zimmet, tahakkuk ve ödeme | Tamamlandı |
+| Operasyon | `/stok-depo` | `StockDepotSurface`, `StockMovementSurface` | Stok/depo operasyonu + özet | Kart, minimum stok, hareket ve transfer | Tamamlandı |
+| Operasyon | `/araclar` | `VehicleFleetSurface` | Filo operasyonu + bakım takvimi | Araç kartı, tarih uyarıları ve sandbox görünümü | Tamamlandı |
+| Operasyon | `/puantaj` | `TimesheetSurface` | Detaylı puantaj grid | Giriş, liste, kesinleştirme, audit ve bordro hazırlığı | Tamamlandı |
+| Operasyon | `/raporlar` | `ReportsSurface` | Rapor merkezi | Gerçek read-model filtreleri ve çalışan çıktılar | Tamamlandı |
+| Sistem | `/abonelik` | `SubscriptionSurface` | Abonelik ve paketler | Paket, add-on, yenileme ve ödeme geçmişi | Tamamlandı |
+| Sistem | `/api-yonetimi` | `ApiKeyManagementSurface` | API yönetimi + anahtar oluşturma | Admin anahtar/revoke, scope ve webhook endpointleri | Tamamlandı |
+| Sistem | `/e-fatura-yonetimi` | `EFaturaSurface` | E-Fatura yönetimi | Plan/durum/audit; gerçek provider iddiası yok | Tamamlandı |
+| Sistem | `/ayarlar` | `SettingsSurface`, `LedgerSurface` | Ayarlar + banka/audit/rol alt görünümleri | Firma, kullanıcı, davet, sandbox banka, dönem, yevmiye ve audit | Tamamlandı |
+
+## 8. Ortak Kabul Özeti
+
+| Sözleşme | Sonuç |
+|---|---|
+| Shell | 22/22 route `data-shell-variant="standard"` |
+| Başlık/landmark | 22/22 route tek ana `h1` ve `main` içerik alanı |
+| Tema | Semantic light/dark tokenlar; route bazlı ayrı palet yok |
+| Kontrast | Light minimum `4.52:1`, dark minimum `7.11:1` |
+| Responsive | Masaüstü ve 390 × 844 px mobil yerleşim; belge düzeyinde yatay taşma yok |
+| Tablo/form/modal/grafik | Erişilebilir ad, odak ve klavye sözleşmeleri kabul edildi |
+| Print | Açık yüksek kontrast palet, gizlenen global shell ve korunan tablo kırılımları |
+| Veri güvenliği | Tenant/firma/dönem scope, RBAC, audit, ledger ve idempotency korunuyor |
+| Dış entegrasyon | Sandbox/plan sınırı görünür; gerçek bağlantı varmış gibi davranılmıyor |
+
+## 9. Abonelik ve Rol Sınırları
+
+- Abonelikle korunabilen route: `/araclar`, `/cek`, `/dokuman-merkezi`, `/e-fatura-yonetimi`, `/hakedis`, `/ihale-yonetimi`.
+- `viewer` yetkili kapsamı salt okunur kullanır.
+- `accounting` finansal ve operasyonel kayıt akışlarını yürütür.
+- `admin` bunlara ek kullanıcı/rol, dönem, entegrasyon ve API yönetimini yürütür.
+- Kesinti kuralı tanımı/revizyonu admin; önizleme ve uygulama admin/accounting rolündedir.
+
+## 10. Kullanıcı Dokümantasyonu ve Kapanış
+
+- Son kullanıcı rehberi: `Docs/NOA-kullanici-rehberi.md`.
+- Görsel/semantik kabul raporu: `Docs/UI-baseline/Faz9-route-matrix-kabul-20260722.md`.
+- Tasarım sistemi ve yeni yüzey kuralları: `Docs/Template-Standard-v1.md`.
+- Kaynak 76 HTML dosyası referans olarak korunur; runtime sayfası veya ikinci uygulama kabuğu değildir.
+- 76/76 şablon eşleşmiş, 22/22 canlı route nihai kabulden geçmiştir. Bu kayıtla Faz 9 sayfa matrisi kapanmıştır.
