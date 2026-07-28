@@ -1,19 +1,15 @@
 "use server";
-/* eslint-disable @typescript-eslint/no-explicit-any -- scoped Prisma transaction helper */
 
 import { revalidatePath } from "next/cache";
 
 import {
-  aggregateConstructionMeasurementQuantities,
-  calculateConstructionItemSnapshot,
   calculateConstructionMeasurementLineQuantity,
-  calculateConstructionPaymentTotals,
-  calculateConstructionSupplementarySummary,
-  resolveConstructionLegacyAutomaticDeduction,
   roundMoney,
-  type ConstructionItemSnapshot,
-  type ConstructionPreviousSnapshot,
 } from "@/lib/construction-progress-payment-service";
+import {
+  recalculateConstructionMeasurementSnapshots,
+  recalculateConstructionProgressPaymentSummary,
+} from "@/lib/construction-progress-payment-recalculation-prisma";
 import { buildConstructionProgressPaymentProjectionDraft } from "@/lib/construction-progress-payment-projection";
 import { calculateProgressPaymentTotals } from "@/lib/progress-payment-service";
 import { prisma } from "@/lib/prisma";
@@ -55,9 +51,9 @@ export async function getConstructionProgressPaymentReportAction(id: string) {
     prisma.auditLog.findMany({ where: { tenantId: result.scope.tenantId, companyId: result.scope.companyId, periodId: result.scope.periodId, entityType: "construction-progress-payment", entityId: payment.id }, orderBy: [{ occurredAt: "asc" }, { createdAt: "asc" }] }),
   ]);
   return { ok: true as const, data: {
-    header: { projectCode: payment.project.code, projectName: payment.project.name, siteName: payment.project.siteName, contractNo: payment.project.contractNo, documentNo: payment.documentNo, sequenceNo: payment.sequenceNo, kind: payment.kind, status: payment.status, periodStart: payment.periodStart.toISOString(), periodEnd: payment.periodEnd.toISOString(), currency: payment.currency },
+    header: { projectId: payment.projectId, progressPaymentId: payment.id, projectCode: payment.project.code, projectName: payment.project.name, siteName: payment.project.siteName, contractNo: payment.project.contractNo, documentNo: payment.documentNo, sequenceNo: payment.sequenceNo, kind: payment.kind, status: payment.status, periodStart: payment.periodStart.toISOString(), periodEnd: payment.periodEnd.toISOString(), currency: payment.currency },
     greenBook: payment.snapshots.map((snapshot) => ({ itemCode: snapshot.contractItem.itemCode, description: snapshot.contractItem.description, unit: snapshot.contractItem.unit, contractQuantity: Number(snapshot.contractQuantity), previousQuantity: Number(snapshot.previousQuantity), periodQuantity: Number(snapshot.periodQuantity), cumulativeQuantity: Number(snapshot.cumulativeQuantity), completionRate: Number(snapshot.contractQuantity) ? roundMoney(Number(snapshot.cumulativeQuantity) / Number(snapshot.contractQuantity) * 100) : 0, exceededContract: snapshot.exceededContract })),
-    manufacturingSheet: payment.snapshots.map((snapshot) => ({ itemCode: snapshot.contractItem.itemCode, description: snapshot.contractItem.description, unit: snapshot.contractItem.unit, unitPrice: Number(snapshot.unitPrice), vatRate: Number(snapshot.vatRate), contractQuantity: Number(snapshot.contractQuantity), contractAmount: roundMoney(Number(snapshot.contractQuantity) * Number(snapshot.unitPrice)), previousQuantity: Number(snapshot.previousQuantity), periodQuantity: Number(snapshot.periodQuantity), cumulativeQuantity: Number(snapshot.cumulativeQuantity), previousAmount: Number(snapshot.previousAmount), periodAmount: Number(snapshot.periodAmount), cumulativeAmount: Number(snapshot.cumulativeAmount), periodVatAmount: Number(snapshot.periodVatAmount), cumulativeVatAmount: Number(snapshot.cumulativeVatAmount) })),
+    manufacturingSheet: payment.snapshots.map((snapshot) => ({ contractItemId: snapshot.contractItemId, itemCode: snapshot.contractItem.itemCode, description: snapshot.contractItem.description, unit: snapshot.contractItem.unit, unitPrice: Number(snapshot.unitPrice), vatRate: Number(snapshot.vatRate), contractQuantity: Number(snapshot.contractQuantity), contractAmount: roundMoney(Number(snapshot.contractQuantity) * Number(snapshot.unitPrice)), previousQuantity: Number(snapshot.previousQuantity), periodQuantity: Number(snapshot.periodQuantity), cumulativeQuantity: Number(snapshot.cumulativeQuantity), previousAmount: Number(snapshot.previousAmount), periodAmount: Number(snapshot.periodAmount), cumulativeAmount: Number(snapshot.cumulativeAmount), periodVatAmount: Number(snapshot.periodVatAmount), cumulativeVatAmount: Number(snapshot.cumulativeVatAmount) })),
     extraWorks: payment.extraWorks.map((row) => ({ documentNo: row.documentNo, workDate: row.workDate.toISOString(), description: row.description, unit: row.unit, quantity: Number(row.quantity), unitPrice: Number(row.unitPrice), vatRate: Number(row.vatRate), amount: Number(row.periodAmount) })),
     deductions: payment.deductionMovements.map((row) => ({ category: row.category, documentNo: row.documentNo, movementDate: row.movementDate.toISOString(), description: row.description, amount: Number(row.amount), vatAmount: Number(row.vatAmount), totalAmount: Number(row.totalAmount) })),
     financialMovements: payment.financialMovements.map((row) => ({ movementType: row.movementType, direction: row.direction, movementDate: row.movementDate.toISOString(), description: row.description, amount: Number(row.amount) })),
@@ -97,7 +93,7 @@ export async function createConstructionMeasurementLineAction(input: { progressP
   const row = await prisma.$transaction(async (transaction) => {
     const aggregate = await transaction.constructionMeasurementLine.aggregate({ where: { progressPaymentId: resolved.payment.id, measurementSheetId: sheet.id }, _max: { lineNo: true } });
     const created = await transaction.constructionMeasurementLine.create({ data: { tenantId: resolved.scope.tenantId, companyId: resolved.scope.companyId, periodId: resolved.scope.periodId, progressPaymentId: resolved.payment.id, measurementSheetId: sheet.id, contractItemId: contractItem.id, lineNo: (aggregate._max.lineNo ?? 0) + 1, measurementType: sheet.sheetType, description: input.description.trim(), unit: input.unit?.trim() || contractItem.unit, quantity, length: input.length, width: input.width, height: input.height, multiplier: input.multiplier ?? 1, createdBy: resolved.scope.userId, updatedBy: resolved.scope.userId } });
-    await recalculateMeasurementSnapshots(transaction, resolved.payment.id, resolved.scope);
+    await recalculateConstructionMeasurementSnapshots(transaction, resolved.payment.id, resolved.scope);
     return created;
   });
   revalidatePath("/hakedis");
@@ -112,7 +108,7 @@ export async function createConstructionExtraWorkAction(input: { progressPayment
   const amount = roundMoney(input.quantity * input.unitPrice);
   const row = await prisma.$transaction(async (transaction) => {
     const created = await transaction.constructionExtraWork.create({ data: { tenantId: resolved.scope.tenantId, companyId: resolved.scope.companyId, periodId: resolved.scope.periodId, progressPaymentId: resolved.payment.id, documentNo: input.documentNo.trim(), workDate, description: input.description.trim(), unit: input.unit.trim(), quantity: input.quantity, unitPrice: input.unitPrice, vatRate: input.vatRate ?? 0, periodAmount: amount, createdBy: resolved.scope.userId, updatedBy: resolved.scope.userId } });
-    await recalculateSummary(transaction, resolved.payment.id, resolved.scope);
+    await recalculateConstructionProgressPaymentSummary(transaction, resolved.payment.id, resolved.scope);
     return created;
   });
   revalidatePath("/hakedis");
@@ -127,7 +123,7 @@ export async function createConstructionDeductionMovementAction(input: { progres
   const totalAmount = roundMoney(input.amount + (input.vatAmount ?? 0));
   const row = await prisma.$transaction(async (transaction) => {
     const created = await transaction.constructionDeductionMovement.create({ data: { tenantId: resolved.scope.tenantId, companyId: resolved.scope.companyId, periodId: resolved.scope.periodId, progressPaymentId: resolved.payment.id, category: input.category.trim(), documentNo: input.documentNo?.trim() || null, movementDate, description: input.description.trim(), amount: input.amount, vatAmount: input.vatAmount ?? 0, totalAmount, createdBy: resolved.scope.userId, updatedBy: resolved.scope.userId } });
-    await recalculateSummary(transaction, resolved.payment.id, resolved.scope);
+    await recalculateConstructionProgressPaymentSummary(transaction, resolved.payment.id, resolved.scope);
     return created;
   });
   revalidatePath("/hakedis");
@@ -141,7 +137,7 @@ export async function createConstructionFinancialMovementAction(input: { progres
   const movementDate = new Date(input.movementDate); if (Number.isNaN(movementDate.getTime())) return { ok: false as const, errors: ["Finansal hareket tarihi geçersizdir."] };
   const row = await prisma.$transaction(async (transaction) => {
     const created = await transaction.constructionFinancialMovement.create({ data: { tenantId: resolved.scope.tenantId, companyId: resolved.scope.companyId, periodId: resolved.scope.periodId, progressPaymentId: resolved.payment.id, movementType: input.movementType, direction: input.direction, movementDate, description: input.description.trim(), amount: input.amount, createdBy: resolved.scope.userId, updatedBy: resolved.scope.userId } });
-    await recalculateSummary(transaction, resolved.payment.id, resolved.scope);
+    await recalculateConstructionProgressPaymentSummary(transaction, resolved.payment.id, resolved.scope);
     return created;
   });
   revalidatePath("/hakedis");
@@ -186,8 +182,8 @@ export async function deleteConstructionProgressPaymentDetailAction(input: { pro
     if (input.detailType === "EXTRA_WORK") count = (await transaction.constructionExtraWork.deleteMany({ where: { id: input.detailId, progressPaymentId: resolved.payment.id, tenantId: resolved.scope.tenantId, companyId: resolved.scope.companyId, periodId: resolved.scope.periodId } })).count;
     if (input.detailType === "DEDUCTION") count = (await transaction.constructionDeductionMovement.deleteMany({ where: { id: input.detailId, progressPaymentId: resolved.payment.id, tenantId: resolved.scope.tenantId, companyId: resolved.scope.companyId, periodId: resolved.scope.periodId } })).count;
     if (input.detailType === "FINANCIAL_MOVEMENT") count = (await transaction.constructionFinancialMovement.deleteMany({ where: { id: input.detailId, progressPaymentId: resolved.payment.id, tenantId: resolved.scope.tenantId, companyId: resolved.scope.companyId, periodId: resolved.scope.periodId } })).count;
-    if (count && ["MEASUREMENT_SHEET", "MEASUREMENT_LINE"].includes(input.detailType)) await recalculateMeasurementSnapshots(transaction, resolved.payment.id, resolved.scope);
-    else if (count) await recalculateSummary(transaction, resolved.payment.id, resolved.scope);
+    if (count && ["MEASUREMENT_SHEET", "MEASUREMENT_LINE"].includes(input.detailType)) await recalculateConstructionMeasurementSnapshots(transaction, resolved.payment.id, resolved.scope);
+    else if (count) await recalculateConstructionProgressPaymentSummary(transaction, resolved.payment.id, resolved.scope);
     return count;
   });
   if (!deleted) return { ok: false as const, errors: ["Silinecek hakediş detayı aktif kapsamda bulunamadı."] };
@@ -203,26 +199,4 @@ async function editablePayment(id: string) {
   if (!payment) return { ok: false as const, result: { ok: false as const, errors: ["Kümülatif hakediş bulunamadı."] } };
   if (!["DRAFT", "RETURNED"].includes(payment.status)) return { ok: false as const, result: { ok: false as const, errors: ["Yalnız taslak veya iade edilmiş hakedişe detay hareketi eklenebilir."] } };
   return { ok: true as const, payment, scope: result.scope };
-}
-
-async function recalculateSummary(transaction: any, paymentId: string, scope: { tenantId: string; companyId: string; periodId: string }) {
-  const payment = await transaction.constructionProgressPayment.findFirst({ where: { id: paymentId, tenantId: scope.tenantId, companyId: scope.companyId, periodId: scope.periodId }, include: { project: true, previousProgressPayment: true, extraWorks: true, deductionMovements: true, deductionRuleApplications: { select: { ruleCode: true } }, financialMovements: true } });
-  if (!payment) throw new Error("Kümülatif hakediş bulunamadı.");
-  const extraAmount = payment.extraWorks.reduce((sum: number, row: any) => sum + Number(row.periodAmount), 0); const additionAmount = payment.financialMovements.filter((row: any) => row.direction === "ADDITION").reduce((sum: number, row: any) => sum + Number(row.amount), 0);
-  const summary = calculateConstructionSupplementarySummary({ periodBaseTotal: Number(payment.periodNetTotal), automaticDeductionAmount: resolveConstructionLegacyAutomaticDeduction({ calculatedAmount: (Number(payment.periodNetTotal) + extraAmount + additionAmount) * Number(payment.project.retentionRate) / 100, applications: payment.deductionRuleApplications }), previous: payment.previousProgressPayment ? { cumulativeExtraWorkTotal: Number(payment.previousProgressPayment.cumulativeExtraWorkTotal), cumulativeAdditionTotal: Number(payment.previousProgressPayment.cumulativeAdditionTotal), cumulativeDeductionTotal: Number(payment.previousProgressPayment.cumulativeDeductionTotal), cumulativePayableTotal: Number(payment.previousProgressPayment.cumulativePayableTotal) } : undefined, extraWorks: payment.extraWorks.map((row: any) => ({ amount: Number(row.periodAmount) })), deductions: payment.deductionMovements.map((row: any) => ({ amount: Number(row.totalAmount) })), financialMovements: payment.financialMovements.map((row: any) => ({ amount: Number(row.amount), direction: row.direction })) });
-  await transaction.constructionProgressPayment.update({ where: { id: payment.id }, data: summary });
-}
-
-async function recalculateMeasurementSnapshots(transaction: any, paymentId: string, scope: { tenantId: string; companyId: string; periodId: string; userId: string }) {
-  const payment = await transaction.constructionProgressPayment.findFirst({ where: { id: paymentId, tenantId: scope.tenantId, companyId: scope.companyId, periodId: scope.periodId }, include: { project: { include: { contractItems: { where: { isActive: true } } } }, previousProgressPayment: { include: { snapshots: true } }, measurementLines: true, extraWorks: true, deductionMovements: true, deductionRuleApplications: { select: { ruleCode: true } }, financialMovements: true } });
-  if (!payment) throw new Error("Kümülatif hakediş bulunamadı.");
-  const measurements = aggregateConstructionMeasurementQuantities(payment.measurementLines.map((line: any) => ({ contractItemId: line.contractItemId, quantity: Number(line.quantity) })));
-  const previousByItem = new Map<string, ConstructionPreviousSnapshot>((payment.previousProgressPayment?.snapshots ?? []).map((snapshot: any) => [snapshot.contractItemId, { contractItemId: snapshot.contractItemId, cumulativeQuantity: Number(snapshot.cumulativeQuantity), cumulativeAmount: Number(snapshot.cumulativeAmount), cumulativeVatAmount: Number(snapshot.cumulativeVatAmount) }]));
-  const snapshots: ConstructionItemSnapshot[] = payment.project.contractItems.map((item: any) => calculateConstructionItemSnapshot({ id: item.id, contractQuantity: Number(item.contractQuantity), unitPrice: Number(item.unitPrice), vatRate: Number(item.vatRate) }, measurements, previousByItem.get(item.id)));
-  const totals = calculateConstructionPaymentTotals(snapshots);
-  const extraAmount = payment.extraWorks.reduce((sum: number, row: any) => sum + Number(row.periodAmount), 0);
-  const additionAmount = payment.financialMovements.filter((row: any) => row.direction === "ADDITION").reduce((sum: number, row: any) => sum + Number(row.amount), 0);
-  const supplementary = calculateConstructionSupplementarySummary({ periodBaseTotal: totals.periodNetTotal, automaticDeductionAmount: resolveConstructionLegacyAutomaticDeduction({ calculatedAmount: (totals.periodNetTotal + extraAmount + additionAmount) * Number(payment.project.retentionRate) / 100, applications: payment.deductionRuleApplications }), previous: payment.previousProgressPayment ? { cumulativeExtraWorkTotal: Number(payment.previousProgressPayment.cumulativeExtraWorkTotal), cumulativeAdditionTotal: Number(payment.previousProgressPayment.cumulativeAdditionTotal), cumulativeDeductionTotal: Number(payment.previousProgressPayment.cumulativeDeductionTotal), cumulativePayableTotal: Number(payment.previousProgressPayment.cumulativePayableTotal) } : undefined, extraWorks: payment.extraWorks.map((row: any) => ({ amount: Number(row.periodAmount) })), deductions: payment.deductionMovements.map((row: any) => ({ amount: Number(row.totalAmount) })), financialMovements: payment.financialMovements.map((row: any) => ({ amount: Number(row.amount), direction: row.direction })) });
-  await transaction.constructionPaymentItemSnapshot.deleteMany({ where: { progressPaymentId: payment.id, tenantId: scope.tenantId, companyId: scope.companyId, periodId: scope.periodId } });
-  await transaction.constructionProgressPayment.update({ where: { id: payment.id }, data: { periodGrossTotal: totals.periodGrossTotal, periodVatTotal: totals.periodVatTotal, periodNetTotal: totals.periodNetTotal, cumulativeGrossTotal: totals.cumulativeGrossTotal, cumulativeVatTotal: totals.cumulativeVatTotal, cumulativeNetTotal: totals.cumulativeNetTotal, ...supplementary, updatedBy: scope.userId, snapshots: { create: snapshots.map((snapshot) => ({ tenantId: scope.tenantId, companyId: scope.companyId, periodId: scope.periodId, contractItemId: snapshot.contractItemId, previousQuantity: snapshot.previousQuantity, periodQuantity: snapshot.periodQuantity, cumulativeQuantity: snapshot.cumulativeQuantity, unitPrice: snapshot.unitPrice, vatRate: snapshot.vatRate, previousAmount: snapshot.previousAmount, periodAmount: snapshot.periodAmount, cumulativeAmount: snapshot.cumulativeAmount, previousVatAmount: snapshot.previousVatAmount, periodVatAmount: snapshot.periodVatAmount, cumulativeVatAmount: snapshot.cumulativeVatAmount, contractQuantity: snapshot.contractQuantity, exceededContract: snapshot.exceededContract })) } } });
 }

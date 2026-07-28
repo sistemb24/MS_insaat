@@ -2,6 +2,7 @@ import {
   signOutActiveSessionAction,
   switchActiveSessionAction,
 } from "@/app/actions/session-actions";
+import { globalSearchAction } from "@/app/actions/global-search-actions";
 import { listCashBankMovementsAction } from "@/app/actions/cash-bank-actions";
 import { listChequesAction } from "@/app/actions/cheque-actions";
 import { listEntityRowsAction } from "@/app/actions/entity-actions";
@@ -68,6 +69,7 @@ export default async function Home({
       activeSessionId={activeSession.sessionId}
       context={activeSession.scope}
       currentPath="/"
+      globalSearchAction={globalSearchAction}
       notificationUnreadCount={notificationUnreadCount}
       sessionOptions={activeSession.sessionOptions}
       signOutAction={signOutActiveSessionAction}

@@ -3,7 +3,11 @@
  */
 
 import { cleanup, fireEvent, render, screen, within } from "@testing-library/react";
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
+
+vi.mock("next/navigation", () => ({
+  useRouter: () => ({ push: vi.fn() }),
+}));
 
 import { AppShell } from "./app-shell";
 import { defaultTenantScope } from "@/lib/tenant-scope";
@@ -13,6 +17,43 @@ afterEach(() => {
 });
 
 describe("AppShell", () => {
+  it("shares one global search dialog between desktop and mobile drawer triggers", () => {
+    render(
+      <AppShell
+        currentPath="/"
+        globalSearchAction={async () => ({
+          data: { query: "", results: [], truncated: false },
+          ok: true,
+        })}
+      >
+        <div>Dashboard içeriği</div>
+      </AppShell>,
+    );
+
+    expect(
+      screen.getAllByRole("button", { name: "Global aramayı aç" }),
+    ).toHaveLength(1);
+    fireEvent.click(screen.getByRole("button", { name: "Menüyü aç" }));
+    const triggers = screen.getAllByRole("button", {
+      name: "Global aramayı aç",
+    });
+    expect(triggers).toHaveLength(2);
+
+    const mobileDrawer = document.querySelector(
+      '[data-mobile-drawer="true"]',
+    );
+    expect(mobileDrawer).toBeTruthy();
+    fireEvent.click(
+      within(mobileDrawer as HTMLElement).getByRole("button", {
+        name: "Global aramayı aç",
+      }),
+    );
+
+    expect(document.querySelector('[data-mobile-drawer="true"]')).toBeNull();
+    expect(screen.getByRole("dialog", { name: "Global Arama" })).toBeTruthy();
+    expect(screen.getAllByRole("dialog", { name: "Global Arama" })).toHaveLength(1);
+  });
+
   it("renders the active session switcher when options are available", () => {
     render(
       <AppShell

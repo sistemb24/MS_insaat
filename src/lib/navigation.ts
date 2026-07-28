@@ -105,6 +105,13 @@ export const navigationItems: NavigationItem[] = [
     phase: "P0",
   },
   {
+    label: "İSG Merkezi",
+    href: "/isg",
+    icon: "İS",
+    description: "İş kazası, eğitim, denetim, bulgu ve KKD takibi",
+    phase: "P1",
+  },
+  {
     label: "Kasa/Banka",
     href: "/kasa-banka",
     icon: "KB",

@@ -278,6 +278,15 @@ const moduleContentBySlug: Record<string, ModuleContent> = {
     primaryActions: ["Yeni Personel", "Ödeme", "Zimmet"],
     metrics: defaultMetrics,
   },
+  isg: {
+    title: "İSG Operasyon Merkezi",
+    eyebrow: "Faz 14 operasyon ve takip",
+    summary:
+      "İş kazası, eğitim, saha denetimi, bulgu ve KKD zimmetini aynı kapsamda takip edin.",
+    templateSources: ["İSG operasyon çekirdeği", "AppShell çalışma alanı"],
+    primaryActions: ["İş Kazası", "Eğitim", "Denetim", "KKD Zimmeti"],
+    metrics: defaultMetrics,
+  },
   "kasa-banka": {
     title: "Kasa/Banka",
     eyebrow: "Nakit ve virman",

@@ -1,7 +1,15 @@
 "use client";
 
 import type { MouseEvent, ReactNode } from "react";
-import { useEffect, useId, useRef, useState } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useId,
+  useRef,
+  useState,
+} from "react";
 
 import { Icon } from "@/components/ui";
 
@@ -18,6 +26,12 @@ const focusableSelector = [
   '[tabindex]:not([tabindex="-1"])',
 ].join(",");
 
+const MobileDrawerCloseContext = createContext<(() => void) | null>(null);
+
+export function useCloseAppShellMobileDrawer() {
+  return useContext(MobileDrawerCloseContext);
+}
+
 export function AppShellMobileDrawer({ children }: AppShellMobileDrawerProps) {
   const [isOpen, setIsOpen] = useState(false);
   const drawerId = useId();
@@ -25,6 +39,7 @@ export function AppShellMobileDrawer({ children }: AppShellMobileDrawerProps) {
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const dialogRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
+  const closeDrawer = useCallback(() => setIsOpen(false), []);
 
   useEffect(() => {
     if (!isOpen) {
@@ -77,13 +92,16 @@ export function AppShellMobileDrawer({ children }: AppShellMobileDrawerProps) {
   }, [isOpen]);
 
   function closeFromNavigation(event: MouseEvent<HTMLDivElement>) {
-    if (event.target instanceof Element && event.target.closest("a[href]")) {
+    if (
+      event.target instanceof Element &&
+      event.target.closest("a[href]")
+    ) {
       setIsOpen(false);
     }
   }
 
   return (
-    <>
+    <MobileDrawerCloseContext value={closeDrawer}>
       <button
         aria-controls={drawerId}
         aria-expanded={isOpen}
@@ -151,6 +169,6 @@ export function AppShellMobileDrawer({ children }: AppShellMobileDrawerProps) {
           </div>
         </div>
       ) : null}
-    </>
+    </MobileDrawerCloseContext>
   );
 }

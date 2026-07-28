@@ -105,4 +105,22 @@ describe("InvoiceManagementSurface", () => {
     expect(screen.getByText("SF-TEST-001")).toBeTruthy();
     expect(screen.getByText("TEST MÜŞTERİ")).toBeTruthy();
   });
+
+  test("opens the sales tab for a global-search sales record deep link", () => {
+    render(
+      <InvoiceManagementSurface
+        deliveryNotes={{ rows: [] } as never}
+        purchase={{ rows: [purchaseInvoice] }}
+        sales={{ highlightedRecordId: "sales-1", rows: [salesInvoice] }}
+      />,
+    );
+
+    expect(screen.queryByText("AF-TEST-001")).toBeNull();
+    expect(screen.getByText("SF-TEST-001")).toBeTruthy();
+    expect(
+      screen.getByRole("tab", { name: "Satış Faturaları (1)" }).getAttribute(
+        "aria-selected",
+      ),
+    ).toBe("true");
+  });
 });

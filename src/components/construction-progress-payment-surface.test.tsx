@@ -7,15 +7,51 @@ import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 
 import { ConstructionProgressPaymentSurface } from "./construction-progress-payment-surface";
 
-const { applyRulesMock, createRuleMock, deactivateRuleMock, detailsMock, listProjectsMock, listRulesMock, previewRulesMock, reportMock } = vi.hoisted(() => ({
+const { applyRulesMock, createRuleMock, deactivateRuleMock, detailsMock, getImportMock, listImportMock, listProjectsMock, listRulesMock, listScenariosMock, getScenarioMock, previewRulesMock, reportMock } = vi.hoisted(() => ({
   applyRulesMock: vi.fn(),
   createRuleMock: vi.fn(),
   deactivateRuleMock: vi.fn(),
   detailsMock: vi.fn(),
+  getImportMock: vi.fn(),
   listProjectsMock: vi.fn(),
+  listImportMock: vi.fn(),
   listRulesMock: vi.fn(),
+  listScenariosMock: vi.fn(),
+  getScenarioMock: vi.fn(),
   previewRulesMock: vi.fn(),
   reportMock: vi.fn(),
+}));
+
+vi.mock("@/app/actions/construction-measurement-import-actions", () => ({
+  applyConstructionMeasurementImportBatchAction: vi.fn(),
+  cancelConstructionMeasurementImportBatchAction: vi.fn(),
+  getConstructionMeasurementImportBatchAction: getImportMock,
+  listConstructionMeasurementImportBatchesAction: listImportMock,
+  uploadConstructionMeasurementImportAction: vi.fn(),
+  validateConstructionMeasurementImportBatchAction: vi.fn(),
+}));
+
+vi.mock("@/components/construction-measurement-import-workspace", () => ({
+  ConstructionMeasurementImportWorkspace: ({
+    initialBatchId,
+  }: {
+    initialBatchId?: string;
+  }) => (
+    <section aria-label="Kalıcı metraj import çalışma alanı">
+      {initialBatchId ?? "import-seçilmedi"}
+    </section>
+  ),
+}));
+
+vi.mock("@/app/actions/construction-simulation-scenario-actions", () => ({
+  approveConstructionSimulationScenarioAction: vi.fn(),
+  archiveConstructionSimulationScenarioAction: vi.fn(),
+  cloneConstructionSimulationScenarioAction: vi.fn(),
+  compareConstructionSimulationScenariosAction: vi.fn(),
+  createConstructionSimulationScenarioAction: vi.fn(),
+  getConstructionSimulationScenarioAction: getScenarioMock,
+  listConstructionSimulationScenariosAction: listScenariosMock,
+  reviseConstructionSimulationScenarioAction: vi.fn(),
 }));
 
 vi.mock("@/app/actions/construction-deduction-rule-actions", () => ({
@@ -56,14 +92,20 @@ afterEach(() => {
   createRuleMock.mockReset();
   deactivateRuleMock.mockReset();
   detailsMock.mockReset();
+  getImportMock.mockReset();
   listProjectsMock.mockReset();
+  listImportMock.mockReset();
   listRulesMock.mockReset();
+  listScenariosMock.mockReset();
+  getScenarioMock.mockReset();
   previewRulesMock.mockReset();
   reportMock.mockReset();
 });
 
 beforeEach(() => {
   listRulesMock.mockResolvedValue({ ok: true, data: { canManage: false, rows: [] } });
+  listScenariosMock.mockResolvedValue({ ok: true, data: { canApprove: false, canArchive: false, canCreate: false, rows: [] } });
+  listImportMock.mockResolvedValue({ ok: true, data: { canCreate: true, rows: [] } });
 });
 
 describe("ConstructionProgressPaymentSurface", () => {
@@ -130,6 +172,155 @@ describe("ConstructionProgressPaymentSurface", () => {
     expect(within(itemTable).getByText("2.220.000,00 TL")).toBeTruthy();
   });
 
+  test("resolves an import deep-link to its scoped project, payment and import tab", async () => {
+    getImportMock.mockResolvedValue({
+      ok: true,
+      data: {
+        batch: {
+          projectId: "project-1",
+          sourceProgressPaymentId: "payment-1",
+        },
+      },
+    });
+    listProjectsMock.mockResolvedValue({
+      ok: true,
+      data: {
+        rows: [{
+          code: "PRJ-001",
+          contractAmount: 100_000,
+          contractItems: [{
+            contractQuantity: 100,
+            description: "Betonarme",
+            id: "item-1",
+            itemCode: "15.001",
+            priceRevisions: [],
+            revisionNo: 0,
+            unit: "m3",
+            unitPrice: 1_000,
+            vatRate: 20,
+          }],
+          contractNo: "SZL-1",
+          id: "project-1",
+          name: "Deep-link Projesi",
+          progressPayments: [{
+            cumulativeGrossTotal: 10_000,
+            documentNo: "HAK-001",
+            id: "payment-1",
+            kind: "FIRST",
+            periodEnd: "2026-07-31T00:00:00.000Z",
+            periodGrossTotal: 10_000,
+            periodStart: "2026-07-01T00:00:00.000Z",
+            progressPaymentId: null,
+            sequenceNo: 1,
+            snapshots: [],
+            status: "DRAFT",
+            updatedAt: "2026-07-23T10:00:00.000Z",
+          }],
+          siteCode: "SNT-1",
+          siteName: "Şantiye",
+          status: "OPEN",
+        }],
+      },
+    });
+    detailsMock.mockResolvedValue({
+      ok: true,
+      data: {
+        canApplyDeductionRules: true,
+        deductions: [],
+        deductionRuleApplications: [],
+        extraWorks: [],
+        financialMovements: [],
+        measurementSheets: [],
+        summary: {
+          periodAdditionTotal: 0,
+          periodDeductionTotal: 0,
+          periodExtraWorkTotal: 0,
+          periodPayableTotal: 10_000,
+        },
+      },
+    });
+    reportMock.mockResolvedValue({
+      ok: true,
+      data: {
+        accounting: null,
+        approvals: [],
+        auditLogs: [],
+        deductions: [],
+        extraWorks: [],
+        financialMovements: [],
+        greenBook: [],
+        header: {
+          contractNo: "SZL-1",
+          currency: "TRY",
+          documentNo: "HAK-001",
+          kind: "FIRST",
+          periodEnd: "2026-07-31T00:00:00.000Z",
+          periodStart: "2026-07-01T00:00:00.000Z",
+          progressPaymentId: "payment-1",
+          projectCode: "PRJ-001",
+          projectId: "project-1",
+          projectName: "Deep-link Projesi",
+          sequenceNo: 1,
+          siteName: "Şantiye",
+          status: "DRAFT",
+        },
+        manufacturingSheet: [{
+          contractAmount: 100_000,
+          contractItemId: "item-1",
+          contractQuantity: 100,
+          cumulativeAmount: 10_000,
+          cumulativeQuantity: 10,
+          cumulativeVatAmount: 2_000,
+          description: "Betonarme",
+          itemCode: "15.001",
+          periodAmount: 10_000,
+          periodQuantity: 10,
+          periodVatAmount: 2_000,
+          previousAmount: 0,
+          previousQuantity: 0,
+          unit: "m3",
+          unitPrice: 1_000,
+          vatRate: 20,
+        }],
+        measurementSheets: [],
+        summary: {
+          cumulativeAdditionTotal: 0,
+          cumulativeDeductionTotal: 0,
+          cumulativeExtraWorkTotal: 0,
+          cumulativePayableTotal: 10_000,
+          cumulativeWorkTotal: 10_000,
+          cumulativeWorkVatTotal: 2_000,
+          periodAdditionTotal: 0,
+          periodDeductionTotal: 0,
+          periodExtraWorkTotal: 0,
+          periodPayableTotal: 10_000,
+          periodWorkTotal: 10_000,
+          periodWorkVatTotal: 2_000,
+          projectedGrandTotal: 12_000,
+          projectedGrossTotal: 10_000,
+          projectedNetTotal: 10_000,
+          projectedRetentionTotal: 0,
+          projectedVatTotal: 2_000,
+        },
+      },
+    });
+
+    render(
+      <ConstructionProgressPaymentSurface
+        canManageMeasurementImports
+        initialImportBatchId="batch-1"
+      />,
+    );
+
+    expect(await screen.findByText("batch-1")).toBeTruthy();
+    expect(getImportMock).toHaveBeenCalledWith("batch-1");
+    expect(reportMock).toHaveBeenCalledWith("payment-1");
+    expect(
+      screen.getByRole("tab", { name: "Aktarım / Simülasyon" })
+        .getAttribute("aria-selected"),
+    ).toBe("true");
+  });
+
   test("opens report views and keeps finalized supplementary movements read only", async () => {
     detailsMock.mockResolvedValue({ ok: true, data: {
       canApplyDeductionRules: true,
@@ -183,10 +374,10 @@ describe("ConstructionProgressPaymentSurface", () => {
           { completionRate: 50, contractQuantity: 1_000, cumulativeQuantity: 500, description: "Betonarme imalatı", exceededContract: false, itemCode: "15.001", periodQuantity: 100, previousQuantity: 400, unit: "m3" },
           { completionRate: 110, contractQuantity: 100, cumulativeQuantity: 110, description: "Donatı imalatı", exceededContract: true, itemCode: "15.002", periodQuantity: 20, previousQuantity: 90, unit: "ton" },
         ],
-        header: { contractNo: "SZL-2026-001", currency: "TRY", documentNo: "HAK-2026-04", kind: "INTERIM", periodEnd: "2026-07-31T00:00:00.000Z", periodStart: "2026-07-01T00:00:00.000Z", projectCode: "PRJ-001", projectName: "Merkez Şantiye Yapım İşi", sequenceNo: 4, siteName: "Merkez Şantiye", status: "FINALIZED" },
+        header: { contractNo: "SZL-2026-001", currency: "TRY", documentNo: "HAK-2026-04", kind: "INTERIM", periodEnd: "2026-07-31T00:00:00.000Z", periodStart: "2026-07-01T00:00:00.000Z", progressPaymentId: "payment-1", projectCode: "PRJ-001", projectId: "project-1", projectName: "Merkez Şantiye Yapım İşi", sequenceNo: 4, siteName: "Merkez Şantiye", status: "FINALIZED" },
         manufacturingSheet: [
-          { contractAmount: 2_220_000, contractQuantity: 1_000, cumulativeAmount: 1_110_000, cumulativeQuantity: 500, cumulativeVatAmount: 222_000, description: "Betonarme imalatı", itemCode: "15.001", periodAmount: 222_000, periodQuantity: 100, periodVatAmount: 44_400, previousAmount: 888_000, previousQuantity: 400, unit: "m3", unitPrice: 2_220, vatRate: 20 },
-          { contractAmount: 185_000, contractQuantity: 100, cumulativeAmount: 203_500, cumulativeQuantity: 110, cumulativeVatAmount: 40_700, description: "Donatı imalatı", itemCode: "15.002", periodAmount: 37_000, periodQuantity: 20, periodVatAmount: 7_400, previousAmount: 166_500, previousQuantity: 90, unit: "ton", unitPrice: 1_850, vatRate: 20 },
+          { contractAmount: 2_220_000, contractItemId: "item-1", contractQuantity: 1_000, cumulativeAmount: 1_110_000, cumulativeQuantity: 500, cumulativeVatAmount: 222_000, description: "Betonarme imalatı", itemCode: "15.001", periodAmount: 222_000, periodQuantity: 100, periodVatAmount: 44_400, previousAmount: 888_000, previousQuantity: 400, unit: "m3", unitPrice: 2_220, vatRate: 20 },
+          { contractAmount: 185_000, contractItemId: "item-2", contractQuantity: 100, cumulativeAmount: 203_500, cumulativeQuantity: 110, cumulativeVatAmount: 40_700, description: "Donatı imalatı", itemCode: "15.002", periodAmount: 37_000, periodQuantity: 20, periodVatAmount: 7_400, previousAmount: 166_500, previousQuantity: 90, unit: "ton", unitPrice: 1_850, vatRate: 20 },
         ],
         measurementSheets: [],
         summary: { cumulativeAdditionTotal: 0, cumulativeDeductionTotal: 50_000, cumulativeExtraWorkTotal: 0, cumulativePayableTotal: 1_200_000, cumulativeWorkTotal: 1_250_000, cumulativeWorkVatTotal: 250_000, periodAdditionTotal: 0, periodDeductionTotal: 25_000, periodExtraWorkTotal: 0, periodPayableTotal: 325_000, periodWorkTotal: 350_000, periodWorkVatTotal: 70_000, projectedGrandTotal: 390_000, projectedGrossTotal: 350_000, projectedNetTotal: 325_000, projectedRetentionTotal: 25_000, projectedVatTotal: 65_000 },
@@ -274,6 +465,11 @@ describe("ConstructionProgressPaymentSurface", () => {
     fireEvent.change(within(candidates).getByLabelText("Metraj CSV dosyası"), { target: { files: [csvFile] } });
     expect(await within(candidates).findByText("Sözleşme pozu bulunamadı")).toBeTruthy();
     expect(within(candidates).getByText("12,5 m3")).toBeTruthy();
+    expect(
+      within(candidates).queryByRole("region", {
+        name: "Kalıcı metraj import çalışma alanı",
+      }),
+    ).toBeNull();
   });
 
   test("switches between general and rebar measurement entry using real sheet data", async () => {

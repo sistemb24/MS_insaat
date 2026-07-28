@@ -1,5 +1,8 @@
 import { notFound } from "next/navigation";
 
+import { globalSearchAction } from "@/app/actions/global-search-actions";
+import { parseGlobalSearchDeepLinkParams } from "@/lib/global-search-domain";
+
 import {
   approveManualBankTransactionMatchAction,
   createCashBankMovementFromBankTransactionAction,
@@ -180,6 +183,7 @@ import {
   transitionTenderStatusAction,
   updateTenderBoqAction,
 } from "@/app/actions/tender-actions";
+import { WorkplaceSafetySurface } from "@/components/workplace-safety-surface";
 import { AppShell } from "@/components/app-shell";
 import { ApiKeyManagementSurface } from "@/components/api-key-management-surface";
 import { CashBankSurface } from "@/components/cash-bank-surface";
@@ -289,6 +293,15 @@ export default async function ModulePage({
     string | string[] | undefined
   > = searchParams ? await searchParams : {};
   const requestedDocumentNo = getSingleSearchParam(resolvedSearchParams.evrak);
+  const requestedImportBatchId = getSingleSearchParam(resolvedSearchParams.import);
+  const requestedSafetyRecordId = getSingleSearchParam(resolvedSearchParams.isg);
+  const globalSearchDeepLink = parseGlobalSearchDeepLinkParams({
+    ara: resolvedSearchParams.ara,
+    kayit: resolvedSearchParams.kayit,
+  });
+  const highlightedDocumentNo =
+    globalSearchDeepLink?.query ?? requestedDocumentNo;
+  const highlightedRecordId = globalSearchDeepLink?.recordId;
   const activeSession = await requireActiveSessionState();
   const activeScope = activeSession.scope;
   const entityDefinition = getEntityDefinition(module);
@@ -542,6 +555,7 @@ export default async function ModulePage({
       activeSessionId={activeSession.sessionId}
       context={activeScope}
       currentPath={`/${module}`}
+      globalSearchAction={globalSearchAction}
       notificationUnreadCount={notificationUnreadCount}
       sessionOptions={activeSession.sessionOptions}
       signOutAction={signOutActiveSessionAction}
@@ -581,7 +595,8 @@ export default async function ModulePage({
                 ? purchaseInvoiceAuditResult.data.rows
                 : [],
             ),
-            highlightedDocumentNo: requestedDocumentNo,
+            highlightedDocumentNo,
+            highlightedRecordId,
             lookups: {
               sites: toLookupOptions(siteRowsResult),
               suppliers: toLookupOptions(supplierRowsResult),
@@ -609,7 +624,8 @@ export default async function ModulePage({
             auditLogsByEntityId: groupAuditLogsByEntityId(
               salesInvoiceAuditResult?.ok ? salesInvoiceAuditResult.data.rows : [],
             ),
-            highlightedDocumentNo: requestedDocumentNo,
+            highlightedDocumentNo,
+            highlightedRecordId,
             lookups: {
               customers: toLookupOptions(customerRowsResult),
               sites: toLookupOptions(siteRowsResult),
@@ -638,6 +654,8 @@ export default async function ModulePage({
           auditLogsByEntityId={groupAuditLogsByEntityId(
             chequeAuditResult?.ok ? chequeAuditResult.data.rows : [],
           )}
+          highlightedRecordId={highlightedRecordId}
+          initialSearchQuery={globalSearchDeepLink?.query}
           permissions={{
             canMutateCheques: canMutateCheques(activeScope),
           }}
@@ -753,6 +771,8 @@ export default async function ModulePage({
         </>
       ) : module === "ihale-yonetimi" ? (
         <TenderManagementSurface
+          highlightedRecordId={highlightedRecordId}
+          initialSearchQuery={globalSearchDeepLink?.query}
           persistence={{
             convertTenderToSite: convertTenderToSiteAction,
             createTender: createTenderAction,
@@ -805,7 +825,18 @@ export default async function ModulePage({
         />
       ) : module === "hakedis" ? (
         <>
-        <ConstructionProgressPaymentSurface />
+        <ConstructionProgressPaymentSurface
+          canManageMeasurementImports={
+            activeScope.userRole === "admin"
+            || activeScope.userRole === "accounting"
+          }
+          initialImportBatchId={requestedImportBatchId}
+          initialSimulationScenarioId={
+            requestedImportBatchId
+              ? undefined
+              : getSingleSearchParam(resolvedSearchParams.senaryo)
+          }
+        />
         <ProgressPaymentSurface
           accountOptions={toCashBankAccountOptions(
             progressPaymentAccountRowsResult,
@@ -838,6 +869,11 @@ export default async function ModulePage({
           }
         />
         </>
+      ) : module === "isg" ? (
+        <WorkplaceSafetySurface
+          canMutate={activeScope.userRole !== "viewer" && !activeScope.periodClosed}
+          initialRecordId={requestedSafetyRecordId}
+        />
       ) : module === "puantaj" ? (
         <TimesheetSurface
           auditLogsByEntityId={groupAuditLogsByEntityId(

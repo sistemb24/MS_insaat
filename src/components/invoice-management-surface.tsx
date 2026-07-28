@@ -19,7 +19,12 @@ export function InvoiceManagementSurface({
   sales: PurchaseInvoiceSurfaceProps;
   deliveryNotes: ComponentProps<typeof DeliveryNoteSurface>;
 }) {
-  const [activeTab, setActiveTab] = useState<"delivery" | "purchase" | "sales">("purchase");
+  const [activeTab, setActiveTab] = useState<"delivery" | "purchase" | "sales">(
+    sales.highlightedRecordId &&
+      sales.rows.some((row) => row.id === sales.highlightedRecordId)
+      ? "sales"
+      : "purchase",
+  );
   const purchaseTotal = getInvoiceTotal(purchase.rows);
   const salesTotal = getInvoiceTotal(sales.rows);
   const draftCount = [...purchase.rows, ...sales.rows].filter(

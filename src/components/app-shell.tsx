@@ -2,7 +2,12 @@ import Link from "next/link";
 
 import { AppShellMobileDrawer } from "@/components/app-shell-mobile-drawer";
 import { ShellNavigation } from "@/components/app-shell-navigation";
+import {
+  GlobalSearchProvider,
+  GlobalSearchTrigger,
+} from "@/components/global-search-command";
 import { Icon, ThemeControl } from "@/components/ui";
+import type { GlobalSearchAction } from "@/app/actions/global-search-actions";
 import { appContext } from "@/lib/navigation";
 import {
   createSeedNotificationRows,
@@ -16,6 +21,7 @@ type AppShellProps = {
   children: React.ReactNode;
   context?: TenantScope;
   currentPath?: string;
+  globalSearchAction?: GlobalSearchAction;
   notificationUnreadCount?: number;
   sessionOptions?: SessionOption[];
   signOutAction?: () => void | Promise<void>;
@@ -27,16 +33,18 @@ export function AppShell({
   children,
   context = appContext,
   currentPath = "/",
+  globalSearchAction,
   notificationUnreadCount = getUnreadNotificationCount(createSeedNotificationRows()),
   sessionOptions = [],
   signOutAction,
   switchSessionAction,
 }: AppShellProps) {
-  return (
+  const shell = (
     <StandardAppShell
       activeSessionId={activeSessionId}
       context={context}
       currentPath={currentPath}
+      globalSearchEnabled={Boolean(globalSearchAction)}
       notificationUnreadCount={notificationUnreadCount}
       sessionOptions={sessionOptions}
       signOutAction={signOutAction}
@@ -45,6 +53,14 @@ export function AppShell({
       {children}
     </StandardAppShell>
   );
+
+  return globalSearchAction ? (
+    <GlobalSearchProvider searchAction={globalSearchAction}>
+      {shell}
+    </GlobalSearchProvider>
+  ) : (
+    shell
+  );
 }
 
 function StandardAppShell({
@@ -52,11 +68,13 @@ function StandardAppShell({
   children,
   context,
   currentPath,
+  globalSearchEnabled,
   notificationUnreadCount,
   sessionOptions,
   signOutAction,
   switchSessionAction,
 }: Required<Pick<AppShellProps, "children" | "context" | "currentPath" | "notificationUnreadCount" | "sessionOptions">> &
+  { globalSearchEnabled: boolean } &
   Pick<AppShellProps, "activeSessionId" | "signOutAction" | "switchSessionAction">) {
   return (
     <div
@@ -76,6 +94,11 @@ function StandardAppShell({
         <div className="flex min-w-0 items-center gap-3 lg:w-[var(--ds-app-sidebar-width)] lg:shrink-0">
           <AppShellMobileDrawer>
             <MobileContextSummary context={context} />
+            {globalSearchEnabled ? (
+              <div className="border-b border-divider bg-surface-raised p-4">
+                <GlobalSearchTrigger variant="mobile" />
+              </div>
+            ) : null}
             <ShellNavigation currentPath={currentPath} label="Mobil ana modüller" />
             <div className="space-y-3 border-t border-divider bg-surface-raised p-4" data-mobile-drawer-footer="true">
               <ThemeControl />
@@ -110,6 +133,7 @@ function StandardAppShell({
         </div>
 
         <div className="ml-auto hidden items-center gap-2 lg:flex">
+          {globalSearchEnabled ? <GlobalSearchTrigger variant="desktop" /> : null}
           <ThemeControl className="hidden 2xl:inline-flex" compact />
           <SessionSwitcher
             activeSessionId={activeSessionId}

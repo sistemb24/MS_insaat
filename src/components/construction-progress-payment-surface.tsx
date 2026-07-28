@@ -30,6 +30,13 @@ import {
   getConstructionProgressPaymentReportAction,
   listConstructionProgressPaymentDetailsAction,
 } from "@/app/actions/construction-progress-payment-detail-actions";
+import { getConstructionSimulationScenarioAction } from "@/app/actions/construction-simulation-scenario-actions";
+import {
+  ConstructionSimulationScenarioWorkspace,
+  type ConstructionSimulationDraft,
+} from "@/components/construction-simulation-scenario-workspace";
+import { getConstructionMeasurementImportBatchAction } from "@/app/actions/construction-measurement-import-actions";
+import { ConstructionMeasurementImportWorkspace } from "@/components/construction-measurement-import-workspace";
 import { nextConstructionPaymentSequence } from "@/lib/construction-progress-payment-service";
 
 type ContractItem = { id: string; itemCode: string; description: string; unit: string; contractQuantity: number; unitPrice: number; vatRate: number; revisionNo: number; priceRevisions: Array<{ id: string; revisionNo: number; effectiveFrom: string; unitPrice: number; reason: string; createdAt: string }> };
@@ -42,11 +49,21 @@ const fieldClass = "min-h-10 rounded-ui-control border border-divider bg-surface
 const primaryButton = "min-h-10 rounded-ui-control border border-brand-primary bg-brand-primary px-3 py-2 text-sm font-semibold text-on-brand transition-colors hover:bg-brand-primary-strong disabled:cursor-not-allowed disabled:opacity-60";
 const secondaryButton = "min-h-10 rounded-ui-control border border-divider bg-surface-raised px-3 py-2 text-sm font-semibold text-content transition-colors hover:border-outline-strong hover:bg-surface-muted disabled:cursor-not-allowed disabled:opacity-60";
 
-export function ConstructionProgressPaymentSurface() {
+export function ConstructionProgressPaymentSurface({
+  canManageMeasurementImports = false,
+  initialImportBatchId,
+  initialSimulationScenarioId,
+}: {
+  canManageMeasurementImports?: boolean;
+  initialImportBatchId?: string;
+  initialSimulationScenarioId?: string;
+} = {}) {
   const [projects, setProjects] = useState<Project[]>([]);
   const [message, setMessage] = useState<string | null>(null);
   const [showProjectForm, setShowProjectForm] = useState(false);
   const [expandedProject, setExpandedProject] = useState<string | null>(null);
+  const [deepLinkedPaymentId, setDeepLinkedPaymentId] = useState<string | null>(null);
+  const [deepLinkedProjectId, setDeepLinkedProjectId] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
   const projectCount = projects.length;
   const openProjectCount = projects.filter((project) => project.status === "OPEN").length;
@@ -76,6 +93,34 @@ export function ConstructionProgressPaymentSurface() {
     });
     return () => { active = false; };
   }, []);
+
+  useEffect(() => {
+    if (!initialSimulationScenarioId) return;
+    let active = true;
+    void getConstructionSimulationScenarioAction(initialSimulationScenarioId).then((result) => {
+      if (!active) return;
+      if (result.ok) {
+        setDeepLinkedPaymentId(result.data.scenario.sourceProgressPaymentId);
+        setDeepLinkedProjectId(result.data.scenario.projectId);
+        setExpandedProject(result.data.scenario.projectId);
+      } else setMessage(readErrors(result));
+    });
+    return () => { active = false; };
+  }, [initialSimulationScenarioId]);
+
+  useEffect(() => {
+    if (!canManageMeasurementImports || !initialImportBatchId) return;
+    let active = true;
+    void getConstructionMeasurementImportBatchAction(initialImportBatchId).then((result) => {
+      if (!active) return;
+      if (result.ok) {
+        setDeepLinkedPaymentId(result.data.batch.sourceProgressPaymentId);
+        setDeepLinkedProjectId(result.data.batch.projectId);
+        setExpandedProject(result.data.batch.projectId);
+      } else setMessage(readErrors(result));
+    });
+    return () => { active = false; };
+  }, [canManageMeasurementImports, initialImportBatchId]);
 
   function run(operation: () => Promise<unknown>, success: string) {
     startTransition(async () => {
@@ -158,7 +203,7 @@ export function ConstructionProgressPaymentSurface() {
           const expanded = expandedProject === project.id; const lastPayment = project.progressPayments.at(-1); const canCreatePayment = project.status === "OPEN" && project.contractItems.length > 0 && (!lastPayment || ["APPROVED", "FINALIZED"].includes(lastPayment.status)); const canRevisePrices = project.status === "OPEN" && (!lastPayment || !["DRAFT", "SUBMITTED", "RETURNED"].includes(lastPayment.status));
           return <article className="rounded-ui-panel border border-divider p-4" key={project.id}>
             <div className="flex flex-wrap items-center justify-between gap-3"><div><p className="font-medium text-content">{project.code} · {project.name}</p><p className="text-xs text-content-muted">{project.siteName} · {project.contractItems.length} poz · {money(project.contractAmount)} TL</p></div><div className="flex items-center gap-2"><span className="text-xs text-content-muted">{project.status === "OPEN" ? "Açık" : "Kapalı"}</span><button className={secondaryButton} onClick={() => setExpandedProject(expanded ? null : project.id)} type="button">{expanded ? "Daralt" : "Çalış"}</button></div></div>
-            {project.progressPayments.length ? <PaymentTimeline payments={project.progressPayments} pending={isPending} run={run} /> : <p className="mt-3 text-xs text-content-muted">İlk hakediş için kümülatif zincir hazır.</p>}
+            {project.progressPayments.length ? <PaymentTimeline canManageMeasurementImports={canManageMeasurementImports} initialImportBatchId={deepLinkedProjectId === project.id ? initialImportBatchId : undefined} initialReportPaymentId={deepLinkedProjectId === project.id ? deepLinkedPaymentId : null} initialSimulationScenarioId={deepLinkedProjectId === project.id ? initialSimulationScenarioId : undefined} key={`${project.id}:${deepLinkedProjectId === project.id ? deepLinkedPaymentId ?? "loading" : "default"}`} payments={project.progressPayments} pending={isPending} run={run} /> : <p className="mt-3 text-xs text-content-muted">İlk hakediş için kümülatif zincir hazır.</p>}
             {expanded ? <div className="mt-4 grid gap-4 xl:grid-cols-2">
               <ProjectContractOverview project={project} />
               <ConstructionDeductionRulePanel project={project} />
@@ -320,8 +365,8 @@ function ProjectValue({ label, value }: { label: string; value: string }) {
   return <div className="bg-surface-raised p-4"><dt className="text-xs font-bold uppercase tracking-wide text-content-muted">{label}</dt><dd className="mt-1 font-mono text-sm font-semibold text-content">{value}</dd></div>;
 }
 
-function PaymentTimeline({ payments, pending, run }: { payments: Payment[]; pending: boolean; run: (operation: () => Promise<unknown>, success: string) => void }) {
-  const [reportPaymentId, setReportPaymentId] = useState<string | null>(null);
+function PaymentTimeline({ canManageMeasurementImports, initialImportBatchId, initialReportPaymentId, initialSimulationScenarioId, payments, pending, run }: { canManageMeasurementImports: boolean; initialImportBatchId?: string; initialReportPaymentId?: string | null; initialSimulationScenarioId?: string; payments: Payment[]; pending: boolean; run: (operation: () => Promise<unknown>, success: string) => void }) {
+  const [reportPaymentId, setReportPaymentId] = useState<string | null>(initialReportPaymentId ?? null);
   const currentPayment = payments.at(-1);
   return <section className="mt-3 scroll-mt-20 space-y-3" id="payment-list-reports">
     <div className="overflow-hidden rounded-ui-panel border border-divider bg-surface-raised shadow-sm">
@@ -336,7 +381,7 @@ function PaymentTimeline({ payments, pending, run }: { payments: Payment[]; pend
         </table>
       </div>
     </div>
-    {reportPaymentId ? <PaymentReportPanel paymentId={reportPaymentId} /> : null}
+    {reportPaymentId ? <PaymentReportPanel canManageMeasurementImports={canManageMeasurementImports} initialImportBatchId={initialImportBatchId} initialSimulationScenarioId={initialSimulationScenarioId} paymentId={reportPaymentId} /> : null}
   </section>;
 }
 
@@ -386,10 +431,10 @@ const reportTabs: { id: ReportTab; label: string }[] = [
   { id: "AUDIT", label: "Rapor / Audit" },
 ];
 
-function PaymentReportPanel({ paymentId }: { paymentId: string }) {
+function PaymentReportPanel({ canManageMeasurementImports, initialImportBatchId, initialSimulationScenarioId, paymentId }: { canManageMeasurementImports: boolean; initialImportBatchId?: string; initialSimulationScenarioId?: string; paymentId: string }) {
   const [report, setReport] = useState<PaymentReport | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [tab, setTab] = useState<ReportTab>("COVER");
+  const [tab, setTab] = useState<ReportTab>(initialSimulationScenarioId || initialImportBatchId ? "IMPORT_SIMULATION" : "COVER");
 
   useEffect(() => {
     let active = true;
@@ -421,7 +466,7 @@ function PaymentReportPanel({ paymentId }: { paymentId: string }) {
       {tab === "QUANTITY_CONTROL" ? <QuantityControlReport report={report} /> : null}
       {tab === "ACCOUNTING" ? <PaymentAccountingWorkspace report={report} /> : null}
       {tab === "REPORT_CENTER" ? <PaymentReportCenter onOpen={setTab} report={report} /> : null}
-      {tab === "IMPORT_SIMULATION" ? <ImportSimulationWorkspace report={report} /> : null}
+      {tab === "IMPORT_SIMULATION" ? <ImportSimulationWorkspace canManageMeasurementImports={canManageMeasurementImports} initialImportBatchId={initialImportBatchId} initialSimulationScenarioId={initialSimulationScenarioId} report={report} /> : null}
       {tab === "AUDIT" ? <PaymentAuditReport report={report} /> : null}
     </div>
   </section>;
@@ -535,9 +580,9 @@ function PaymentReportCenter({ onOpen, report }: { onOpen: (tab: ReportTab) => v
 
 type CsvPreviewRow = { lineNo: number; itemCode: string; description: string; unit: string; quantity: number | null; status: "READY" | "ERROR"; message: string };
 type CsvPreview = { fileName: string; issue: string | null; rows: CsvPreviewRow[] };
-type SimulationResult = { itemCode: string; description: string; unit: string; proposedQuantity: number; currentCumulative: number; projectedCumulative: number; contractQuantity: number; projectedRemaining: number; projectedAmount: number };
+type SimulationResult = ConstructionSimulationDraft;
 
-function ImportSimulationWorkspace({ report }: { report: PaymentReport }) {
+function ImportSimulationWorkspace({ canManageMeasurementImports, initialImportBatchId, initialSimulationScenarioId, report }: { canManageMeasurementImports: boolean; initialImportBatchId?: string; initialSimulationScenarioId?: string; report: PaymentReport }) {
   const firstItemCode = report.manufacturingSheet[0]?.itemCode ?? "";
   const [selectedItemCode, setSelectedItemCode] = useState(firstItemCode);
   const [preview, setPreview] = useState<CsvPreview | null>(null);
@@ -574,7 +619,10 @@ function ImportSimulationWorkspace({ report }: { report: PaymentReport }) {
       setSimulation(null); setSimulationError("Doğrudan miktar veya pozitif ölçü değerleriyle sıfırdan büyük bir sonuç üretin."); return;
     }
     const projectedCumulative = item.cumulativeQuantity + proposedQuantity;
-    setSimulation({ itemCode: item.itemCode, description: item.description, unit: item.unit, proposedQuantity, currentCumulative: item.cumulativeQuantity, projectedCumulative, contractQuantity: item.contractQuantity, projectedRemaining: item.contractQuantity - projectedCumulative, projectedAmount: proposedQuantity * item.unitPrice });
+    const actionLine = directText
+      ? { contractItemId: item.contractItemId, directQuantity: proposedQuantity }
+      : { contractItemId: item.contractItemId, length: numberValue(data, "length"), width: numberValue(data, "width"), height: numberValue(data, "height"), multiplier: numberValue(data, "multiplier") };
+    setSimulation({ contractItemId: item.contractItemId, itemCode: item.itemCode, description: item.description, unit: item.unit, proposedQuantity, currentCumulative: item.cumulativeQuantity, projectedCumulative, contractQuantity: item.contractQuantity, projectedRemaining: item.contractQuantity - projectedCumulative, projectedAmount: proposedQuantity * item.unitPrice, actionLine });
     setSimulationError(null);
   }
 
@@ -594,6 +642,8 @@ function ImportSimulationWorkspace({ report }: { report: PaymentReport }) {
         <div aria-live="polite" className="border-t border-divider p-4">{simulationError ? <p className="rounded-ui-control border border-danger/30 bg-danger-subtle p-3 text-sm text-danger">{simulationError}</p> : null}{simulation ? <div className="space-y-3"><div className="flex flex-wrap items-start justify-between gap-2"><div><p className="font-mono text-xs font-bold text-brand-primary">{simulation.itemCode}</p><p className="mt-1 text-sm font-semibold text-content">{simulation.description}</p></div><span className={simulation.projectedRemaining < 0 ? "rounded-full bg-danger-subtle px-2 py-1 text-xs font-semibold text-danger" : "rounded-full bg-success-subtle px-2 py-1 text-xs font-semibold text-success"}>{simulation.projectedRemaining < 0 ? "Sözleşme aşımı" : "Sınırlar içinde"}</span></div><div className="grid gap-2 sm:grid-cols-2"><ReportMetric brand label="Önerilen miktar" value={`${quantity(simulation.proposedQuantity)} ${simulation.unit}`} /><ReportMetric label="Tahmini dönem tutarı" moneyValue value={simulation.projectedAmount} /><ReportMetric label="Yeni kümülatif" value={`${quantity(simulation.projectedCumulative)} ${simulation.unit}`} /><ReportMetric danger={simulation.projectedRemaining < 0} label="Kalan sözleşme" value={`${quantity(simulation.projectedRemaining)} ${simulation.unit}`} /></div><p className="rounded-ui-control border border-divider bg-surface-subtle p-3 text-xs leading-5 text-content-muted">Hesap, {quantity(simulation.currentCumulative)} {simulation.unit} mevcut kümülatif ve {quantity(simulation.contractQuantity)} {simulation.unit} sözleşme miktarını kullanır. Sonuç föye aktarılmaz ve kaydedilmez.</p></div> : !simulationError ? <p className="text-sm text-content-muted">Bir poz ve miktar seçerek salt okunur etki hesabını başlatın.</p> : null}</div>
       </article>
     </div>
+    <ConstructionSimulationScenarioWorkspace draft={simulation} initialScenarioId={initialSimulationScenarioId} projectId={report.header.projectId} sourceProgressPaymentId={report.header.progressPaymentId} />
+    {canManageMeasurementImports ? <ConstructionMeasurementImportWorkspace initialBatchId={initialImportBatchId} projectId={report.header.projectId} sourceProgressPaymentId={report.header.progressPaymentId} /> : null}
   </section>;
 }
 

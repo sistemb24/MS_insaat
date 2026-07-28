@@ -116,6 +116,7 @@ export type PurchaseInvoiceSurfaceProps = {
     >;
   };
   highlightedDocumentNo?: string;
+  highlightedRecordId?: string;
   embedded?: boolean;
   paymentMovements?: CashBankMovementRow[];
   rows: PurchaseInvoiceRow[];
@@ -155,6 +156,7 @@ export function PurchaseInvoiceSurface({
   accountOptions = [],
   auditLogsByEntityId = {},
   highlightedDocumentNo,
+  highlightedRecordId,
   embedded = false,
   lookups = { sites: [], suppliers: [] },
   permissions = { canMutateInvoices: true },
@@ -972,8 +974,10 @@ export function PurchaseInvoiceSurface({
                   const remainingPaymentTotal = Math.max(0, row.grandTotal - paidTotal);
                   const isPaid = remainingPaymentTotal <= 0;
                   const isHighlighted = isHighlightedDocument(
+                    row.id,
                     row.documentNo,
                     highlightedDocumentNo,
+                    highlightedRecordId,
                   );
                   const isProcessing =
                     cancellingId === row.id ||
@@ -1184,9 +1188,15 @@ export function PurchaseInvoiceSurface({
 }
 
 function isHighlightedDocument(
+  recordId: string,
   documentNo: string,
   highlightedDocumentNo?: string,
+  highlightedRecordId?: string,
 ) {
+  if (highlightedRecordId) {
+    return recordId === highlightedRecordId;
+  }
+
   return Boolean(highlightedDocumentNo && documentNo === highlightedDocumentNo);
 }
 
