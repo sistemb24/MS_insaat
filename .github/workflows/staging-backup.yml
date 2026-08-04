@@ -1,6 +1,9 @@
 name: Staging Backup
 
 on:
+  push:
+    branches:
+      - agent/faz36-staging-recovery
   schedule:
     - cron: "15 1 * * *"
   workflow_dispatch:
