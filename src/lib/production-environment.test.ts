@@ -8,7 +8,7 @@ describe("production environment", () => {
       validateProductionEnvironment({
         APP_BASE_URL: "https://app.noa.example",
         DATABASE_URL: "postgresql://noa:secret@db.noa.example:5432/noa",
-        NOA_DOCUMENT_STORAGE_DIR: "D:\\noa-production-documents",
+        NOA_DOCUMENT_STORAGE_DIR: "/var/lib/noa-production-documents",
         NOA_TRUST_PROXY: "false",
       }),
     ).toMatchObject({
@@ -32,7 +32,7 @@ describe("production environment", () => {
       validateProductionEnvironment({
         APP_BASE_URL: "https://app.noa.example",
         DATABASE_URL: "postgresql://noa:secret@db.noa.example:5432/noa",
-        NOA_DOCUMENT_STORAGE_DIR: "D:\\noa-production-documents",
+        NOA_DOCUMENT_STORAGE_DIR: "/var/lib/noa-production-documents",
         NOA_PAYMENT_WEBHOOK_SECRET: "short",
       }),
     ).toThrow(/NOA_PAYMENT_WEBHOOK_SECRET/);
@@ -43,7 +43,7 @@ describe("production environment", () => {
       validateProductionEnvironment({
         APP_BASE_URL: "https://app.noa.example",
         DATABASE_URL: "postgresql://noa:secret@db.noa.example:5432/noa",
-        NOA_DOCUMENT_STORAGE_DIR: "D:\\noa-production-documents",
+        NOA_DOCUMENT_STORAGE_DIR: "/var/lib/noa-production-documents",
         NOA_PUBLIC_INDEXING_ENABLED: "true",
       }),
     ).toThrow(/NOA_LEGAL_COMPANY_NAME/);

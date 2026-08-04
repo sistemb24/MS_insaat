@@ -1331,6 +1331,7 @@ function formatAuditDate(value: string) {
     hour12: false,
     minute: "2-digit",
     month: "2-digit",
+    timeZone: "Europe/Istanbul",
     year: "numeric",
   }).format(new Date(value));
 }
