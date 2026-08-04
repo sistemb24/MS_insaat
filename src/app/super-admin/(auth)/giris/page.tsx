@@ -11,6 +11,7 @@ import { createSuperAdminCredentialPrismaRepository } from "@/lib/super-admin-cr
 import { createSuperAdminSessionPrismaRepository, resolveSuperAdminSession, SUPER_ADMIN_SESSION_COOKIE } from "@/lib/super-admin-session-repository";
 
 export const metadata: Metadata = { title: "Süper Admin Girişi | NOA İnşaat" };
+export const dynamic = "force-dynamic";
 
 export default async function SuperAdminLoginPage({
   searchParams,
