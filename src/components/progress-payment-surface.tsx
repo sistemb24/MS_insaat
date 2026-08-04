@@ -3,6 +3,9 @@
 import { useMemo, useState, useTransition } from "react";
 
 import type { AuditLogEntry } from "@/lib/audit-log";
+import { CompanyProfileDocumentHeader } from "@/components/company-profile-document-header";
+import type { EffectiveCompanyProfile } from "@/lib/company-profile";
+import type { EffectiveCompanyBrandAsset } from "@/lib/company-brand-asset";
 import type {
   CashBankAccountOption,
   CashBankMovementRow,
@@ -17,7 +20,6 @@ import {
   getP0BaseCurrencyDisplayValue,
   getP0BaseCurrencyTransactionValue,
   getP0CurrencyPolicyDisplayValue,
-  getP0DefaultVatRateInputValue,
 } from "@/lib/settings-contract";
 
 type ProgressPaymentLookupOption = {
@@ -28,6 +30,8 @@ type ProgressPaymentLookupOption = {
 type ProgressPaymentSurfaceProps = {
   accountOptions?: CashBankAccountOption[];
   auditLogsByEntityId?: Record<string, AuditLogEntry[]>;
+  companyBrandAsset?: EffectiveCompanyBrandAsset;
+  companyProfile?: EffectiveCompanyProfile;
   lookups?: {
     counterparties: ProgressPaymentLookupOption[];
     sites: ProgressPaymentLookupOption[];
@@ -72,6 +76,8 @@ type ProgressPaymentSurfaceProps = {
   highlightedDocumentNo?: string;
   paymentMovements?: CashBankMovementRow[];
   rows: ProgressPaymentRow[];
+  defaultVatRate?: number;
+  showVatBreakdown?: boolean;
   today?: string;
 };
 
@@ -100,12 +106,16 @@ type LineState = {
 export function ProgressPaymentSurface({
   accountOptions = [],
   auditLogsByEntityId = {},
+  companyBrandAsset,
+  companyProfile,
   highlightedDocumentNo,
   lookups = { counterparties: [], sites: [] },
   permissions = { canMutateProgressPayments: true },
   paymentMovements = [],
   persistence,
   rows,
+  defaultVatRate = 20,
+  showVatBreakdown = true,
   today = new Date().toISOString().slice(0, 10),
 }: ProgressPaymentSurfaceProps) {
   const [displayRows, setDisplayRows] = useState(rows);
@@ -140,7 +150,7 @@ export function ProgressPaymentSurface({
   );
   const baseCurrencyContext = `Baz Para: ${getP0BaseCurrencyDisplayValue()}`;
   const currencyPolicyContext = getP0CurrencyPolicyDisplayValue();
-  const defaultVatContext = `Varsayılan KDV: %${getP0DefaultVatRateInputValue()}`;
+  const defaultVatContext = `Varsayılan KDV: %${defaultVatRate}`;
 
   function startCreate() {
     if (!permissions.canMutateProgressPayments) {
@@ -154,7 +164,7 @@ export function ProgressPaymentSurface({
       description: "",
       documentNo: "",
       issueDate: today,
-      lines: [createEmptyLine()],
+      lines: [createEmptyLine(defaultVatRate)],
       paymentType: "Taşeron Hakedişi",
       retentionRate: "5",
       siteCode: "",
@@ -406,6 +416,11 @@ export function ProgressPaymentSurface({
 
   return (
     <section className="mx-auto flex max-w-[1440px] scroll-mt-20 flex-col gap-4" id="progress-payment-operations">
+      <CompanyProfileDocumentHeader
+        brandAsset={companyBrandAsset}
+        className="hidden print:block"
+        profile={companyProfile}
+      />
       <header className="rounded-ui-panel border border-divider bg-surface-raised p-5">
         <p className="text-xs font-semibold uppercase tracking-wide text-brand-primary">
           Şantiye, taşeron ve cari
@@ -655,7 +670,7 @@ export function ProgressPaymentSurface({
                 label="Kesinti Toplamı"
                 value={draftTotals?.retentionTotal ?? 0}
               />
-              <SummaryRow label="KDV Toplamı" value={draftTotals?.vatTotal ?? 0} />
+              {showVatBreakdown ? <SummaryRow label="KDV Toplamı" value={draftTotals?.vatTotal ?? 0} /> : null}
               <SummaryRow
                 label="Genel Toplam"
                 strong
@@ -1082,14 +1097,14 @@ function createValuesFromForm(form: FormState): ProgressPaymentCreateValues {
   };
 }
 
-function createEmptyLine(): LineState {
+function createEmptyLine(defaultVatRate = 20): LineState {
   return {
     id: `line-${Date.now()}-${Math.random().toString(16).slice(2)}`,
     description: "",
     quantity: "1",
     unit: "Adet",
     unitPrice: "0",
-    vatRate: getP0DefaultVatRateInputValue(),
+    vatRate: String(defaultVatRate),
   };
 }
 

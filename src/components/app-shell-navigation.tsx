@@ -32,7 +32,13 @@ const navigationGroups = [
   },
   {
     label: "Sistem",
-    routes: ["/abonelik", "/api-yonetimi", "/e-fatura-yonetimi"],
+    routes: [
+      "/abonelik",
+      "/api-yonetimi",
+      "/destek-merkezi",
+      "/bilgi-merkezi",
+      "/e-fatura-yonetimi",
+    ],
   },
 ] as const;
 
@@ -40,6 +46,8 @@ const iconByRoute: Record<string, IconName> = {
   "/": "dashboard",
   "/abonelik": "receipt",
   "/api-yonetimi": "code",
+  "/destek-merkezi": "life-buoy",
+  "/bilgi-merkezi": "info",
   "/araclar": "car",
   "/ayarlar": "settings",
   "/bildirimler": "bell",

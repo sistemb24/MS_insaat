@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, test, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 
 import { defaultTenantScope } from "@/lib/tenant-scope";
 
@@ -84,6 +84,8 @@ const missingBankIntegrationGuardResult = {
 
 describe("bank integration actions", () => {
   beforeEach(() => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date("2026-08-02T00:00:00.000Z"));
     getActiveTenantScopeMock.mockReset();
     ensureTenantScopeMock.mockReset();
     revalidatePathMock.mockReset();
@@ -116,6 +118,10 @@ describe("bank integration actions", () => {
     prismaMock.cashBankMovement.findMany.mockResolvedValue([]);
     prismaMock.entityRecord.findMany.mockResolvedValue([]);
     prismaMock.auditLog.create.mockResolvedValue({});
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
   });
 
   test("blocks sandbox bank connection when the active subscription lacks bank integration", async () => {

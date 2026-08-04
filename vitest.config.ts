@@ -11,5 +11,13 @@ export default defineConfig({
   test: {
     environment: "node",
     testTimeout: 15000,
+    sequence: {
+      concurrent: false,
+    },
+    server: {
+      deps: {
+        inline: ["fast-check"],
+      },
+    },
   },
 });

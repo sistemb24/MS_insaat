@@ -2,6 +2,10 @@ import type { AuditLogRepository } from "./audit-log";
 import { createAuditLogEntry } from "./audit-log";
 import { hasRbacPermission } from "./rbac";
 import {
+  canUseDocumentPermission,
+  type AccessProfilePermissionCode,
+} from "./access-profile";
+import {
   buildTenantScopeKey,
   type TenantScope,
   validateTenantScope,
@@ -130,6 +134,14 @@ export type DocumentCenterSummary = {
   usedPercent: number;
 };
 
+export type DocumentCenterCapabilities = {
+  canCreateFile: boolean;
+  canManageFolders: boolean;
+  canRenameFile: boolean;
+  canTrashRestoreFile: boolean;
+  canView: boolean;
+};
+
 export type DocumentCenterRepositoryListInput = {
   scope: TenantScope;
 };
@@ -242,6 +254,7 @@ export type DocumentCenterService = {
       files: DocumentFileRow[];
       folders: DocumentFolderRow[];
       trashedFiles: DocumentFileRow[];
+      capabilities: DocumentCenterCapabilities;
     }>
   >;
   moveFileToTrash(
@@ -522,6 +535,13 @@ export function createDocumentCenterService({
     },
 
     async list({ scope }) {
+      const permissionErrors = validateDocumentCenterPermission(
+        scope,
+        "document.view",
+      );
+      if (permissionErrors.length > 0) {
+        return { ok: false, errors: permissionErrors };
+      }
       const scopeErrors = validateTenantScope(scope);
 
       if (scopeErrors.length > 0) {
@@ -531,6 +551,7 @@ export function createDocumentCenterService({
       return {
         ok: true,
         data: {
+          capabilities: getDocumentCenterCapabilities(scope),
           files: await repository.listFiles({ scope }),
           folders: await repository.listFolders({ scope }),
           trashedFiles: await repository.listTrashedFiles({ scope }),
@@ -539,7 +560,10 @@ export function createDocumentCenterService({
     },
 
     async moveFileToTrash({ fileId, scope }) {
-      const permissionErrors = validateDocumentCenterMutationPermission(scope);
+      const permissionErrors = validateDocumentCenterPermission(
+        scope,
+        "document.file.trash_restore",
+      );
 
       if (permissionErrors.length > 0) {
         return { ok: false, errors: permissionErrors };
@@ -575,7 +599,10 @@ export function createDocumentCenterService({
     },
 
     async renameFile({ fileId, name, scope }) {
-      const permissionErrors = validateDocumentCenterMutationPermission(scope);
+      const permissionErrors = validateDocumentCenterPermission(
+        scope,
+        "document.file.rename",
+      );
       if (permissionErrors.length > 0) return { ok: false, errors: permissionErrors };
       const trimmedName = name.trim();
       if (!trimmedName) return { ok: false, errors: ["Dosya adı zorunludur."] };
@@ -598,7 +625,10 @@ export function createDocumentCenterService({
     },
 
     async restoreFileFromTrash({ fileId, scope }) {
-      const permissionErrors = validateDocumentCenterMutationPermission(scope);
+      const permissionErrors = validateDocumentCenterPermission(
+        scope,
+        "document.file.trash_restore",
+      );
 
       if (permissionErrors.length > 0) {
         return { ok: false, errors: permissionErrors };
@@ -633,7 +663,10 @@ export function createDocumentCenterService({
     },
 
     async purgeExpiredTrash({ retentionDays = DOCUMENT_TRASH_RETENTION_DAYS, scope }) {
-      const permissionErrors = validateDocumentCenterMutationPermission(scope);
+      const permissionErrors = validateDocumentCenterPermission(
+        scope,
+        "document.file.trash_restore",
+      );
 
       if (permissionErrors.length > 0) {
         return { ok: false, errors: permissionErrors };
@@ -671,7 +704,10 @@ export function createDocumentCenterService({
     },
 
     async createUserFolder({ scope, values }) {
-      const permissionErrors = validateDocumentCenterMutationPermission(scope);
+      const permissionErrors = validateDocumentCenterPermission(
+        scope,
+        "document.folder.manage",
+      );
 
       if (permissionErrors.length > 0) {
         return { ok: false, errors: permissionErrors };
@@ -708,7 +744,10 @@ export function createDocumentCenterService({
     },
 
     async deleteUserFolder({ folderId, scope }) {
-      const permissionErrors = validateDocumentCenterMutationPermission(scope);
+      const permissionErrors = validateDocumentCenterPermission(
+        scope,
+        "document.folder.manage",
+      );
       if (permissionErrors.length > 0) return { ok: false, errors: permissionErrors };
       const resolvedFolders = await resolveFolders(scope);
       if (!resolvedFolders.ok) return resolvedFolders;
@@ -724,7 +763,10 @@ export function createDocumentCenterService({
     },
 
     async renameUserFolder({ folderId, name, scope }) {
-      const permissionErrors = validateDocumentCenterMutationPermission(scope);
+      const permissionErrors = validateDocumentCenterPermission(
+        scope,
+        "document.folder.manage",
+      );
       if (permissionErrors.length > 0) return { ok: false, errors: permissionErrors };
       const resolvedFolders = await resolveFolders(scope);
       if (!resolvedFolders.ok) return resolvedFolders;
@@ -746,7 +788,10 @@ export function createDocumentCenterService({
     },
 
     async createFileMetadata({ scope, storageKey, values }) {
-      const permissionErrors = validateDocumentCenterMutationPermission(scope);
+      const permissionErrors = validateDocumentCenterPermission(
+        scope,
+        "document.file.create",
+      );
 
       if (permissionErrors.length > 0) {
         return { ok: false, errors: permissionErrors };
@@ -817,7 +862,54 @@ export function createDocumentCenterService({
 }
 
 export function canMutateDocumentCenter(scope: TenantScope) {
-  return hasRbacPermission(scope.userRole, "document.manage");
+  return scope.documentAccess?.assigned
+    ? (
+        [
+          "document.file.create",
+          "document.file.rename",
+          "document.file.trash_restore",
+          "document.folder.manage",
+        ] as const
+      ).some((permission) =>
+        canUseDocumentPermission(
+          scope.userRole,
+          scope.documentAccess,
+          permission,
+        ),
+      )
+    : hasRbacPermission(scope.userRole, "document.manage");
+}
+
+export function getDocumentCenterCapabilities(
+  scope: TenantScope,
+): DocumentCenterCapabilities {
+  return {
+    canCreateFile: canUseDocumentPermission(
+      scope.userRole,
+      scope.documentAccess,
+      "document.file.create",
+    ),
+    canManageFolders: canUseDocumentPermission(
+      scope.userRole,
+      scope.documentAccess,
+      "document.folder.manage",
+    ),
+    canRenameFile: canUseDocumentPermission(
+      scope.userRole,
+      scope.documentAccess,
+      "document.file.rename",
+    ),
+    canTrashRestoreFile: canUseDocumentPermission(
+      scope.userRole,
+      scope.documentAccess,
+      "document.file.trash_restore",
+    ),
+    canView: canUseDocumentPermission(
+      scope.userRole,
+      scope.documentAccess,
+      "document.view",
+    ),
+  };
 }
 
 export function createSeededDocumentCenterMemoryRepository(): DocumentCenterRepository {
@@ -1174,10 +1266,21 @@ function buildRowScopeKey(row: {
   return `${row.tenantId ?? ""}::${row.companyId ?? ""}::${row.periodId ?? ""}`;
 }
 
-function validateDocumentCenterMutationPermission(scope: TenantScope) {
-  return canMutateDocumentCenter(scope)
+function validateDocumentCenterPermission(
+  scope: TenantScope,
+  permission: AccessProfilePermissionCode,
+) {
+  return canUseDocumentPermission(
+    scope.userRole,
+    scope.documentAccess,
+    permission,
+  )
     ? []
-    : ["Döküman işlemi için muhasebe veya admin yetkisi gereklidir."];
+    : [
+        scope.documentAccess?.assigned
+          ? "Yetki profiliniz bu Doküman Merkezi işlemine izin vermiyor."
+          : "Döküman işlemi için muhasebe veya admin yetkisi gereklidir.",
+      ];
 }
 
 async function recordDocumentAudit(

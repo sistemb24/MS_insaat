@@ -8,4 +8,6 @@ export { PageHeader } from "./page-header";
 export { Panel } from "./panel";
 export { StatusBadge, type StatusTone } from "./status-badge";
 export { SurfaceState, type SurfaceStateKind } from "./surface-state";
+export { RouteErrorState } from "./route-error-state";
+export { RouteLoadingState } from "./route-loading-state";
 export { ThemeControl } from "./theme-control";

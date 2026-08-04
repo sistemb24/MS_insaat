@@ -1,5 +1,6 @@
 import type { EntityDefinition, EntityDraft, EntityRow } from "./entities";
 import { saveEntityDraft, validateEntityDraft } from "./entities";
+import type { EffectiveDocumentAccess } from "./access-profile";
 
 export type TenantScope = {
   tenantId: string;
@@ -13,6 +14,7 @@ export type TenantScope = {
   userRole: TenantUserRole;
   licenseLabel: string;
   periodClosed?: boolean;
+  documentAccess?: EffectiveDocumentAccess;
 };
 
 export type TenantUserRole = "admin" | "accounting" | "viewer";

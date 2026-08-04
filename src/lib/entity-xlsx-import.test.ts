@@ -202,6 +202,82 @@ describe("previewEntityImportXlsx", () => {
     expect(preview.rows).toEqual([]);
   });
 
+  it("applies supplier category dictionary validation to xlsx rows", () => {
+    const definition = getEntityDefinition("tedarikciler");
+    expect(definition).toBeDefined();
+
+    const preview = previewEntityImportXlsx(
+      definition!,
+      [],
+      createWorkbookBuffer([
+        ["Kodu", "Tanımı", "Vergi No", "Telefon", "Kategori", "Bakiye", "Durum"],
+        ["TED-0005", "XLSX Tedarikçi", "5555555555", "0 242 555 55 55", "Tanımsız", "0,00 TL", "Aktif"],
+      ]),
+      undefined,
+      undefined,
+      {
+        supplierCategories: [
+          {
+            canManage: true,
+            description: "",
+            id: "category-material",
+            name: "Malzeme",
+            normalizedName: "malzeme",
+            revisionNo: 1,
+            source: "managed",
+            status: "ACTIVE",
+            updatedAt: "2026-07-31T00:00:00.000Z",
+            updatedBy: "admin",
+            usageCount: 0,
+          },
+        ],
+      },
+    );
+
+    expect(preview.summary.invalidRows).toBe(1);
+    expect(preview.rows[0]?.errors).toContain(
+      "Tedarikçi kategorisi aktif sözlükte bulunamadı: Tanımsız",
+    );
+  });
+
+  it("applies customer type dictionary validation to xlsx rows", () => {
+    const definition = getEntityDefinition("musteriler");
+    expect(definition).toBeDefined();
+
+    const preview = previewEntityImportXlsx(
+      definition!,
+      [],
+      createWorkbookBuffer([
+        ["Kodu", "Tanımı", "Müşteri Tipi", "Vergi No", "Telefon", "E-posta", "Bakiye", "Durum"],
+        ["MUS-0007", "XLSX Müşterisi", "Tanımsız", "7777777777", "0 242 777 77 77", "xlsx@example.com", "0,00 TL", "Aktif"],
+      ]),
+      undefined,
+      undefined,
+      {
+        customerTypes: [
+          {
+            canManage: true,
+            description: "",
+            id: "customer-type-corporate",
+            name: "Kurumsal",
+            normalizedName: "kurumsal",
+            revisionNo: 1,
+            source: "managed",
+            status: "ACTIVE",
+            updatedAt: "2026-07-31T00:00:00.000Z",
+            updatedBy: "admin",
+            usageCount: 0,
+          },
+        ],
+      },
+    );
+
+    expect(preview.summary.invalidRows).toBe(1);
+    expect(preview.rows[0]?.errors).toContain(
+      "Müşteri tipi aktif sözlükte bulunamadı: Tanımsız",
+    );
+  });
+
   it("inspects and previews the selected worksheet instead of the first worksheet", () => {
     const definition = getEntityDefinition("musteriler");
     const workbookData = createWorkbookBuffer([

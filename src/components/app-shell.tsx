@@ -238,6 +238,7 @@ function SessionSwitcher({
           className="mt-1 h-9 w-full min-w-0 rounded-ui-control border border-divider bg-surface-muted px-2 text-xs font-semibold text-content outline-none focus:border-brand-primary"
           defaultValue={activeSessionId}
           id={id}
+          key={activeSessionId}
           name="sessionId"
         >
           {options.map((option) => (

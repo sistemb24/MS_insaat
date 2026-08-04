@@ -34,8 +34,11 @@ import {
 } from "../src/lib/timesheet-seed";
 import { createTimesheetService } from "../src/lib/timesheet-service";
 import { seedDemoUserScopeAccesses } from "../src/lib/user-scope-access-seed";
+import { assertNonProductionDatabaseCommand } from "../src/lib/database-command-safety";
 
 async function main() {
+  assertNonProductionDatabaseCommand("db:seed", process.env);
+
   for (const scope of allTenantScopes) {
     await ensureTenantScope(prisma, scope);
   }

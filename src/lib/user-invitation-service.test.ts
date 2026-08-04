@@ -9,6 +9,8 @@ import {
   type UserInvitationRow,
 } from "./user-invitation-service";
 import { defaultTenantScope, type TenantScope } from "./tenant-scope";
+import type { AccessProfileSnapshot } from "./access-profile";
+import { CUSTOM_RBAC_USER_TYPE } from "./user-invitation-access-profile";
 
 const adminScope: TenantScope = {
   ...defaultTenantScope,
@@ -35,6 +37,109 @@ const invitation: UserInvitationRow = {
 };
 
 describe("user invitation service", () => {
+  test("creates and accepts a custom invitation with an active profile assignment", async () => {
+    const acceptedAssignments: import("./access-profile").AccessProfileAssignmentSnapshot[] = [];
+    const accessProfile: AccessProfileSnapshot = {
+      companyId: adminScope.companyId,
+      createdAt: "2026-07-01T10:00:00.000Z",
+      createdBy: adminScope.userId,
+      description: "Yalnız doküman okuma",
+      id: "profile-document-reader",
+      lastMutationKey: "profile-create",
+      name: "Doküman Okuyucu",
+      normalizedName: "doküman okuyucu",
+      permissions: ["document.view"],
+      revisionNo: 1,
+      status: "ACTIVE",
+      tenantId: adminScope.tenantId,
+      updatedAt: "2026-07-01T10:00:00.000Z",
+      updatedBy: adminScope.userId,
+    };
+    const repository = createSeededUserInvitationMemoryRepository({
+      acceptedAssignments,
+      accessProfiles: [accessProfile],
+    });
+    const auditLogs: AuditLogEntryInput[] = [];
+    const service = createUserInvitationService({
+      auditLogRepository: createMemoryAuditRepository(auditLogs),
+      now: () => "2026-07-31T10:00:00.000Z",
+      repository,
+      tokenFactory: () => "custom-invite-token",
+    });
+
+    const created = await service.createInvitation({
+      scope: adminScope,
+      values: {
+        accessProfileId: accessProfile.id,
+        email: "ozel@example.com",
+        role: CUSTOM_RBAC_USER_TYPE,
+      },
+    });
+    expect(created.ok).toBe(true);
+    if (!created.ok) return;
+
+    const accepted = await service.acceptInvitation({
+      values: {
+        fullName: "Özel Kullanıcı",
+        password: "Strong123!",
+        passwordConfirm: "Strong123!",
+        token: created.data.token,
+      },
+    });
+    expect(accepted.ok).toBe(true);
+    expect(acceptedAssignments).toHaveLength(1);
+    expect(acceptedAssignments[0]).toMatchObject({
+      companyId: adminScope.companyId,
+      periodId: adminScope.periodId,
+      profileId: accessProfile.id,
+      revisionNo: 1,
+      tenantId: adminScope.tenantId,
+    });
+    expect(auditLogs.map((entry) => entry.metadata.accessProfileId)).toEqual([
+      accessProfile.id,
+      accessProfile.id,
+    ]);
+    expect(JSON.stringify(auditLogs)).not.toContain(accessProfile.name);
+    expect(JSON.stringify(auditLogs)).not.toContain(accessProfile.description);
+    expect(JSON.stringify(auditLogs)).not.toContain("custom-invite-token");
+  });
+
+  test("rejects missing, foreign and inactive profiles for custom invitations", async () => {
+    const inactiveProfile: AccessProfileSnapshot = {
+      companyId: adminScope.companyId,
+      createdAt: "2026-07-01T10:00:00.000Z",
+      createdBy: adminScope.userId,
+      description: "",
+      id: "profile-inactive",
+      lastMutationKey: "profile-create",
+      name: "Pasif Profil",
+      normalizedName: "pasif profil",
+      permissions: [],
+      revisionNo: 2,
+      status: "INACTIVE",
+      tenantId: adminScope.tenantId,
+      updatedAt: "2026-07-02T10:00:00.000Z",
+      updatedBy: adminScope.userId,
+    };
+    const service = createUserInvitationService({
+      repository: createSeededUserInvitationMemoryRepository({
+        accessProfiles: [inactiveProfile],
+      }),
+    });
+
+    for (const accessProfileId of [undefined, "foreign-profile", inactiveProfile.id]) {
+      const result = await service.createInvitation({
+        scope: adminScope,
+        values: {
+          accessProfileId,
+          email: `${accessProfileId ?? "missing"}@example.com`,
+          role: CUSTOM_RBAC_USER_TYPE,
+        },
+      });
+      expect(result.ok).toBe(false);
+    }
+  });
+
   test("creates a normalized tenant scoped invitation with a 7 day token", async () => {
     const auditLogs: AuditLogEntryInput[] = [];
     const emailMessages: unknown[] = [];

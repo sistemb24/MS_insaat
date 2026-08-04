@@ -8,9 +8,10 @@ const createDocumentCenterPrismaRepositoryMock = vi.hoisted(() =>
     listFiles: listFilesMock,
   })),
 );
-const createLocalDocumentStorageMock = vi.hoisted(() =>
+const createDocumentStorageRuntimeMock = vi.hoisted(() =>
   vi.fn(() => ({
-    readObject: readObjectMock,
+    provider: "local",
+    storage: { readObject: readObjectMock },
   })),
 );
 
@@ -23,8 +24,8 @@ vi.mock("@/lib/document-center-prisma-repository", () => ({
     createDocumentCenterPrismaRepositoryMock,
 }));
 
-vi.mock("@/lib/document-storage", () => ({
-  createLocalDocumentStorage: createLocalDocumentStorageMock,
+vi.mock("@/lib/document-storage-runtime", () => ({
+  createDocumentStorageRuntime: createDocumentStorageRuntimeMock,
 }));
 
 vi.mock("@/lib/prisma", () => ({

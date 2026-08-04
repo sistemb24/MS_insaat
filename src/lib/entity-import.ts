@@ -1,5 +1,18 @@
 import type { EntityDefinition, EntityRow } from "./entities";
 import { validateEntityDraft } from "./entities";
+import {
+  validateSupplierCategoryAssignment,
+  type EffectiveSupplierCategory,
+} from "./supplier-category";
+import {
+  validateCustomerTypeAssignment,
+  type EffectiveCustomerType,
+} from "./customer-type";
+
+export type EntityImportValidationContext = {
+  customerTypes?: EffectiveCustomerType[];
+  supplierCategories?: EffectiveSupplierCategory[];
+};
 
 export type EntityImportPreviewRow = {
   rowNumber: number;
@@ -22,6 +35,7 @@ export function previewEntityImportCsv(
   definition: EntityDefinition,
   existingRows: EntityRow[],
   csvText: string,
+  context: EntityImportValidationContext = {},
 ): EntityImportPreview {
   const records = parseSemicolonCsv(csvText).filter((record) =>
     record.some((cell) => cell.trim()),
@@ -53,6 +67,18 @@ export function previewEntityImportCsv(
 
     if (values.status && !["Aktif", "Pasif"].includes(values.status)) {
       errors.push("Durum Aktif veya Pasif olmalıdır.");
+    }
+    if (definition.slug === "tedarikciler" && context.supplierCategories) {
+      errors.push(...validateSupplierCategoryAssignment({
+        categories: context.supplierCategories,
+        value: values.category ?? "",
+      }));
+    }
+    if (definition.slug === "musteriler" && context.customerTypes) {
+      errors.push(...validateCustomerTypeAssignment({
+        customerTypes: context.customerTypes,
+        value: values.customerType ?? "",
+      }));
     }
 
     if (code) {

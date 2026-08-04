@@ -7,6 +7,9 @@ import {
   createPurchaseInvoiceDraft,
 } from "@/lib/invoices";
 import type { AuditLogEntry } from "@/lib/audit-log";
+import { CompanyProfileDocumentHeader } from "@/components/company-profile-document-header";
+import type { EffectiveCompanyProfile } from "@/lib/company-profile";
+import type { EffectiveCompanyBrandAsset } from "@/lib/company-brand-asset";
 import type {
   CashBankAccountOption,
   CashBankMovementRow,
@@ -17,7 +20,6 @@ import {
   getP0BaseCurrencyDisplayValue,
   getP0BaseCurrencyTransactionValue,
   getP0CurrencyPolicyDisplayValue,
-  getP0DefaultVatRateInputValue,
 } from "@/lib/settings-contract";
 
 export type InvoiceLookupOption = {
@@ -33,6 +35,8 @@ export type StockCardLookupOption = InvoiceLookupOption & {
 export type PurchaseInvoiceSurfaceProps = {
   accountOptions?: CashBankAccountOption[];
   auditLogsByEntityId?: Record<string, AuditLogEntry[]>;
+  companyBrandAsset?: EffectiveCompanyBrandAsset;
+  companyProfile?: EffectiveCompanyProfile;
   lookups?: {
     customers?: InvoiceLookupOption[];
     sites: InvoiceLookupOption[];
@@ -120,6 +124,8 @@ export type PurchaseInvoiceSurfaceProps = {
   embedded?: boolean;
   paymentMovements?: CashBankMovementRow[];
   rows: PurchaseInvoiceRow[];
+  defaultVatRate?: number;
+  showVatBreakdown?: boolean;
   stockCardOptions?: StockCardLookupOption[];
   today?: string;
   variant?: "purchase" | "sales";
@@ -155,6 +161,8 @@ type LineState = {
 export function PurchaseInvoiceSurface({
   accountOptions = [],
   auditLogsByEntityId = {},
+  companyBrandAsset,
+  companyProfile,
   highlightedDocumentNo,
   highlightedRecordId,
   embedded = false,
@@ -163,6 +171,8 @@ export function PurchaseInvoiceSurface({
   paymentMovements = [],
   persistence,
   rows,
+  defaultVatRate = 20,
+  showVatBreakdown = true,
   stockCardOptions = [],
   today = new Date().toISOString().slice(0, 10),
   variant = "purchase",
@@ -207,7 +217,7 @@ export function PurchaseInvoiceSurface({
   );
   const baseCurrencyContext = `Baz Para: ${getP0BaseCurrencyDisplayValue()}`;
   const currencyPolicyContext = getP0CurrencyPolicyDisplayValue();
-  const defaultVatContext = `Varsayılan KDV: %${getP0DefaultVatRateInputValue()}`;
+  const defaultVatContext = `Varsayılan KDV: %${defaultVatRate}`;
 
   function startCreate() {
     if (!permissions.canMutateInvoices) {
@@ -224,7 +234,7 @@ export function PurchaseInvoiceSurface({
       counterpartyName: "",
       siteCode: "",
       siteName: "",
-      lines: [createEmptyLine()],
+      lines: [createEmptyLine(defaultVatRate)],
     });
   }
 
@@ -332,7 +342,7 @@ export function PurchaseInvoiceSurface({
       current
         ? {
             ...current,
-            lines: [...current.lines, createEmptyLine()],
+            lines: [...current.lines, createEmptyLine(defaultVatRate)],
           }
         : current,
     );
@@ -349,7 +359,7 @@ export function PurchaseInvoiceSurface({
 
       return {
         ...current,
-        lines: lines.length > 0 ? lines : [createEmptyLine()],
+        lines: lines.length > 0 ? lines : [createEmptyLine(defaultVatRate)],
       };
     });
   }
@@ -561,6 +571,11 @@ export function PurchaseInvoiceSurface({
 
   return (
     <section className="mx-auto flex max-w-7xl flex-col gap-4">
+      <CompanyProfileDocumentHeader
+        brandAsset={companyBrandAsset}
+        className="hidden print:block"
+        profile={companyProfile}
+      />
       {!embedded ? <header className="rounded-ui-panel border border-divider bg-surface-raised p-5">
         <p className="text-xs font-semibold uppercase tracking-wide text-brand-primary">
           {invoiceTypeLabel} ve çıktı
@@ -908,10 +923,10 @@ export function PurchaseInvoiceSurface({
                 label="İskonto Toplamı"
                 value={draftTotals?.discountTotal ?? 0}
               />
-              <SummaryRow
+              {showVatBreakdown ? <SummaryRow
                 label="KDV Toplamı"
                 value={draftTotals?.vatTotal ?? 0}
-              />
+              /> : null}
               <SummaryRow
                 label="Genel Toplam"
                 strong
@@ -924,7 +939,7 @@ export function PurchaseInvoiceSurface({
 
       {!embedded ? <div className="grid gap-3 md:grid-cols-3">
         <Metric label="Net Toplam" value={formatMoney(totalNet)} />
-        <Metric label="KDV Toplamı" value={formatMoney(totalVat)} />
+        {showVatBreakdown ? <Metric label="KDV Toplamı" value={formatMoney(totalVat)} /> : null}
         <Metric label="Genel Toplam" value={formatMoney(totalGrand)} />
       </div> : null}
 
@@ -1178,6 +1193,8 @@ export function PurchaseInvoiceSurface({
 
       {isPdfPreviewOpen ? (
         <InvoicePdfPreview
+          companyBrandAsset={companyBrandAsset}
+          companyProfile={companyProfile}
           invoiceTypeLabel={invoiceTypeLabel}
           onClose={() => setIsPdfPreviewOpen(false)}
           rows={displayRows}
@@ -1319,10 +1336,14 @@ function formatAuditDate(value: string) {
 }
 
 function InvoicePdfPreview({
+  companyBrandAsset,
+  companyProfile,
   invoiceTypeLabel,
   onClose,
   rows,
 }: {
+  companyBrandAsset?: EffectiveCompanyBrandAsset;
+  companyProfile?: EffectiveCompanyProfile;
   invoiceTypeLabel: string;
   onClose: () => void;
   rows: PurchaseInvoiceRow[];
@@ -1409,9 +1430,16 @@ function InvoicePdfPreview({
             </button>
           </div>
         </div>
+        <CompanyProfileDocumentHeader
+          brandAsset={companyBrandAsset}
+          className="mb-5"
+          profile={companyProfile}
+        />
         <div className="mb-5 flex items-end justify-between gap-4">
           <div>
-            <p className="text-lg font-bold">NOA İnşaat Yönetim</p>
+            {!companyProfile ? (
+              <p className="text-lg font-bold">NOA İnşaat Yönetim</p>
+            ) : null}
             <p className="text-sm text-content-subtle">{invoiceTypeLabel} dökümü</p>
           </div>
           <p className="text-sm text-content-subtle">
@@ -1684,7 +1712,7 @@ function toNumber(value: string) {
   return Number.isFinite(parsed) ? parsed : 0;
 }
 
-function createEmptyLine(): LineState {
+function createEmptyLine(defaultVatRate = 20): LineState {
   return {
     id: `line-${Date.now()}-${Math.random().toString(16).slice(2)}`,
     stockCode: "",
@@ -1696,7 +1724,7 @@ function createEmptyLine(): LineState {
     unitPrice: "0",
     discountRate1: "0",
     discountRate2: "0",
-    vatRate: getP0DefaultVatRateInputValue(),
+    vatRate: String(defaultVatRate),
   };
 }
 

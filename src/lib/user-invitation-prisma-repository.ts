@@ -6,9 +6,12 @@ import type {
   UserInvitationSessionCreate,
   UserInvitationUserCreate,
 } from "./user-invitation-service";
+import { UserInvitationRepositoryError } from "./user-invitation-service";
+import type { AccessProfileAssignmentSnapshot } from "./access-profile";
 import type { TenantScope } from "./tenant-scope";
 
 type UserInvitationRecord = {
+  accessProfileId?: string | null;
   acceptedAt: Date | string | null;
   companyId: string;
   createdAt: Date | string;
@@ -57,7 +60,34 @@ type UserInvitationClient = {
   }): Promise<UserInvitationRecord>;
 };
 
+type AccessProfileClient = {
+  findFirst(input: {
+    select: { companyId: true; id: true; status: true; tenantId: true };
+    where: {
+      companyId: string;
+      id: string;
+      status?: "ACTIVE";
+      tenantId: string;
+    };
+  }): Promise<{
+    companyId: string;
+    id: string;
+    status: string;
+    tenantId: string;
+  } | null>;
+};
+
+type UserAccessProfileAssignmentClient = {
+  create(input: {
+    data: ReturnType<typeof accessProfileAssignmentData>;
+  }): Promise<unknown>;
+};
+
 export type UserInvitationPrismaClientLike = {
+  $transaction?<T>(
+    callback: (transaction: UserInvitationPrismaClientLike) => Promise<T>,
+  ): Promise<T>;
+  accessProfile?: AccessProfileClient;
   appCredential: {
     create(input: {
       data: UserInvitationCredentialCreate;
@@ -78,6 +108,7 @@ export type UserInvitationPrismaClientLike = {
       data: UserInvitationScopeAccessCreate;
     }): Promise<unknown>;
   };
+  userAccessProfileAssignment?: UserAccessProfileAssignmentClient;
   userInvitation: UserInvitationClient;
 };
 
@@ -87,26 +118,60 @@ export function createUserInvitationPrismaRepository(
   return {
     async acceptInvitation({
       acceptedAt,
+      accessProfileAssignment,
       credential,
       invitation,
       scopeAccess,
       session,
       user,
     }) {
-      await prisma.appUser.create({ data: user });
-      await prisma.appSession.create({ data: session });
-      await prisma.appUserScopeAccess.create({ data: scopeAccess });
-      await prisma.appCredential.create({ data: credential });
-      await prisma.userInvitation.update({
-        data: {
-          acceptedAt: new Date(acceptedAt),
-          status: "accepted",
-          updatedAt: new Date(acceptedAt),
-        },
-        where: {
-          id: invitation.id,
-        },
-      });
+      const execute = async (client: UserInvitationPrismaClientLike) => {
+        if (accessProfileAssignment) {
+          const activeProfile = await client.accessProfile?.findFirst({
+            select: {
+              companyId: true,
+              id: true,
+              status: true,
+              tenantId: true,
+            },
+            where: {
+              companyId: invitation.companyId,
+              id: accessProfileAssignment.profileId,
+              status: "ACTIVE",
+              tenantId: invitation.tenantId,
+            },
+          });
+          if (!activeProfile || !client.userAccessProfileAssignment) {
+            throw new UserInvitationRepositoryError(
+              "Davet için seçilen aktif yetki profili bulunamadı.",
+            );
+          }
+        }
+        await client.appUser.create({ data: user });
+        await client.appSession.create({ data: session });
+        await client.appUserScopeAccess.create({ data: scopeAccess });
+        await client.appCredential.create({ data: credential });
+        if (accessProfileAssignment) {
+          await client.userAccessProfileAssignment!.create({
+            data: accessProfileAssignmentData(accessProfileAssignment),
+          });
+        }
+        await client.userInvitation.update({
+          data: {
+            acceptedAt: new Date(acceptedAt),
+            status: "accepted",
+            updatedAt: new Date(acceptedAt),
+          },
+          where: {
+            id: invitation.id,
+          },
+        });
+      };
+      if (prisma.$transaction) {
+        await prisma.$transaction(execute);
+      } else {
+        await execute(prisma);
+      }
     },
 
     async createInvitation({ invitation }) {
@@ -144,6 +209,25 @@ export function createUserInvitationPrismaRepository(
       });
 
       return row ? invitationRecordToRow(row) : null;
+    },
+
+    async findAccessProfile({ companyId, profileId, tenantId }) {
+      if (!prisma.accessProfile) return null;
+      const profile = await prisma.accessProfile.findFirst({
+        select: {
+          companyId: true,
+          id: true,
+          status: true,
+          tenantId: true,
+        },
+        where: { companyId, id: profileId, tenantId },
+      });
+      return profile
+        ? {
+            ...profile,
+            status: profile.status === "ACTIVE" ? "ACTIVE" : "INACTIVE",
+          }
+        : null;
     },
 
     async revokeInvitation({ invitation, revokedAt }) {
@@ -184,6 +268,7 @@ export function createUserInvitationPrismaRepository(
 function invitationRowToCreateData(row: UserInvitationRow) {
   return {
     acceptedAt: row.acceptedAt ? new Date(row.acceptedAt) : null,
+    accessProfileId: row.accessProfileId ?? null,
     companyId: row.companyId,
     createdAt: new Date(row.createdAt),
     email: row.email,
@@ -203,6 +288,7 @@ function invitationRowToCreateData(row: UserInvitationRow) {
 function invitationRecordToRow(row: UserInvitationRecord): UserInvitationRow {
   return {
     acceptedAt: row.acceptedAt ? toIsoString(row.acceptedAt) : undefined,
+    accessProfileId: row.accessProfileId ?? undefined,
     companyId: row.companyId,
     createdAt: toIsoString(row.createdAt),
     email: row.email,
@@ -216,6 +302,14 @@ function invitationRecordToRow(row: UserInvitationRecord): UserInvitationRow {
     tenantId: row.tenantId,
     tokenHash: row.tokenHash,
     updatedAt: toIsoString(row.updatedAt),
+  };
+}
+
+function accessProfileAssignmentData(row: AccessProfileAssignmentSnapshot) {
+  return {
+    ...row,
+    createdAt: new Date(row.createdAt),
+    updatedAt: new Date(row.updatedAt),
   };
 }
 

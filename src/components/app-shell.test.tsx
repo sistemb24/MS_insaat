@@ -141,7 +141,7 @@ describe("AppShell", () => {
     expect(document.querySelector('[data-shell-variant="legacy"]')).toBeNull();
     expect(screen.getByRole("main").textContent).toContain("Dashboard içeriği");
     const navigation = screen.getByRole("navigation", { name: "Ana modüller" });
-    expect(within(navigation).getAllByRole("link")).toHaveLength(22);
+    expect(within(navigation).getAllByRole("link")).toHaveLength(24);
     expect(
       within(navigation).getByRole("link", { name: "Dashboard" }).getAttribute("aria-current"),
     ).toBe("page");

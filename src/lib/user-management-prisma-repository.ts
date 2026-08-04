@@ -1,11 +1,15 @@
 import type { TenantScope } from "./tenant-scope";
 import type {
+  UserManagementAccessProfileAssignmentRecord,
+  UserManagementAccessMutationRecord,
   UserManagementEmailOutboxRecord,
   UserManagementInvitationRecord,
   UserManagementRepository,
   UserManagementUserAccessRecord,
   UserManagementRole,
 } from "./user-management-service";
+import { UserManagementRepositoryError } from "./user-management-service";
+import { resolveAccessProfileAssignmentLifecycle } from "./user-management-profile-lifecycle";
 
 type AppUserScopeAccessRecord = {
   company: {
@@ -45,6 +49,38 @@ type EmailOutboxRecord = {
   subject: string;
   template: string;
   tenantId: string;
+};
+
+type AccessProfileAssignmentRecord = {
+  companyId: string;
+  id: string;
+  periodId: string;
+  profileId: string;
+  tenantId: string;
+  userId: string;
+};
+
+export type UserManagementMutationClientLike = {
+  appUserScopeAccess: UserManagementPrismaClientLike["appUserScopeAccess"];
+  userAccessProfileAssignment?: {
+    deleteMany(input: {
+      where: {
+        companyId: string;
+        id: string;
+        periodId: string;
+        tenantId: string;
+        userId: string;
+      };
+    }): Promise<{ count: number }>;
+    findFirst(input: {
+      where: {
+        companyId: string;
+        periodId: string;
+        tenantId: string;
+        userId: string;
+      };
+    }): Promise<AccessProfileAssignmentRecord | null>;
+  };
 };
 
 export type UserManagementPrismaClientLike = {
@@ -108,6 +144,10 @@ export type UserManagementPrismaClientLike = {
       };
     }): Promise<UserInvitationRecord[]>;
   };
+  userAccessProfileAssignment?: UserManagementMutationClientLike["userAccessProfileAssignment"];
+  $transaction?<T>(
+    callback: (client: UserManagementMutationClientLike) => Promise<T>,
+  ): Promise<T>;
 };
 
 export function createUserManagementPrismaRepository(
@@ -121,45 +161,20 @@ export function createUserManagementPrismaRepository(
       accessId: string;
       scope: TenantScope;
     }) {
-      const existing = await prisma.appUserScopeAccess.findFirst({
-        where: {
-          companyId: scope.companyId,
-          id: accessId,
-          isActive: true,
-          periodId: scope.periodId,
-          tenantId: scope.tenantId,
-        },
-        include: {
-          company: true,
-          user: true,
-        },
+      return runAccessMutation(prisma, {
+        accessId,
+        operation: "deactivate",
+        scope,
       });
-
-      if (!existing) {
-        return null;
-      }
-
-      const row = await prisma.appUserScopeAccess.update({
-        where: {
-          id: accessId,
-        },
-        data: {
-          isActive: false,
-        },
-        include: {
-          company: true,
-          user: true,
-        },
-      });
-
-      return userAccessRecordToRow(row);
     },
 
     async updateUserAccessRole({ accessId, role, scope }) {
-      const existing = await prisma.appUserScopeAccess.findFirst({ where: { companyId: scope.companyId, id: accessId, isActive: true, periodId: scope.periodId, tenantId: scope.tenantId }, include: { company: true, user: true } });
-      if (!existing) return null;
-      const row = await prisma.appUserScopeAccess.update({ where: { id: accessId }, data: { role }, include: { company: true, user: true } });
-      return userAccessRecordToRow(row);
+      return runAccessMutation(prisma, {
+        accessId,
+        operation: "role-change",
+        role,
+        scope,
+      });
     },
 
     async listActiveUserAccesses({ scope }: { scope: TenantScope }) {
@@ -205,6 +220,105 @@ export function createUserManagementPrismaRepository(
 
       return rows.map(invitationRecordToRow);
     },
+  };
+}
+
+async function runAccessMutation(
+  prisma: UserManagementPrismaClientLike,
+  input: {
+    accessId: string;
+    operation: "deactivate" | "role-change";
+    role?: UserManagementRole;
+    scope: TenantScope;
+  },
+): Promise<UserManagementAccessMutationRecord | null> {
+  const execute = async (
+    client: UserManagementMutationClientLike,
+  ): Promise<UserManagementAccessMutationRecord | null> => {
+    const existing = await client.appUserScopeAccess.findFirst({
+      where: {
+        companyId: input.scope.companyId,
+        id: input.accessId,
+        isActive: true,
+        periodId: input.scope.periodId,
+        tenantId: input.scope.tenantId,
+      },
+      include: {
+        company: true,
+        user: true,
+      },
+    });
+    if (!existing) return null;
+
+    const lifecycle = resolveAccessProfileAssignmentLifecycle({
+      operation: input.operation,
+      targetRole: input.role,
+    });
+    const assignment =
+      lifecycle.removeAssignment && client.userAccessProfileAssignment
+        ? await client.userAccessProfileAssignment.findFirst({
+            where: {
+              companyId: input.scope.companyId,
+              periodId: input.scope.periodId,
+              tenantId: input.scope.tenantId,
+              userId: existing.user.id,
+            },
+          })
+        : null;
+
+    const row = await client.appUserScopeAccess.update({
+      where: { id: input.accessId },
+      data:
+        input.operation === "deactivate"
+          ? { isActive: false }
+          : { role: input.role },
+      include: {
+        company: true,
+        user: true,
+      },
+    });
+
+    if (assignment && client.userAccessProfileAssignment) {
+      const deleted = await client.userAccessProfileAssignment.deleteMany({
+        where: {
+          companyId: input.scope.companyId,
+          id: assignment.id,
+          periodId: input.scope.periodId,
+          tenantId: input.scope.tenantId,
+          userId: existing.user.id,
+        },
+      });
+      if (deleted.count !== 1) {
+        throw new UserManagementRepositoryError(
+          "Yetki profili ataması beklenen kapsamda kaldırılamadı.",
+        );
+      }
+    }
+
+    return {
+      access: userAccessRecordToRow(row),
+      removedAssignment: assignment
+        ? accessProfileAssignmentRecordToRow(assignment)
+        : null,
+    };
+  };
+
+  if (prisma.$transaction) {
+    return prisma.$transaction((client) => execute(client));
+  }
+  return execute(prisma);
+}
+
+function accessProfileAssignmentRecordToRow(
+  row: AccessProfileAssignmentRecord,
+): UserManagementAccessProfileAssignmentRecord {
+  return {
+    companyId: row.companyId,
+    id: row.id,
+    periodId: row.periodId,
+    profileId: row.profileId,
+    tenantId: row.tenantId,
+    userId: row.userId,
   };
 }
 

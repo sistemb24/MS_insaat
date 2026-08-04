@@ -1,7 +1,7 @@
 # NOA İnşaat SaaS — Yeni Modüller Geliştirme Planı
 
 > Oluşturulma tarihi: 28.06.2026
-> Son yalın plan revizyonu: 14.07.2026
+> Son yalın plan revizyonu: 02.08.2026
 > Baz plan: `NOA-insaat-on-muhasebe-saas-analiz-ve-gelistirme-plani.md` (dokunulmadı)
 > Ekran görüntüsü kaynağı: `C:\Users\SisteM\Pictures\Screenshots\Parsek-insaat`
 > Ana NOA iş akışı ekran havuzu: `D:\Projeler\NOA-InsaatYonetim\NOA-insaat-SS görseller`
@@ -53,7 +53,7 @@ Bu belge, **mevcut P0/P1/P2 geliştirme planında yer almayan veya yalnızca kı
 | Yeni Modül | Mevcut Plandaki Durumu | Bu Plan |
 |---|---|---|
 | Firmalar Dashboard | Yok | P1 |
-| Cari Kart — Müşteri tipi | P1 başlangıç kartı uygulandı | P1 |
+| Cari Kart — Müşteri tipi | Faz 29 ile yönetilen sözlük tamamlandı | P1 |
 | Taşeron — Sözleşme Bilgileri | Uygulandı | P0 eki |
 | Tedarikçi — Kategori | Uygulandı | P0 eki |
 | Excel ile Toplu İçe Aktar | Native XLSX şablon + temel XLSX önizleme/import başladı | P1 |
@@ -65,7 +65,7 @@ Bu belge, **mevcut P0/P1/P2 geliştirme planında yer almayan veya yalnızca kı
 | Lokasyon Yönetimi ayarı | P0 sözleşmesi uygulandı | P0 eki |
 | Kullanıcı Tipleri (İSG vb.) | Yok | P1 |
 | Rol Kaynak-Aksiyon Matrisi UI | P0 salt-okunur uygulandı | P0 eki |
-| Finans Ayarları KDV detayı | P0 sözleşmesi uygulandı | P0 eki |
+| Finans Ayarları KDV detayı | Faz 24 ile kalıcılaştırıldı | P0 eki |
 | Bildirim Ayarları (kategori) | Kısa not | P1 |
 | Banka Entegrasyonu | Kısa not | P2 |
 | Arvento Filo Takip | P2 araçlar | P2 |
@@ -78,11 +78,11 @@ Bu bölüm, uzun uygulama kayıtlarından bağımsız olarak **hangi hattın tam
 
 | Hat | Yalın durum | Revizyon kararı |
 |---|---|---|
-| P0 ekleri | Tamamlandı | Temel tenant/firma/dönem, ayarlar, finans KDV, rol matrisi ve audit sözleşmesi korunur. |
-| P1 modülleri | Çekirdek yüzeyler çalışıyor | Müşteri, dashboard, ihale/BOQ, doküman, bildirim ve kullanıcı akışları mevcut; gelişmiş XLSX eşleme, bulut storage, gerçek e-posta teslimatı ve granular RBAC ayrı backlog'da tutulur. |
+| P0 ekleri | Çekirdek tamamlandı | Faz 24-28 finans, firma profili, lokasyon, belge markalaması ve tedarikçi kategori master verisini kalıcılaştırdı. Tamamlanan alanlar yeni bir gerçek eksiklik olmadan yeniden açılmaz. |
+| P1 modülleri | Çekirdek yüzeyler çalışıyor | Faz 32 rol değişikliği/devre dışı bırakma sırasında profil ataması yaşam döngüsünü atomik kapattı. Sıradaki sağlayıcıdan bağımsız aday, tenant kimliğine dokunmadan ayrı Süper Admin giriş ve tekil ilk kurulum dikeyini tamamlamaktır; bulut storage ve gerçek e-posta teslimatı ayrı backlog'da tutulur. |
 | P2-S1 Banka/Ledger | Sandbox banka hattı + tam ledger çekirdeği çalışıyor | Gerçek Open Banking ve worker açılmaz; `BankLedgerEntry` köprüsü ile `LedgerEntry/LedgerLine` muhasebe çekirdeği ayrı sorumluluklarda korunur. |
 | P2-S2 Abonelik | Sandbox ve enforcement çalışıyor | Gerçek ödeme sağlayıcısı, canlı tahsilat ve dış webhook doğrulaması açılmaz. |
-| P2-S3 Araç/Filo | Kalıcı araç kartı yaşam döngüsü ve sandbox takip read-model'i çalışıyor | Oluşturma, düzenleme, pasife alma ve tekrar aktifleştirme tamamdır; gerçek Arvento/GPS/CANbus erişimi açılmaz. |
+| P2-S3 Araç/Filo | Araç kartı, manuel operasyonlar, lastik ve kabul verisi çalışıyor | Faz 15-16 ile atama, yakıt, bakım, bakım planı ve lastik yönetimi tamamlandı. Gerçek Arvento/GPS/CANbus erişimi açılmaz. |
 | P2-S4 API | Salt-okunur faz kapalı | 30 scope, route filtreleri, Bearer guard ve tenant izolasyonu tamamdır; yeni endpoint eklenmez. |
 
 ### Yalın yürütme sırası
@@ -104,6 +104,25 @@ Bu bölüm, uzun uygulama kayıtlarından bağımsız olarak **hangi hattın tam
 8. **Tamamlandı — P0 alış irsaliyesi:** Ayrı Prisma kalıcılığı, taslak/kesinleştirme/iptal yaşam döngüsü, alış faturası satır devri, audit ve Faturalar sekmesi hazır; kesinleşen irsaliye stok girişine ve irsaliye raporuna yansıyor, bağlı fatura ile çift stok girişi engelleniyor.
 9. **Tamamlandı — P0 personel zimmeti:** Personel bazlı KKD, ekipman, elektronik ve demirbaş kalıcılığı; aktif personel/seri no doğrulaması, iade hedefi, iade/kayıp/kullanılamaz yaşam döngüsü, audit ve Personel çalışma alanı hazır.
 10. **Tamamlandı — P0 normalize stok hareketi:** `StockMovement` kalıcılığıyla depolar arası transfer ve şantiye çıkışı; taslak/kesinleştirme/iptal yaşam döngüsü, kaynak bakiye koruması ve audit ile çalışıyor. Fatura, irsaliye ve manuel hareketler tek giriş/çıkış/bakiye read-model'inde birleşiyor; CSV ve minimum stok bildirimi mevcut bakiyeyi kullanıyor.
+11. **Tamamlandı — Faz 16 filo lastik yönetimi:** Mevcut araç ve bakım operasyonlarının üstünde manuel lastik montaj/söküm, mevsim ve aşınma takibi; izole kabul verisi, audit, mobil/tema/print doğrulamasıyla tamamlandı. Ayrıntı `Docs/RFC-F16-01-filo-lastik-yonetimi.md` içindedir.
+12. **Tamamlandı — Faz 17 mobil İSG kontrol listeleri:** Mobil şablon, yürütme, madde yanıtları, bilinçli bulgu bağlantısı ve izole kabul tamamlandı.
+13. **Tamamlandı — Faz 18 destek merkezi:** Tenant içi talep, append-only yazışma, requester/admin görünürlüğü ve yaşam döngüsü tamamlandı.
+14. **Tamamlandı — Faz 19 bilgi merkezi:** Duyuru yaşam döngüsü, rol görünürlüğü, deep-link ve izole kabul tamamlandı.
+15. **Tamamlandı — Faz 20 personel izin yönetimi:** İzin talebi/onayı, operasyonel bakiye ve personel çalışma alanı bağlantısı tamamlandı.
+16. **Tamamlandı — Faz 21 personel avans yönetimi:** Yönetici/finans onayı, ödeme, bordro mahsubu ve finans bağlantısı tamamlandı.
+17. **Tamamlandı — Faz 22 personel şantiye transferi:** Kontrollü transfer yaşam döngüsü ve personel kartının atomik şantiye güncellemesi tamamlandı.
+18. **Tamamlandı — Faz 23 İK Operasyon Dashboard:** Personel, izin, avans, transfer, eğitim ve puantaj kaynakları salt-okunur scoped dashboard'da birleştirildi.
+19. **Tamamlandı — Faz 24 kalıcı finans ayarları:** `%20` fallback korunarak `defaultVatRate` ve `showVatBreakdown` ayarlarının scoped kalıcılığı, admin-only audit'li yazımı ve yeni taslak tüketicileri tamamlandı. Ayrıntı `Docs/RFC-F24-01-kalici-finans-ayarlari.md` içindedir.
+20. **Tamamlandı — Faz 25 kalıcı firma profili:** Şirket kapsam kimliği ve `Company.name` oturum etiketi korunarak hukuki unvan, vergi ve iletişim/adres bilgileri company-scoped kalıcılaştırıldı; Ayarlar ile fatura/hakediş belge başlıklarına bağlandı. Ayrıntı `Docs/RFC-F25-01-kalici-firma-profili.md` ve `Docs/UI-baseline/Faz25-gercek-veri-kapanis-20260730.md` içindedir.
+21. **Tamamlandı — Faz 26 şirket lokasyon dizini:** Kilitli `multi-location` kararı korunarak Merkez/Şube/Ofis kayıtları company-scoped kalıcılaştırıldı; mevcut Şantiye kartları çift master oluşturmadan federatif Ayarlar görünümüne bağlandı. Ayrıntı `Docs/RFC-F26-01-sirket-lokasyon-dizini.md` ve `Docs/UI-baseline/Faz26-gercek-veri-kapanis-20260730.md` içindedir.
+22. **Tamamlandı — Faz 27 firma belge markalaması:** AppShell ürün markası ve Document Center depolaması korunarak güvenli raster firma logosu company-scoped kalıcılaştırıldı; Ayarlar önizlemesi ile yeni fatura/hakediş belge başlıklarına bağlandı. Ayrıntı `Docs/RFC-F27-01-firma-belge-markalamasi.md` ve `Docs/UI-baseline/Faz27-gercek-veri-kapanis-20260731.md` içindedir.
+23. **Tamamlandı — Faz 28 tedarikçi kategori sözlüğü:** Mevcut serbest metin tedarikçi kategorileri backfill yapılmadan company-scoped yönetilen sözlükle federatif birleştirildi; Ayarlar yönetimi ile form/filtre/CSV/XLSX/server doğrulaması tamamlandı. Ayrıntı `Docs/RFC-F28-01-tedarikci-kategori-sozlugu.md` içindedir.
+24. **Tamamlandı — Faz 29 müşteri tipi sözlüğü:** Mevcut `EntityRecord.payload.customerType` alanı ve müşteri kartları taşınmadan company-scoped yönetilen sözlük, federatif mevcut-değer okuması, Ayarlar yönetimi ve müşteri form/filtre/import doğrulaması tamamlandı. Ayrıntı `Docs/RFC-F29-01-musteri-tipi-sozlugu.md` ve `Docs/UI-baseline/Faz29-gercek-veri-kapanis-20260731.md` içindedir.
+25. **Tamamlandı — Faz 30 özel yetki profilleri ve Doküman Merkezi pilotu:** Mevcut `admin/accounting/viewer` rolleri ve atanmamış kullanıcı davranışı korunarak company-scoped profil, period-scoped viewer ataması, admin-only yönetim ve yalnız Doküman Merkezi permission enforcement pilotu uygulandı. Ayrıntı `Docs/RFC-F30-01-ozel-yetki-profilleri-dokuman-pilotu.md` ve `Docs/UI-baseline/Faz30-gercek-veri-kapanis-20260731.md` içindedir.
+26. **Tamamlandı — Faz 31 özel kullanıcı davetinde yetki profili:** “Özel (RBAC ile Yönetilen)” davetinde aktif profil seçimi ve kabul anında viewer erişimi + profil atamasının atomik oluşması uygulandı. Mevcut roller, diğer kullanıcı tipleri ve Doküman Merkezi dışındaki guard'lar korundu. Ayrıntı `Docs/RFC-F31-01-ozel-kullanici-davetinde-yetki-profili.md` içindedir.
+27. **Tamamlandı — Faz 32 yetki profili atama yaşam döngüsü:** Profil atanmış viewer kullanıcının rol değişikliği veya devre dışı bırakılmasında erişim ve atama temizliği atomik yapıldı; stale UI satırı kaldırıldı ve güvenli audit tamamlandı. Ayrıntı `Docs/RFC-F32-01-yetki-profili-atama-yasam-dongusu.md` içindedir.
+28. **Tamamlandı — Faz 33 Süper Admin giriş ve tekil ilk kurulum:** Tenant kimlik hattından bağımsız platform credential/session şeması 63. additive migration ile kalıcılaştırıldı; DB singleton bootstrap, güvenli giriş/çıkış, kayar oturum, sıkı `returnTo`, korumalı minimal çalışma alanı ve izole gerçek veri kabulü tamamlandı. Şifre sıfırlama, OTP/TOTP, gerçek e-posta ve bakım modu etkinleştirilmedi. Ayrıntı `Docs/RFC-F33-01-super-admin-giris-ilk-kurulum.md` ve `Docs/UI-baseline/Faz33-gercek-veri-kapanis-20260802.md` içindedir.
+29. **Tamamlandı — Faz 34 Süper Admin güvenlik yüzeyleri:** Genişletilmiş auth taslakları fail-closed capability sınırına alındı; exact public rota matrisi, opak DB challenge, kalıcı rate-limit, atomik reset sözleşmesi ve şifreli TOTP domain'i 64. additive migration ile tamamlandı. Gerçek delivery sağlayıcısı, public recovery ve bakım modu açılmadı. Ayrıntı `Docs/RFC-F34-01-super-admin-guvenlik-yuzeyleri-mutabakati.md` ve `Docs/UI-baseline/Faz34-gercek-veri-kapanis-20260803.md` içindedir.
 
 ### 14.07.2026 yalın revizyon kaydı
 
@@ -280,7 +299,7 @@ Tedarikçi, taşeron ve müşteri ilişkilerinin birleşik analiz panelidir. Mev
 
 **Araç çubuğu:** İçe Aktar | + Yeni Müşteri | Excel | PDF | Yazdır | Yenile
 
-**Uygulama notu:** İlk P1 başlangıcı olarak `musteriler` route'u genel Tanımlar standardına bağlandı. `src/lib/entities.ts` içinde `MUS-XXXX` kodlu müşteri cari kartı; müşteri tipi, vergi no, telefon, e-posta, bakiye ve durum kolonlarıyla görünür. `/musteriler` sol navigasyonda P1 etiketiyle açılır; `Yeni`, `Düzenle`, `Pasifleştir`, `Yenile`, `Şablon`, `Excel` ve `Yazdır` davranışları mevcut generic Tanımlar hattını kullanır. Bu dilimde satış faturası, tahsilat/ödeme hareketi, gelişmiş XLSX kolon eşleme ve ayrı müşteri detay sayfası açılmadı; iş akışı önce müşteri kartı/liste standardı olarak sabitlendi. Seçili müşteri kartı artık ortak `Hesap Ekstresi` panelinden hakediş alacağı, tahsilat ve diğer cari hareketlerini okuyabilir; panel verisi `counterpartyStatementRouteSlugs` sözleşmesiyle `/musteriler` için de yüklenir. Kart listesindeki `Bakiye` kolonu statik demo değerine bağlı kalmaz; aynı cari için oluşan ekstre hareketlerinin son yürüyen bakiyesi görünür listeye ve Excel CSV çıktısına yansıtılır. Bu karar eski pencere görünümünü kopyalamadan, cari kartın hareketlerden beslenen güncel bakiye iş akışını korur.
+**Uygulama notu:** İlk P1 başlangıcı olarak `musteriler` route'u genel Tanımlar standardına bağlandı. `src/lib/entities.ts` içinde `MUS-XXXX` kodlu müşteri cari kartı; müşteri tipi, vergi no, telefon, e-posta, bakiye ve durum kolonlarıyla görünür. `/musteriler` sol navigasyonda P1 etiketiyle açılır; `Yeni`, `Düzenle`, `Pasifleştir`, `Yenile`, `Şablon`, `Excel` ve `Yazdır` davranışları mevcut generic Tanımlar hattını kullanır. Satış faturası, cari tahsilat/ödeme, hesap ekstresi, native XLSX çalışma sayfası seçimi ve kullanıcı kontrollü bire bir kolon eşleme sonraki dilimlerde tamamlandı; ayrı müşteri detay rotası açılmadan ortak cari çalışma alanı korundu. Kart listesindeki `Bakiye` kolonu statik demo değerine bağlı kalmaz; aynı cari için oluşan ekstre hareketlerinin son yürüyen bakiyesi görünür listeye ve Excel CSV çıktısına yansıtılır. Bu karar eski pencere görünümünü kopyalamadan, cari kartın hareketlerden beslenen güncel bakiye iş akışını korur.
 
 ### 6.4 Müşteri İşlemleri
 
@@ -296,12 +315,12 @@ Tedarikçi, taşeron ve müşteri ilişkilerinin birleşik analiz panelidir. Mev
 **Adım 1 — Şablon & Yükle:**
 - `Şablon` toolbar aksiyonu artık native `.xlsx` workbook indirir; veri sayfası kolonları `EntityDefinition.columns` sözleşmesinden gelir, ilk satır `MUS-0001`, `Zorunlu`, `Opsiyonel`, `Aktif` örnek değerlerini taşır.
 - İndirilen workbook ikinci `Açıklamalar` sayfasında kolon bazlı zorunlu/opsiyonel bilgisi ve giriş kurallarını taşır. CSV dosyası seçme ve CSV metin yapıştırma geriye dönük uyumluluk için import panelinde korunur.
-- `.xlsx` dosya seçme veya sürükle-bırak ilk çalışma sayfasını okuyarak aynı kolon sözleşmesine göre önizleme üretir; yalnızca `.xlsx` uzantısı ve 15 MB sınırı kabul edilir. Başlık adları doğru olduğu sürece kolon sırası farklı gelen XLSX dosyaları tanım kolonlarına göre yeniden hizalanır. Kullanıcı kontrollü gelişmiş kolon eşleme ve server-side workbook işleme sonraki XLSX import sihirbazı diliminde eklenecek.
+- `.xlsx` dosya seçme veya sürükle-bırak seçilen çalışma sayfasını aynı kolon sözleşmesine göre önizler; yalnızca `.xlsx` uzantısı ve 15 MB sınırı kabul edilir. Başlık sırası farklı dosyalar etiketle otomatik hizalanır; kullanıcı kontrollü bire bir kolon eşleme eksik veya çift kaynak seçimini reddeder. Workbook istemcide önizlenir, geçerli satırlar mevcut server action'a güvenli DTO olarak gönderilir; ham workbook'un server-side saklanması veya işlenmesi kapsam dışıdır.
 
 **Adım 2 — Önizleme:**
 - `İçe Aktar` toolbar aksiyonu CSV metin/dosya ve XLSX dosya önizlemesini aynı import panelinde toplar; CSV ayrıştırma çekirdeği `src/lib/entity-import.ts`, XLSX adaptörü `src/lib/entity-xlsx-import.ts` içindedir.
 - Yüklenecek kayıtların listesi geçerli/hatalı satır sayısı ile özetlenir; kod/tanım zorunluluğu, mevcut kod çakışması, dosya içi kod tekrarı ve durum değeri kontrol edilir. XLSX tarafında ilk sheet başlıkları `EntityDefinition.columns` etiketleriyle eşleşmeden satır validasyonuna geçilmez. Kullanıcı `.xlsx` dosyasını input ile seçebilir veya aynı panele sürükle-bırak yapabilir; iki yol da aynı önizleme ve validasyon hattını kullanır. Önizleme panelinde satır durum tablosu görünür; geçerli satırlar yeşil onay, hatalı satırlar kırmızı uyarı sınıfıyla ayrılır. Hatalı satır varsa `Önizleme hata raporu CSV indir` bağlantısıyla satır no, kod, tanım ve hata açıklamaları indirilebilir.
-- Hatalı satırı atlayarak devam davranışı `Geçerli Satırları Uygula` ile çalışır; CSV veya temel XLSX önizlemesinden gelen geçerli satırlar persistence bağlı ekranlarda `importEntityRowsAction` / `EntityCrudService.importMany` hattından tek servis operasyonuyla kalıcı kaynağa yazılır, bulk action verilmeyen demo modda lokal listeye eklenir. XLSX tarafında gelişmiş kolon eşleme ve server-side workbook işleme sonraki P1 diliminde derinleşecektir.
+- Hatalı satırı atlayarak devam davranışı `Geçerli Satırları Uygula` ile çalışır; CSV veya XLSX önizlemesinden gelen geçerli satırlar persistence bağlı ekranlarda `importEntityRowsAction` / `EntityCrudService.importMany` hattından tek servis operasyonuyla kalıcı kaynağa yazılır, bulk action verilmeyen demo modda lokal listeye eklenir. Seçili sheet ve kullanıcı kolon eşlemesi aynı önizleme/uygulama sözleşmesini kullanır.
 - Tenant izolasyonu hem `EntityPrismaRepository` sorgu kapsamıyla hem de `EntityCrudService` içinde repository çıktısını yeniden aktif tenant/firma/döneme filtreleyen savunmalı katmanla korunur; karışık repository çıktısı gelse bile başka tenant kaydı listeye ve next-code hesabına dahil edilmez.
 - Tanım CRUD mutasyonları `EntityCrudService` içinde opsiyonel `AuditLogRepository` ile kayıt altına alınır; server action hattında `createAuditLogPrismaRepository` bağlıdır. Tekil oluşturma ve toplu içe aktarma satırları `entity.create`, güncelleme `entity.update`, pasifleştirme `entity.delete` aksiyonlarıyla `entity-record` tipi, `slug:code` kimliği, görünür etiket ve status geçiş metadata bilgisiyle yazılır.
 
@@ -1203,7 +1222,7 @@ P0 tamamlandıktan (Hafta 12 pilot) sonra başlayacak blok:
 
 | Sprint | Modül | Tahmini Süre | Yalın durum |
 |---|---|---|---|
-| P1-S1 | Müşteri Cari Kartı + Excel Toplu İçe Aktar | 2 hafta | Çekirdek çalışıyor; gelişmiş XLSX eşleme backlog'da |
+| P1-S1 | Müşteri Cari Kartı + Excel Toplu İçe Aktar | 2 hafta | Çekirdek, sheet seçimi ve kullanıcı kolon eşleme tamamlandı |
 | P1-S2 | Firmalar Dashboard | 1 hafta | Tamamlandı |
 | P1-S3 | İhale Yönetimi — Temel (Liste, Form Sekme 1-2, Durum geçişleri) | 2 hafta | Tamamlandı |
 | P1-S4 | İhale Yönetimi — BOQ/Poz + Karlılık Simülasyonu | 2 hafta | Tamamlandı |
@@ -2215,3 +2234,1238 @@ kaldı. Faz 11/Faz 12 kabul doğrulamaları korundu. Tekrarlanabilir doğrulama
 `npm run isg:acceptance:verify`, ayrıntılı kapanış kaydı
 `Docs/UI-baseline/Faz14-gercek-veri-kapanis-20260728.md` içindedir. Faz 14
 tamamlandı.
+
+### Faz 15 — Araç/Filo Manuel Operasyon Çekirdeği
+
+**Planlama durumu — 28.07.2026:** Faz 13 sağlayıcı önkoşulu ertelendiği için
+P2-A'nın dış sağlayıcıdan bağımsız devamı olarak araç/filo operasyon çekirdeği
+adaydır. `Docs/RFC-F15-01-arac-filo-manuel-operasyon-cekirdegi.md`, mevcut
+`Vehicle` kartını koruyarak araç atama, manuel yakıt, bakım planı ve bakım
+kaydı için dar kapsamı tanımlar. Arvento/GPS/telemetri, otomatik puantaj,
+finansal veya stok yan etkisi bu faza alınmaz. On varsayımın kullanıcı onayı
+beklenir; onaydan önce kod, Prisma şeması, migration veya gerçek veri
+değişikliği yapılmaz.
+
+**Dilim 1 tamamlanma durumu — 28.07.2026 Faz 15 Domain Çekirdeği:** Kullanıcı
+onayından sonra araç atama, manuel yakıt, bakım planı ve bakım kaydı için saf
+`vehicle-fleet-operations` sözleşmesi eklendi. Takvim/metin/tutar/odometre
+doğrulamaları, kontrollü ileri durum geçişleri, atama/yakıt idempotency
+anahtarları ile `admin/accounting` yazma, `viewer` okuma ve kapalı dönem red
+kararı tek kaynakta toplandı. Hedefli 12 domain testi, type-check, Prisma
+validate ve lint geçti. Prisma şeması, migration, repository, action, UI ve
+gerçek veri değişmedi. Sıradaki bağımsız dilim **Şema ve Repository**'dir.
+
+**Dilim 2 tamamlanma durumu — 29.07.2026 Faz 16 Şema ve Repository:**
+`VehicleTireRecord` additive modeli `20260729230000_add_vehicle_tire_operations`
+migration'ıyla eklendi ve yerel `insaatMuhasebe` geliştirme veritabanına
+uygulandı. Tenant/firma/dönem ile araç foreign key/index sözleşmeleri, scoped
+montaj anahtarını ve bir araç-konum için tek aktif montajı PostgreSQL kısmi
+tekillik indeksiyle korur. Backfill veya mevcut araç/Faz 15 kaydına veri
+değişikliği yapılmadı. `vehicle-tire-prisma-repository` her sorguda aktif scope
+ile liste/create/update köprüsünü, date-only dönüşümünü ve güvenli durum/sezon
+eşlemesini sağlar. Domain/repository hedefli paketi 11 test, Prisma validate,
+Prisma client üretimi, type-check ve lint ile geçti. Sıradaki bağımsız dilim
+**Server Action ve Audit**'tir.
+
+**Dilim 3 tamamlanma durumu — 29.07.2026 Faz 16 Server Action ve Audit:**
+`vehicle-tire-actions`, aktif tenant/firma/dönem kapsamını her çağrıda yeniden
+kurar; viewer ve kapalı dönem yazımını araç okumasından önce fail-closed
+reddeder. Scope içi aktif araç doğrulamasından sonra montaj ve söküm
+mutation'ları ortak service üzerinden merkezi audit'e yazılır. Audit metadata
+ve kimliği marka/model veya serbest belge bilgisi taşımaz; başarılı mutation
+`/araclar` ve dinamik module route'unu revalidate eder. Finans, stok, satın
+alma, bordro, puantaj, cari, ledger ve hakediş yan etkisi eklenmedi.
+Domain/repository/service/action hedefli paketi 19 test, type-check, Prisma
+validate ve lint ile geçti. Sıradaki bağımsız dilim **Filo Lastik UI**'dır.
+
+**Dilim 4 uygulama durumu — 29.07.2026 Faz 16 Filo Lastik UI:** Mevcut araç
+kartı ve F15 Filo Operasyon Merkezi korunarak `/araclar` altında Filo Lastik
+Yönetimi eklendi. Montaj/söküm kayıtları ortak arama ve durum filtresinde
+listelenir; `/araclar?tire=<id>` detail drawer'ı, etiketli montaj formu ve
+aktif montaj için kontrollü söküm formu uygulanır. Araç seçimi mevcut scope
+lookup'ındaki aktif araçlarla sınırlı; viewer/kapalı dönem mutation DOM sınırı,
+mobil yatay tablo kabı ve print-safe kontrol sınıfları vardır. Hedefli 5
+dosya/25 test, type-check, Prisma validate ve lint geçti; gerçek lastik kaydı
+yazılmadı. Masaüstü/mobil/tema/print görsel kabulü ve izole gerçek veri
+kabulüyle birlikte Dilim 5'te kapatılacaktır. Sıradaki bağımsız dilim
+**İzole Gerçek Veri ve Kapanış**'tır.
+
+**Dilim 2 tamamlanma durumu — 28.07.2026 Faz 15 Şema ve Repository:** Araç
+atama, yakıt, bakım planı ve bakım kaydı için dört additive tablo
+`20260728230000_add_vehicle_fleet_operations` migration'ıyla eklendi ve yerel
+`insaatMuhasebe` geliştirme veritabanına uygulandı. Tenant/firma/dönem ve araç
+foreign key/index sözleşmeleri; atama/yakıt ile bakım tamamlamasında scoped
+idempotency sınırlarını korur. Dört tablo `0/0/0/0` kaldı; backfill veya mevcut
+`Vehicle` kartına veri değişikliği yapılmadı. `vehicle-fleet-prisma-repository`
+tüm alt yüzeyleri yalnız aktif scope'ta listeler ve date-only/decimal dönüşümü
+ile create/update köprüsünü sağlar. Domain/repository hedefli paketi 15 test,
+Prisma validate ve type-check geçti. Sıradaki bağımsız dilim **Server Action ve
+Audit**'tir.
+
+**Dilim 3 tamamlanma durumu — 29.07.2026 Faz 15 Server Action ve Audit:**
+`vehicle-fleet-actions`, aktif oturumdan tenant/firma/dönem kapsamını her
+çağrıda tekrar kurar; viewer veya kapalı dönem yazımını araç/proje/personel
+referans okumasından önce reddeder. Scope içi aktif araç, proje ve personel
+doğrulamasından sonra atama/transfer, yakıt, bakım planı ve bakım kaydı
+mutation'ları ortak servis üzerinden merkezi audit'e yazılır. Audit metadata
+serbest not, servis ayrıntısı veya finansal belge taşımaz; başarılı mutation
+`/araclar` ve module route'unu revalidate eder. Finans, stok, bordro, puantaj,
+cari, ledger ve hakediş yan etkisi eklenmedi. Domain/repository/service/action
+hedefli paketi 4 dosya/25 test ve type-check geçti. Sıradaki bağımsız dilim
+**Filo Operasyon UI**'dır.
+
+**Dilim 4 uygulama durumu — 29.07.2026 Faz 15 Filo Operasyon UI:** Mevcut
+araç kartı arayüzü korunarak `/araclar` altında Filo Operasyon Merkezi eklendi.
+Atama, yakıt, bakım planı ve bakım kaydı; ortak liste/arama/tür filtresi,
+`/araclar?fleet=<id>` detail drawer'ı, durum aksiyonları ve aktif atama
+transferiyle yönetilir. Accounting/admin için etiketli form ve scope lookup'ı,
+viewer/kapalı dönem için mutation DOM sınırı, mobil yatay tablo kabı ve
+print-safe kontrol sınıfları uygulanır. Hedefli 5 dosya/33 test, type-check ve
+lint geçti; gerçek veri, audit veya çapraz modül hareketi yazılmadı. Yerel
+canlı rota oturum gerektirdiği için masaüstü/mobil/tema/print görsel kabulü,
+izole gerçek veri kabulüyle birlikte Dilim 5'te kapatılacaktır. Sıradaki
+bağımsız dilim **İzole Gerçek Veri ve Kapanış**'tır.
+
+**Dilim 5 veri kapanış durumu — 29.07.2026 Faz 15 İzole Gerçek Veri ve
+Kapanış:** `tenant-noa-demo` altında yalnız `company-f15-kabul-20260729` /
+`period-f15-kabul-20260729` kabul kapsamına araç atama transferi, yakıt iptali,
+bakım planı ve bakım tamamlanması işlendi. İki atama (`TRANSFERRED` + tek
+`ACTIVE`), bir iptal yakıt, tamamlanmış plan ve bakım kaydı ile 9 beklenen
+audit aksiyonu tekrar çalıştırılabilir biçimde doğrulandı. Yanlış
+firma/dönem/proje, kasa/banka, gider, ledger, bordro, stok ve puantaj sayıları
+`0`; Faz 11/Faz 12 mutabakatları korunmuştur. `npm run fleet:acceptance:verify`
+ayrıntılı kabulü tekrarlar; kayıt
+`Docs/UI-baseline/Faz15-gercek-veri-kapanis-20260729.md` içindedir. Accounting
+demo oturumuyla 1440×900 koyu/açık tema, 390×844 mobil, deep-link drawer ve
+print sözleşmesi gerçek kabul verisi üzerinde ayrıca doğrulandı; global yatay
+taşma ile konsol hata/uyarısı görülmedi. Operasyon etiketlerinde teknik araç
+kimliği yerine plaka, proje/personel için kod-ad bilgisi kullanılır; fixture
+araç kartı yerleşik `Aktif` statüsüyle lookup'a katılır. Böylece Faz 15'in
+veri, iş akışı ve görsel kapanışı tamamlandı.
+
+### Faz 16 — Filo Lastik Yönetimi
+
+**Planlama durumu — 29.07.2026:** Faz 15 sonrası P2-A hattındaki sıradaki
+sağlayıcıdan bağımsız gerçek iş akışı adayı, araç bazlı manuel lastik yönetimidir.
+`Docs/RFC-F16-01-filo-lastik-yonetimi.md`, montaj/söküm, mevsim ve aşınma
+takibini mevcut `Vehicle` kartı ile F15 operasyon yüzeyi üzerinde dar kapsamda
+tanımlar. Arvento/GPS, otomatik kilometre beslemesi, lastik stoğu/satın alma,
+finansal maliyet yansıtması ve backfill kapsam dışıdır. On varsayımın kullanıcı
+onayı beklenir; onaydan önce kod, Prisma şeması, migration veya gerçek veri
+değişikliği yapılmaz.
+
+**Dilim 1 tamamlanma durumu — 29.07.2026 Faz 16 Domain Çekirdeği:** Kullanıcı
+onayından sonra `vehicle-tire-operations` saf sözleşmesi eklendi. Manuel
+montaj/söküm DTO'ları; geçerli tarih, konum, sezon, marka-model, aşınma ve
+odometre doğrulamaları ile araç-konum başına tek aktif montaj, deterministic
+montaj anahtarı, yalnız `ACTIVE → REMOVED` geçişi ve role/kapalı dönem izin
+kararını tek kaynakta toplar. Hedefli 8 domain testi, type-check, Prisma
+validate ve lint geçti. Prisma şeması, migration, repository, action, UI ve
+gerçek veri değişmedi. Sıradaki bağımsız dilim **Şema ve Repository**'dir.
+
+**Dilim 5 veri kapanış durumu — 29.07.2026 Faz 16 İzole Gerçek Veri ve
+Kapanış:** `tenant-noa-demo` altındaki yalnız
+`company-f16-kabul-20260729` / `period-f16-kabul-20260729` kabul kapsamı,
+`F16 KABUL 001` aracının Sol Ön lastik kaydını `ACTIVE → REMOVED` yaşam
+döngüsünde iki kez idempotent doğruladı. Yalnız iki beklenen audit aksiyonu
+oluştu; yanlış firma/dönem, kasa/banka, gider, yevmiye, bordro, stok ve
+puantaj sayıları `0` kaldı. `npm run tire:acceptance:verify` kabulü tekrarlar;
+ayrıntı `Docs/UI-baseline/Faz16-gercek-veri-kapanis-20260729.md` içindedir.
+Muhasebe demo oturumuyla gerçek kayıt üzerinde 1440×900 koyu/açık tema,
+390×844 mobil, deep-link drawer ve print sözleşmesi doğrulandı; global yatay
+taşma ile konsol hata/uyarısı görülmedi. Faz 16 tamamlandı.
+
+### Faz 17 — Mobil İSG Kontrol Listeleri
+
+**Planlama durumu — 29.07.2026:** Faz 14'te tamamlanan denetim/bulgu
+çekirdeğinin sağlayıcıdan bağımsız sıradaki geliştirme adayı, saha telefon
+tarayıcısında kullanılacak mobil öncelikli İSG kontrol listeleridir.
+`Docs/RFC-F17-01-mobil-isg-kontrol-listeleri.md`; kontrol şablonu, yürütme,
+madde yanıtı ve açık kullanıcı aksiyonuyla mevcut bulgu bağlantısı için dar
+kapsamı tanımlar. Offline/PWA, kamera/konum, resmi kurum bağlantısı, otomatik
+bildirim ve çapraz modül hareketleri kapsam dışıdır. On varsayımın kullanıcı
+onayı beklenir; onaydan önce kod, Prisma şeması, migration veya gerçek veri
+değişikliği yapılmaz.
+
+**Dilim 1 tamamlanma durumu — 30.07.2026 Faz 17 Domain Çekirdeği:** Kullanıcı
+onayından sonra `mobile-safety-checklist` saf sözleşmesi eklendi. Kontrol
+şablonu/madde, saha yürütmesi ve madde yanıtı DTO'ları; doğrulanmış metin,
+tarih ve en fazla 50 madde sınırı; tekrar eden şablon maddesi ve eksik/çift
+yanıt reddi; deterministic yürütme ile yürütme-madde anahtarları; yalnız
+`ACTIVE → ARCHIVED` ve `DRAFT → COMPLETED` geçişleri ile `admin/accounting`
+yazma, `viewer` okuma ve kapalı dönem red kararını tek kaynakta toplar.
+Hedefli 8 domain testi, type-check, Prisma validate ve lint geçti. Prisma
+şeması, migration, repository, action, UI ve gerçek veri değişmedi. Sıradaki
+bağımsız dilim **Şema ve Repository**'dir.
+
+**Dilim 2 tamamlanma durumu — 30.07.2026 Faz 17 Şema ve Repository:**
+`SafetyChecklistTemplate`, `SafetyChecklistTemplateItem`, `SafetyChecklistRun`
+ve `SafetyChecklistResponse` additive modelleri
+`20260730093000_add_mobile_safety_checklists` migration'ıyla eklendi ve yerel
+`insaatMuhasebe` geliştirme veritabanına uygulandı. Tenant/firma/dönem foreign
+key/index sözleşmeleri; şablon-madde sıra tekilliğini, scoped yürütme/yanıt
+idempotency anahtarlarını, tek yürütme-madde yanıtını ve boş kalabilen tekil
+denetim/bulgu bağlantılarını korur. Backfill veya mevcut İSG denetim/bulgu
+kaydına veri değişikliği yapılmadı. `mobile-safety-checklist-prisma-repository`
+her sorguda aktif scope ile template/madde/yürütme/yanıt create/update/liste
+köprüsünü, UTC date-only dönüşümünü ve güvenli durum eşlemesini sağlar.
+Domain/repository hedefli paketi 11 test, Prisma client üretimi, Prisma
+validate, type-check ve lint ile geçti. Sıradaki bağımsız dilim **Server
+Action ve Audit**'tir.
+
+**Dilim 3 tamamlanma durumu — 30.07.2026 Faz 17 Server Action ve Audit:**
+`mobile-safety-checklist-actions`, aktif tenant/firma/dönem kapsamını her
+çağrıda yeniden kurar; viewer ve kapalı dönem yazımını proje, denetim ve bulgu
+referans sorgularından önce fail-closed reddeder. Açık proje, isteğe bağlı
+denetimin aynı proje-kapsamı ve açıkça bağlanacak bulgunun aktif kapsamı
+doğrulanır. Şablon oluşturma/arşivleme, yürütme, yanıt, eksiksiz tamamlanma ve
+yalnız uygunsuz yanıtın açık bulgu bağlantısı ortak service üzerinden merkezi
+audit'e yazılır. Audit metadata serbest kontrol notu, şablon metni veya sağlık
+ayrıntısı taşımaz; başarılı mutation `/isg` ve module route'unu revalidate
+eder. Finans, stok, bordro, puantaj, bildirim veya otomatik bulgu yan etkisi
+eklenmedi. Domain/repository/service/action hedefli paketi 23 test,
+type-check, Prisma validate ve lint ile geçti. Sıradaki bağımsız dilim
+**Mobil İSG UI**'dır.
+
+**Dilim 4 tamamlanma durumu — 30.07.2026 Faz 17 Mobil İSG UI:** Mevcut `/isg`
+denetim/bulgu merkezi korunarak Mobil İSG Kontrol Listeleri ikinci yüzeyi
+eklendi. Aktif şablonlar ile yürütme özetleri; arama, durum etiketleri ve
+mobilde yatay kaydırılabilir tabloyla listelenir. Seçili yürütme
+`/isg?checklist=<runId>` deep-link'i ile açılan tek kolonlu detay çekmecesinde;
+madde bazlı büyük `Uygun`/`Uygunsuz`/`Uygulanamaz` dokunma kontrolleri ve kısa
+notla yürütülür. Yalnız uygunsuz yanıttan, açık kullanıcı isteğiyle mevcut
+aynı-kapsamlı bulgu bağlanabilir; otomatik bulgu üretilmez. Şablon ve yürütme
+formları etiketli, yükleniyor/boş/hata durumları erişilebilir; viewer veya
+kapalı dönemde mutation kontrolleri DOM'a eklenmez. Kontroller print dışında
+tutulur; proje/denetim/bulgu lookup'ları mevcut scoped İSG sözleşmesini
+kullanır. Hedefli 5 dosya/26 test, type-check, Prisma validate ve lint geçti.
+İzole gerçek veri ile masaüstü/mobil/tema/print görsel kabulü ve tam kapılar
+sonraki bağımsız dilim **İzole Gerçek Veri ve Kapanış**'ta tamamlanacaktır.
+
+**Dilim 5 veri kapanış durumu — 30.07.2026 Faz 17 İzole Gerçek Veri ve
+Kapanış:** `tenant-noa-demo` altındaki yalnız
+`company-f17-kabul-20260730` / `period-f17-kabul-20260730` kabul kapsamı; tek
+aktif şablon, üç madde, tek tamamlanmış saha yürütmesi ve
+`PASS`/`FAIL`/`NOT_APPLICABLE` yanıtlarını iki kez idempotent doğruladı. Yalnız
+uygunsuz yanıt mevcut açık bulguya bilinçli aksiyonla bağlandı; audit 7
+beklenen olayda kaldı. Yanlış firma/dönem/proje ve kasa/banka, gider, yevmiye,
+bordro, stok, puantaj sayıları `0` oldu. Gerçek Prisma kabulünde bulunan
+`templateItemId → checklistItemId` repository eşleme kusuru düzeltildi ve
+testi eklendi. Gerçek muhasebe/viewer oturumlarıyla 1440×900 koyu/açık tema,
+390×844 mobil, deep-link drawer, kullanıcı dostu proje etiketi, print ve
+mutation DOM sınırı doğrulandı; global taşma veya konsol hata/uyarısı
+görülmedi. Faz 8/11/12 ile Faz 14–16 kabulleri tekrar geçti. Tam kapılar 255
+dosya/1490 test, type-check, Prisma validate, lint, production build ve
+`git diff --check` ile yeşildir. Ayrıntı
+`Docs/UI-baseline/Faz17-gercek-veri-kapanis-20260730.md` içindedir. Faz 17
+tamamlandı.
+
+### Faz 18 — Destek Talebi Merkezi
+
+**Planlama durumu — 30.07.2026:** P2-A, Faz 14–17 ile sağlayıcıdan bağımsız
+İSG ve araç/filo kapsamını tamamladı. Faz 13 Open Banking sağlayıcı/ürün ve
+resmi sandbox önkoşulları hazır olana kadar kuyruk sonunda tutulmaya devam
+eder. P2-B'nin abonelik, API yönetimi ve kullanıcı daveti yüzeyleri mevcut
+olduğundan sıradaki sağlayıcıdan bağımsız eksik iş akışı Destek Merkezi'dir.
+
+`Docs/RFC-F18-01-destek-talebi-merkezi.md`; mevcut rol modelini bozmadan tenant
+içi destek talebi, append-only yazışma, requester/admin görünürlüğü, ileri
+yaşam döngüsü, güvenli audit ve mobil/deep-link UI sınırını tanımlar. Canlı NOA
+platform desteği, e-posta/SMS, dosya eki, SLA, otomatik bildirim/eskalasyon ve
+dış helpdesk entegrasyonu kapsam dışıdır. RFC'deki 10 varsayımın kullanıcı
+onayı beklenir; onaydan önce Domain Çekirdeği dahil kod, Prisma şeması,
+migration veya gerçek veri değişikliği yapılmaz.
+
+**Dilim 1 tamamlanma durumu — 30.07.2026 Faz 18 Domain Çekirdeği:** Kullanıcı
+onayından sonra `support-ticket` saf sözleşmesi eklendi. Talep ve append-only
+mesaj DTO'ları; konu, mesaj ve request-key sınırları; tür/öncelik/durum
+doğrulamaları; içerik taşımayan requester/author scoped deterministic
+idempotency anahtarları; requester-admin görünürlüğü ve izin kararları tek
+kaynakta toplandı. Tüm roller destek talebi açabilir; `accounting` ve `viewer`
+yalnız kendi taleplerini görüp açık taleplerine yanıt verebilir, `admin` kapsam
+genelini görür ve `OPEN → IN_PROGRESS → RESOLVED → CLOSED` ileri geçişlerini
+yönetir. Kapalı talebe veya eksik/geçersiz durumla yanıt reddedilir. Prisma
+şeması, migration, repository, Server Action, audit, UI ve gerçek veri
+değişmedi. Sıradaki bağımsız dilim **Şema ve Repository**'dir.
+
+**Dilim 2 tamamlanma durumu — 30.07.2026 Faz 18 Şema ve Repository:**
+`SupportTicket` ve append-only `SupportTicketMessage` additive modelleri
+`20260730150000_add_support_ticket_center` migration'ıyla eklendi ve yerel
+geliştirme veritabanına uygulandı. Tenant/firma/dönem foreign key ve indeks
+sözleşmeleri; kapsam içi talep/mesaj idempotency tekilliğini ve mesajın üst
+taleple aynı kapsamda kalmasını bileşik foreign key ile korur. Backfill
+yapılmadı. `support-ticket-prisma-repository`; admin için scope-wide,
+`accounting/viewer` için requester-only talep sorgularını ve üst talep owner
+koşullu mesaj sorgularını sağlar. Talep ile ilk mesaj nested create içinde
+atomiktir; scope dışı talep güncellemesi ve eşleşmeyen ilk mesaj fail-closed
+reddedilir. Mesaj update/delete yüzeyi yoktur; talebin değişebilir alanları
+durum, son mesaj zamanı ve güncelleyen bilgisiyle sınırlıdır. Server Action,
+audit, UI ve gerçek veri eklenmedi. Sıradaki bağımsız dilim **Server Action ve
+Audit**'tir.
+
+**Dilim 3 tamamlanma durumu — 30.07.2026 Faz 18 Server Action ve Audit:**
+`support-ticket-service` ve `support-ticket-actions`; doğrulanmış aktif oturumu
+her çağrıda yeniden çözer, tenant/firma/dönem ile requester/admin görünürlüğünü
+uygular ve client tarafından gönderilebilecek talep sahibi yerine oturum
+kullanıcısını damgalar. `viewer` dahil tüm roller yalnız destek alanında kapalı
+dönemde de kendi talebini açıp açık talebine yanıt verebilir; yalnız admin
+`OPEN → IN_PROGRESS → RESOLVED → CLOSED` ileri geçişini yönetir. Talep ile ilk
+mesaj nested create, sonraki mesaj ile son mesaj zamanı tek atomik repository
+işlemidir. Aynı request key ikinci mutation veya audit üretmez; yabancı owner,
+yanlış scope, kapalı talep, geri/atlamalı geçiş fail-closed reddedilir. Audit
+metadata yalnız işlem/entity kimliği, tür, öncelik ve güvenli durum bilgisini
+taşır; konu, mesaj gövdesi veya request key sızdırmaz. Başarılı mutasyonlar
+`/destek-merkezi` ve dinamik module sayfasını revalidate eder. UI ve gerçek
+veri eklenmedi. Sıradaki bağımsız dilim **Destek Merkezi UI**'dır.
+
+**Dilim 4 tamamlanma durumu — 30.07.2026 Faz 18 Destek Merkezi UI:**
+`/destek-merkezi`; mevcut AppShell içinde sayaç, arama, durum/tür filtresi,
+etiketli yeni talep formu, yerel kaydırmalı liste ve
+`?ticket=<id>` deep-link konuşma çekmecesiyle tamamlandı. Requester kendi
+talebini açıp açık talebine yanıt verebilir; yalnız admin sıradaki ileri durum
+geçişini görür. Kapalı talep açıklayıcı salt okunur durumda kalır. Boş,
+yükleniyor ve hata durumları; klavye odağı, mobil tek kolon, tema ve print
+sözleşmeleri uygulandı. Navigasyon ve module content kaynağı yeni rotayla
+uyumlu hale getirildi.
+
+**Dilim 5 tamamlanma durumu — 30.07.2026 Faz 18 İzole Gerçek Veri ve
+Kapanış:** Kullanıcının kalan Faz 18 dilimleri için verdiği kesintisiz onayla
+`company-f18-kabul-20260730` / `period-f18-kabul-20260730` scope'unda iki
+talep, dört append-only mesaj, `RESOLVED`/`CLOSED` durumları ve 9 içeriksiz
+audit olayı tekrar çalıştırmalarda idempotent kaldı. Yanlış scope, başka owner
+ve kapalı talebe yanıt reddedildi; finans, stok, bordro, puantaj ve yevmiye
+yan etkileri sıfırdır. Gerçek Prisma kabulünde bulunan nested bileşik ilişki
+yazım kusuru düzeltilip regresyon testine alındı. Admin/requester deep-link,
+1440×900 açık/koyu tema, 390×844 mobil, kapalı durum, print ve konsol kabulü
+geçti. Faz 8/11/12 ile Faz 14–17 kabulleri yeniden yeşildir. Tam kapılar 260
+dosya/1518 test, type-check, Prisma validate, 50 migration durumu, lint, 76
+sayfalık production build ve `git diff --check` ile geçti. Ayrıntı
+`Docs/UI-baseline/Faz18-gercek-veri-kapanis-20260730.md` içindedir. Faz 18
+tamamlandı.
+
+### Faz 19 — Bilgi Merkezi ve Duyuru Akışı
+
+**Planlama durumu — 30.07.2026:** Faz 18 ile tenant içi Destek Merkezi
+tamamlandı. Faz 13 Open Banking, sağlayıcı/ürün ve resmi sandbox önkoşulları
+hazır olana kadar kuyruk sonunda tutulmaya devam eder. P2-B Parsek Platform
+Katmanı'nın sıradaki sağlayıcıdan bağımsız eksik iş akışı, ana genişletme
+planının 9.5 bölümündeki Bilgi Merkezi'dir.
+
+`Docs/RFC-F19-01-bilgi-merkezi-duyuru-akisi.md`; kaynak
+`Parsek-Bilgi Merkezi.png` ekranındaki kategori/kart akışını NOA standardında,
+tenant içi şirket duyurusu olarak tanımlar. Platform operatörü veya global
+yayın servisi varmış gibi davranılmaz. Additive duyuru modeli, taslak-yayın-
+arşiv yaşam döngüsü, admin yönetimi, tüm roller için yayımlanmış içerik okuması,
+güvenli audit, mobil/deep-link/print UI ve izole gerçek veri sınırı beş bağımsız
+dilime ayrılmıştır.
+
+RFC'deki 10 varsayım ve Faz 19 dilimlerinin tekrar onay alınmadan kesintisiz
+tamamlanması kullanıcı tarafından 30.07.2026 tarihinde onaylandı.
+
+**Dilim 1 tamamlanma durumu — 30.07.2026 Faz 19 Domain Çekirdeği:** Kullanıcı
+RFC'deki on varsayımı ve tüm Faz 19 dilimlerinin kesintisiz yürütülmesini
+onayladı. `announcement` saf sözleşmesi; başlık/özet/içerik, kategori,
+öncelik, durum, rol ve kapalı dönem doğrulamalarını; yalnız
+`DRAFT → PUBLISHED → ARCHIVED` geçişlerini; içerik taşımayan deterministic
+idempotency anahtarlarını, optimistic revision girdisini ve yayımdan sonraki
+14 günlük `YENİ` kararını tek yerde topladı. Hedefli 8 domain testi geçti.
+
+**Dilim 2 tamamlanma durumu — 30.07.2026 Faz 19 Şema ve Repository:**
+Additive `Announcement` modeli
+`20260730230000_add_announcement_center` migration'ıyla eklendi. Kayıt,
+create/update/publish/archive request key'leri, scope foreign key ve sorgu
+indeksleri tenant/firma/dönem ayrımını korur. `announcement-prisma-repository`;
+admin için tüm durumları, diğer roller için yalnız yayımlanmış kayıtları
+okur; kapsam dışı erişimi ve revision uyuşmazlığını fail-closed reddeder.
+Backfill yapılmadı.
+
+**Dilim 3 tamamlanma durumu — 30.07.2026 Faz 19 Server Action ve Audit:**
+`announcement-service` ve `announcement-actions`; aktif oturum/scope'u her
+çağrıda yeniden doğrular, yalnız admin yazımını ve kapalı dönem reddini
+uygular. Create, taslak update, publish ve archive request key ile
+idempotenttir; başarılı işlemler Bilgi Merkezi rotalarını revalidate eder.
+Merkezi audit metadata başlık, özet, içerik veya request key taşımaz. Eski bir
+publish isteğinin kayıt arşivlendikten sonra yeniden oynatılması da ikinci
+geçiş/audit üretmeden aynı başarılı sonucu döndürür.
+
+**Dilim 4 tamamlanma durumu — 30.07.2026 Faz 19 Bilgi Merkezi UI:**
+`/bilgi-merkezi`; AppShell navigasyonu içinde sayaçlar, arama,
+kategori/durum filtreleri, responsive kart akışı ve
+`?announcement=<id>` detay çekmecesiyle tamamlandı. Admin taslak oluşturma,
+düzenleme, yayımlama ve arşivleme kontrollerini görür; accounting/viewer
+DOM'unda mutation kontrolleri bulunmaz. Durum/öncelik/kategori metinleri,
+14 günlük `YENİ` rozeti, boş/yükleniyor/hata, tema, mobil ve print
+sözleşmeleri uygulandı.
+
+**Dilim 5 tamamlanma durumu — 30.07.2026 Faz 19 İzole Gerçek Veri ve
+Kapanış:** `company-f19-kabul-20260730` /
+`period-f19-kabul-20260730` kapsamındaki dört duyuru; admin için
+`DRAFT`/`PUBLISHED`/`ARCHIVED`, salt-okur için yalnız iki `PUBLISHED` kayıt
+olarak tekrar çalıştırmalarda idempotent kaldı. Dört create, bir update, üç
+publish ve bir archive olmak üzere dokuz içeriksiz audit olayı doğrulandı.
+Yanlış scope, viewer taslak okuması/yazımı ve kapalı dönem yazımı reddedildi;
+bildirim, finans, stok, bordro ve puantaj yan etkileri sıfırdır. Gerçek
+admin/salt-okur deep-link'i; masaüstü açık/koyu tema, 390 px mobil, rol DOM
+sınırı, `YENİ`, print ve konsol kabulü geçti. Faz 8/11/12 ve Faz 14–18 kabul
+senaryoları tekrar yeşildir. Tam kapılar 265 dosya/1548 test, type-check,
+Prisma validate, 51 migration durumu, lint, 77 sayfalık production build ve
+`git diff --check` ile geçti. Ayrıntı
+`Docs/UI-baseline/Faz19-gercek-veri-kapanis-20260730.md` içindedir. Faz 19
+tamamlandı.
+
+### Faz 20 — Personel İzin Yönetimi
+
+**Planlama durumu — 30.07.2026:** Faz 19 ile sağlayıcıdan bağımsız P2-B Bilgi
+Merkezi tamamlandı. API Yönetimi ve anahtar/webhook yüzeyleri daha önce
+tamamlandığından yeniden açılmaz. Faz 13 Open Banking sağlayıcı/ürün ve resmi
+sandbox bilgisi hazır olana kadar kuyruk sonunda tutulur. “Davet Et & Kazan”
+ise yeni tenant kaydı ile gerçek ödül/indirim politikası tanımlanmadan mevcut
+şirket içi kullanıcı davetiyle karıştırılmayacağı için ürün kararı kuyruğuna
+alındı.
+
+Ana genişletme planının henüz tamamlanmamış, sağlayıcıdan bağımsız ve mevcut
+çekirdeğe doğrudan bağlanabilen sıradaki dikeyi Bölüm 13.4'teki Personel İzin
+Yönetimi'dir. `Docs/RFC-F20-01-personel-izin-yonetimi.md`; mevcut `personel`
+`EntityRecord` kayıtlarını koruyan additive izin/bakiye modeli, kontrollü
+yaşam döngüsü, yıllık operasyonel bakiye, kapsam/rol/audit sınırı,
+mobil/deep-link/print UI ve izole gerçek veri kabulünü beş bağımsız dilime
+ayırır.
+
+RFC'deki 10 varsayım ve Faz 20 dilimlerinin tekrar onay alınmadan kesintisiz
+tamamlanması kullanıcı tarafından 30.07.2026 tarihinde onaylandı.
+
+**Dilim 1 tamamlanma durumu — 30.07.2026 Faz 20 Domain Çekirdeği:**
+`employee-leave` saf sözleşmesi izin türü/durumu, aynı yıl tarih ve ücretli gün
+sınırlarını; admin/accounting/viewer rol kararlarını, kapalı dönem reddini,
+yalnız ileri yaşam döngüsünü, aktif izin çakışmasını, operasyonel bakiye
+hesabını ve içeriksiz idempotency anahtarlarını tek kaynakta topladı. Dokuz saf
+domain testi geçti.
+
+**Dilim 2 tamamlanma durumu — 30.07.2026 Faz 20 Şema ve Repository:**
+`EmployeeLeaveRequest` ve `EmployeeLeaveBalance` additive modelleri
+`20260730235900_add_employee_leave_management` migration'ıyla eklendi.
+Tenant/firma/dönem, create request key, personel/yıl tekilliği, durum/tarih
+indeksleri ve optimistic revision koşulları korundu. İzin durumuyla yıllık
+bakiye etkisi tek Prisma transaction'ında güncellenir. Mevcut personel,
+puantaj ve bordro kayıtları backfill edilmedi.
+
+**Dilim 3 tamamlanma durumu — 30.07.2026 Faz 20 Server Action ve Audit:**
+Aktif oturum ve scope her çağrıda yeniden çözüldü; mevcut aktif personel ile
+isteğe bağlı Doküman Merkezi belgesi aynı kapsamda doğrulandı. Admin ve
+accounting taslak/gönderim, yalnız admin bakiye/onay/red/iptal yapabilir;
+kapalı dönem ve viewer yazımı fail-closed reddedilir. Yıllık izin onayı ve
+iptali kullanılan günü atomik değiştirir; yetersiz bakiye ve aktif tarih
+çakışması reddedilir. Audit açıklama, sağlık ayrıntısı, belge veya request key
+taşımaz; başarılı mutation `/personel` ve dinamik module yolunu revalidate
+eder.
+
+**Dilim 4 tamamlanma durumu — 30.07.2026 Faz 20 Personel İzin UI:**
+Mevcut Personel çalışma alanına izin sayaçları, kart akışı,
+arama/tür/durum/yıl filtreleri, yıllık bakiye tablosu, taslak ve bakiye
+formları ile `?leave=<id>` detay çekmecesi eklendi. Admin onay/red/iptal ve
+bakiye; accounting taslak/gönderim kontrollerini görür. Salt-okur DOM'unda
+mutation kontrolleri bulunmaz. Boş/yükleniyor/hata, mobil, açık/koyu tema ve
+print sözleşmeleri uygulandı.
+
+**Dilim 5 tamamlanma durumu — 30.07.2026 Faz 20 İzole Gerçek Veri ve
+Kapanış:** `company-f20-kabul-20260730` /
+`period-f20-kabul-20260730` kapsamında tek yıllık bakiye ile dört izin
+`APPROVED`/`REJECTED`/`CANCELLED`/`DRAFT` durumlarında iki ardışık çalıştırmada
+idempotent kaldı. Onaylı yıllık izin 3 gün kullandı ve 11 gün bıraktı; çakışan
+izin taslak kaldı. On üç içeriksiz audit; yanlış scope, viewer yazımı,
+accounting bakiye ve kapalı dönem reddi doğrulandı. Bildirim, finans, stok,
+bordro ve puantaj etkileri sıfırdır. Admin/muhasebe/salt-okur deep-link,
+1440×900 açık/koyu tema, 390×844 mobil, print, rol DOM ve konsol kabulü geçti.
+Faz 8/11/12 ve Faz 14–19 kabul senaryoları yeniden yeşildir. Tam kapılar 270
+dosya/1578 test, type-check, Prisma validate, 52 migration durumu, lint, 77
+sayfalık production build ve `git diff --check` ile geçti. Ayrıntı
+`Docs/UI-baseline/Faz20-gercek-veri-kapanis-20260730.md` içindedir. Faz 20
+tamamlandı.
+
+### Faz 21 — Personel Avans Yönetimi
+
+**Planlama durumu — 30.07.2026:** Faz 20 ile sağlayıcıdan bağımsız Personel
+İzin Yönetimi tamamlandı. Faz 13 Open Banking sağlayıcı/ürün ve resmi sandbox
+bilgisi hazır olana kadar kuyruk sonunda tutulmaya devam eder. “Davet Et &
+Kazan” da gerçek tenant kayıt ve ödül politikası tanımlanmadan şirket içi
+kullanıcı davetiyle karıştırılmaz.
+
+Ana genişletme planının henüz tamamlanmamış, sağlayıcıdan bağımsız ve mevcut
+personel–bordro–finans çekirdeğine doğrudan bağlanabilen sıradaki dikeyi Bölüm
+13.5'teki Personel Avans Yönetimi'dir.
+
+`Docs/RFC-F21-01-personel-avans-yonetimi.md`; mevcut personel kartlarını ve
+bordro hesaplamasını koruyan additive talep/mahsup modeli, yönetici-finans
+onay ayrımı, idempotent kasa/banka ve 135 Personel Avansları bağlantısı,
+mevcut kesinleşmiş bordro kesintisini yeniden üretmeden tahsis eden mahsup
+sınırı, mobil/deep-link/print UI ve izole gerçek veri kabulünü beş bağımsız
+dilime ayırır.
+
+RFC'deki 10 varsayım ve Faz 21 dilimlerinin tekrar onay alınmadan kesintisiz
+tamamlanması kullanıcı tarafından 30.07.2026 tarihinde onaylandı.
+
+**Dilim 1 tamamlanma durumu — 30.07.2026 Faz 21 Domain Çekirdeği:**
+`employee-advance` saf sözleşmesi; iki ondalıklı pozitif TRY tutarı, admin
+yönetici kararı, accounting finans/ödeme/mahsup ayrımı, kapalı dönem reddi,
+ileri yaşam döngüsü, avans ve bordro kesintisi kapasitesi ile içeriksiz
+idempotency anahtarlarını tek yerde topladı. Sekiz saf domain testi geçti.
+
+**Dilim 2 tamamlanma durumu — 30.07.2026 Faz 21 Şema ve Repository:**
+`EmployeeAdvanceRequest` ve append-only `EmployeeAdvanceSettlement` additive
+modelleri `20260731010000_add_employee_advance_management` migration'ıyla
+eklendi. Scope, create/payment/mahsup request key tekillikleri, sorgu indeksleri
+ve optimistic revision korundu. Mevcut personel, puantaj, bordro ve finans
+kayıtları backfill edilmedi.
+
+**Dilim 3 tamamlanma durumu — 30.07.2026 Faz 21 Server Action, Finans
+Bağlantısı ve Audit:** Aktif oturum/scope her çağrıda yeniden çözülür; personel
+ve kasa/banka hesabı aktif kapsamda, mahsup ise kesinleşmiş aynı personel
+bordro satırında doğrulanır. Ödeme; tek transaction'da idempotent `Avans
+Ödemesi` çıkışı ve 135 Personel Avansları borç/seçili hesap alacak yevmiyesi
+üretir. Mahsup mevcut `advanceDeduction` değerini değiştirmeden tahsis eder ve
+ikinci yevmiye üretmez. Audit açıklama, hesap ayrıntısı ve request key taşımaz.
+
+**Dilim 4 tamamlanma durumu — 30.07.2026 Faz 21 Personel Avans UI:**
+Mevcut Personel çalışma alanına sayaçlar, responsive kartlar, arama/durum
+filtresi, talep/onay/ödeme/mahsup formları ve `?advance=<id>` detay çekmecesi
+eklendi. Admin yalnız yönetici, accounting yalnız finans/ödeme/mahsup
+kontrollerini görür; salt-okur DOM'unda mutation kontrolleri bulunmaz. Boş,
+yükleniyor, hata, mobil, tema ve print sözleşmeleri uygulandı.
+
+**Dilim 5 tamamlanma durumu — 30.07.2026 Faz 21 İzole Gerçek Veri ve
+Kapanış:** `company-f21-kabul-20260730` /
+`period-f21-kabul-20260730` kapsamında dört avans
+`SETTLED`/`REJECTED`/`CANCELLED`/`DRAFT` durumlarında, iki mahsup, tek 3.000 TL
+kasa çıkışı, tek dengeli yevmiye ve 16 içeriksiz audit ile iki ardışık
+çalıştırmada idempotent kaldı. Bordro kesintisi 3.000 TL olarak değişmeden
+korundu; yanlış scope, viewer/admin rol ihlali ve kapalı dönem reddedildi.
+Gider, bildirim, stok ve puantaj yan etkileri sıfırdır. In-app browser yerel
+URL güvenlik politikası interaktif ekran görüntüsü kabulünü engelledi; rol
+DOM/deep-link/responsive/print sözleşmeleri bileşen testleri, type-check ve
+77 sayfalık production build ile doğrulandı. Faz 8/11/12 ve Faz 14–20 kabul
+senaryoları yeniden yeşildir. Tam kapılar 275 dosya/1.602 test, type-check,
+Prisma validate, 53 migration durumu, lint, production build ve
+`git diff --check` ile geçti. Ayrıntı
+`Docs/UI-baseline/Faz21-gercek-veri-kapanis-20260730.md` içindedir. Faz 21
+tamamlandı.
+
+### Faz 22 — Personel Şantiye Transferi
+
+**Planlama durumu — 30.07.2026:** Faz 21 ile sağlayıcıdan bağımsız Personel
+Avans Yönetimi tamamlandı. Faz 13 Open Banking sağlayıcı/ürün ve resmi sandbox
+bilgisi hazır olana kadar kuyruk sonunda tutulmaya devam eder. “Davet Et &
+Kazan” da gerçek tenant kayıt ve ödül politikası tanımlanmadan şirket içi
+kullanıcı davetiyle karıştırılmaz.
+
+Ana genişletme planının Bölüm 13.6'sındaki malzeme transferi mevcut
+`StockMovement`, araç transferi mevcut `VehicleAssignment` akışında
+tamamlanmıştır. Bu hareketler yeniden modellenmez veya ortak bir transfer
+tablosuna kopyalanmaz. Aynı bölümde ve Bölüm 13.8 veri modelinde açık kalan
+sağlayıcıdan bağımsız dikey **Personel Şantiye Transferi**dir.
+
+`Docs/RFC-F22-01-personel-santiye-transferi.md`; mevcut `personel` ve
+`santiyeler` `EntityRecord` kayıtlarını koruyan additive `EmployeeTransfer`
+modelini, yönetici onayını, zincir ve optimistic revision kontrolünü, onayla
+atomik güncel şantiye değişimini, mobil/deep-link/print UI'ı ve izole gerçek
+veri kabulünü beş bağımsız dilime ayırır.
+
+RFC'deki 10 önerilen varsayım kullanıcı tarafından 30.07.2026 tarihinde
+onaylandı.
+
+**Dilim 1 tamamlanma durumu — 30.07.2026 Faz 22 Domain Çekirdeği:**
+`employee-transfer` saf sözleşmesi; taslak normalizasyonu, kaynak/hedef ayrımı,
+onay tarih sınırı, admin/accounting/viewer rol kararları, kapalı dönem reddi,
+yalnız ileri yaşam döngüsü, personel kartı ve son onaylı hedef kaynak
+sürekliliği, tek bekleyen transfer, optimistic revision ve içeriksiz
+idempotency anahtarlarını tek yerde topladı. On saf domain testi geçti. Şema,
+migration, repository, UI ve gerçek veri değiştirilmedi. Tam kapılar 276
+dosya/1.612 test, type-check, Prisma validate, lint, 77 sayfalık production
+build ve `git diff --check` ile geçti.
+
+**Dilim 2 tamamlanma durumu — 30.07.2026 Faz 22 Şema ve Repository:**
+Additive `EmployeeTransfer` modeli
+`20260731020000_add_employee_transfer_management` migration'ıyla eklendi.
+Tenant/firma/dönem scope'u, create request key tekilliği, durum/tarih ve
+personel/şantiye sorgu indeksleri ile optimistic status/revision koşulları
+korundu. Onay transaction'ı aynı scope'taki personel kartını `updatedAt`
+koşuluyla kilitler, diğer JSON alanlarını koruyup yalnız `site` değerini hedef
+şantiyeye taşır; kaynak veya concurrency uyuşmazlığında fail-closed geri
+alınır. Backfill yapılmadı. Hedefli 17 test ve tam kapılar 277 dosya/1.619
+test, type-check, Prisma validate, 54/54 migration, lint, 77 sayfalık
+production build ve `git diff --check` ile geçti.
+
+**Dilim 3 tamamlanma durumu — 30.07.2026 Faz 22 Server Action ve Audit:**
+Her action aktif oturum ve tenant/firma/dönem scope'unu yeniden çözer;
+rol/kapalı dönem izni, aktif personel ile kaynak/hedef şantiye referansları
+mutation öncesi doğrulanır. Servis create/update/submit/approve/reject yaşam
+döngüsü, kaynak zinciri, tek bekleyen transfer, optimistic revision ve
+idempotency kararlarını uygular. Onay Europe/Istanbul şirket gününü ve
+personel `updatedAt` snapshot'ını atomik repository işlemine taşır. Audit
+yalnız personel, kaynak/hedef şantiye kodları ile güvenli revision/durum
+geçişini içerir; not, ad ve request key taşımaz. Başarılı mutation `/personel`
+ile dinamik modül sayfasını revalidate eder. Hedefli 30 test ve tam kapılar
+279 dosya/1.632 test, type-check, Prisma validate, lint, 77 sayfalık
+production build ve `git diff --check` ile geçti.
+
+**Dilim 4 tamamlanma durumu — 30.07.2026 Faz 22 Personel Transfer UI:**
+`/personel` çalışma alanına bekleyen, onaylanan ve taslak sayaçları; arama,
+durum, şantiye ve yıl filtreleri; responsive transfer kartları ile
+`?transfer=<id>` ayrıntı deep-link'i eklendi. Taslak form kaynak şantiyeyi
+personel kartından türetir ve yalnız farklı aktif hedefleri seçtirir. Admin
+onay/red dahil tüm kontrolleri, accounting taslak/gönderim kontrollerini
+görür; viewer ve kapalı dönem DOM'unda mutation kontrolleri bulunmaz. Boş,
+yükleniyor ve hata durumları ile mobil, açık/koyu tema ve print sözleşmeleri
+uygulandı. Hedefli UI paketi 6 test; tam paket 280 dosya/1.638 test,
+type-check, Prisma validate, lint, 77 sayfalık production build ve
+`git diff --check` ile geçti. Yerel in-app browser oturumu sekme bağlama
+hatası verdiği için etkileşimli ekran görüntüsü kabulü Dilim 5'e bırakıldı;
+UI davranışı bileşen sözleşmeleriyle doğrulandı.
+
+**Dilim 5 tamamlanma durumu — 30.07.2026 Faz 22 İzole Gerçek Veri ve
+Kapanış:** Yalnız `company-f22-kabul-20260730` /
+`period-f22-kabul-20260730` kapsamında dört transfer
+`APPROVED`/`REJECTED`/`SUBMITTED`/`DRAFT` durumlarında iki ardışık çalıştırmada
+idempotent kaldı. Onay yalnız personel `site` alanını Kuzey'den Güney'e
+taşıdı; görev ve telefon korundu, red/bekleyen/taslak personel kartını
+değiştirmedi. Dokuz içeriksiz audit sabit kaldı; yanlış scope,
+viewer/accounting rol ihlali, kapalı dönem, gelecek tarih ve ikinci bekleyen
+transfer reddedildi. Avans, izin, finans, bildirim, bordro, KKD, stok,
+puantaj ve araç yan etkileri sıfırdır. Gerçek accounting/viewer UI'ında
+sayaçlar, dört kart, filtreler ve deep-link; koyu/açık tema ile 390 px
+taşmasız görünüm doğrulandı. Hedefli paket 5 dosya/36 test; tam kapılar 280
+dosya/1.638 test, type-check, Prisma validate, güncel 54 migration, lint,
+77 sayfalık production build ve `git diff --check` ile geçti. Ayrıntı
+`Docs/UI-baseline/Faz22-gercek-veri-kapanis-20260730.md` içindedir. Faz 22
+tamamlandı.
+
+### Faz 23 — İK Operasyon Dashboard
+
+**Dilim 0 planlama durumu — 30.07.2026:** Faz 20–22 ile izin, avans ve
+personel transferi; Faz 14/17 ile İSG eğitim altyapısı ve Faz 5 ile puantaj
+akışı tamamlandı. Ana genişletme planının Bölüm 13.7 ve 20.2'sinde açık kalan
+sağlayıcıdan bağımsız İK Dashboard; bu mevcut kaynakları ikinci bir İK
+uygulaması veya yeni personel ana modeli kurmadan tek salt-okunur operasyon
+özetinde birleştirebilir.
+
+`Docs/RFC-F23-01-ik-operasyon-dashboard.md`; personel kartı, onaylı izin,
+bekleyen izin/avans/transfer, planlı İSG eğitimi ve taslak puantaj verilerini
+tenant/firma/dönem scoped federatif read-model'de toplar. Pasif personeli
+“işten ayrılmış” yasal kaydı olarak yorumlamaz; eğitim hedef kitlesi ve hiç
+açılmamış puantaj için sahte eksik alarm üretmez. Yeni Prisma modeli,
+migration, mutation, okuma audit'i, bildirim veya dış entegrasyon eklenmez.
+
+RFC'deki 10 varsayım ve Faz 23 dilimlerinin tekrar onay alınmadan kesintisiz
+tamamlanması kullanıcı tarafından 30.07.2026 tarihinde onaylandı.
+
+**Dilim 1 tamamlanma durumu — 30.07.2026 Faz 23 Domain ve Read-model
+Çekirdeği:** `hr-dashboard` saf sözleşmesi; İstanbul takvim günü ve 30 günlük
+pencereyi, aktif/pasif/izinli KPI'larını, şantiye normalizasyonu ve oranlarını,
+mevcut izin/avans/transfer durumlarından iş kuyruğunu, eğitim katılım sayısını
+ve yalnız mevcut taslak puantajları güvenli DTO'da topladı. Liste sınırı 12,
+serbest not ve tutar alanları kapsam dışıdır. Sekiz saf test geçti.
+
+**Dilim 2 tamamlanma durumu — 30.07.2026 Faz 23 Federatif Repository:**
+Personel, izin, avans, transfer, eğitim, eğitim katılımı ve puantaj kaynakları
+aynı `tenantId + companyId + periodId` filtresiyle, explicit güvenli select ve
+paralel sorgularla okundu. Yeni Prisma modeli, migration veya backfill
+eklenmedi. Repository yanlış scope'u boş döndürür ve iki hedefli testle
+korunur.
+
+**Dilim 3 tamamlanma durumu — 30.07.2026 Faz 23 Server Action ve Erişim:**
+Tek salt-okunur action aktif oturumu ve scope'u yeniden çözer, Istanbul gününü
+read-model'e taşır ve teknik hatayı kontrollü genel mesaja çevirir. Mutation,
+audit, bildirim ve revalidation üretmez. Üç action testi geçti.
+
+**Dilim 4 tamamlanma durumu — 30.07.2026 Faz 23 İK Dashboard UI ve
+Deep-link:** `/personel` içine KPI, şantiye dağılımı, bekleyen iş kuyruğu,
+yaklaşan izin/eğitim ve taslak puantaj panelleri eklendi. Dashboard mutation
+kontrolü içermez; yükleniyor/boş/hata, responsive, tema ve print sözleşmeleri
+uygulandı. Aynı rota üzerinde izin/avans/transfer query prop değişiklikleri
+kaynak yüzey state'ine senkronlanarak üç deep-link'in ayrıntı panelini açması
+sağlandı.
+
+**Dilim 5 tamamlanma durumu — 30.07.2026 Faz 23 İzole Gerçek Veri ve
+Kapanış:** Yalnız `company-f23-kabul-20260730` /
+`period-f23-kabul-20260730` kapsamında 4 personel, 6 bekleyen iş, 1 yaklaşan
+izin, 2 katılımlı 1 eğitim ve 1 taslak puantaj iki okumada aynı kaldı. Yabancı
+scope boş, audit `0 → 0`; not, tutar ve request key görünürlüğü sıfırdır.
+Gerçek accounting UI'ında KPI/listeler, izin-avans-transfer deep-link'leri,
+açık/koyu tema, 390 px taşmasız görünüm ve temiz konsol doğrulandı. Tam kapılar
+284 dosya/1.656 test, type-check, Prisma validate, güncel 54 migration, lint,
+77 sayfalık production build ve `git diff --check` ile geçti. Ayrıntı
+`Docs/UI-baseline/Faz23-gercek-veri-kapanis-20260730.md` içindedir. Faz 23
+tamamlandı.
+
+### Faz 24 — Kalıcı Finans Ayarları
+
+**Dilim 0 planlama durumu — 30.07.2026:** Faz 23 ile ana genişletme
+planındaki sağlayıcıdan bağımsız operasyon modülleri tamamlandı. Faz 13 Open
+Banking sağlayıcı/ürün ve resmi sandbox bilgisi hazır olana kadar kuyruk
+sonunda kalır. Gerçek Arvento bağlantısı erişim bilgilerine; “Davet Et &
+Kazan” ise yeni tenant edinim akışı ile ödül/indirim politikasına bağlıdır.
+Bu başlıklar varmış gibi uygulanmaz.
+
+Ana planın Bölüm 4.4'ünde açık bırakılan ilk sağlayıcıdan bağımsız gerçek iş
+akışı, `/ayarlar` yüzeyinde salt-okunur duran finans varsayımlarının dar ve
+typed kalıcılığıdır. `Docs/RFC-F24-01-kalici-finans-ayarlari.md`; yalnız
+`defaultVatRate` ve `showVatBreakdown` alanlarını tenant/firma/dönem scoped
+additive model, fallback, optimistic revision, admin-only audit'li yazım ve
+yeni gider/fatura/klasik hakediş taslaklarına server-supplied varsayılan
+olarak bağlayan beş bağımsız dilime ayırır.
+
+Base currency `TRY/TL`, çoklu döviz kapalı ve KDV modu hariç olarak korunur;
+geçmiş kayıtlar yeniden hesaplanmaz, explicit satır oranı ezilmez, backfill
+yapılmaz. RFC'deki 10 varsayım ve Faz 24 dilimlerinin yeniden onay alınmadan
+kesintisiz tamamlanması kullanıcı tarafından 30.07.2026 tarihinde onaylandı.
+
+**Dilim 1 tamamlanma durumu — 30.07.2026 Faz 24 Domain Çekirdeği:**
+`finance-settings` saf sözleşmesi `%20`/KDV dağılımı açık fallback'ini,
+`0..100` aralığında en fazla iki ondalıklı KDV validasyonunu, admin/açık dönem
+yazım kararını, optimistic revision ve içeriksiz idempotency anahtarını tek
+yerde topladı.
+
+**Dilim 2 tamamlanma durumu — 30.07.2026 Faz 24 Şema ve Repository:**
+Additive `FinanceSetting` modeli
+`20260731030000_add_finance_settings` migration'ıyla eklendi. Effective okuma,
+create ve revision-scoped update tam `tenantId + companyId + periodId`
+kapsamındadır. Mevcut dönemlere backfill yapılmadı.
+
+**Dilim 3 tamamlanma durumu — 30.07.2026 Faz 24 Server Action ve Audit:**
+Her action aktif oturum ve scope'u yeniden çözer. Yalnız admin açık dönemde
+yazabilir; accounting, viewer ve kapalı dönem fail-closed reddedilir.
+Idempotent retry ikinci mutation/audit üretmez. Audit yalnız eski/yeni
+güvenli değerler ile revision geçişini taşır; request key içermez.
+
+**Dilim 4 tamamlanma durumu — 30.07.2026 Faz 24 Ayarlar UI ve
+Tüketiciler:** `/ayarlar` effective kaynağı ve revision'ı gösteren form ile
+admin düzenleme, salt-okur rol ve kapalı dönem durumlarını sunar. Yeni gider,
+alış/satış faturası ve klasik hakediş satırları aktif scope'un server-supplied
+KDV varsayılanını alır; mevcut ve explicit satır oranları korunur.
+`showVatBreakdown=false` yalnız yeni form özetlerindeki KDV dağılım sunumunu
+gizler; hesaplama ve kayıt yaşam döngüsünü değiştirmez.
+
+**Dilim 5 tamamlanma durumu — 30.07.2026 Faz 24 İzole Gerçek Veri ve
+Kapanış:** `company-f24-kabul-20260730` /
+`period-f24-kabul-20260730` kapsamında kayıt yokken `%20` fallback, ardından
+`%18` ve dağılım kapalı persisted ayarı doğrulandı. Retry tek audit/revision'da
+kaldı; stale revision, accounting/viewer, kapalı dönem ve yabancı scope
+yazımları reddedildi. Gider, alış/satış faturası, klasik hakediş, kasa ve
+yevmiye yan etkileri sıfırdır. Gerçek admin/viewer UI'ında ayar ve tüketici
+varsayılanı, masaüstü, 390 px mobil, açık/koyu tema ve salt-okur kontrolleri
+doğrulandı. Ayrıntı
+`Docs/UI-baseline/Faz24-gercek-veri-kapanis-20260730.md` içindedir. Tam
+kapılar 288 dosya/1.667 test, type-check, Prisma validate, güncel 55
+migration, lint, 77 sayfalık production build ve `git diff --check` ile
+geçti. Faz 24 tamamlandı.
+
+### Faz 25 — Kalıcı Firma Profili
+
+**Tamamlanma durumu — 30.07.2026:** RFC'deki 10 varsayım kullanıcı
+tarafından onaylandı ve beş dilim birlikte tamamlandı. Typed effective profil
+ve `Company.name` fallback'i; additive `CompanyProfile` modeli/migration'ı;
+tenant/firma scoped optimistic repository; admin-only, dönemden bağımsız,
+idempotent ve hassas değer taşımayan audit'li yazım; `/ayarlar` düzenleme
+formu ile alış/satış faturası ve klasik hakediş belge başlıkları uygulandı.
+
+İzole F25 kabul kapsamı fallback/persisted okuma, admin/accounting/viewer
+rolleri, kapalı dönem bağımsızlığı, retry, stale revision, yabancı firma
+izolasyonu ve audit güvenliğini doğruladı. `Company.name`, AppShell oturum
+etiketi, lokasyon modu, session kayıtları ve finansal operasyonlar değişmedi.
+Gerçek admin/viewer UI'ında masaüstü, 390 px mobil, açık/koyu tema,
+salt-okur ve fatura PDF başlığı kabul edildi. Ayrıntı
+`Docs/UI-baseline/Faz25-gercek-veri-kapanis-20260730.md` içindedir.
+
+### Faz 26 — Şirket Lokasyon Dizini
+
+**Tamamlanma durumu — 30.07.2026:** RFC'deki 10 varsayım kullanıcı
+tarafından onaylandı ve beş dilim birlikte tamamlandı. Typed
+`CompanyLocation` domaini; additive model/migration; dönemden bağımsız
+tenant/firma scoped Merkez/Şube/Ofis repository'si; aktif dönemin
+`santiyeler` EntityRecord satırlarını ikinci kez yazmadan birleştiren
+federatif okuma; admin-only optimistic revision/idempotency ve hassas değer
+taşımayan audit; `/ayarlar` liste, filtre, form, pasifleştirme ve print
+yüzeyi uygulandı.
+
+İzole F26 kabul kapsamı iki yönetilen lokasyon ve bir federatif şantiyeyi,
+tek aktif merkez, admin/accounting/viewer rolleri, kapalı dönem bağımsızlığı,
+retry, stale revision, yabancı firma izolasyonu ve audit güvenliğini
+doğruladı. `locationMode`, `CompanyProfile`, session kayıtları, operasyon
+tabloları ve mevcut şantiye master kaydı değişmedi. Gerçek admin/viewer
+UI'ında masaüstü, 390 px mobil, açık/koyu tema, salt-okur ve şantiye kaynak
+bağlantısı kabul edildi. Ayrıntı
+`Docs/UI-baseline/Faz26-gercek-veri-kapanis-20260730.md` içindedir.
+
+### Faz 27 — Firma Belge Markalaması
+
+**Tamamlanma durumu — 31.07.2026:** RFC'deki 10 varsayım kullanıcı
+tarafından onaylandı ve beş dilim birlikte tamamlandı. PNG/JPEG/WebP imza,
+512 KiB, 64..1600 px ve oran doğrulaması; dönemden bağımsız
+`tenantId + companyId` tekil `CompanyBrandAsset` modeli; optimistic revision,
+idempotent request key, admin-only mutation ve binary/dosya adı/hash taşımayan
+audit sözleşmesi uygulandı.
+
+`/ayarlar` yönetici önizleme/yükleme/kaldırma yüzeyi ve salt-okur sunumu,
+yeni alış/satış faturası PDF/print başlığı ile klasik hakediş print başlığına
+bağlandı. AppShell `NOA İnşaat` ürün markası, `Company.name`, Document Center,
+geçmiş belgeler ve finansal kayıtlar değişmedi.
+
+İzole gerçek veri kabulünde revizyon `3`, üç güvenli audit, rol/firma/dönem
+izolasyonu ve sıfır operasyon/session yan etkisi doğrulandı. Yönetici/salt-okur
+tarayıcı kabulü, fatura PDF logosu ve 375 px mobil taşmasız görünüm geçti.
+303 test dosyasında 1.710 test, type-check, Prisma validate, uyarısız lint,
+77 sayfalık üretim derlemesi ve `git diff --check` yeşildir. Ayrıntı
+`Docs/UI-baseline/Faz27-gercek-veri-kapanis-20260731.md` içindedir. Faz 27
+tamamlandı.
+
+### Faz 28 — Tedarikçi Kategori Sözlüğü
+
+**Tamamlanma durumu — 31.07.2026:** RFC'deki 10 varsayım kullanıcı
+tarafından onaylandı ve beş dilim birlikte tamamlandı. Türkçe uyumlu kategori
+domaini; dönemden bağımsız `tenantId + companyId` scoped additive
+`SupplierCategory` modeli/migration'ı; mevcut tedarikçi kartı değerleriyle
+backfill yapmadan federatif repository; admin-only optimistic
+revision/idempotency ve kategori içeriği taşımayan audit uygulandı.
+
+`/ayarlar` kategori dizini ve yönetim formu; `/tedarikciler` filtre ve
+aktif-kategori seçimi; CSV/XLSX önizleme ile create/update/import server
+doğrulaması aynı effective sözlüğe bağlandı. Pasif/eski değerler mevcut
+kartlarda kayıpsız kalırken yeni atamalardan dışlandı.
+
+İzole F28 kabul kapsamında iki dönemdeki iki `Hazır Beton` kullanımı tek
+federatif değerde toplandı; iki yönetilen kategori, retry, duplicate, stale
+revision, admin/accounting/viewer rolleri, kapalı dönem ve yabancı firma
+izolasyonu doğrulandı. Üç redacted audit üretildi; tedarikçi kartı,
+session/finans/ledger/stok yan etkisi sıfırdır. Gerçek yönetici UI'ında
+Ayarlar dizini, tedarikçi filtre/form seçimi, koyu tema ve taşmasız masaüstü
+kabul edildi; 390 px responsive sözleşme bileşen testleriyle kapatıldı.
+Ayrıntı `Docs/UI-baseline/Faz28-gercek-veri-kapanis-20260731.md` içindedir.
+Tam kapılar 309 dosya/1.727 test, type-check, Prisma validate, güncel 59
+migration, uyarısız lint, 77 sayfalık production build ve
+`git diff --check` ile geçti. Faz 28 tamamlandı.
+
+### Faz 29 — Müşteri Tipi Sözlüğü
+
+**Tamamlanma durumu — 31.07.2026:** RFC'deki 10 varsayım kullanıcı tarafından
+onaylandı ve beş dilim birlikte tamamlandı. Türkçe uyumlu müşteri tipi
+domaini; dönemden bağımsız `tenantId + companyId` scoped additive
+`CustomerType` modeli/migration'ı; mevcut müşteri kartı değerleriyle backfill
+yapmadan federatif repository; admin-only optimistic revision/idempotency ve
+tip içeriği taşımayan audit uygulandı.
+
+`/ayarlar` müşteri tipi dizini ve yönetim formu; `/musteriler` filtre ve
+aktif-tip seçimi; CSV/XLSX önizleme ile create/update/import server
+doğrulaması aynı effective sözlüğe bağlandı. Pasif/eski değerler mevcut
+kartlarda kayıpsız kalırken yeni atamalardan dışlandı.
+
+İzole F29 kabul kapsamında iki dönemdeki iki `Kamu İştiraki` kullanımı tek
+federatif değerde toplandı; iki yönetilen tip, retry, duplicate, stale
+revision, admin/accounting/viewer rolleri, kapalı dönem ve yabancı firma
+izolasyonu doğrulandı. Üç redacted audit üretildi; müşteri kartı ve
+finans/ledger/stok yan etkisi sıfırdır. Gerçek yönetici UI'ında Ayarlar dizini,
+müşteri filtre/form seçimi, koyu tema, 390 px taşmasız görünüm ve temiz konsol
+kabul edildi. Ayrıntı
+`Docs/UI-baseline/Faz29-gercek-veri-kapanis-20260731.md` içindedir. Tam kapılar
+314 dosya/1.743 test, type-check, Prisma validate, güncel 60 migration,
+uyarısız lint, 77 sayfalık production build ve `git diff --check` ile geçti.
+Faz 29 tamamlandı.
+
+### Faz 30 — Özel Yetki Profilleri ve Doküman Merkezi Pilotu
+
+**Dilim 0 planlama durumu — 31.07.2026:** Faz 29 ile sağlayıcıdan bağımsız
+cari master veri backlog'u tamamlandı. Faz 13 gerçek Open Banking,
+SMTP/e-posta teslimatı ve bulut storage resmi sağlayıcı/erişim önkoşulları
+hazır olana kadar kuyruk sonunda kalır.
+
+Ana plan Bölüm 4.5 ve 10'da görünen gerçek sağlayıcıdan bağımsız eksiklik,
+“Özel (RBAC ile Yönetilen)” kullanıcı tipinin kalıcı yetki profiline
+atanamamasıdır. Mevcut `src/lib/rbac.ts` sabit `admin/accounting/viewer`
+fallback'ini koruyarak, ilk enforcement tüketicisini merkezi
+`document.manage` guard'ı bulunan ve finansal yan etki üretmeyen Doküman
+Merkezi ile sınırlandırmak en düşük riskli dikeydir.
+
+`Docs/RFC-F30-01-ozel-yetki-profilleri-dokuman-pilotu.md`; company-scoped
+profil, period-scoped kullanıcı ataması, sabit doküman permission kataloğu,
+admin bypass, atanmamış rol geriye uyumu, deny-by-default özel viewer kararı,
+redacted audit ve beş bağımsız uygulama dilimini tanımlar.
+
+Tüm modüllerin RBAC dönüşümü, admin/accounting kısıtlama, klasör bazlı ACL,
+lokasyon bazlı veri filtresi, SSO/SCIM ve dış sağlayıcılar açılmaz. RFC'deki
+10 önerilen varsayım kullanıcı onayını beklemektedir. Onaydan sonra sıradaki
+bağımsız çalışma **Faz 30 Dilim 1 — Domain Çekirdeği**dir.
+
+**Tamamlanma durumu — 31.07.2026:** RFC'deki 10 varsayım kullanıcı tarafından
+onaylandı ve beş dilim birlikte tamamlandı. Sabit Doküman Merkezi permission
+kataloğu; additive profil/permission/atama şeması; tenant/firma/dönem scoped
+repository; admin-only optimistic/idempotent action ve redacted audit;
+Ayarlar profil matrisi, aktif viewer ataması ve UI + server çift katmanlı
+Doküman Merkezi enforcement pilotu uygulandı.
+
+İzole F30 kabulü kapalı dönem, retry, duplicate, aktif atamalı profil
+pasifleştirme reddi, admin bypass, viewer grant/deny, atanmamış accounting
+fallback'i ve yabancı firma izolasyonunu doğruladı. İki güvenli audit üretildi;
+doküman, finans, ledger ve session yan etkisi sıfırdır. Canlı yönetici UI'ında
+koyu tema, 390 px taşmasız görünüm ve temiz konsol kabul edildi. Ayrıntı
+`Docs/UI-baseline/Faz30-gercek-veri-kapanis-20260731.md` içindedir. Faz 30
+tamamlandı. Tam kapılar 315 dosya/1.747 test, type-check, Prisma validate,
+güncel 61 migration, uyarısız lint, 77 sayfalık production build ve
+`git diff --check` ile geçti.
+
+### Faz 31 — Özel Kullanıcı Davetinde Yetki Profili
+
+**Dilim 0 planlama durumu — 31.07.2026:** Faz 30 kalıcı özel yetki profilini,
+aktif viewer atamasını ve Doküman Merkezi enforcement pilotunu tamamladı.
+Mevcut kullanıcı davetinde “Özel (RBAC ile Yönetilen)” tipi güvenli `viewer`
+rolüne eşlenir; ancak davet profil kimliği taşımadığı için admin, kabulden
+sonra ayrı manuel atama yapmak zorundadır.
+
+`Docs/RFC-F31-01-ozel-kullanici-davetinde-yetki-profili.md`; yalnız özel
+kullanıcı tipinde zorunlu aktif profil seçimi, firma kapsamı, kabul anında
+atomik kullanıcı/session/access/assignment yazımı, pasif profil fail-closed
+kararı, mevcut davet geriye uyumu ve beş küçük uygulama dilimini tanımlar.
+
+Doküman Merkezi dışı permission yayılımı, admin/accounting kısıtlama,
+bekleyen davet düzenleme, SSO/SCIM ve gerçek SMTP açılmaz. RFC'deki 10
+önerilen varsayım kullanıcı onayını beklemektedir. Onaydan sonra sıradaki
+bağımsız çalışma **Faz 31 Dilim 1 — Domain Sözleşmesi**dir.
+
+**Tamamlanma durumu — 31.07.2026:** RFC'deki 10 varsayım kullanıcı tarafından
+onaylandı ve beş dilim birlikte tamamlandı. Özel kullanıcı/profil domain
+sözleşmesi; nullable davet profil ilişkisi ve 62. migration; aktif ve
+firma-kapsamlı profil doğrulaması; tek transaction içinde kullanıcı, session,
+viewer erişimi, credential, davet durumu ve profil ataması; redacted audit ile
+Ayarlar davet UI'ında koşullu zorunlu profil seçimi uygulandı.
+
+İzole F31 kabulü özel ve profilsiz eski davetleri, pasif/yabancı profil reddini,
+retry'ı, atomik hata davranışını ve audit güvenliğini doğruladı. Tek özel
+kabulde bir viewer erişimi ve bir profil ataması oluştu; başarısız kabulde
+kısmi kimlik kaydı kalmadı. Finans, ledger ve doküman yan etkisi sıfırdır.
+Canlı yönetici UI'ında masaüstü, dar mobil görünüm, koyu tema, zorunlu seçim,
+yatay taşmasızlık ve temiz konsol kabul edildi. Ayrıntı
+`Docs/UI-baseline/Faz31-gercek-veri-kapanis-20260731.md` içindedir. Faz 31
+tamamlandı. Tam kapılar 316 test dosyasında 1.752 test, type-check, Prisma
+validate, güncel 62 migration, uyarısız lint, 77 sayfalık production build
+ve `git diff --check` ile geçti.
+
+### Faz 32 — Yetki Profili Atama Yaşam Döngüsü
+
+**Dilim 0 planlama durumu — 02.08.2026:** Faz 31 özel kullanıcı davetinde
+viewer erişimi ve profil atamasını atomik oluşturdu. Mevcut kullanıcı yönetimi
+rol değişikliği ve devre dışı bırakma işlemleri ise yalnız
+`AppUserScopeAccess` kaydını güncelliyor; ilgili dönem profil atamasını
+koruyor.
+
+Bu durum viewer → accounting geçişinde eski profil enforcement'ının yeni
+rolü beklenmedik biçimde daraltmasına ve devre dışı kullanıcının atamasının
+profil pasifleştirmeyi engellemesine yol açabilir.
+
+`Docs/RFC-F32-01-yetki-profili-atama-yasam-dongusu.md`; viewer rolünden çıkış
+ve erişim deaktivasyonunda scoped atama temizliğini erişim mutasyonuyla tek
+transaction'a alır; mevcut rol fallback'lerini, diğer firma/dönemleri ve
+audit güvenliğini korur. Ayarlar UI'ı da başarılı işlem sonrası aktif kullanıcı
+ve viewer atama listelerini sayfa yenilemeden birlikte günceller.
+
+Yeni permission kodu, yeni RBAC tüketicisi, kullanıcı reaktivasyonu, toplu
+işlem, history tablosu ve dış sağlayıcı açılmaz. RFC'deki 10 önerilen varsayım
+kullanıcı onayını beklemektedir. Onaydan sonra sıradaki bağımsız çalışma
+**Faz 32 Dilim 1 — Domain Sözleşmesi**dir.
+
+**Tamamlanma durumu — 02.08.2026:** RFC'deki 10 varsayım kullanıcı tarafından
+onaylandı ve beş dilim birlikte tamamlandı. Rol/deaktivasyon yaşam döngüsü,
+scoped profil ataması temizliğiyle tek Prisma transaction'ı, additive service
+sonuçları, güvenli audit metadata'sı ve Ayarlar ekranında aktif kullanıcı ile
+viewer profil listelerinin eşzamanlı uzlaştırılması uygulandı.
+
+İzole F32 kabulü viewer → accounting/admin temizliğini, accounting → viewer
+geçişinde profilsiz fallback'i, deaktivasyon temizliğini, yabancı scope
+izolasyonunu, profil pasifleştirme blokajının kalkmasını ve zorlanmış hata
+durumunda transaction rollback'ini doğruladı. Dört redacted audit üretildi;
+finans, ledger, doküman ve session yan etkisi sıfırdır. Canlı yönetici UI'ında
+koyu tema, kullanıcı/yetki panelleri, erişilebilir rol denetimi, yatay
+taşmasızlık ve temiz konsol kabul edildi. Ayrıntı
+`Docs/UI-baseline/Faz32-gercek-veri-kapanis-20260802.md` içindedir. Faz 32
+tamamlandı. 324 dosya/1.791 test, type-check, Prisma validate, uyarısız repo
+lint'i, 62 migration, 93 sayfalık uyarısız production build ve
+`git diff --check` geçti. Kapanışta auth/marketing React/Next.js sözleşme
+borçları, `/blog` istemci form sınırı, Next.js 16 `proxy.ts` geçişi ve
+`metadataBase` yapılandırması da tamamlandı.
+
+### Faz 33 — Süper Admin Giriş ve Tekil İlk Kurulum
+
+**Dilim 0 planlama durumu — 02.08.2026:** Faz 32 ve repo sağlık kapıları
+tamamlandı. Çalışma ağacındaki `.kiro/specs/super-admin-authentication`
+belgesinin Faz 1 zemini; ayrı `SuperAdmin*` modelleri, bağımsız session cookie,
+auth kartı, proxy koruması ve kısmi giriş/kurulum bileşenleri oluşturmuş olsa
+da canlı şema ile migration geçmişi mutabık değildir, route sayfaları eksiktir
+ve girişin yönlendiği korumalı çalışma alanı henüz yoktur.
+
+`Docs/RFC-F33-01-super-admin-giris-ilk-kurulum.md`; tenant
+`AppCredential/AppSession` hattına sıfır müdahale, tekil platform yöneticisi,
+opak DB session, sıkı `returnTo`, proxy + server doğrulaması, gerçek olmayan
+2FA/e-posta iddiasının kaldırılması ve beş bağımsız uygulama dilimini tanımlar.
+
+Şifre sıfırlama, OTP/TOTP, gerçek e-posta teslimatı, bakım modu, tenantlar
+arası yönetim dashboard'u ve platform operasyonları kapsam dışıdır.
+
+**Tamamlanma durumu — 02.08.2026:** Kullanıcının onayladığı 10 varsayım ve
+beş uygulama dilimi tamamlandı. `SuperAdminCredential.singletonKey` DB
+tekilliği, 63. additive migration, atomik bootstrap, kademeli kilit, PBKDF2,
+iki saatlik kayar DB session, güvenli cookie, DB session guard, sıkı
+`returnTo`, giriş/kurulum/çalışma alanı deep-link'leri ve DB+cookie çıkışı
+uygulandı. Ham OTP logu ve etkin olmayan 2FA/recovery vaatleri kaldırıldı.
+
+İzole kabul eşzamanlı iki farklı e-postalı bootstrap'ta yalnız bir kaydı kabul
+etti; geçersiz/geçerli giriş, kilit temizliği ve tırmanması, süresi dolmuş
+session, tenant tablo izolasyonu ve secret redaction geçti. 390 px koyu tema
+canlı kabulünde yatay taşma ve konsol uyarısı bulunmadı; kurulum → giriş →
+korumalı alan → çıkış ve bootstrap kapanışı doğrulandı. Kabul hesabı ile
+session'ları sonrasında silindi. Faz 33; 328 dosya/1.814 test, type-check,
+Prisma validate, uyarısız lint, 63 migration, 96 sayfalık production build ve
+`git diff --check` kapılarıyla kapatıldı. Ayrıntı
+`Docs/UI-baseline/Faz33-gercek-veri-kapanis-20260802.md` içindedir.
+
+### Faz 34 — Süper Admin Güvenlik Yüzeyleri
+
+**Tamamlanma durumu — 03.08.2026:** RFC-F34-01'deki 10 varsayım kullanıcı
+tarafından onaylandı ve beş bağımsız dilim tamamlandı. Faz 33'ün giriş,
+singleton bootstrap, session ve çıkış davranışı korunurken çalışma ağacındaki
+reset, OTP/TOTP, kilit ve bakım taslakları üretimde yanlışlıkla etkinleşmeyecek
+fail-closed sözleşmeye alındı.
+
+Merkezi exact public route matrisi yalnız giriş/ilk kurulumu açar. Yeni
+`SuperAdminAuthChallenge` opak ve tek kullanımlıdır; yeni
+`SuperAdminRateLimitBucket` reset/OTP/ikinci faktör denemelerini DB fixed-window
+ile izler. Reset delivery adapter'ı yokken token üretmez; uygulama sözleşmesi
+token tüketimi, password update ve tüm platform session iptalini tek
+transaction'da tamamlar. TOTP secret AES-256-GCM `v1` ciphertext, backup
+kodları yalnız hash olarak saklanır; geçerli key yokken enrollment açılmaz.
+
+64. additive migration yerel PostgreSQL'e uygulandı. İzole kabul challenge
+wrong-purpose/expiry/replay, DB rate-limit, delivery ve crypto fail-closed
+davranışı ile tenant izolasyonunu doğruladı ve ürettiği kabul kayıtlarını
+temizledi. Gerçek SMTP/SMS, public recovery, bakım operasyonu ve panel
+mutasyonları kapsam dışında kaldı. Ayrıntı
+`Docs/UI-baseline/Faz34-gercek-veri-kapanis-20260803.md` içindedir.
+
+### Faz 35 — Platform Uyumluluğu ve Canlıya Hazırlık
+
+**Dilim 0 planlama durumu — 04.08.2026:** Faz 33–34 Süper Admin giriş/session
+ve genişletilmiş auth güvenlik sınırını tamamladı. Canlı çalışma ağacı, tenant
+SaaS, marketing/public auth ve Süper Admin paneli birlikte incelendi;
+`Docs/RFC-F35-01-platform-uyumlulugu-ve-canliya-hazirlik.md` mevcut durum,
+route/auth/veri kaynağı ve UI matrislerini, production gap analizini, P0/P1/P2
+risklerini, 10 önerilen varsayımı ve sekiz bağımsız dilimi tanımlar.
+
+İlk önerilen uygulama; çalışan domaini yeniden tasarlamadan tenant Server
+Action session'larını fail-closed yapmak, tarih-bağımlı 22 abonelik testini
+deterministic hale getirmek ve public yüzeylerdeki gerçek olmayan başarı ile
+kanıtlanmamış marketing iddialarını karantinaya almaktır. Faz 33–34 recovery,
+OTP/TOTP ve bakım yüzeyleri; gerçek SMTP/SMS, ödeme, Open Banking, GİB,
+Arvento, object storage veya başka dış provider açılmaz. RFC'deki 10 varsayım
+ve yürütme sırası kullanıcı onayını beklemektedir; onaydan önce production
+kodu, Prisma şeması, migration, route davranışı veya UI değiştirilmez.
+
+**Dilim 1 tamamlanma durumu — 04.08.2026:** RFC'deki 10 varsayım ve sekiz
+dilimlik yürütme sırası kullanıcı tarafından onaylandı. Tenant kapsam kaydı ile
+tarayıcı auth oturumu ayrıldı; 65. additive migration ile sekiz saatlik opak,
+iptal edilebilir ve scope geçişinde dönen `AppAuthSession` uygulandı. Tenant
+Server Action kapsamı artık cookie yok/bilinmiyor/süresi dolmuş/iptal edilmiş
+durumlarda fail-closed çalışır; production demo listeleme kapalıdır. Üç tarih
+bağımlı abonelik action testi deterministik saate alındı. Gerçek browser kabulü
+giriş, refresh, firma/dönem geçişi ve DB revoke çıkış zincirini doğruladı.
+Ayrıntı `Docs/UI-baseline/Faz35-dilim1-auth-test-stabilizasyonu-20260804.md`
+içindedir. Sıradaki bağımsız çalışma **Faz 35 Dilim 2 — Public Gerçeklik
+Karantinası**dır.
+
+**Dilim 2 tamamlanma durumu — 04.08.2026:** Provider bağımlı public kayıt,
+parola kurtarma, iletişim ve newsletter akışları tek typed fail-closed sözleşme
+ile kapatıldı; ilgili route'lar kişisel veri, token, hesap veya sahte başarı
+üretmez. Kaynaksız müşteri/istatistik/referans, ücretsiz deneme, canlı
+entegrasyon, hosting/sertifika/backup ve SLA iddiaları kaldırıldı ya da açık
+`sandbox`/`provider bekliyor` etiketi aldı. Doğrulanmamış blog yazıları draft,
+resmi kimliksiz yasal sayfalar “yayına hazır değil” durumundadır. Sekiz public
+route canlı browser ile doğrulandı. Ayrıntı
+`Docs/UI-baseline/Faz35-dilim2-public-gerceklik-karantinasi-20260804.md`
+içindedir. Sıradaki bağımsız çalışma **Faz 35 Dilim 3 — Production Güvenlik
+Tabanı**dır.
+
+**Dilim 3 tamamlanma durumu — 04.08.2026:** Production env/startup sözleşmesi,
+global CSP ve browser security header'ları, tenant girişinde DB-backed
+beş-deneme/15-dakika rate-limit ve production `db:seed`/`db:push` hard-stop
+uygulandı. 66. additive migration yerel PostgreSQL'e uygulandı; ham e-posta/IP
+rate-limit tablosuna yazılmaz. Sekiz saatlik absolute tenant session politikası
+typed hale getirildi ve Faz 34 Süper Admin güvenlik hattı değiştirilmedi. Canlı
+browser altıncı hatalı girişin kontrollü blok durumunu, HTTP kabulü CSP/header
+setini doğruladı. Ayrıntı
+`Docs/UI-baseline/Faz35-dilim3-production-guvenlik-tabani-20260804.md`
+içindedir. Sıradaki bağımsız çalışma **Faz 35 Dilim 4 — Süper Admin Platform
+Read-model**dır.
+
+**Dilim 4 tamamlanma durumu — 04.08.2026:** Süper Admin tenant, kullanıcı ve
+audit listeleri typed salt-okunur read-model, explicit Prisma `select`, 25
+satırlık pagination, filtre ve sıralama sözleşmesine taşındı. Ham platform ID,
+e-posta, IP ve user-agent yayını minimize edildi. Dashboard DB health'i gerçek
+probe/gecikme ile ölçer; dış monitoring provider'ı açık `unavailable` kalır.
+Gerçek DB read-model kabulü ve geçici, sonunda silinen opak SA session ile dört
+protected route kabulü geçti; oturumsuz browser deep-link'i fail-closed kaldı.
+Ayrıntı
+`Docs/UI-baseline/Faz35-dilim4-super-admin-platform-read-model-20260804.md`
+içindedir. Sıradaki bağımsız çalışma **Faz 35 Dilim 5 — Marketing/Legal/SEO
+Sözleşmesi**dir.
+
+**Dilim 5 tamamlanma durumu — 04.08.2026:** Plan kartları ve karşılaştırma
+matrisi tek typed plan/capability kaynağına bağlandı. Canonical origin
+deployment `APP_BASE_URL` girdisinden türetilir. Resmi şirket kimliği, adres,
+iletişim, veri sorumlusu ve hukuki onay tarihi eksikken indexing fail-closed;
+robots tüm siteyi kapatır, sitemap boş, JSON-LD kapalı ve yasal taslaklar
+`noindex` kalır. Yalnız explicit production yayın kapıları tamamlanırsa public
+marketing route'ları ve yayınlanmış bloglar indekslenebilir. Canlı HTTP ve
+browser kabulü geçti. Ayrıntı
+`Docs/UI-baseline/Faz35-dilim5-marketing-legal-seo-sozlesmesi-20260804.md`
+içindedir. Sıradaki bağımsız çalışma **Faz 35 Dilim 6 — Ortak UI/UX ve Route
+State**dir.
+
+**Dilim 6 tamamlanma durumu — 04.08.2026:** Süper Admin liste kontrolleri
+ortak form/button primitive'lerine yaklaştırıldı. Kök, marketing, tenant modül
+ve Süper Admin panel segmentlerine ortak loading ve bilgi sızdırmayan error
+state eklendi; retry Next.js 16.2.9 `unstable_retry` sözleşmesini kullanır.
+320/390/768/1024/1440 canlı browser kabulü, mobil dialog açma/kapatma, tema,
+print/reduced-motion sözleşmesi ve hatasız console doğrulandı. Ayrıntı
+`Docs/UI-baseline/Faz35-dilim6-ortak-ui-route-state-20260804.md` içindedir.
+Sıradaki bağımsız çalışma **Faz 35 Dilim 7 — Operasyon ve Deployment
+Hazırlığı**dır.
+
+**Dilim 7 tamamlanma durumu — 04.08.2026:** Bağımlılıksız health ve DB'ye
+bağlı fail-closed readiness route'ları, redacted structured-log sınırı, ortak
+document-storage runtime portu ve PostgreSQL servisli CI kapıları eklendi.
+Migrate/backup/restore/rollback/incident/retention runbook'u dry-run ile
+sınırlandı; hosting, monitoring, backup, object storage, incident ve hukuki
+sahipler atanmadığından production yayın kapısı açıkça bloklu kaldı. Canlı yerel
+HTTP kabulü health/readiness yanıtlarını doğruladı. Ayrıntı
+`Docs/UI-baseline/Faz35-dilim7-operasyon-deployment-hazirligi-20260804.md`
+içindedir. Sıradaki bağımsız çalışma **Faz 35 Dilim 8 — İzole Gerçek Veri ve
+Kapanış**tır.
+
+**Dilim 8 ve Faz 35 kapanış durumu — 04.08.2026:** Gerçek PostgreSQL'de
+geçici ikinci tenant ile yabancı scope geçişi reddedildi, mevcut opak auth scope
+değişmedi ve kabul kayıtları temizlendi. Public/tenant/Süper Admin browser
+smoke kabulü geçti. 352 test dosyası/1.869 test, type-check, Prisma validate,
+lint, Next.js 16.2.9 build, secret scan ve diff kontrolü yeşildir. Açık P0/P1
+yazılım kusuru kalmadı. Hosting/TLS/secret store, backup/restore, object
+storage, monitoring/incident, RPO/RTO/SLA, retention/KVKK ve resmi yayın
+girdileri external blocker olduğu için production yayın kapısı fail-closed
+kalmaktadır. Ayrıntı
+`Docs/UI-baseline/Faz35-dilim8-izole-gercek-veri-kapanis-20260804.md`
+içindedir. Faz 35'in onaylı sekiz dilimi tamamlanmıştır.
+
+### Faz 36 — Production Yayın Yönetişimi
+
+**Dilim 0 planlama durumu — 04.08.2026:** Faz 35 sonrasında bağımsız P0/P1
+yazılım kusuru kalmadığı; sıradaki işin production domaini, hosting,
+PostgreSQL, secret store, object storage, monitoring, backup/restore,
+operasyon sahipliği, RPO/RTO/SLA, retention/KVKK ve resmi yayın girdilerine
+bağlı olduğu doğrulandı.
+
+`Docs/RFC-F36-01-production-yayin-yonetisimi.md`, bu dış kararları sağlayıcı
+veya credential varmış gibi davranmadan sorumluluk, kabul kanıtı ve geri dönüş
+sınırı bulunan yedi uygulama dilimine ayırır. RFC'nin 10 temel varsayımı ve
+yürütme sırası kullanıcı onayını beklemektedir. Onaydan ve gerekli girdilerden
+önce provider SDK'sı, production altyapısı, DNS/TLS, credential, migration veya
+canlı deployment değişikliği yapılmaz; production'a trafik açmak her durumda
+ayrı açık kullanıcı onayı gerektirir.
+
+**Dilim 0 tamamlanma ve Dilim 1 başlangıç durumu — 04.08.2026:** RFC'deki 10
+varsayım ve yedi dilimlik yürütme sırası kullanıcı tarafından onaylandı. Repo
+taramasında localhost geliştirme sözleşmesi dışında doğrulanmış production
+domaini, sağlayıcı veya atanmış operasyon sahibi bulunmadı. Onaylanan çevre
+izolasyonu ile gerekli provider, sahiplik ve politika kararları
+`Docs/operasyon/production-topoloji-ve-sahiplik-karar-kaydi.md` içinde tek
+fail-closed kayıt altında toplandı. Gerçek isim, sağlayıcı, bölge, RPO/RTO,
+retention ve SLA girdileri sağlanana kadar Dilim 1 tamamlanmış sayılmaz; Dilim
+2 staging kurulumu, credential, dış kaynak ve production değişikliği açılmaz.
+
+**Dilim 1 karar desteği — 04.08.2026:** Dış girdiler henüz verilmediği için
+provider seçimi yapılmadan resmî ve güncel sağlayıcı dokümanlarıyla iki aday
+topoloji karşılaştırıldı. Düşük operasyonlu Vercel + Neon Frankfurt +
+Cloudflare R2 `eu` jurisdiction + Sentry DE birleşimi yalnız staging için
+koşullu teknik öneri; AWS App Runner + RDS + S3 + Secrets Manager +
+CloudWatch/X-Ray birleşimi konsolide alternatif olarak kaydedildi. Ayrıntı
+`Docs/operasyon/production-provider-aday-mimarileri.md` içindedir. Kullanıcı
+açık seçim yapmadan karar kaydı, hesap/credential, dış kaynak ve deployment
+değişmez; Dilim 1 kabul kapısı kapalı kalır.
+
+**Dilim 1 provider/bölge kararı — 04.08.2026:** Kullanıcı Aday A'yı staging
+için onayladı. Vercel Node.js Functions bölgesi, Türkiye'ye hizmet eden
+uygulamanın onaylı Neon AWS Frankfurt `eu-central-1` DB'siyle aynı bölgede
+çalışması için `fra1` Frankfurt seçildi. Cloudflare R2 `eu` jurisdiction ve
+Sentry DE de staging kararına işlendi. Hesap, bucket, DB, monitoring projesi,
+credential, DNS veya deployment oluşturulmadı. Sorumlular, staging domaini,
+RPO/RTO, retention ve SLA girdileri gelene kadar Dilim 1 tamamlanmaz.
+
+**Dilim 1 operasyon politikası önerisi — 04.08.2026:** Vercel staging ortam
+ayrımı, Neon scheduled snapshot/restore ve Cloudflare R2 lifecycle yetenekleri
+resmî kaynaklardan doğrulandı. Yalnız staging için 24 saat RPO, 8 saat RTO, 14
+gün backup retention, 30 gün sentetik veri/log üst sınırı, dış SLA olmayan
+hafta içi destek penceresi, aylık restore provası ve `PROJE_SAHIBI`,
+`TEKNIK_OPERASYON`, `DB_RECOVERY`, `VERI_HUKUK` rol modeli önerildi. Ayrıntı
+`Docs/operasyon/staging-operasyon-politikasi-taslagi.md` içindedir. Bu değerler
+ve rol atamaları kullanıcı onayı bekler; Dilim 2 veya dış kaynak açılmaz.
+
+**Dilim 1 staging karar kapısı tamamlandı — 04.08.2026:** Kullanıcı 24 saat
+RPO, 8 saat RTO, günlük backup/14 gün retention ve 30 gün staging retention
+politikasını onayladı. Dört staging operasyon rolünün tamamına Murat Saygı
+atandı; aynı kişinin uygulayan/onaylayan olması ve yedek insan sorumlu
+bulunmaması production'a taşınmayan staging riski olarak kaydedildi. Özel DNS
+verilene kadar domain karar sahibi Murat Saygı yönetiminde geçici Vercel
+hostname kullanılacaktır. Dilim 1'in staging kapısı tamamlandı; sıradaki
+bağımsız çalışma **Faz 36 Dilim 2 — Staging Temeli**dir.
+
+**Dilim 2 yerel başlangıç — 04.08.2026:** Next.js 16.2.9 yerel deployment ve
+region sözleşmesi doğrulandı. Kök `vercel.json`, Vercel Node.js Functions için
+yalnız `fra1` Frankfurt bölgesini tanımlar; route/function override, onaysız
+failover ve config içine environment değeri gömme testli
+`staging:platform:verify` kapısında reddedilir. Dış Vercel/Neon/R2/Sentry
+kaynağı, credential, hostname, DNS veya deployment henüz oluşturulmadı; Dilim
+2 yalnız dış kaynak gerektirmeyen preflight seviyesinde ilerletildi.
+
+**Dilim 2 yerel preflight doğrulaması — 04.08.2026:** `fra1` platform
+preflight'i, hedefli 3 test, tam 353 test dosyası/1.872 test, type-check, Prisma
+validate, lint, Next.js 16.2.9 build/104 sayfa ve 1.345 dosyalık secret scan
+yeşildir. Ayrıntı
+`Docs/UI-baseline/Faz36-dilim2-yerel-staging-preflight-20260804.md` içindedir.
+Vercel proje/environment, Neon DB, R2 bucket, Sentry proje, hostname,
+credential, migration ve deployment oluşturulmadığından Dilim 2 henüz
+tamamlanmış sayılmaz.
+
+**Dilim 2 dış kaynak hazırlığı — 04.08.2026:** Vercel CLI oturumu açıldı ve
+yeni proje oluşturmak yerine mevcut `murat-saygis-projects/insaat-yonetim`
+Next.js projesi repoya bağlandı. `DATABASE_URL` ve `AUTH_SECRET` değişkenlerinin
+Production/Preview/Development ortamlarında ortak kapsamlı olduğu saptandı;
+değerler okunmadı veya değiştirilmedi. Ayrı Neon staging DB oluşmadan Vercel
+Preview environment ayrımı yapılmadı. Neon, Cloudflare ve Sentry giriş
+sekmeleri kullanıcıya bırakıldı; dashboard oturumları açılana kadar kaynak,
+credential, ödeme, migration veya deployment kapalıdır.
+
+**Dilim 2 dış staging temeli — 04.08.2026:** Kullanıcının açık onayıyla Vercel
+`murat-saygis-projects/insaat-yonetim`, Neon Frankfurt
+`noa-insaat-staging`, private Cloudflare R2 EU doküman bucket'ı
+`noa-insaat-staging-eu` ve Sentry DE `MS-INSAAT/noa-insaat-staging` kaynakları
+oluşturuldu. Staging DB/R2/Sentry değerleri yalnız Vercel Preview secret
+yüzeyine yazıldı; production environment değiştirilmedi. Deployment,
+migration, hostname, health/readiness ve rollback kanıtı Dilim 6'da açık kalır.
+
+**Dilim 3 kalıcı storage ve recovery başlangıcı — 04.08.2026:** Mevcut
+document-storage portuna R2 adapter ve staging/production local-storage
+hard-stop'u eklendi. Ayrı private EU backup bucket'ı
+`noa-insaat-staging-backups-eu` oluşturuldu; 14 günlük lifecycle etkinliği
+provider arayüzünde doğrulandı. Günlük PostgreSQL custom-format export, binary
+copy/checksum manifesti ve bütünlük doğrulama workflow'u fail-closed hazırlandı.
+GitHub Actions repository secret/variable yüzeyinde beş hassas değer ve dört
+hassas olmayan R2 ayarı yapılandırıldı. Document-read ve backup-read/write
+tokenları ayrı bucket'lara sınırlandı; oluşturma çıktısına yansıyan ilk
+document-read tokenı kullanılmadan silinip `v2` ile döndürüldü. Backup
+credential'ı uygulama runtime'ına eklenmedi. Workflow henüz varsayılan dala
+gönderilmediği için gerçek backup ve izole restore tatbikatı yapılmadı.
+Dolayısıyla 24 saat RPO/8 saat RTO henüz ölçülmüş sonuç değil, onaylı hedeftir.
+Hedefli 19 test, tam 355 test dosyası/1.884 test,
+type-check, Prisma validate, lint, Next.js 16.2.9 build/104 sayfa, `fra1`
+preflight ve 1.354 dosyalık secret scan yeşildir.

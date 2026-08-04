@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, test, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 
 import { defaultTenantScope } from "@/lib/tenant-scope";
 
@@ -42,6 +42,8 @@ const adminScope = {
 
 describe("arvento fleet actions", () => {
   beforeEach(() => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date("2026-08-02T00:00:00.000Z"));
     getActiveTenantScopeMock.mockReset();
     ensureTenantScopeMock.mockReset();
     revalidatePathMock.mockReset();
@@ -53,6 +55,10 @@ describe("arvento fleet actions", () => {
     prismaMock.subscriptionInvoice.findMany.mockResolvedValue([]);
     prismaMock.tenantSubscription.findFirst.mockResolvedValue(null);
     prismaMock.tenantSubscriptionAddon.findMany.mockResolvedValue([]);
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
   });
 
   test("blocks sandbox connection when the active subscription lacks Arvento fleet access", async () => {

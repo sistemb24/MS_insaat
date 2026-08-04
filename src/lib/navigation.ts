@@ -84,6 +84,20 @@ export const navigationItems: NavigationItem[] = [
     phase: "P2",
   },
   {
+    label: "Destek Merkezi",
+    href: "/destek-merkezi",
+    icon: "DM",
+    description: "Destek talepleri, yazışma ve çözüm takibi",
+    phase: "P2",
+  },
+  {
+    label: "Bilgi Merkezi",
+    href: "/bilgi-merkezi",
+    icon: "BM",
+    description: "Şirket duyuruları, planlı bakım, güncelleme ve haberler",
+    phase: "P2",
+  },
+  {
     label: "E-Fatura Yönetimi",
     href: "/e-fatura-yonetimi",
     icon: "EF",

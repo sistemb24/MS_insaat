@@ -7,226 +7,297 @@ datasource db {
 }
 
 model Tenant {
-  id                         String                      @id
-  name                       String
-  createdAt                  DateTime                    @default(now())
-  updatedAt                  DateTime                    @updatedAt
-  companies                  Company[]
-  sessions                   AppSession[]
-  userScopeAccesses          AppUserScopeAccess[]
-  users                      AppUser[]
-  records                    EntityRecord[]
-  purchaseInvoices           PurchaseInvoice[]
-  salesInvoices              SalesInvoice[]
-  deliveryNotes              DeliveryNote[]
-  personnelAssets            PersonnelAssetAssignment[]
-  safetyWorkAccidents        SafetyWorkAccident[]
-  safetyTrainings            SafetyTraining[]
-  safetyTrainingAttendances  SafetyTrainingAttendance[]
-  safetyInspections          SafetyInspection[]
-  safetyFindings             SafetyFinding[]
-  safetyPpeIssuances         SafetyPpeIssuance[]
-  stockMovements             StockMovement[]
-  progressPayments           ProgressPayment[]
-  constructionProjects      ConstructionProject[]
-  constructionContractItems ConstructionContractItem[]
-  constructionProgressPayments ConstructionProgressPayment[]
-  constructionMeasurementLines ConstructionMeasurementLine[]
-  constructionSnapshots     ConstructionPaymentItemSnapshot[]
-  constructionApprovalEvents ConstructionApprovalEvent[]
-  constructionAccountingLinks ConstructionAccountingLink[]
-  constructionMeasurementSheets ConstructionMeasurementSheet[]
-  constructionExtraWorks ConstructionExtraWork[]
-  constructionDeductionMovements ConstructionDeductionMovement[]
-  constructionDeductionRules ConstructionDeductionRule[]
+  id                                    String                                  @id
+  name                                  String
+  createdAt                             DateTime                                @default(now())
+  updatedAt                             DateTime                                @updatedAt
+  companies                             Company[]
+  sessions                              AppSession[]
+  userScopeAccesses                     AppUserScopeAccess[]
+  users                                 AppUser[]
+  records                               EntityRecord[]
+  purchaseInvoices                      PurchaseInvoice[]
+  salesInvoices                         SalesInvoice[]
+  deliveryNotes                         DeliveryNote[]
+  personnelAssets                       PersonnelAssetAssignment[]
+  safetyWorkAccidents                   SafetyWorkAccident[]
+  safetyTrainings                       SafetyTraining[]
+  safetyTrainingAttendances             SafetyTrainingAttendance[]
+  safetyInspections                     SafetyInspection[]
+  safetyFindings                        SafetyFinding[]
+  safetyPpeIssuances                    SafetyPpeIssuance[]
+  safetyChecklistTemplates              SafetyChecklistTemplate[]
+  safetyChecklistTemplateItems          SafetyChecklistTemplateItem[]
+  safetyChecklistRuns                   SafetyChecklistRun[]
+  safetyChecklistResponses              SafetyChecklistResponse[]
+  supportTickets                        SupportTicket[]
+  supportTicketMessages                 SupportTicketMessage[]
+  announcements                         Announcement[]
+  employeeLeaveRequests                 EmployeeLeaveRequest[]
+  employeeLeaveBalances                 EmployeeLeaveBalance[]
+  employeeAdvanceRequests               EmployeeAdvanceRequest[]
+  employeeAdvanceSettlements            EmployeeAdvanceSettlement[]
+  employeeTransfers                     EmployeeTransfer[]
+  vehicleAssignments                    VehicleAssignment[]
+  vehicleFuelRecords                    VehicleFuelRecord[]
+  vehicleMaintenancePlans               VehicleMaintenancePlan[]
+  vehicleMaintenanceRecords             VehicleMaintenanceRecord[]
+  vehicleTireRecords                    VehicleTireRecord[]
+  stockMovements                        StockMovement[]
+  progressPayments                      ProgressPayment[]
+  constructionProjects                  ConstructionProject[]
+  constructionContractItems             ConstructionContractItem[]
+  constructionProgressPayments          ConstructionProgressPayment[]
+  constructionMeasurementLines          ConstructionMeasurementLine[]
+  constructionSnapshots                 ConstructionPaymentItemSnapshot[]
+  constructionApprovalEvents            ConstructionApprovalEvent[]
+  constructionAccountingLinks           ConstructionAccountingLink[]
+  constructionMeasurementSheets         ConstructionMeasurementSheet[]
+  constructionExtraWorks                ConstructionExtraWork[]
+  constructionDeductionMovements        ConstructionDeductionMovement[]
+  constructionDeductionRules            ConstructionDeductionRule[]
   constructionDeductionRuleApplications ConstructionDeductionRuleApplication[]
-  constructionFinancialMovements ConstructionFinancialMovement[]
-  constructionPriceRevisions ConstructionContractItemPriceRevision[]
-  constructionSimulationScenarios ConstructionSimulationScenario[]
-  constructionMeasurementImportBatches ConstructionMeasurementImportBatch[]
-  expenses                   Expense[]
-  timesheets                 Timesheet[]
-  payrollAccruals            PayrollAccrual[]
-  cheques                    Cheque[]
-  cashBankMovements          CashBankMovement[]
-  tenders                    Tender[]
-  documentFolders            DocumentFolder[]
-  documentFiles              DocumentFile[]
-  notifications              Notification[]
-  notificationPreferences    NotificationPreference[]
-  stockMinimumSettings       StockMinimumSetting[]
-  userInvitations            UserInvitation[]
-  emailOutboxMessages        EmailOutbox[]
-  tenantSubscriptions        TenantSubscription[]
-  subscriptionInvoices       SubscriptionInvoice[]
-  subscriptionPaymentWebhookEvents SubscriptionPaymentWebhookEvent[]
-  eFaturaWebhookEvents      EFaturaWebhookEvent[]
-  tenantSubscriptionAddons   TenantSubscriptionAddon[]
-  bankIntegrationConnections BankIntegrationConnection[]
-  bankTransactions           BankTransaction[]
-  bankLedgerEntries          BankLedgerEntry[]
-  ledgerEntries              LedgerEntry[]
-  ledgerLines                LedgerLine[]
-  vehicles                   Vehicle[]
-  apiKeys                    ApiKey[]
-  webhookEndpoints           WebhookEndpoint[]
-  auditLogs                  AuditLog[]
+  constructionFinancialMovements        ConstructionFinancialMovement[]
+  constructionPriceRevisions            ConstructionContractItemPriceRevision[]
+  constructionSimulationScenarios       ConstructionSimulationScenario[]
+  constructionMeasurementImportBatches  ConstructionMeasurementImportBatch[]
+  expenses                              Expense[]
+  timesheets                            Timesheet[]
+  payrollAccruals                       PayrollAccrual[]
+  cheques                               Cheque[]
+  cashBankMovements                     CashBankMovement[]
+  tenders                               Tender[]
+  documentFolders                       DocumentFolder[]
+  documentFiles                         DocumentFile[]
+  notifications                         Notification[]
+  notificationPreferences               NotificationPreference[]
+  stockMinimumSettings                  StockMinimumSetting[]
+  financeSettings                       FinanceSetting[]
+  companyProfiles                       CompanyProfile[]
+  companyLocations                      CompanyLocation[]
+  companyBrandAssets                    CompanyBrandAsset[]
+  supplierCategories                    SupplierCategory[]
+  customerTypes                         CustomerType[]
+  userInvitations                       UserInvitation[]
+  emailOutboxMessages                   EmailOutbox[]
+  tenantSubscriptions                   TenantSubscription[]
+  subscriptionInvoices                  SubscriptionInvoice[]
+  subscriptionPaymentWebhookEvents      SubscriptionPaymentWebhookEvent[]
+  eFaturaWebhookEvents                  EFaturaWebhookEvent[]
+  tenantSubscriptionAddons              TenantSubscriptionAddon[]
+  bankIntegrationConnections            BankIntegrationConnection[]
+  bankTransactions                      BankTransaction[]
+  bankLedgerEntries                     BankLedgerEntry[]
+  ledgerEntries                         LedgerEntry[]
+  ledgerLines                           LedgerLine[]
+  vehicles                              Vehicle[]
+  apiKeys                               ApiKey[]
+  webhookEndpoints                      WebhookEndpoint[]
+  auditLogs                             AuditLog[]
+  accessProfiles                        AccessProfile[]
+  accessProfileAssignments              UserAccessProfileAssignment[]
 }
 
 model Company {
-  id                         String                      @id
-  tenantId                   String
-  name                       String
-  createdAt                  DateTime                    @default(now())
-  updatedAt                  DateTime                    @updatedAt
-  tenant                     Tenant                      @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  periods                    Period[]
-  sessions                   AppSession[]
-  userScopeAccesses          AppUserScopeAccess[]
-  records                    EntityRecord[]
-  purchaseInvoices           PurchaseInvoice[]
-  salesInvoices              SalesInvoice[]
-  deliveryNotes              DeliveryNote[]
-  personnelAssets            PersonnelAssetAssignment[]
-  safetyWorkAccidents        SafetyWorkAccident[]
-  safetyTrainings            SafetyTraining[]
-  safetyTrainingAttendances  SafetyTrainingAttendance[]
-  safetyInspections          SafetyInspection[]
-  safetyFindings             SafetyFinding[]
-  safetyPpeIssuances         SafetyPpeIssuance[]
-  stockMovements             StockMovement[]
-  progressPayments           ProgressPayment[]
-  constructionProjects      ConstructionProject[]
-  constructionContractItems ConstructionContractItem[]
-  constructionProgressPayments ConstructionProgressPayment[]
-  constructionMeasurementLines ConstructionMeasurementLine[]
-  constructionSnapshots     ConstructionPaymentItemSnapshot[]
-  constructionApprovalEvents ConstructionApprovalEvent[]
-  constructionAccountingLinks ConstructionAccountingLink[]
-  constructionMeasurementSheets ConstructionMeasurementSheet[]
-  constructionExtraWorks ConstructionExtraWork[]
-  constructionDeductionMovements ConstructionDeductionMovement[]
-  constructionDeductionRules ConstructionDeductionRule[]
+  id                                    String                                  @id
+  tenantId                              String
+  name                                  String
+  createdAt                             DateTime                                @default(now())
+  updatedAt                             DateTime                                @updatedAt
+  tenant                                Tenant                                  @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  periods                               Period[]
+  sessions                              AppSession[]
+  userScopeAccesses                     AppUserScopeAccess[]
+  records                               EntityRecord[]
+  purchaseInvoices                      PurchaseInvoice[]
+  salesInvoices                         SalesInvoice[]
+  deliveryNotes                         DeliveryNote[]
+  personnelAssets                       PersonnelAssetAssignment[]
+  safetyWorkAccidents                   SafetyWorkAccident[]
+  safetyTrainings                       SafetyTraining[]
+  safetyTrainingAttendances             SafetyTrainingAttendance[]
+  safetyInspections                     SafetyInspection[]
+  safetyFindings                        SafetyFinding[]
+  safetyPpeIssuances                    SafetyPpeIssuance[]
+  safetyChecklistTemplates              SafetyChecklistTemplate[]
+  safetyChecklistTemplateItems          SafetyChecklistTemplateItem[]
+  safetyChecklistRuns                   SafetyChecklistRun[]
+  safetyChecklistResponses              SafetyChecklistResponse[]
+  supportTickets                        SupportTicket[]
+  supportTicketMessages                 SupportTicketMessage[]
+  announcements                         Announcement[]
+  employeeLeaveRequests                 EmployeeLeaveRequest[]
+  employeeLeaveBalances                 EmployeeLeaveBalance[]
+  employeeAdvanceRequests               EmployeeAdvanceRequest[]
+  employeeAdvanceSettlements            EmployeeAdvanceSettlement[]
+  employeeTransfers                     EmployeeTransfer[]
+  vehicleAssignments                    VehicleAssignment[]
+  vehicleFuelRecords                    VehicleFuelRecord[]
+  vehicleMaintenancePlans               VehicleMaintenancePlan[]
+  vehicleMaintenanceRecords             VehicleMaintenanceRecord[]
+  vehicleTireRecords                    VehicleTireRecord[]
+  stockMovements                        StockMovement[]
+  progressPayments                      ProgressPayment[]
+  constructionProjects                  ConstructionProject[]
+  constructionContractItems             ConstructionContractItem[]
+  constructionProgressPayments          ConstructionProgressPayment[]
+  constructionMeasurementLines          ConstructionMeasurementLine[]
+  constructionSnapshots                 ConstructionPaymentItemSnapshot[]
+  constructionApprovalEvents            ConstructionApprovalEvent[]
+  constructionAccountingLinks           ConstructionAccountingLink[]
+  constructionMeasurementSheets         ConstructionMeasurementSheet[]
+  constructionExtraWorks                ConstructionExtraWork[]
+  constructionDeductionMovements        ConstructionDeductionMovement[]
+  constructionDeductionRules            ConstructionDeductionRule[]
   constructionDeductionRuleApplications ConstructionDeductionRuleApplication[]
-  constructionFinancialMovements ConstructionFinancialMovement[]
-  constructionPriceRevisions ConstructionContractItemPriceRevision[]
-  constructionSimulationScenarios ConstructionSimulationScenario[]
-  constructionMeasurementImportBatches ConstructionMeasurementImportBatch[]
-  expenses                   Expense[]
-  timesheets                 Timesheet[]
-  payrollAccruals            PayrollAccrual[]
-  cheques                    Cheque[]
-  cashBankMovements          CashBankMovement[]
-  tenders                    Tender[]
-  documentFolders            DocumentFolder[]
-  documentFiles              DocumentFile[]
-  notifications              Notification[]
-  stockMinimumSettings       StockMinimumSetting[]
-  userInvitations            UserInvitation[]
-  emailOutboxMessages        EmailOutbox[]
-  tenantSubscriptions        TenantSubscription[]
-  subscriptionInvoices       SubscriptionInvoice[]
-  subscriptionPaymentWebhookEvents SubscriptionPaymentWebhookEvent[]
-  eFaturaWebhookEvents      EFaturaWebhookEvent[]
-  tenantSubscriptionAddons   TenantSubscriptionAddon[]
-  bankIntegrationConnections BankIntegrationConnection[]
-  bankTransactions           BankTransaction[]
-  bankLedgerEntries          BankLedgerEntry[]
-  ledgerEntries              LedgerEntry[]
-  ledgerLines                LedgerLine[]
-  vehicles                   Vehicle[]
-  apiKeys                    ApiKey[]
-  webhookEndpoints           WebhookEndpoint[]
-  auditLogs                  AuditLog[]
+  constructionFinancialMovements        ConstructionFinancialMovement[]
+  constructionPriceRevisions            ConstructionContractItemPriceRevision[]
+  constructionSimulationScenarios       ConstructionSimulationScenario[]
+  constructionMeasurementImportBatches  ConstructionMeasurementImportBatch[]
+  expenses                              Expense[]
+  timesheets                            Timesheet[]
+  payrollAccruals                       PayrollAccrual[]
+  cheques                               Cheque[]
+  cashBankMovements                     CashBankMovement[]
+  tenders                               Tender[]
+  documentFolders                       DocumentFolder[]
+  documentFiles                         DocumentFile[]
+  notifications                         Notification[]
+  stockMinimumSettings                  StockMinimumSetting[]
+  financeSettings                       FinanceSetting[]
+  profiles                              CompanyProfile[]
+  locations                             CompanyLocation[]
+  brandAssets                           CompanyBrandAsset[]
+  supplierCategories                    SupplierCategory[]
+  customerTypes                         CustomerType[]
+  userInvitations                       UserInvitation[]
+  emailOutboxMessages                   EmailOutbox[]
+  tenantSubscriptions                   TenantSubscription[]
+  subscriptionInvoices                  SubscriptionInvoice[]
+  subscriptionPaymentWebhookEvents      SubscriptionPaymentWebhookEvent[]
+  eFaturaWebhookEvents                  EFaturaWebhookEvent[]
+  tenantSubscriptionAddons              TenantSubscriptionAddon[]
+  bankIntegrationConnections            BankIntegrationConnection[]
+  bankTransactions                      BankTransaction[]
+  bankLedgerEntries                     BankLedgerEntry[]
+  ledgerEntries                         LedgerEntry[]
+  ledgerLines                           LedgerLine[]
+  vehicles                              Vehicle[]
+  apiKeys                               ApiKey[]
+  webhookEndpoints                      WebhookEndpoint[]
+  auditLogs                             AuditLog[]
+  accessProfiles                        AccessProfile[]
+  accessProfileAssignments              UserAccessProfileAssignment[]
 
   @@index([tenantId])
 }
 
 model Period {
-  id                         String                      @id
-  tenantId                   String
-  companyId                  String
-  label                      String
-  startsAt                   DateTime?
-  endsAt                     DateTime?
-  createdAt                  DateTime                    @default(now())
-  updatedAt                  DateTime                    @updatedAt
-  isClosed                    Boolean                     @default(false)
-  company                    Company                     @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  sessions                   AppSession[]
-  userScopeAccesses          AppUserScopeAccess[]
-  records                    EntityRecord[]
-  purchaseInvoices           PurchaseInvoice[]
-  salesInvoices              SalesInvoice[]
-  deliveryNotes              DeliveryNote[]
-  personnelAssets            PersonnelAssetAssignment[]
-  safetyWorkAccidents        SafetyWorkAccident[]
-  safetyTrainings            SafetyTraining[]
-  safetyTrainingAttendances  SafetyTrainingAttendance[]
-  safetyInspections          SafetyInspection[]
-  safetyFindings             SafetyFinding[]
-  safetyPpeIssuances         SafetyPpeIssuance[]
-  stockMovements             StockMovement[]
-  progressPayments           ProgressPayment[]
-  constructionProjects      ConstructionProject[]
-  constructionContractItems ConstructionContractItem[]
-  constructionProgressPayments ConstructionProgressPayment[]
-  constructionMeasurementLines ConstructionMeasurementLine[]
-  constructionSnapshots     ConstructionPaymentItemSnapshot[]
-  constructionApprovalEvents ConstructionApprovalEvent[]
-  constructionAccountingLinks ConstructionAccountingLink[]
-  constructionMeasurementSheets ConstructionMeasurementSheet[]
-  constructionExtraWorks ConstructionExtraWork[]
-  constructionDeductionMovements ConstructionDeductionMovement[]
-  constructionDeductionRules ConstructionDeductionRule[]
+  id                                    String                                  @id
+  tenantId                              String
+  companyId                             String
+  label                                 String
+  startsAt                              DateTime?
+  endsAt                                DateTime?
+  createdAt                             DateTime                                @default(now())
+  updatedAt                             DateTime                                @updatedAt
+  isClosed                              Boolean                                 @default(false)
+  company                               Company                                 @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  sessions                              AppSession[]
+  userScopeAccesses                     AppUserScopeAccess[]
+  records                               EntityRecord[]
+  purchaseInvoices                      PurchaseInvoice[]
+  salesInvoices                         SalesInvoice[]
+  deliveryNotes                         DeliveryNote[]
+  personnelAssets                       PersonnelAssetAssignment[]
+  safetyWorkAccidents                   SafetyWorkAccident[]
+  safetyTrainings                       SafetyTraining[]
+  safetyTrainingAttendances             SafetyTrainingAttendance[]
+  safetyInspections                     SafetyInspection[]
+  safetyFindings                        SafetyFinding[]
+  safetyPpeIssuances                    SafetyPpeIssuance[]
+  safetyChecklistTemplates              SafetyChecklistTemplate[]
+  safetyChecklistTemplateItems          SafetyChecklistTemplateItem[]
+  safetyChecklistRuns                   SafetyChecklistRun[]
+  safetyChecklistResponses              SafetyChecklistResponse[]
+  supportTickets                        SupportTicket[]
+  supportTicketMessages                 SupportTicketMessage[]
+  announcements                         Announcement[]
+  employeeLeaveRequests                 EmployeeLeaveRequest[]
+  employeeLeaveBalances                 EmployeeLeaveBalance[]
+  employeeAdvanceRequests               EmployeeAdvanceRequest[]
+  employeeAdvanceSettlements            EmployeeAdvanceSettlement[]
+  employeeTransfers                     EmployeeTransfer[]
+  vehicleAssignments                    VehicleAssignment[]
+  vehicleFuelRecords                    VehicleFuelRecord[]
+  vehicleMaintenancePlans               VehicleMaintenancePlan[]
+  vehicleMaintenanceRecords             VehicleMaintenanceRecord[]
+  vehicleTireRecords                    VehicleTireRecord[]
+  stockMovements                        StockMovement[]
+  progressPayments                      ProgressPayment[]
+  constructionProjects                  ConstructionProject[]
+  constructionContractItems             ConstructionContractItem[]
+  constructionProgressPayments          ConstructionProgressPayment[]
+  constructionMeasurementLines          ConstructionMeasurementLine[]
+  constructionSnapshots                 ConstructionPaymentItemSnapshot[]
+  constructionApprovalEvents            ConstructionApprovalEvent[]
+  constructionAccountingLinks           ConstructionAccountingLink[]
+  constructionMeasurementSheets         ConstructionMeasurementSheet[]
+  constructionExtraWorks                ConstructionExtraWork[]
+  constructionDeductionMovements        ConstructionDeductionMovement[]
+  constructionDeductionRules            ConstructionDeductionRule[]
   constructionDeductionRuleApplications ConstructionDeductionRuleApplication[]
-  constructionFinancialMovements ConstructionFinancialMovement[]
-  constructionPriceRevisions ConstructionContractItemPriceRevision[]
-  constructionSimulationScenarios ConstructionSimulationScenario[]
-  constructionMeasurementImportBatches ConstructionMeasurementImportBatch[]
-  expenses                   Expense[]
-  timesheets                 Timesheet[]
-  payrollAccruals            PayrollAccrual[]
-  cheques                    Cheque[]
-  cashBankMovements          CashBankMovement[]
-  tenders                    Tender[]
-  documentFolders            DocumentFolder[]
-  documentFiles              DocumentFile[]
-  notifications              Notification[]
-  stockMinimumSettings       StockMinimumSetting[]
-  userInvitations            UserInvitation[]
-  emailOutboxMessages        EmailOutbox[]
-  tenantSubscriptions        TenantSubscription[]
-  subscriptionInvoices       SubscriptionInvoice[]
-  subscriptionPaymentWebhookEvents SubscriptionPaymentWebhookEvent[]
-  eFaturaWebhookEvents      EFaturaWebhookEvent[]
-  tenantSubscriptionAddons   TenantSubscriptionAddon[]
-  bankIntegrationConnections BankIntegrationConnection[]
-  bankTransactions           BankTransaction[]
-  bankLedgerEntries          BankLedgerEntry[]
-  ledgerEntries              LedgerEntry[]
-  ledgerLines                LedgerLine[]
-  vehicles                   Vehicle[]
-  apiKeys                    ApiKey[]
-  webhookEndpoints           WebhookEndpoint[]
-  auditLogs                  AuditLog[]
+  constructionFinancialMovements        ConstructionFinancialMovement[]
+  constructionPriceRevisions            ConstructionContractItemPriceRevision[]
+  constructionSimulationScenarios       ConstructionSimulationScenario[]
+  constructionMeasurementImportBatches  ConstructionMeasurementImportBatch[]
+  expenses                              Expense[]
+  timesheets                            Timesheet[]
+  payrollAccruals                       PayrollAccrual[]
+  cheques                               Cheque[]
+  cashBankMovements                     CashBankMovement[]
+  tenders                               Tender[]
+  documentFolders                       DocumentFolder[]
+  documentFiles                         DocumentFile[]
+  notifications                         Notification[]
+  stockMinimumSettings                  StockMinimumSetting[]
+  financeSettings                       FinanceSetting[]
+  userInvitations                       UserInvitation[]
+  emailOutboxMessages                   EmailOutbox[]
+  tenantSubscriptions                   TenantSubscription[]
+  subscriptionInvoices                  SubscriptionInvoice[]
+  subscriptionPaymentWebhookEvents      SubscriptionPaymentWebhookEvent[]
+  eFaturaWebhookEvents                  EFaturaWebhookEvent[]
+  tenantSubscriptionAddons              TenantSubscriptionAddon[]
+  bankIntegrationConnections            BankIntegrationConnection[]
+  bankTransactions                      BankTransaction[]
+  bankLedgerEntries                     BankLedgerEntry[]
+  ledgerEntries                         LedgerEntry[]
+  ledgerLines                           LedgerLine[]
+  vehicles                              Vehicle[]
+  apiKeys                               ApiKey[]
+  webhookEndpoints                      WebhookEndpoint[]
+  auditLogs                             AuditLog[]
+  accessProfileAssignments              UserAccessProfileAssignment[]
 
   @@index([tenantId, companyId])
 }
 
 model AppUser {
-  id                      String                   @id
-  tenantId                String
-  name                    String
-  email                   String?
-  createdAt               DateTime                 @default(now())
-  updatedAt               DateTime                 @updatedAt
-  tenant                  Tenant                   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  credential              AppCredential?
-  sessions                AppSession[]
-  userScopeAccesses       AppUserScopeAccess[]
-  notifications           Notification[]
-  notificationPreferences NotificationPreference[]
+  id                       String                        @id
+  tenantId                 String
+  name                     String
+  email                    String?
+  createdAt                DateTime                      @default(now())
+  updatedAt                DateTime                      @updatedAt
+  tenant                   Tenant                        @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  credential               AppCredential?
+  sessions                 AppSession[]
+  authSessions             AppAuthSession[]
+  userScopeAccesses        AppUserScopeAccess[]
+  notifications            Notification[]
+  notificationPreferences  NotificationPreference[]
+  accessProfileAssignments UserAccessProfileAssignment[]
 
   @@index([tenantId])
 }
@@ -262,9 +333,40 @@ model AppSession {
   period       Period          @relation(fields: [periodId], references: [id], onDelete: Cascade)
   user         AppUser         @relation(fields: [userId], references: [id], onDelete: Cascade)
   credentials  AppCredential[]
+  authSessions AppAuthSession[]
 
   @@index([tenantId, userId])
   @@index([tenantId, companyId, periodId])
+}
+
+model AppAuthSession {
+  id             String     @id
+  userId         String
+  scopeSessionId String
+  expiresAt      DateTime
+  revokedAt      DateTime?
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+  user           AppUser    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  scopeSession   AppSession @relation(fields: [scopeSessionId], references: [id], onDelete: Cascade)
+
+  @@index([userId, revokedAt, expiresAt])
+  @@index([scopeSessionId])
+  @@index([expiresAt])
+}
+
+model TenantLoginRateLimitBucket {
+  id              String   @id
+  scopeKind       String
+  scopeHash       String
+  windowStartedAt DateTime
+  windowEndsAt    DateTime
+  requestCount    Int      @default(0)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@unique([scopeKind, scopeHash, windowStartedAt])
+  @@index([windowEndsAt])
 }
 
 model AppUserScopeAccess {
@@ -287,6 +389,63 @@ model AppUserScopeAccess {
   @@unique([userId, companyId, periodId])
   @@index([tenantId, userId, isActive])
   @@index([tenantId, companyId, periodId])
+}
+
+model AccessProfile {
+  id              String                        @id
+  tenantId        String
+  companyId       String
+  name            String
+  normalizedName  String
+  description     String
+  status          String                        @default("ACTIVE")
+  revisionNo      Int                           @default(1)
+  lastMutationKey String
+  createdBy       String
+  updatedBy       String
+  createdAt       DateTime                      @default(now())
+  updatedAt       DateTime                      @updatedAt
+  tenant          Tenant                        @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company         Company                       @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  permissions     AccessProfilePermission[]
+  assignments     UserAccessProfileAssignment[]
+  invitations     UserInvitation[]
+
+  @@unique([tenantId, companyId, normalizedName])
+  @@index([tenantId, companyId, status])
+}
+
+model AccessProfilePermission {
+  profileId      String
+  permissionCode String
+  allowed        Boolean       @default(false)
+  profile        AccessProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  @@id([profileId, permissionCode])
+  @@index([permissionCode])
+}
+
+model UserAccessProfileAssignment {
+  id              String        @id
+  tenantId        String
+  companyId       String
+  periodId        String
+  userId          String
+  profileId       String
+  revisionNo      Int           @default(1)
+  lastMutationKey String
+  createdBy       String
+  updatedBy       String
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  tenant          Tenant        @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company         Company       @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  period          Period        @relation(fields: [periodId], references: [id], onDelete: Cascade)
+  user            AppUser       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  profile         AccessProfile @relation(fields: [profileId], references: [id], onDelete: Restrict)
+
+  @@unique([tenantId, companyId, periodId, userId])
+  @@index([tenantId, companyId, profileId])
 }
 
 model EntityRecord {
@@ -329,6 +488,150 @@ model AuditLog {
   @@index([tenantId, companyId, periodId, occurredAt])
   @@index([tenantId, entityType, entityId])
   @@index([tenantId, actorUserId, occurredAt])
+}
+
+model FinanceSetting {
+  id               String   @id
+  tenantId         String
+  companyId        String
+  periodId         String
+  defaultVatRate   Decimal  @db.Decimal(5, 2)
+  showVatBreakdown Boolean  @default(true)
+  revisionNo       Int      @default(1)
+  lastMutationKey  String?  @db.VarChar(500)
+  createdBy        String
+  updatedBy        String
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  tenant           Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company          Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  period           Period   @relation(fields: [periodId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, companyId, periodId])
+  @@index([tenantId, companyId, periodId, updatedAt])
+}
+
+model CompanyProfile {
+  id              String   @id
+  tenantId        String
+  companyId       String
+  legalName       String   @db.VarChar(200)
+  taxOffice       String   @default("") @db.VarChar(100)
+  taxNumber       String   @default("") @db.VarChar(11)
+  mersisNumber    String   @default("") @db.VarChar(16)
+  phone           String   @default("") @db.VarChar(30)
+  email           String   @default("") @db.VarChar(254)
+  addressLine     String   @default("") @db.VarChar(300)
+  district        String   @default("") @db.VarChar(100)
+  city            String   @default("") @db.VarChar(100)
+  postalCode      String   @default("") @db.VarChar(10)
+  revisionNo      Int      @default(1)
+  lastMutationKey String?  @db.VarChar(500)
+  createdBy       String
+  updatedBy       String
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  tenant          Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company         Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, companyId])
+  @@index([tenantId, companyId, updatedAt])
+}
+
+model CompanyLocation {
+  id                String   @id
+  tenantId          String
+  companyId         String
+  code              String   @db.VarChar(30)
+  name              String   @db.VarChar(160)
+  type              String   @db.VarChar(20)
+  responsiblePerson String   @default("") @db.VarChar(160)
+  phone             String   @default("") @db.VarChar(30)
+  email             String   @default("") @db.VarChar(254)
+  addressLine       String   @default("") @db.VarChar(300)
+  district          String   @default("") @db.VarChar(100)
+  city              String   @default("") @db.VarChar(100)
+  postalCode        String   @default("") @db.VarChar(10)
+  status            String   @default("ACTIVE") @db.VarChar(20)
+  revisionNo        Int      @default(1)
+  lastMutationKey   String?  @db.VarChar(500)
+  createdBy         String
+  updatedBy         String
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  tenant            Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company           Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, companyId, code])
+  @@index([tenantId, companyId, type, status])
+  @@index([tenantId, companyId, updatedAt])
+}
+
+model CompanyBrandAsset {
+  id               String   @id
+  tenantId         String
+  companyId        String
+  mimeType         String?  @db.VarChar(50)
+  originalFileName String   @default("") @db.VarChar(180)
+  sizeBytes        Int      @default(0)
+  width            Int?
+  height           Int?
+  sha256           String   @default("") @db.VarChar(64)
+  content          Bytes?
+  status           String   @default("ACTIVE") @db.VarChar(20)
+  revisionNo       Int      @default(1)
+  lastMutationKey  String?  @db.VarChar(500)
+  createdBy        String
+  updatedBy        String
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  tenant           Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company          Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, companyId])
+  @@index([tenantId, companyId, status, updatedAt])
+}
+
+model SupplierCategory {
+  id              String   @id
+  tenantId        String
+  companyId       String
+  name            String   @db.VarChar(80)
+  normalizedName  String   @db.VarChar(80)
+  description     String   @default("") @db.VarChar(240)
+  status          String   @default("ACTIVE") @db.VarChar(16)
+  revisionNo      Int      @default(1)
+  lastMutationKey String?  @db.VarChar(500)
+  createdBy       String
+  updatedBy       String
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  tenant          Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company         Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, companyId, normalizedName])
+  @@index([tenantId, companyId, status, name])
+}
+
+model CustomerType {
+  id              String   @id
+  tenantId        String
+  companyId       String
+  name            String   @db.VarChar(80)
+  normalizedName  String   @db.VarChar(80)
+  description     String   @default("") @db.VarChar(240)
+  status          String   @default("ACTIVE") @db.VarChar(16)
+  revisionNo      Int      @default(1)
+  lastMutationKey String?  @db.VarChar(500)
+  createdBy       String
+  updatedBy       String
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  tenant          Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company         Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, companyId, normalizedName])
+  @@index([tenantId, companyId, status, name])
 }
 
 model Notification {
@@ -397,27 +700,30 @@ model StockMinimumSetting {
 }
 
 model UserInvitation {
-  id         String    @id
-  tenantId   String
-  companyId  String
-  periodId   String
-  email      String
-  role       String
-  status     String
-  tokenHash  String    @unique
-  invitedBy  String
-  expiresAt  DateTime
-  acceptedAt DateTime?
-  revokedAt  DateTime?
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
-  tenant     Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  company    Company   @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  period     Period    @relation(fields: [periodId], references: [id], onDelete: Cascade)
+  id              String         @id
+  tenantId        String
+  companyId       String
+  periodId        String
+  email           String
+  role            String
+  status          String
+  tokenHash       String         @unique
+  invitedBy       String
+  expiresAt       DateTime
+  acceptedAt      DateTime?
+  revokedAt       DateTime?
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  accessProfileId String?
+  tenant          Tenant         @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company         Company        @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  period          Period         @relation(fields: [periodId], references: [id], onDelete: Cascade)
+  accessProfile   AccessProfile? @relation(fields: [accessProfileId], references: [id], onDelete: Restrict)
 
   @@index([tenantId, companyId, periodId, status])
   @@index([tenantId, companyId, periodId, email])
   @@index([tenantId, tokenHash])
+  @@index([tenantId, companyId, accessProfileId])
 }
 
 model EmailOutbox {
@@ -462,42 +768,42 @@ model SubscriptionPlan {
 }
 
 model SubscriptionAddon {
-  id             String                    @id
-  name           String
-  description    String
-  monthlyPrice   Decimal                   @db.Decimal(18, 2)
-  isActive       Boolean                   @default(true)
-  createdAt      DateTime                  @default(now())
-  updatedAt      DateTime                  @updatedAt
-  subscriptions  TenantSubscriptionAddon[]
+  id            String                    @id
+  name          String
+  description   String
+  monthlyPrice  Decimal                   @db.Decimal(18, 2)
+  isActive      Boolean                   @default(true)
+  createdAt     DateTime                  @default(now())
+  updatedAt     DateTime                  @updatedAt
+  subscriptions TenantSubscriptionAddon[]
 
   @@index([isActive, name])
 }
 
 model TenantSubscription {
-  id              String                     @id
-  tenantId        String
-  companyId       String
-  periodId        String
-  planId          String
-  billingCycle    String
-  startsAt        DateTime
-  endsAt          DateTime
-  renewalAmount   Decimal                    @db.Decimal(18, 2)
-  autoRenew       Boolean                    @default(true)
-  userLimit       Int
-  storageLimitGb  Int
-  status          String
-  createdBy       String
-  updatedBy       String
-  createdAt       DateTime                   @default(now())
-  updatedAt       DateTime                   @updatedAt
-  tenant          Tenant                     @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  company         Company                    @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  period          Period                     @relation(fields: [periodId], references: [id], onDelete: Cascade)
-  plan            SubscriptionPlan           @relation(fields: [planId], references: [id])
-  invoices        SubscriptionInvoice[]
-  addons          TenantSubscriptionAddon[]
+  id             String                    @id
+  tenantId       String
+  companyId      String
+  periodId       String
+  planId         String
+  billingCycle   String
+  startsAt       DateTime
+  endsAt         DateTime
+  renewalAmount  Decimal                   @db.Decimal(18, 2)
+  autoRenew      Boolean                   @default(true)
+  userLimit      Int
+  storageLimitGb Int
+  status         String
+  createdBy      String
+  updatedBy      String
+  createdAt      DateTime                  @default(now())
+  updatedAt      DateTime                  @updatedAt
+  tenant         Tenant                    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company        Company                   @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  period         Period                    @relation(fields: [periodId], references: [id], onDelete: Cascade)
+  plan           SubscriptionPlan          @relation(fields: [planId], references: [id])
+  invoices       SubscriptionInvoice[]
+  addons         TenantSubscriptionAddon[]
 
   @@index([tenantId, companyId, periodId, status])
   @@index([tenantId, planId])
@@ -740,37 +1046,42 @@ model LedgerLine {
 }
 
 model Vehicle {
-  id              String   @id
-  tenantId        String
-  companyId       String
-  periodId        String
-  plate           String
-  vehicleType     String
-  brand           String?
-  modelName       String?
-  modelYear       Int?
-  fuelType        String?
-  chassisNumber   String?
-  engineNumber    String?
-  entryOdometerKm Int?
-  acquisitionDate DateTime? @db.Date
-  dispositionDate DateTime? @db.Date
-  insuranceEndDate DateTime? @db.Date
-  inspectionEndDate DateTime? @db.Date
-  maintenanceDueDate DateTime? @db.Date
-  registrationDate DateTime? @db.Date
-  siteCode        String?
-  siteName        String
-  driverName      String?
-  arventoDeviceId String?
-  status          String
-  createdBy       String
-  updatedBy       String
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-  tenant          Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  company         Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  period          Period   @relation(fields: [periodId], references: [id], onDelete: Cascade)
+  id                 String                     @id
+  tenantId           String
+  companyId          String
+  periodId           String
+  plate              String
+  vehicleType        String
+  brand              String?
+  modelName          String?
+  modelYear          Int?
+  fuelType           String?
+  chassisNumber      String?
+  engineNumber       String?
+  entryOdometerKm    Int?
+  acquisitionDate    DateTime?                  @db.Date
+  dispositionDate    DateTime?                  @db.Date
+  insuranceEndDate   DateTime?                  @db.Date
+  inspectionEndDate  DateTime?                  @db.Date
+  maintenanceDueDate DateTime?                  @db.Date
+  registrationDate   DateTime?                  @db.Date
+  siteCode           String?
+  siteName           String
+  driverName         String?
+  arventoDeviceId    String?
+  status             String
+  createdBy          String
+  updatedBy          String
+  createdAt          DateTime                   @default(now())
+  updatedAt          DateTime                   @updatedAt
+  tenant             Tenant                     @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company            Company                    @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  period             Period                     @relation(fields: [periodId], references: [id], onDelete: Cascade)
+  assignments        VehicleAssignment[]
+  fuelRecords        VehicleFuelRecord[]
+  maintenancePlans   VehicleMaintenancePlan[]
+  maintenanceRecords VehicleMaintenanceRecord[]
+  tireRecords        VehicleTireRecord[]
 
   @@unique([tenantId, companyId, periodId, plate])
   @@unique([tenantId, companyId, periodId, arventoDeviceId])
@@ -780,28 +1091,174 @@ model Vehicle {
   @@index([tenantId, arventoDeviceId])
 }
 
+model VehicleAssignment {
+  id                String    @id
+  tenantId          String
+  companyId         String
+  periodId          String
+  vehicleId         String
+  projectId         String?
+  driverPersonnelId String?
+  assignmentKey     String    @db.VarChar(1000)
+  assignedOn        DateTime
+  endedOn           DateTime?
+  status            String    @default("ACTIVE")
+  assignmentNote    String?   @db.Text
+  createdBy         String
+  updatedBy         String
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  tenant            Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company           Company   @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  period            Period    @relation(fields: [periodId], references: [id], onDelete: Cascade)
+  vehicle           Vehicle   @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, companyId, periodId, assignmentKey])
+  @@index([tenantId, companyId, periodId, vehicleId, status])
+  @@index([tenantId, companyId, periodId, projectId])
+  @@index([tenantId, companyId, periodId, driverPersonnelId])
+}
+
+model VehicleFuelRecord {
+  id          String    @id
+  tenantId    String
+  companyId   String
+  periodId    String
+  vehicleId   String
+  fuelKey     String    @db.VarChar(1000)
+  fueledOn    DateTime
+  liters      Decimal   @db.Decimal(18, 3)
+  unitPrice   Decimal   @db.Decimal(18, 4)
+  totalAmount Decimal   @db.Decimal(18, 2)
+  odometerKm  Int
+  stationName String?   @db.VarChar(500)
+  status      String    @default("RECORDED")
+  cancelledOn DateTime?
+  createdBy   String
+  updatedBy   String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  tenant      Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company     Company   @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  period      Period    @relation(fields: [periodId], references: [id], onDelete: Cascade)
+  vehicle     Vehicle   @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, companyId, periodId, fuelKey])
+  @@index([tenantId, companyId, periodId, vehicleId, fueledOn])
+  @@index([tenantId, companyId, periodId, status, fueledOn])
+}
+
+model VehicleMaintenancePlan {
+  id              String                     @id
+  tenantId        String
+  companyId       String
+  periodId        String
+  vehicleId       String
+  maintenanceType String                     @db.VarChar(500)
+  intervalKm      Int?
+  intervalDays    Int?
+  nextDueKm       Int?
+  nextDueOn       DateTime?
+  lastCompletedOn DateTime?
+  status          String                     @default("ACTIVE")
+  createdBy       String
+  updatedBy       String
+  createdAt       DateTime                   @default(now())
+  updatedAt       DateTime                   @updatedAt
+  tenant          Tenant                     @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company         Company                    @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  period          Period                     @relation(fields: [periodId], references: [id], onDelete: Cascade)
+  vehicle         Vehicle                    @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+  records         VehicleMaintenanceRecord[]
+
+  @@index([tenantId, companyId, periodId, vehicleId, status])
+  @@index([tenantId, companyId, periodId, nextDueOn])
+  @@index([tenantId, companyId, periodId, nextDueKm])
+}
+
+model VehicleMaintenanceRecord {
+  id              String                  @id
+  tenantId        String
+  companyId       String
+  periodId        String
+  vehicleId       String
+  planId          String?
+  completionKey   String?                 @db.VarChar(1000)
+  maintenanceType String                  @db.VarChar(500)
+  maintenanceOn   DateTime
+  odometerKm      Int
+  costAmount      Decimal                 @db.Decimal(18, 2)
+  providerName    String?                 @db.VarChar(500)
+  note            String?                 @db.Text
+  status          String                  @default("DRAFT")
+  completedOn     DateTime?
+  createdBy       String
+  updatedBy       String
+  createdAt       DateTime                @default(now())
+  updatedAt       DateTime                @updatedAt
+  tenant          Tenant                  @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company         Company                 @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  period          Period                  @relation(fields: [periodId], references: [id], onDelete: Cascade)
+  vehicle         Vehicle                 @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+  plan            VehicleMaintenancePlan? @relation(fields: [planId], references: [id], onDelete: SetNull)
+
+  @@unique([tenantId, companyId, periodId, completionKey])
+  @@index([tenantId, companyId, periodId, vehicleId, status, maintenanceOn])
+  @@index([tenantId, companyId, periodId, planId])
+}
+
+model VehicleTireRecord {
+  id                String    @id
+  tenantId          String
+  companyId         String
+  periodId          String
+  vehicleId         String
+  mountKey          String    @db.VarChar(1000)
+  tirePosition      String    @db.VarChar(100)
+  season            String    @db.VarChar(32)
+  brandModel        String    @db.VarChar(200)
+  treadWearPercent  Int
+  mountedOn         DateTime  @db.Date
+  mountedOdometerKm Int
+  status            String    @default("ACTIVE")
+  removedOn         DateTime? @db.Date
+  removedOdometerKm Int?
+  createdBy         String
+  updatedBy         String
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  tenant            Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company           Company   @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  period            Period    @relation(fields: [periodId], references: [id], onDelete: Cascade)
+  vehicle           Vehicle   @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, companyId, periodId, mountKey])
+  @@index([tenantId, companyId, periodId, vehicleId, status, tirePosition])
+  @@index([tenantId, companyId, periodId, status, mountedOn])
+}
+
 model ApiKey {
-  id                 String    @id
-  tenantId           String
-  companyId          String
-  periodId           String
-  name               String
-  keyPrefix          String
-  keyHash            String    @unique
-  scopes             Json
-  rateLimitPerSecond Int
+  id                       String    @id
+  tenantId                 String
+  companyId                String
+  periodId                 String
+  name                     String
+  keyPrefix                String
+  keyHash                  String    @unique
+  scopes                   Json
+  rateLimitPerSecond       Int
   rateLimitWindowStartedAt DateTime?
-  rateLimitWindowCount Int       @default(0)
-  expiresAt          DateTime? @db.Date
-  lastUsedAt         DateTime?
-  revokedAt          DateTime?
-  revokedBy          String?
-  createdBy          String
-  createdAt          DateTime  @default(now())
-  updatedAt          DateTime  @updatedAt
-  tenant             Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  company            Company   @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  period             Period    @relation(fields: [periodId], references: [id], onDelete: Cascade)
+  rateLimitWindowCount     Int       @default(0)
+  expiresAt                DateTime? @db.Date
+  lastUsedAt               DateTime?
+  revokedAt                DateTime?
+  revokedBy                String?
+  createdBy                String
+  createdAt                DateTime  @default(now())
+  updatedAt                DateTime  @updatedAt
+  tenant                   Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company                  Company   @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  period                   Period    @relation(fields: [periodId], references: [id], onDelete: Cascade)
 
   @@unique([tenantId, companyId, periodId, name])
   @@index([tenantId, companyId, periodId, revokedAt])
@@ -809,22 +1266,22 @@ model ApiKey {
 }
 
 model WebhookEndpoint {
-  id                 String   @id
-  tenantId           String
-  companyId          String
-  periodId           String
-  name               String
-  url                String
-  secretHash         String
-  secretPrefix       String
-  eventTypes         Json
-  isActive           Boolean  @default(true)
-  createdBy          String
-  createdAt          DateTime @default(now())
-  updatedAt          DateTime @updatedAt
-  tenant             Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  company            Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  period             Period   @relation(fields: [periodId], references: [id], onDelete: Cascade)
+  id           String   @id
+  tenantId     String
+  companyId    String
+  periodId     String
+  name         String
+  url          String
+  secretHash   String
+  secretPrefix String
+  eventTypes   Json
+  isActive     Boolean  @default(true)
+  createdBy    String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  tenant       Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company      Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  period       Period   @relation(fields: [periodId], references: [id], onDelete: Cascade)
 
   @@unique([tenantId, companyId, periodId, name])
   @@index([tenantId, companyId, periodId, isActive])
@@ -1233,31 +1690,31 @@ model DeliveryNoteLine {
 }
 
 model PersonnelAssetAssignment {
-  id              String   @id
-  tenantId        String
-  companyId       String
-  periodId        String
-  personnelCode   String
-  personnelName   String
-  siteCode        String?
-  siteName        String?
-  assetCategory   String
-  assetCode       String
-  assetName       String
-  serialNo        String?
-  quantity        Decimal  @db.Decimal(18, 4)
-  assignedAt      DateTime
-  dueAt           DateTime?
-  returnedAt      DateTime?
-  status          String
-  notes           String?
-  createdBy       String
-  updatedBy       String
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-  tenant          Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  company         Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  period          Period   @relation(fields: [periodId], references: [id], onDelete: Cascade)
+  id            String    @id
+  tenantId      String
+  companyId     String
+  periodId      String
+  personnelCode String
+  personnelName String
+  siteCode      String?
+  siteName      String?
+  assetCategory String
+  assetCode     String
+  assetName     String
+  serialNo      String?
+  quantity      Decimal   @db.Decimal(18, 4)
+  assignedAt    DateTime
+  dueAt         DateTime?
+  returnedAt    DateTime?
+  status        String
+  notes         String?
+  createdBy     String
+  updatedBy     String
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  tenant        Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company       Company   @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  period        Period    @relation(fields: [periodId], references: [id], onDelete: Cascade)
 
   @@index([tenantId, companyId, periodId, personnelCode])
   @@index([tenantId, companyId, periodId, status])
@@ -1265,25 +1722,25 @@ model PersonnelAssetAssignment {
 }
 
 model SafetyWorkAccident {
-  id          String   @id
-  tenantId    String
-  companyId   String
-  periodId    String
-  projectId   String?
-  personnelId String?
-  occurredOn  DateTime
-  classification String @db.VarChar(500)
-  summary     String   @db.Text
-  status      String   @default("DRAFT")
-  recordedAt  DateTime?
-  closedAt    DateTime?
-  createdBy   String
-  updatedBy   String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  tenant      Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  company     Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  period      Period   @relation(fields: [periodId], references: [id], onDelete: Cascade)
+  id             String    @id
+  tenantId       String
+  companyId      String
+  periodId       String
+  projectId      String?
+  personnelId    String?
+  occurredOn     DateTime
+  classification String    @db.VarChar(500)
+  summary        String    @db.Text
+  status         String    @default("DRAFT")
+  recordedAt     DateTime?
+  closedAt       DateTime?
+  createdBy      String
+  updatedBy      String
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  tenant         Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company        Company   @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  period         Period    @relation(fields: [periodId], references: [id], onDelete: Cascade)
 
   @@index([tenantId, companyId, periodId, status, occurredOn])
   @@index([tenantId, companyId, periodId, projectId])
@@ -1291,43 +1748,43 @@ model SafetyWorkAccident {
 }
 
 model SafetyTraining {
-  id                  String   @id
-  tenantId            String
-  companyId           String
-  periodId            String
-  name                String   @db.VarChar(500)
-  type                String   @db.VarChar(500)
-  trainerName         String   @db.VarChar(500)
-  trainingOn          DateTime
-  durationMinutes     Int
-  nextTrainingOn      DateTime?
-  status              String   @default("DRAFT")
-  createdBy           String
-  updatedBy           String
-  createdAt           DateTime @default(now())
-  updatedAt           DateTime @updatedAt
-  tenant              Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  company             Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  period              Period   @relation(fields: [periodId], references: [id], onDelete: Cascade)
-  attendances         SafetyTrainingAttendance[]
+  id              String                     @id
+  tenantId        String
+  companyId       String
+  periodId        String
+  name            String                     @db.VarChar(500)
+  type            String                     @db.VarChar(500)
+  trainerName     String                     @db.VarChar(500)
+  trainingOn      DateTime
+  durationMinutes Int
+  nextTrainingOn  DateTime?
+  status          String                     @default("DRAFT")
+  createdBy       String
+  updatedBy       String
+  createdAt       DateTime                   @default(now())
+  updatedAt       DateTime                   @updatedAt
+  tenant          Tenant                     @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company         Company                    @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  period          Period                     @relation(fields: [periodId], references: [id], onDelete: Cascade)
+  attendances     SafetyTrainingAttendance[]
 
   @@index([tenantId, companyId, periodId, status, trainingOn])
   @@index([tenantId, companyId, periodId, nextTrainingOn])
 }
 
 model SafetyTrainingAttendance {
-  id          String   @id
+  id          String         @id
   tenantId    String
   companyId   String
   periodId    String
   trainingId  String
   personnelId String
-  status      String   @default("ATTENDED")
+  status      String         @default("ATTENDED")
   createdBy   String
-  createdAt   DateTime @default(now())
-  tenant      Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  company     Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  period      Period   @relation(fields: [periodId], references: [id], onDelete: Cascade)
+  createdAt   DateTime       @default(now())
+  tenant      Tenant         @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company     Company        @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  period      Period         @relation(fields: [periodId], references: [id], onDelete: Cascade)
   training    SafetyTraining @relation(fields: [trainingId], references: [id], onDelete: Cascade)
 
   @@unique([trainingId, personnelId])
@@ -1336,75 +1793,429 @@ model SafetyTrainingAttendance {
 }
 
 model SafetyInspection {
-  id            String   @id
+  id            String               @id
   tenantId      String
   companyId     String
   periodId      String
   projectId     String
   inspectedOn   DateTime
-  inspectorName String   @db.VarChar(500)
-  summary       String?  @db.Text
-  status        String   @default("DRAFT")
+  inspectorName String               @db.VarChar(500)
+  summary       String?              @db.Text
+  status        String               @default("DRAFT")
   createdBy     String
   updatedBy     String
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-  tenant        Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  company       Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  period        Period   @relation(fields: [periodId], references: [id], onDelete: Cascade)
+  createdAt     DateTime             @default(now())
+  updatedAt     DateTime             @updatedAt
+  tenant        Tenant               @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company       Company              @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  period        Period               @relation(fields: [periodId], references: [id], onDelete: Cascade)
   findings      SafetyFinding[]
+  checklistRuns SafetyChecklistRun[]
 
   @@index([tenantId, companyId, periodId, status, inspectedOn])
   @@index([tenantId, companyId, periodId, projectId])
 }
 
 model SafetyFinding {
-  id                String   @id
+  id                String                   @id
   tenantId          String
   companyId         String
   periodId          String
   inspectionId      String
   ownerPersonnelId  String?
-  category          String   @db.VarChar(500)
+  category          String                   @db.VarChar(500)
   riskLevel         String
-  summary           String   @db.Text
+  summary           String                   @db.Text
   dueOn             DateTime?
-  status            String   @default("OPEN")
+  status            String                   @default("OPEN")
   resolvedAt        DateTime?
   createdBy         String
   updatedBy         String
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
-  tenant            Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  company           Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  period            Period   @relation(fields: [periodId], references: [id], onDelete: Cascade)
-  inspection        SafetyInspection @relation(fields: [inspectionId], references: [id], onDelete: Cascade)
+  createdAt         DateTime                 @default(now())
+  updatedAt         DateTime                 @updatedAt
+  tenant            Tenant                   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company           Company                  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  period            Period                   @relation(fields: [periodId], references: [id], onDelete: Cascade)
+  inspection        SafetyInspection         @relation(fields: [inspectionId], references: [id], onDelete: Cascade)
+  checklistResponse SafetyChecklistResponse?
 
   @@index([tenantId, companyId, periodId, status, dueOn])
   @@index([tenantId, companyId, periodId, inspectionId])
   @@index([tenantId, companyId, periodId, ownerPersonnelId])
 }
 
+model SafetyChecklistTemplate {
+  id          String                        @id
+  tenantId    String
+  companyId   String
+  periodId    String
+  title       String                        @db.VarChar(300)
+  description String?                       @db.VarChar(300)
+  status      String                        @default("ACTIVE")
+  createdBy   String
+  updatedBy   String
+  createdAt   DateTime                      @default(now())
+  updatedAt   DateTime                      @updatedAt
+  tenant      Tenant                        @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company     Company                       @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  period      Period                        @relation(fields: [periodId], references: [id], onDelete: Cascade)
+  items       SafetyChecklistTemplateItem[]
+  runs        SafetyChecklistRun[]
+
+  @@index([tenantId, companyId, periodId, status, title])
+}
+
+model SafetyChecklistTemplateItem {
+  id         String                    @id
+  tenantId   String
+  companyId  String
+  periodId   String
+  templateId String
+  category   String?                   @db.VarChar(300)
+  title      String                    @db.VarChar(300)
+  sortOrder  Int
+  createdBy  String
+  createdAt  DateTime                  @default(now())
+  tenant     Tenant                    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company    Company                   @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  period     Period                    @relation(fields: [periodId], references: [id], onDelete: Cascade)
+  template   SafetyChecklistTemplate   @relation(fields: [templateId], references: [id], onDelete: Cascade)
+  responses  SafetyChecklistResponse[]
+
+  @@unique([templateId, sortOrder])
+  @@index([tenantId, companyId, periodId, templateId])
+}
+
+model SafetyChecklistRun {
+  id            String                    @id
+  tenantId      String
+  companyId     String
+  periodId      String
+  templateId    String
+  inspectionId  String?
+  runKey        String                    @db.VarChar(1000)
+  projectId     String
+  inspectedOn   DateTime
+  inspectorName String                    @db.VarChar(300)
+  status        String                    @default("DRAFT")
+  completedAt   DateTime?
+  createdBy     String
+  updatedBy     String
+  createdAt     DateTime                  @default(now())
+  updatedAt     DateTime                  @updatedAt
+  tenant        Tenant                    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company       Company                   @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  period        Period                    @relation(fields: [periodId], references: [id], onDelete: Cascade)
+  template      SafetyChecklistTemplate   @relation(fields: [templateId], references: [id], onDelete: Restrict)
+  inspection    SafetyInspection?         @relation(fields: [inspectionId], references: [id], onDelete: SetNull)
+  responses     SafetyChecklistResponse[]
+
+  @@unique([tenantId, companyId, periodId, runKey])
+  @@unique([inspectionId])
+  @@index([tenantId, companyId, periodId, status, inspectedOn])
+  @@index([tenantId, companyId, periodId, projectId])
+  @@index([tenantId, companyId, periodId, templateId])
+}
+
+model SafetyChecklistResponse {
+  id             String                      @id
+  tenantId       String
+  companyId      String
+  periodId       String
+  runId          String
+  templateItemId String
+  findingId      String?                     @unique
+  responseKey    String                      @db.VarChar(1000)
+  response       String                      @db.VarChar(32)
+  note           String?                     @db.VarChar(500)
+  createdBy      String
+  updatedBy      String
+  createdAt      DateTime                    @default(now())
+  updatedAt      DateTime                    @updatedAt
+  tenant         Tenant                      @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company        Company                     @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  period         Period                      @relation(fields: [periodId], references: [id], onDelete: Cascade)
+  run            SafetyChecklistRun          @relation(fields: [runId], references: [id], onDelete: Cascade)
+  templateItem   SafetyChecklistTemplateItem @relation(fields: [templateItemId], references: [id], onDelete: Restrict)
+  finding        SafetyFinding?              @relation(fields: [findingId], references: [id], onDelete: SetNull)
+
+  @@unique([tenantId, companyId, periodId, responseKey])
+  @@unique([runId, templateItemId])
+  @@index([tenantId, companyId, periodId, runId])
+  @@index([tenantId, companyId, periodId, response])
+}
+
+model SupportTicket {
+  id              String                 @id
+  tenantId        String
+  companyId       String
+  periodId        String
+  requesterUserId String
+  ticketKey       String                 @db.VarChar(1000)
+  subject         String                 @db.VarChar(200)
+  type            String                 @db.VarChar(32)
+  priority        String                 @db.VarChar(32)
+  status          String                 @default("OPEN") @db.VarChar(32)
+  lastMessageAt   DateTime
+  createdBy       String
+  updatedBy       String
+  createdAt       DateTime               @default(now())
+  updatedAt       DateTime               @updatedAt
+  tenant          Tenant                 @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company         Company                @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  period          Period                 @relation(fields: [periodId], references: [id], onDelete: Cascade)
+  messages        SupportTicketMessage[]
+
+  @@unique([tenantId, companyId, periodId, ticketKey])
+  @@unique([id, tenantId, companyId, periodId])
+  @@index([tenantId, companyId, periodId, requesterUserId, status, updatedAt])
+  @@index([tenantId, companyId, periodId, status, priority, updatedAt])
+}
+
+model SupportTicketMessage {
+  id           String        @id
+  tenantId     String
+  companyId    String
+  periodId     String
+  ticketId     String
+  authorUserId String
+  messageKey   String        @db.VarChar(1000)
+  body         String        @db.Text
+  createdAt    DateTime      @default(now())
+  tenant       Tenant        @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company      Company       @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  period       Period        @relation(fields: [periodId], references: [id], onDelete: Cascade)
+  ticket       SupportTicket @relation(fields: [ticketId, tenantId, companyId, periodId], references: [id, tenantId, companyId, periodId], onDelete: Cascade)
+
+  @@unique([tenantId, companyId, periodId, messageKey])
+  @@index([tenantId, companyId, periodId, ticketId, createdAt])
+  @@index([tenantId, companyId, periodId, authorUserId, createdAt])
+}
+
+model Announcement {
+  id                String    @id
+  tenantId          String
+  companyId         String
+  periodId          String
+  announcementKey   String    @db.VarChar(1000)
+  title             String    @db.VarChar(180)
+  summary           String    @db.VarChar(500)
+  content           String    @db.Text
+  category          String    @db.VarChar(32)
+  priority          String    @db.VarChar(32)
+  status            String    @default("DRAFT") @db.VarChar(32)
+  revisionNo        Int       @default(1)
+  lastUpdateKey     String?   @db.VarChar(1000)
+  publishRequestKey String?   @db.VarChar(1000)
+  archiveRequestKey String?   @db.VarChar(1000)
+  publishedAt       DateTime?
+  archivedAt        DateTime?
+  createdBy         String
+  updatedBy         String
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  tenant            Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company           Company   @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  period            Period    @relation(fields: [periodId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, companyId, periodId, announcementKey])
+  @@index([tenantId, companyId, periodId, status, publishedAt])
+  @@index([tenantId, companyId, periodId, category, priority, publishedAt])
+}
+
+model EmployeeLeaveRequest {
+  id                String    @id
+  tenantId          String
+  companyId         String
+  periodId          String
+  createRequestKey  String
+  personnelCode     String
+  personnelName     String
+  leaveType         String
+  startDate         DateTime  @db.Date
+  endDate           DateTime  @db.Date
+  chargeableDays    Decimal   @db.Decimal(5, 2)
+  note              String
+  documentFileId    String?
+  status            String
+  revisionNo        Int       @default(1)
+  lastUpdateKey     String?
+  submitRequestKey  String?
+  approveRequestKey String?
+  rejectRequestKey  String?
+  cancelRequestKey  String?
+  submittedAt       DateTime?
+  approvedAt        DateTime?
+  rejectedAt        DateTime?
+  cancelledAt       DateTime?
+  createdBy         String
+  updatedBy         String
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  tenant            Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company           Company   @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  period            Period    @relation(fields: [periodId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, companyId, periodId, createRequestKey])
+  @@index([tenantId, companyId, periodId, status, startDate])
+  @@index([tenantId, companyId, periodId, personnelCode, startDate, endDate])
+}
+
+model EmployeeLeaveBalance {
+  id              String   @id
+  tenantId        String
+  companyId       String
+  periodId        String
+  personnelCode   String
+  personnelName   String
+  year            Int
+  openingDays     Decimal  @db.Decimal(5, 2)
+  adjustmentDays  Decimal  @db.Decimal(5, 2)
+  usedDays        Decimal  @db.Decimal(5, 2)
+  revisionNo      Int      @default(1)
+  lastMutationKey String?
+  createdBy       String
+  updatedBy       String
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  tenant          Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company         Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  period          Period   @relation(fields: [periodId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, companyId, periodId, personnelCode, year])
+  @@index([tenantId, companyId, periodId, year])
+}
+
+model EmployeeAdvanceRequest {
+  id                       String                      @id
+  tenantId                 String
+  companyId                String
+  periodId                 String
+  createRequestKey         String
+  personnelCode            String
+  personnelName            String
+  requestDate              DateTime                    @db.Date
+  requestedAmount          Decimal                     @db.Decimal(18, 2)
+  approvedAmount           Decimal?                    @db.Decimal(18, 2)
+  settledAmount            Decimal                     @default(0) @db.Decimal(18, 2)
+  note                     String
+  status                   String
+  revisionNo               Int                         @default(1)
+  lastUpdateKey            String?
+  submitRequestKey         String?
+  managerApproveRequestKey String?
+  managerRejectRequestKey  String?
+  financeApproveRequestKey String?
+  financeRejectRequestKey  String?
+  cancelRequestKey         String?
+  paymentRequestKey        String?
+  submittedAt              DateTime?
+  managerApprovedAt        DateTime?
+  managerRejectedAt        DateTime?
+  financeApprovedAt        DateTime?
+  financeRejectedAt        DateTime?
+  cancelledAt              DateTime?
+  paidAt                   DateTime?
+  paymentDate              DateTime?                   @db.Date
+  paymentAccountCode       String?
+  paymentAccountName       String?
+  paymentMovementId        String?
+  paymentLedgerEntryId     String?
+  createdBy                String
+  updatedBy                String
+  createdAt                DateTime                    @default(now())
+  updatedAt                DateTime                    @updatedAt
+  tenant                   Tenant                      @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company                  Company                     @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  period                   Period                      @relation(fields: [periodId], references: [id], onDelete: Cascade)
+  settlements              EmployeeAdvanceSettlement[]
+
+  @@unique([tenantId, companyId, periodId, createRequestKey])
+  @@unique([tenantId, companyId, periodId, paymentRequestKey])
+  @@index([tenantId, companyId, periodId, status, requestDate])
+  @@index([tenantId, companyId, periodId, personnelCode, requestDate])
+}
+
+model EmployeeAdvanceSettlement {
+  id                    String                 @id
+  tenantId              String
+  companyId             String
+  periodId              String
+  advanceId             String
+  payrollAccrualId      String
+  payrollLinePersonCode String
+  settlementDate        DateTime               @db.Date
+  amount                Decimal                @db.Decimal(18, 2)
+  mutationRequestKey    String
+  createdBy             String
+  createdAt             DateTime               @default(now())
+  tenant                Tenant                 @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company               Company                @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  period                Period                 @relation(fields: [periodId], references: [id], onDelete: Cascade)
+  advance               EmployeeAdvanceRequest @relation(fields: [advanceId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, companyId, periodId, mutationRequestKey])
+  @@index([tenantId, companyId, periodId, advanceId, settlementDate])
+  @@index([tenantId, companyId, periodId, payrollAccrualId, payrollLinePersonCode])
+}
+
+model EmployeeTransfer {
+  id                String    @id
+  tenantId          String
+  companyId         String
+  periodId          String
+  createRequestKey  String
+  personnelCode     String
+  personnelName     String
+  sourceSiteCode    String
+  sourceSiteName    String
+  targetSiteCode    String
+  targetSiteName    String
+  effectiveDate     DateTime  @db.Date
+  note              String
+  status            String    @default("DRAFT")
+  revisionNo        Int       @default(1)
+  lastUpdateKey     String?
+  submitRequestKey  String?
+  approveRequestKey String?
+  rejectRequestKey  String?
+  submittedAt       DateTime?
+  approvedAt        DateTime?
+  rejectedAt        DateTime?
+  createdBy         String
+  updatedBy         String
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  tenant            Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company           Company   @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  period            Period    @relation(fields: [periodId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, companyId, periodId, createRequestKey])
+  @@index([tenantId, companyId, periodId, status, effectiveDate])
+  @@index([tenantId, companyId, periodId, personnelCode, effectiveDate])
+  @@index([tenantId, companyId, periodId, sourceSiteCode, targetSiteCode])
+}
+
 model SafetyPpeIssuance {
-  id          String   @id
+  id          String    @id
   tenantId    String
   companyId   String
   periodId    String
   personnelId String
-  issuanceKey String   @db.VarChar(1000)
-  ppeCode     String   @db.VarChar(500)
-  ppeType     String   @db.VarChar(500)
+  issuanceKey String    @db.VarChar(1000)
+  ppeCode     String    @db.VarChar(500)
+  ppeType     String    @db.VarChar(500)
   quantity    Int
   issuedOn    DateTime
   returnedOn  DateTime?
-  status      String   @default("ISSUED")
+  status      String    @default("ISSUED")
   createdBy   String
   updatedBy   String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  tenant      Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  company     Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  period      Period   @relation(fields: [periodId], references: [id], onDelete: Cascade)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  tenant      Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company     Company   @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  period      Period    @relation(fields: [periodId], references: [id], onDelete: Cascade)
 
   @@unique([tenantId, companyId, periodId, issuanceKey])
   @@index([tenantId, companyId, periodId, status, issuedOn])
@@ -1445,35 +2256,35 @@ model StockMovement {
 }
 
 model ProgressPayment {
-  id               String                @id
-  tenantId         String
-  companyId        String
-  periodId         String
-  documentNo       String
-  issueDate        DateTime
-  paymentType      String
-  counterpartyCode String
-  counterpartyName String
-  siteCode         String
-  siteName         String
-  currency         String
-  description      String?
-  retentionRate    Decimal               @db.Decimal(5, 2)
-  status           String
-  grossTotal       Decimal               @db.Decimal(18, 2)
-  retentionTotal   Decimal               @db.Decimal(18, 2)
-  netTotal         Decimal               @db.Decimal(18, 2)
-  vatTotal         Decimal               @db.Decimal(18, 2)
-  grandTotal       Decimal               @db.Decimal(18, 2)
-  lineCount        Int
-  createdBy        String
-  updatedBy        String
-  createdAt        DateTime              @default(now())
-  updatedAt        DateTime              @updatedAt
-  tenant           Tenant                @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  company          Company               @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  period           Period                @relation(fields: [periodId], references: [id], onDelete: Cascade)
-  lines            ProgressPaymentLine[]
+  id                          String                       @id
+  tenantId                    String
+  companyId                   String
+  periodId                    String
+  documentNo                  String
+  issueDate                   DateTime
+  paymentType                 String
+  counterpartyCode            String
+  counterpartyName            String
+  siteCode                    String
+  siteName                    String
+  currency                    String
+  description                 String?
+  retentionRate               Decimal                      @db.Decimal(5, 2)
+  status                      String
+  grossTotal                  Decimal                      @db.Decimal(18, 2)
+  retentionTotal              Decimal                      @db.Decimal(18, 2)
+  netTotal                    Decimal                      @db.Decimal(18, 2)
+  vatTotal                    Decimal                      @db.Decimal(18, 2)
+  grandTotal                  Decimal                      @db.Decimal(18, 2)
+  lineCount                   Int
+  createdBy                   String
+  updatedBy                   String
+  createdAt                   DateTime                     @default(now())
+  updatedAt                   DateTime                     @updatedAt
+  tenant                      Tenant                       @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company                     Company                      @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  period                      Period                       @relation(fields: [periodId], references: [id], onDelete: Cascade)
+  lines                       ProgressPaymentLine[]
   constructionAccountingLinks ConstructionAccountingLink[]
 
   @@unique([tenantId, companyId, periodId, documentNo])
@@ -1482,32 +2293,32 @@ model ProgressPayment {
 }
 
 model ConstructionProject {
-  id              String   @id @default(cuid())
-  tenantId        String
-  companyId       String
-  periodId        String
-  code            String
-  name            String
-  siteCode        String
-  siteName        String
-  contractNo      String?
-  contractAmount  Decimal  @db.Decimal(18, 2)
-  paymentType     String   @default("Taşeron Hakedişi")
-  counterpartyCode String?
-  counterpartyName String?
-  retentionRate   Decimal  @db.Decimal(5, 2) @default(0)
-  status          String   @default("OPEN")
-  createdBy       String
-  updatedBy       String
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-  tenant          Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  company         Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  period          Period   @relation(fields: [periodId], references: [id], onDelete: Cascade)
-  contractItems   ConstructionContractItem[]
-  progressPayments ConstructionProgressPayment[]
-  deductionRules  ConstructionDeductionRule[]
-  simulationScenarios ConstructionSimulationScenario[]
+  id                       String                               @id @default(cuid())
+  tenantId                 String
+  companyId                String
+  periodId                 String
+  code                     String
+  name                     String
+  siteCode                 String
+  siteName                 String
+  contractNo               String?
+  contractAmount           Decimal                              @db.Decimal(18, 2)
+  paymentType              String                               @default("Taşeron Hakedişi")
+  counterpartyCode         String?
+  counterpartyName         String?
+  retentionRate            Decimal                              @default(0) @db.Decimal(5, 2)
+  status                   String                               @default("OPEN")
+  createdBy                String
+  updatedBy                String
+  createdAt                DateTime                             @default(now())
+  updatedAt                DateTime                             @updatedAt
+  tenant                   Tenant                               @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company                  Company                              @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  period                   Period                               @relation(fields: [periodId], references: [id], onDelete: Cascade)
+  contractItems            ConstructionContractItem[]
+  progressPayments         ConstructionProgressPayment[]
+  deductionRules           ConstructionDeductionRule[]
+  simulationScenarios      ConstructionSimulationScenario[]
   measurementImportBatches ConstructionMeasurementImportBatch[]
 
   @@unique([tenantId, companyId, periodId, code])
@@ -1515,31 +2326,31 @@ model ConstructionProject {
 }
 
 model ConstructionContractItem {
-  id              String   @id @default(cuid())
-  tenantId        String
-  companyId       String
-  periodId        String
-  projectId       String
-  itemCode        String
-  description     String
-  unit            String
-  contractQuantity Decimal @db.Decimal(18, 4)
-  unitPrice       Decimal  @db.Decimal(18, 4)
-  vatRate         Decimal  @db.Decimal(5, 2)
-  revisionNo      Int      @default(1)
-  isActive        Boolean  @default(true)
-  createdBy       String
-  updatedBy       String
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-  tenant          Tenant  @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  company         Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  period          Period  @relation(fields: [periodId], references: [id], onDelete: Cascade)
-  project         ConstructionProject @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  measurementLines ConstructionMeasurementLine[]
-  snapshots       ConstructionPaymentItemSnapshot[]
-  priceRevisions  ConstructionContractItemPriceRevision[]
-  simulationLines ConstructionSimulationLine[]
+  id                    String                                  @id @default(cuid())
+  tenantId              String
+  companyId             String
+  periodId              String
+  projectId             String
+  itemCode              String
+  description           String
+  unit                  String
+  contractQuantity      Decimal                                 @db.Decimal(18, 4)
+  unitPrice             Decimal                                 @db.Decimal(18, 4)
+  vatRate               Decimal                                 @db.Decimal(5, 2)
+  revisionNo            Int                                     @default(1)
+  isActive              Boolean                                 @default(true)
+  createdBy             String
+  updatedBy             String
+  createdAt             DateTime                                @default(now())
+  updatedAt             DateTime                                @updatedAt
+  tenant                Tenant                                  @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company               Company                                 @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  period                Period                                  @relation(fields: [periodId], references: [id], onDelete: Cascade)
+  project               ConstructionProject                     @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  measurementLines      ConstructionMeasurementLine[]
+  snapshots             ConstructionPaymentItemSnapshot[]
+  priceRevisions        ConstructionContractItemPriceRevision[]
+  simulationLines       ConstructionSimulationLine[]
   measurementImportRows ConstructionMeasurementImportRow[]
 
   @@unique([projectId, itemCode, revisionNo])
@@ -1547,62 +2358,62 @@ model ConstructionContractItem {
 }
 
 model ConstructionProgressPayment {
-  id                    String   @id @default(cuid())
-  tenantId              String
-  companyId             String
-  periodId              String
-  projectId             String
+  id                        String                                 @id @default(cuid())
+  tenantId                  String
+  companyId                 String
+  periodId                  String
+  projectId                 String
   previousProgressPaymentId String?
-  sequenceNo            Int
-  kind                  String   @default("INTERIM")
-  status                String   @default("DRAFT")
-  periodStart           DateTime
-  periodEnd             DateTime
-  paymentDate           DateTime?
-  documentNo            String
-  description           String?
-  currency              String   @default("TL")
-  periodGrossTotal      Decimal  @db.Decimal(18, 2) @default(0)
-  periodVatTotal        Decimal  @db.Decimal(18, 2) @default(0)
-  periodNetTotal        Decimal  @db.Decimal(18, 2) @default(0)
-  cumulativeGrossTotal  Decimal  @db.Decimal(18, 2) @default(0)
-  cumulativeVatTotal    Decimal  @db.Decimal(18, 2) @default(0)
-  cumulativeNetTotal    Decimal  @db.Decimal(18, 2) @default(0)
-  periodExtraWorkTotal  Decimal  @db.Decimal(18, 2) @default(0)
-  periodAdditionTotal   Decimal  @db.Decimal(18, 2) @default(0)
-  periodDeductionTotal  Decimal  @db.Decimal(18, 2) @default(0)
-  periodPayableTotal    Decimal  @db.Decimal(18, 2) @default(0)
-  cumulativeExtraWorkTotal Decimal @db.Decimal(18, 2) @default(0)
-  cumulativeAdditionTotal Decimal @db.Decimal(18, 2) @default(0)
-  cumulativeDeductionTotal Decimal @db.Decimal(18, 2) @default(0)
-  cumulativePayableTotal Decimal @db.Decimal(18, 2) @default(0)
-  createdBy             String
-  updatedBy             String
-  submittedBy           String?
-  approvedBy            String?
-  finalizedBy           String?
-  submittedAt           DateTime?
-  approvedAt            DateTime?
-  finalizedAt           DateTime?
-  createdAt             DateTime @default(now())
-  updatedAt             DateTime @updatedAt
-  tenant                Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  company               Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  period                Period   @relation(fields: [periodId], references: [id], onDelete: Cascade)
-  project               ConstructionProject @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  previousProgressPayment ConstructionProgressPayment? @relation("ConstructionProgressPaymentChain", fields: [previousProgressPaymentId], references: [id])
-  nextProgressPayments  ConstructionProgressPayment[] @relation("ConstructionProgressPaymentChain")
-  measurementLines      ConstructionMeasurementLine[]
-  snapshots             ConstructionPaymentItemSnapshot[]
-  approvals             ConstructionApprovalEvent[]
-  accountingLink        ConstructionAccountingLink?
-  measurementSheets     ConstructionMeasurementSheet[]
-  extraWorks            ConstructionExtraWork[]
-  deductionMovements    ConstructionDeductionMovement[]
+  sequenceNo                Int
+  kind                      String                                 @default("INTERIM")
+  status                    String                                 @default("DRAFT")
+  periodStart               DateTime
+  periodEnd                 DateTime
+  paymentDate               DateTime?
+  documentNo                String
+  description               String?
+  currency                  String                                 @default("TL")
+  periodGrossTotal          Decimal                                @default(0) @db.Decimal(18, 2)
+  periodVatTotal            Decimal                                @default(0) @db.Decimal(18, 2)
+  periodNetTotal            Decimal                                @default(0) @db.Decimal(18, 2)
+  cumulativeGrossTotal      Decimal                                @default(0) @db.Decimal(18, 2)
+  cumulativeVatTotal        Decimal                                @default(0) @db.Decimal(18, 2)
+  cumulativeNetTotal        Decimal                                @default(0) @db.Decimal(18, 2)
+  periodExtraWorkTotal      Decimal                                @default(0) @db.Decimal(18, 2)
+  periodAdditionTotal       Decimal                                @default(0) @db.Decimal(18, 2)
+  periodDeductionTotal      Decimal                                @default(0) @db.Decimal(18, 2)
+  periodPayableTotal        Decimal                                @default(0) @db.Decimal(18, 2)
+  cumulativeExtraWorkTotal  Decimal                                @default(0) @db.Decimal(18, 2)
+  cumulativeAdditionTotal   Decimal                                @default(0) @db.Decimal(18, 2)
+  cumulativeDeductionTotal  Decimal                                @default(0) @db.Decimal(18, 2)
+  cumulativePayableTotal    Decimal                                @default(0) @db.Decimal(18, 2)
+  createdBy                 String
+  updatedBy                 String
+  submittedBy               String?
+  approvedBy                String?
+  finalizedBy               String?
+  submittedAt               DateTime?
+  approvedAt                DateTime?
+  finalizedAt               DateTime?
+  createdAt                 DateTime                               @default(now())
+  updatedAt                 DateTime                               @updatedAt
+  tenant                    Tenant                                 @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company                   Company                                @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  period                    Period                                 @relation(fields: [periodId], references: [id], onDelete: Cascade)
+  project                   ConstructionProject                    @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  previousProgressPayment   ConstructionProgressPayment?           @relation("ConstructionProgressPaymentChain", fields: [previousProgressPaymentId], references: [id])
+  nextProgressPayments      ConstructionProgressPayment[]          @relation("ConstructionProgressPaymentChain")
+  measurementLines          ConstructionMeasurementLine[]
+  snapshots                 ConstructionPaymentItemSnapshot[]
+  approvals                 ConstructionApprovalEvent[]
+  accountingLink            ConstructionAccountingLink?
+  measurementSheets         ConstructionMeasurementSheet[]
+  extraWorks                ConstructionExtraWork[]
+  deductionMovements        ConstructionDeductionMovement[]
   deductionRuleApplications ConstructionDeductionRuleApplication[]
-  financialMovements    ConstructionFinancialMovement[]
-  simulationScenarios   ConstructionSimulationScenario[]
-  measurementImportBatches ConstructionMeasurementImportBatch[]
+  financialMovements        ConstructionFinancialMovement[]
+  simulationScenarios       ConstructionSimulationScenario[]
+  measurementImportBatches  ConstructionMeasurementImportBatch[]
 
   @@unique([projectId, sequenceNo])
   @@unique([tenantId, companyId, periodId, documentNo])
@@ -1611,30 +2422,30 @@ model ConstructionProgressPayment {
 }
 
 model ConstructionSimulationScenario {
-  id                      String   @id @default(cuid())
+  id                      String                           @id @default(cuid())
   tenantId                String
   companyId               String
   periodId                String
   projectId               String
   sourceProgressPaymentId String
   scenarioNo              String
-  name                    String   @db.VarChar(120)
-  description             String?  @db.VarChar(500)
-  status                  String   @default("DRAFT")
-  currentRevisionNo       Int      @default(1)
+  name                    String                           @db.VarChar(120)
+  description             String?                          @db.VarChar(500)
+  status                  String                           @default("DRAFT")
+  currentRevisionNo       Int                              @default(1)
   createdBy               String
   updatedBy               String
-  createdAt               DateTime @default(now())
-  updatedAt               DateTime @updatedAt
+  createdAt               DateTime                         @default(now())
+  updatedAt               DateTime                         @updatedAt
   approvedBy              String?
   approvedAt              DateTime?
   archivedBy              String?
   archivedAt              DateTime?
-  tenant                  Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  company                 Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  period                  Period   @relation(fields: [periodId], references: [id], onDelete: Cascade)
-  project                 ConstructionProject @relation(fields: [projectId], references: [id], onDelete: Restrict)
-  sourceProgressPayment   ConstructionProgressPayment @relation(fields: [sourceProgressPaymentId], references: [id], onDelete: Restrict)
+  tenant                  Tenant                           @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company                 Company                          @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  period                  Period                           @relation(fields: [periodId], references: [id], onDelete: Cascade)
+  project                 ConstructionProject              @relation(fields: [projectId], references: [id], onDelete: Restrict)
+  sourceProgressPayment   ConstructionProgressPayment      @relation(fields: [sourceProgressPaymentId], references: [id], onDelete: Restrict)
   revisions               ConstructionSimulationRevision[]
 
   @@unique([projectId, scenarioNo])
@@ -1643,19 +2454,19 @@ model ConstructionSimulationScenario {
 }
 
 model ConstructionSimulationRevision {
-  id                             String   @id @default(cuid())
+  id                             String                         @id @default(cuid())
   scenarioId                     String
   revisionNo                     Int
-  revisionNote                   String?  @db.VarChar(500)
+  revisionNote                   String?                        @db.VarChar(500)
   sourceProgressPaymentUpdatedAt DateTime
   sourceSnapshotAt               DateTime
   lineCount                      Int
-  proposedQuantityTotal          Decimal  @db.Decimal(18, 4)
-  projectedAmountTotal           Decimal  @db.Decimal(18, 2)
+  proposedQuantityTotal          Decimal                        @db.Decimal(18, 4)
+  projectedAmountTotal           Decimal                        @db.Decimal(18, 2)
   overrunLineCount               Int
-  inputHash                      String   @db.VarChar(64)
+  inputHash                      String                         @db.VarChar(64)
   createdBy                      String
-  createdAt                      DateTime @default(now())
+  createdAt                      DateTime                       @default(now())
   scenario                       ConstructionSimulationScenario @relation(fields: [scenarioId], references: [id], onDelete: Cascade)
   lines                          ConstructionSimulationLine[]
 
@@ -1665,7 +2476,7 @@ model ConstructionSimulationRevision {
 }
 
 model ConstructionSimulationLine {
-  id                     String   @id @default(cuid())
+  id                     String                         @id @default(cuid())
   revisionId             String
   lineNo                 Int
   contractItemId         String
@@ -1674,21 +2485,21 @@ model ConstructionSimulationLine {
   unit                   String
   contractItemRevisionNo Int
   inputMode              String
-  currentCumulative      Decimal  @db.Decimal(18, 4)
-  contractQuantity       Decimal  @db.Decimal(18, 4)
-  unitPrice              Decimal  @db.Decimal(18, 2)
-  directQuantity         Decimal? @db.Decimal(18, 4)
-  length                 Decimal? @db.Decimal(18, 4)
-  width                  Decimal? @db.Decimal(18, 4)
-  height                 Decimal? @db.Decimal(18, 4)
-  multiplier             Decimal? @db.Decimal(18, 4)
-  proposedQuantity       Decimal  @db.Decimal(18, 4)
-  projectedCumulative    Decimal  @db.Decimal(18, 4)
-  projectedRemaining     Decimal  @db.Decimal(18, 4)
-  projectedAmount        Decimal  @db.Decimal(18, 2)
-  isOverrun              Boolean  @default(false)
+  currentCumulative      Decimal                        @db.Decimal(18, 4)
+  contractQuantity       Decimal                        @db.Decimal(18, 4)
+  unitPrice              Decimal                        @db.Decimal(18, 2)
+  directQuantity         Decimal?                       @db.Decimal(18, 4)
+  length                 Decimal?                       @db.Decimal(18, 4)
+  width                  Decimal?                       @db.Decimal(18, 4)
+  height                 Decimal?                       @db.Decimal(18, 4)
+  multiplier             Decimal?                       @db.Decimal(18, 4)
+  proposedQuantity       Decimal                        @db.Decimal(18, 4)
+  projectedCumulative    Decimal                        @db.Decimal(18, 4)
+  projectedRemaining     Decimal                        @db.Decimal(18, 4)
+  projectedAmount        Decimal                        @db.Decimal(18, 2)
+  isOverrun              Boolean                        @default(false)
   revision               ConstructionSimulationRevision @relation(fields: [revisionId], references: [id], onDelete: Cascade)
-  contractItem           ConstructionContractItem @relation(fields: [contractItemId], references: [id], onDelete: Restrict)
+  contractItem           ConstructionContractItem       @relation(fields: [contractItemId], references: [id], onDelete: Restrict)
 
   @@unique([revisionId, lineNo])
   @@index([revisionId, contractItemId])
@@ -1696,32 +2507,32 @@ model ConstructionSimulationLine {
 }
 
 model ConstructionMeasurementLine {
-  id                String   @id @default(cuid())
-  tenantId          String
-  companyId         String
-  periodId          String
-  progressPaymentId String
+  id                 String                            @id @default(cuid())
+  tenantId           String
+  companyId          String
+  periodId           String
+  progressPaymentId  String
   measurementSheetId String?
-  contractItemId    String
-  lineNo            Int
-  measurementType   String   @default("GENERAL")
-  description       String
-  unit              String
-  quantity          Decimal  @db.Decimal(18, 4)
-  length            Decimal? @db.Decimal(18, 4)
-  width             Decimal? @db.Decimal(18, 4)
-  height            Decimal? @db.Decimal(18, 4)
-  multiplier        Decimal  @db.Decimal(18, 4) @default(1)
-  createdBy         String
-  updatedBy         String
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
-  tenant            Tenant  @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  company           Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  period            Period  @relation(fields: [periodId], references: [id], onDelete: Cascade)
-  progressPayment   ConstructionProgressPayment @relation(fields: [progressPaymentId], references: [id], onDelete: Cascade)
-  contractItem      ConstructionContractItem @relation(fields: [contractItemId], references: [id], onDelete: Cascade)
-  measurementSheet  ConstructionMeasurementSheet? @relation(fields: [measurementSheetId], references: [id], onDelete: Cascade)
+  contractItemId     String
+  lineNo             Int
+  measurementType    String                            @default("GENERAL")
+  description        String
+  unit               String
+  quantity           Decimal                           @db.Decimal(18, 4)
+  length             Decimal?                          @db.Decimal(18, 4)
+  width              Decimal?                          @db.Decimal(18, 4)
+  height             Decimal?                          @db.Decimal(18, 4)
+  multiplier         Decimal                           @default(1) @db.Decimal(18, 4)
+  createdBy          String
+  updatedBy          String
+  createdAt          DateTime                          @default(now())
+  updatedAt          DateTime                          @updatedAt
+  tenant             Tenant                            @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company            Company                           @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  period             Period                            @relation(fields: [periodId], references: [id], onDelete: Cascade)
+  progressPayment    ConstructionProgressPayment       @relation(fields: [progressPaymentId], references: [id], onDelete: Cascade)
+  contractItem       ConstructionContractItem          @relation(fields: [contractItemId], references: [id], onDelete: Cascade)
+  measurementSheet   ConstructionMeasurementSheet?     @relation(fields: [measurementSheetId], references: [id], onDelete: Cascade)
   importSourceRow    ConstructionMeasurementImportRow?
 
   @@unique([progressPaymentId, measurementSheetId, lineNo])
@@ -1731,23 +2542,23 @@ model ConstructionMeasurementLine {
 }
 
 model ConstructionMeasurementSheet {
-  id                String   @id @default(cuid())
+  id                String                              @id @default(cuid())
   tenantId          String
   companyId         String
   periodId          String
   progressPaymentId String
   sheetNo           String
-  sheetType         String   @default("GENERAL")
+  sheetType         String                              @default("GENERAL")
   title             String
-  status            String   @default("DRAFT")
+  status            String                              @default("DRAFT")
   createdBy         String
   updatedBy         String
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
-  tenant            Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  company           Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  period            Period   @relation(fields: [periodId], references: [id], onDelete: Cascade)
-  progressPayment   ConstructionProgressPayment @relation(fields: [progressPaymentId], references: [id], onDelete: Cascade)
+  createdAt         DateTime                            @default(now())
+  updatedAt         DateTime                            @updatedAt
+  tenant            Tenant                              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company           Company                             @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  period            Period                              @relation(fields: [periodId], references: [id], onDelete: Cascade)
+  progressPayment   ConstructionProgressPayment         @relation(fields: [progressPaymentId], references: [id], onDelete: Cascade)
   lines             ConstructionMeasurementLine[]
   importBatch       ConstructionMeasurementImportBatch?
 
@@ -1756,42 +2567,42 @@ model ConstructionMeasurementSheet {
 }
 
 model ConstructionMeasurementImportBatch {
-  id                             String   @id @default(cuid())
+  id                             String                               @id @default(cuid())
   tenantId                       String
   companyId                      String
   periodId                       String
   projectId                      String
   sourceProgressPaymentId        String
   batchNo                        Int
-  status                         String   @default("DRAFT")
-  originalFileName               String   @db.VarChar(180)
-  contentType                    String   @db.VarChar(100)
+  status                         String                               @default("DRAFT")
+  originalFileName               String                               @db.VarChar(180)
+  contentType                    String                               @db.VarChar(100)
   fileSize                       Int
-  fileSha256                     String   @db.VarChar(64)
-  mappingVersion                 String   @db.VarChar(50)
-  delimiter                      String   @db.VarChar(1)
+  fileSha256                     String                               @db.VarChar(64)
+  mappingVersion                 String                               @db.VarChar(50)
+  delimiter                      String                               @db.VarChar(1)
   totalRowCount                  Int
   validRowCount                  Int
   errorRowCount                  Int
   sourceProgressPaymentUpdatedAt DateTime
   sourceSnapshotAt               DateTime
-  targetSheetId                  String?  @unique
-  failureCode                    String?  @db.VarChar(64)
+  targetSheetId                  String?                              @unique
+  failureCode                    String?                              @db.VarChar(64)
   createdBy                      String
   validatedBy                    String?
   appliedBy                      String?
   cancelledBy                    String?
-  createdAt                      DateTime @default(now())
-  updatedAt                      DateTime @updatedAt
+  createdAt                      DateTime                             @default(now())
+  updatedAt                      DateTime                             @updatedAt
   validatedAt                    DateTime?
   appliedAt                      DateTime?
   cancelledAt                    DateTime?
-  tenant                         Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  company                        Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  period                         Period   @relation(fields: [periodId], references: [id], onDelete: Cascade)
-  project                        ConstructionProject @relation(fields: [projectId], references: [id], onDelete: Restrict)
-  sourceProgressPayment          ConstructionProgressPayment @relation(fields: [sourceProgressPaymentId], references: [id], onDelete: Restrict)
-  targetSheet                    ConstructionMeasurementSheet? @relation(fields: [targetSheetId], references: [id], onDelete: Restrict)
+  tenant                         Tenant                               @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company                        Company                              @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  period                         Period                               @relation(fields: [periodId], references: [id], onDelete: Cascade)
+  project                        ConstructionProject                  @relation(fields: [projectId], references: [id], onDelete: Restrict)
+  sourceProgressPayment          ConstructionProgressPayment          @relation(fields: [sourceProgressPaymentId], references: [id], onDelete: Restrict)
+  targetSheet                    ConstructionMeasurementSheet?        @relation(fields: [targetSheetId], references: [id], onDelete: Restrict)
   rows                           ConstructionMeasurementImportRow[]
   events                         ConstructionMeasurementImportEvent[]
 
@@ -1802,22 +2613,22 @@ model ConstructionMeasurementImportBatch {
 }
 
 model ConstructionMeasurementImportRow {
-  id                       String   @id @default(cuid())
+  id                       String                             @id @default(cuid())
   batchId                  String
   rowNo                    Int
   sourceItemCode           String
   contractItemId           String?
-  description              String   @db.VarChar(240)
+  description              String                             @db.VarChar(240)
   sourceUnit               String
   resolvedUnit             String
-  quantity                 Decimal? @db.Decimal(18, 4)
+  quantity                 Decimal?                           @db.Decimal(18, 4)
   status                   String
-  errorCode                String?  @db.VarChar(64)
-  appliedMeasurementLineId String?  @unique
-  createdAt                DateTime @default(now())
+  errorCode                String?                            @db.VarChar(64)
+  appliedMeasurementLineId String?                            @unique
+  createdAt                DateTime                           @default(now())
   batch                    ConstructionMeasurementImportBatch @relation(fields: [batchId], references: [id], onDelete: Cascade)
-  contractItem             ConstructionContractItem? @relation(fields: [contractItemId], references: [id], onDelete: Restrict)
-  appliedMeasurementLine   ConstructionMeasurementLine? @relation(fields: [appliedMeasurementLineId], references: [id], onDelete: Restrict)
+  contractItem             ConstructionContractItem?          @relation(fields: [contractItemId], references: [id], onDelete: Restrict)
+  appliedMeasurementLine   ConstructionMeasurementLine?       @relation(fields: [appliedMeasurementLineId], references: [id], onDelete: Restrict)
 
   @@unique([batchId, rowNo])
   @@index([batchId, status, rowNo])
@@ -1825,19 +2636,19 @@ model ConstructionMeasurementImportRow {
 }
 
 model ConstructionMeasurementImportEvent {
-  id          String   @id @default(cuid())
+  id          String                             @id @default(cuid())
   batchId     String
   eventType   String
   actorUserId String
   metadata    Json?
-  createdAt   DateTime @default(now())
+  createdAt   DateTime                           @default(now())
   batch       ConstructionMeasurementImportBatch @relation(fields: [batchId], references: [id], onDelete: Cascade)
 
   @@index([batchId, createdAt])
 }
 
 model ConstructionExtraWork {
-  id                String   @id @default(cuid())
+  id                String                      @id @default(cuid())
   tenantId          String
   companyId         String
   periodId          String
@@ -1846,18 +2657,18 @@ model ConstructionExtraWork {
   workDate          DateTime
   description       String
   unit              String
-  quantity          Decimal  @db.Decimal(18, 4)
-  unitPrice         Decimal  @db.Decimal(18, 4)
-  vatRate           Decimal  @db.Decimal(5, 2) @default(0)
-  periodAmount      Decimal  @db.Decimal(18, 2)
-  status            String   @default("DRAFT")
+  quantity          Decimal                     @db.Decimal(18, 4)
+  unitPrice         Decimal                     @db.Decimal(18, 4)
+  vatRate           Decimal                     @default(0) @db.Decimal(5, 2)
+  periodAmount      Decimal                     @db.Decimal(18, 2)
+  status            String                      @default("DRAFT")
   createdBy         String
   updatedBy         String
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
-  tenant            Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  company           Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  period            Period   @relation(fields: [periodId], references: [id], onDelete: Cascade)
+  createdAt         DateTime                    @default(now())
+  updatedAt         DateTime                    @updatedAt
+  tenant            Tenant                      @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company           Company                     @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  period            Period                      @relation(fields: [periodId], references: [id], onDelete: Cascade)
   progressPayment   ConstructionProgressPayment @relation(fields: [progressPaymentId], references: [id], onDelete: Cascade)
 
   @@unique([progressPaymentId, documentNo])
@@ -1865,7 +2676,7 @@ model ConstructionExtraWork {
 }
 
 model ConstructionDeductionMovement {
-  id                String   @id @default(cuid())
+  id                String                                @id @default(cuid())
   tenantId          String
   companyId         String
   periodId          String
@@ -1874,59 +2685,59 @@ model ConstructionDeductionMovement {
   documentNo        String?
   movementDate      DateTime
   description       String
-  amount            Decimal  @db.Decimal(18, 2)
-  vatAmount         Decimal  @db.Decimal(18, 2) @default(0)
-  totalAmount       Decimal  @db.Decimal(18, 2)
+  amount            Decimal                               @db.Decimal(18, 2)
+  vatAmount         Decimal                               @default(0) @db.Decimal(18, 2)
+  totalAmount       Decimal                               @db.Decimal(18, 2)
   createdBy         String
   updatedBy         String
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
-  tenant            Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  company           Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  period            Period   @relation(fields: [periodId], references: [id], onDelete: Cascade)
-  progressPayment   ConstructionProgressPayment @relation(fields: [progressPaymentId], references: [id], onDelete: Cascade)
+  createdAt         DateTime                              @default(now())
+  updatedAt         DateTime                              @updatedAt
+  tenant            Tenant                                @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company           Company                               @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  period            Period                                @relation(fields: [periodId], references: [id], onDelete: Cascade)
+  progressPayment   ConstructionProgressPayment           @relation(fields: [progressPaymentId], references: [id], onDelete: Cascade)
   ruleApplication   ConstructionDeductionRuleApplication?
 
   @@index([tenantId, companyId, periodId, progressPaymentId, category])
 }
 
 model ConstructionDeductionRule {
-  id                String   @id @default(cuid())
-  tenantId          String
-  companyId         String
-  periodId          String
-  projectId         String
-  ruleKey           String
-  code              String
-  name              String
-  category          String
-  description       String?
-  revisionNo        Int
-  calculationType   String
-  baseType          String?
-  rate              Decimal? @db.Decimal(9, 4)
-  fixedAmount       Decimal? @db.Decimal(18, 2)
-  minimumAmount     Decimal? @db.Decimal(18, 2)
-  maximumAmount     Decimal? @db.Decimal(18, 2)
-  taxMode           String   @default("NONE")
-  taxRate           Decimal  @db.Decimal(5, 2) @default(0)
-  priority          Int      @default(0)
-  effectiveFrom     DateTime
-  effectiveTo       DateTime?
-  isActive          Boolean  @default(true)
-  autoApply         Boolean  @default(false)
-  supersedesRuleId  String?  @unique
-  createdBy         String
-  updatedBy         String
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
-  tenant            Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  company           Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  period            Period   @relation(fields: [periodId], references: [id], onDelete: Cascade)
-  project           ConstructionProject @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  supersedesRule    ConstructionDeductionRule? @relation("ConstructionDeductionRuleRevisions", fields: [supersedesRuleId], references: [id])
-  nextRevisions     ConstructionDeductionRule[] @relation("ConstructionDeductionRuleRevisions")
-  applications      ConstructionDeductionRuleApplication[]
+  id               String                                 @id @default(cuid())
+  tenantId         String
+  companyId        String
+  periodId         String
+  projectId        String
+  ruleKey          String
+  code             String
+  name             String
+  category         String
+  description      String?
+  revisionNo       Int
+  calculationType  String
+  baseType         String?
+  rate             Decimal?                               @db.Decimal(9, 4)
+  fixedAmount      Decimal?                               @db.Decimal(18, 2)
+  minimumAmount    Decimal?                               @db.Decimal(18, 2)
+  maximumAmount    Decimal?                               @db.Decimal(18, 2)
+  taxMode          String                                 @default("NONE")
+  taxRate          Decimal                                @default(0) @db.Decimal(5, 2)
+  priority         Int                                    @default(0)
+  effectiveFrom    DateTime
+  effectiveTo      DateTime?
+  isActive         Boolean                                @default(true)
+  autoApply        Boolean                                @default(false)
+  supersedesRuleId String?                                @unique
+  createdBy        String
+  updatedBy        String
+  createdAt        DateTime                               @default(now())
+  updatedAt        DateTime                               @updatedAt
+  tenant           Tenant                                 @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company          Company                                @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  period           Period                                 @relation(fields: [periodId], references: [id], onDelete: Cascade)
+  project          ConstructionProject                    @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  supersedesRule   ConstructionDeductionRule?             @relation("ConstructionDeductionRuleRevisions", fields: [supersedesRuleId], references: [id])
+  nextRevisions    ConstructionDeductionRule[]            @relation("ConstructionDeductionRuleRevisions")
+  applications     ConstructionDeductionRuleApplication[]
 
   @@unique([projectId, ruleKey, revisionNo])
   @@unique([projectId, code, revisionNo])
@@ -1935,39 +2746,39 @@ model ConstructionDeductionRule {
 }
 
 model ConstructionDeductionRuleApplication {
-  id                  String   @id @default(cuid())
+  id                  String                        @id @default(cuid())
   tenantId            String
   companyId           String
   periodId            String
   progressPaymentId   String
   deductionRuleId     String
-  deductionMovementId String   @unique
+  deductionMovementId String                        @unique
   ruleKey             String
   ruleCode            String
   ruleName            String
   ruleRevisionNo      Int
   calculationType     String
   baseType            String?
-  baseAmount          Decimal  @db.Decimal(18, 2)
-  rate                Decimal? @db.Decimal(9, 4)
-  fixedAmount         Decimal? @db.Decimal(18, 2)
-  minimumAmount       Decimal? @db.Decimal(18, 2)
-  maximumAmount       Decimal? @db.Decimal(18, 2)
+  baseAmount          Decimal                       @db.Decimal(18, 2)
+  rate                Decimal?                      @db.Decimal(9, 4)
+  fixedAmount         Decimal?                      @db.Decimal(18, 2)
+  minimumAmount       Decimal?                      @db.Decimal(18, 2)
+  maximumAmount       Decimal?                      @db.Decimal(18, 2)
   taxMode             String
-  taxRate             Decimal  @db.Decimal(5, 2)
-  taxAmount           Decimal  @db.Decimal(18, 2)
-  netAmount           Decimal  @db.Decimal(18, 2)
-  totalAmount         Decimal  @db.Decimal(18, 2)
-  applicationKey      String   @unique
+  taxRate             Decimal                       @db.Decimal(5, 2)
+  taxAmount           Decimal                       @db.Decimal(18, 2)
+  netAmount           Decimal                       @db.Decimal(18, 2)
+  totalAmount         Decimal                       @db.Decimal(18, 2)
+  applicationKey      String                        @unique
   appliedBy           String
   updatedBy           String
-  appliedAt           DateTime @default(now())
-  updatedAt           DateTime @updatedAt
-  tenant              Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  company             Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  period              Period   @relation(fields: [periodId], references: [id], onDelete: Cascade)
-  progressPayment     ConstructionProgressPayment @relation(fields: [progressPaymentId], references: [id], onDelete: Cascade)
-  deductionRule       ConstructionDeductionRule @relation(fields: [deductionRuleId], references: [id], onDelete: Restrict)
+  appliedAt           DateTime                      @default(now())
+  updatedAt           DateTime                      @updatedAt
+  tenant              Tenant                        @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company             Company                       @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  period              Period                        @relation(fields: [periodId], references: [id], onDelete: Cascade)
+  progressPayment     ConstructionProgressPayment   @relation(fields: [progressPaymentId], references: [id], onDelete: Cascade)
+  deductionRule       ConstructionDeductionRule     @relation(fields: [deductionRuleId], references: [id], onDelete: Restrict)
   deductionMovement   ConstructionDeductionMovement @relation(fields: [deductionMovementId], references: [id], onDelete: Cascade)
 
   @@unique([progressPaymentId, ruleKey])
@@ -1976,114 +2787,114 @@ model ConstructionDeductionRuleApplication {
 }
 
 model ConstructionFinancialMovement {
-  id                String   @id @default(cuid())
+  id                String                      @id @default(cuid())
   tenantId          String
   companyId         String
   periodId          String
   progressPaymentId String
   movementType      String
-  direction         String   @default("DEDUCTION")
+  direction         String                      @default("DEDUCTION")
   movementDate      DateTime
   description       String
-  amount            Decimal  @db.Decimal(18, 2)
+  amount            Decimal                     @db.Decimal(18, 2)
   createdBy         String
   updatedBy         String
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
-  tenant            Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  company           Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  period            Period   @relation(fields: [periodId], references: [id], onDelete: Cascade)
+  createdAt         DateTime                    @default(now())
+  updatedAt         DateTime                    @updatedAt
+  tenant            Tenant                      @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company           Company                     @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  period            Period                      @relation(fields: [periodId], references: [id], onDelete: Cascade)
   progressPayment   ConstructionProgressPayment @relation(fields: [progressPaymentId], references: [id], onDelete: Cascade)
 
   @@index([tenantId, companyId, periodId, progressPaymentId, movementType])
 }
 
 model ConstructionContractItemPriceRevision {
-  id                String   @id @default(cuid())
-  tenantId          String
-  companyId         String
-  periodId          String
-  contractItemId    String
-  revisionNo        Int
-  effectiveFrom     DateTime
-  unitPrice         Decimal  @db.Decimal(18, 4)
-  reason            String
-  createdBy         String
-  createdAt         DateTime @default(now())
-  tenant            Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  company           Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  period            Period   @relation(fields: [periodId], references: [id], onDelete: Cascade)
-  contractItem      ConstructionContractItem @relation(fields: [contractItemId], references: [id], onDelete: Cascade)
+  id             String                   @id @default(cuid())
+  tenantId       String
+  companyId      String
+  periodId       String
+  contractItemId String
+  revisionNo     Int
+  effectiveFrom  DateTime
+  unitPrice      Decimal                  @db.Decimal(18, 4)
+  reason         String
+  createdBy      String
+  createdAt      DateTime                 @default(now())
+  tenant         Tenant                   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company        Company                  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  period         Period                   @relation(fields: [periodId], references: [id], onDelete: Cascade)
+  contractItem   ConstructionContractItem @relation(fields: [contractItemId], references: [id], onDelete: Cascade)
 
   @@unique([contractItemId, revisionNo])
   @@index([tenantId, companyId, periodId, contractItemId, effectiveFrom])
 }
 
 model ConstructionPaymentItemSnapshot {
-  id                 String   @id @default(cuid())
-  tenantId           String
-  companyId          String
-  periodId           String
-  progressPaymentId  String
-  contractItemId     String
-  previousQuantity   Decimal  @db.Decimal(18, 4) @default(0)
-  periodQuantity     Decimal  @db.Decimal(18, 4) @default(0)
-  cumulativeQuantity Decimal  @db.Decimal(18, 4) @default(0)
-  unitPrice          Decimal  @db.Decimal(18, 4) @default(0)
-  vatRate            Decimal  @db.Decimal(5, 2) @default(0)
-  previousAmount     Decimal  @db.Decimal(18, 2) @default(0)
-  periodAmount       Decimal  @db.Decimal(18, 2) @default(0)
-  cumulativeAmount   Decimal  @db.Decimal(18, 2) @default(0)
-  previousVatAmount  Decimal  @db.Decimal(18, 2) @default(0)
-  periodVatAmount    Decimal  @db.Decimal(18, 2) @default(0)
-  cumulativeVatAmount Decimal @db.Decimal(18, 2) @default(0)
-  contractQuantity   Decimal  @db.Decimal(18, 4) @default(0)
-  exceededContract   Boolean  @default(false)
-  calculationVersion String   @default("construction-v1")
-  createdAt          DateTime @default(now())
-  tenant             Tenant  @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  company            Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  period             Period  @relation(fields: [periodId], references: [id], onDelete: Cascade)
-  progressPayment    ConstructionProgressPayment @relation(fields: [progressPaymentId], references: [id], onDelete: Cascade)
-  contractItem       ConstructionContractItem @relation(fields: [contractItemId], references: [id], onDelete: Cascade)
+  id                  String                      @id @default(cuid())
+  tenantId            String
+  companyId           String
+  periodId            String
+  progressPaymentId   String
+  contractItemId      String
+  previousQuantity    Decimal                     @default(0) @db.Decimal(18, 4)
+  periodQuantity      Decimal                     @default(0) @db.Decimal(18, 4)
+  cumulativeQuantity  Decimal                     @default(0) @db.Decimal(18, 4)
+  unitPrice           Decimal                     @default(0) @db.Decimal(18, 4)
+  vatRate             Decimal                     @default(0) @db.Decimal(5, 2)
+  previousAmount      Decimal                     @default(0) @db.Decimal(18, 2)
+  periodAmount        Decimal                     @default(0) @db.Decimal(18, 2)
+  cumulativeAmount    Decimal                     @default(0) @db.Decimal(18, 2)
+  previousVatAmount   Decimal                     @default(0) @db.Decimal(18, 2)
+  periodVatAmount     Decimal                     @default(0) @db.Decimal(18, 2)
+  cumulativeVatAmount Decimal                     @default(0) @db.Decimal(18, 2)
+  contractQuantity    Decimal                     @default(0) @db.Decimal(18, 4)
+  exceededContract    Boolean                     @default(false)
+  calculationVersion  String                      @default("construction-v1")
+  createdAt           DateTime                    @default(now())
+  tenant              Tenant                      @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company             Company                     @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  period              Period                      @relation(fields: [periodId], references: [id], onDelete: Cascade)
+  progressPayment     ConstructionProgressPayment @relation(fields: [progressPaymentId], references: [id], onDelete: Cascade)
+  contractItem        ConstructionContractItem    @relation(fields: [contractItemId], references: [id], onDelete: Cascade)
 
   @@unique([progressPaymentId, contractItemId])
   @@index([tenantId, companyId, periodId, progressPaymentId])
 }
 
 model ConstructionApprovalEvent {
-  id                 String   @id @default(cuid())
-  tenantId           String
-  companyId          String
-  periodId           String
-  progressPaymentId  String
-  statusFrom         String?
-  statusTo           String
-  actorUserId        String
-  reason             String?
-  metadata           Json?
-  createdAt          DateTime @default(now())
-  tenant             Tenant  @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  company            Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  period             Period  @relation(fields: [periodId], references: [id], onDelete: Cascade)
-  progressPayment    ConstructionProgressPayment @relation(fields: [progressPaymentId], references: [id], onDelete: Cascade)
+  id                String                      @id @default(cuid())
+  tenantId          String
+  companyId         String
+  periodId          String
+  progressPaymentId String
+  statusFrom        String?
+  statusTo          String
+  actorUserId       String
+  reason            String?
+  metadata          Json?
+  createdAt         DateTime                    @default(now())
+  tenant            Tenant                      @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company           Company                     @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  period            Period                      @relation(fields: [periodId], references: [id], onDelete: Cascade)
+  progressPayment   ConstructionProgressPayment @relation(fields: [progressPaymentId], references: [id], onDelete: Cascade)
 
   @@index([tenantId, companyId, periodId, progressPaymentId, createdAt])
 }
 
 model ConstructionAccountingLink {
-  id                 String   @id @default(cuid())
-  tenantId           String
-  companyId          String
-  periodId           String
-  constructionPaymentId String @unique
-  progressPaymentId  String   @unique
-  createdAt          DateTime @default(now())
-  tenant             Tenant  @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  company            Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  period             Period  @relation(fields: [periodId], references: [id], onDelete: Cascade)
-  constructionPayment ConstructionProgressPayment @relation(fields: [constructionPaymentId], references: [id], onDelete: Cascade)
-  progressPayment    ProgressPayment @relation(fields: [progressPaymentId], references: [id], onDelete: Cascade)
+  id                    String                      @id @default(cuid())
+  tenantId              String
+  companyId             String
+  periodId              String
+  constructionPaymentId String                      @unique
+  progressPaymentId     String                      @unique
+  createdAt             DateTime                    @default(now())
+  tenant                Tenant                      @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company               Company                     @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  period                Period                      @relation(fields: [periodId], references: [id], onDelete: Cascade)
+  constructionPayment   ConstructionProgressPayment @relation(fields: [constructionPaymentId], references: [id], onDelete: Cascade)
+  progressPayment       ProgressPayment             @relation(fields: [progressPaymentId], references: [id], onDelete: Cascade)
 
   @@index([tenantId, companyId, periodId])
 }
@@ -2217,4 +3028,137 @@ model PayrollAccrualLine {
   @@unique([payrollAccrualId, personCode])
   @@index([payrollAccrualId])
   @@index([personCode])
+}
+
+// ─── Süper Admin Authentication ───────────────────────────────────────────────
+
+model SuperAdminCredential {
+  id           String   @id @default(cuid())
+  singletonKey String   @unique @default("platform")
+  email        String   @unique
+  passwordHash String
+  name         String
+  is2FAEnabled Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  sessions            SuperAdminSession[]
+  otpCodes            SuperAdminOtpCode[]
+  totpSecret          SuperAdminTotpSecret?
+  accountLock         SuperAdminAccountLock?
+  passwordResetTokens SuperAdminPasswordResetToken[]
+  authChallenges      SuperAdminAuthChallenge[]
+}
+
+model SuperAdminSession {
+  id           String   @id @default(cuid())
+  credentialId String
+  createdAt    DateTime @default(now())
+  expiresAt    DateTime
+  lastActiveAt DateTime @default(now())
+  ipAddress    String?
+  userAgent    String?
+
+  credential SuperAdminCredential @relation(fields: [credentialId], references: [id], onDelete: Cascade)
+
+  @@index([credentialId])
+  @@index([expiresAt])
+}
+
+model SuperAdminPasswordResetToken {
+  id           String    @id @default(cuid())
+  credentialId String
+  tokenHash    String    @unique
+  expiresAt    DateTime
+  usedAt       DateTime?
+  createdAt    DateTime  @default(now())
+
+  credential SuperAdminCredential @relation(fields: [credentialId], references: [id], onDelete: Cascade)
+
+  @@index([credentialId])
+  @@index([expiresAt])
+}
+
+model SuperAdminOtpCode {
+  id           String    @id @default(cuid())
+  credentialId String
+  codeHash     String
+  expiresAt    DateTime
+  usedAt       DateTime?
+  attemptCount Int       @default(0)
+  createdAt    DateTime  @default(now())
+
+  credential SuperAdminCredential @relation(fields: [credentialId], references: [id], onDelete: Cascade)
+
+  @@index([credentialId])
+  @@index([expiresAt])
+}
+
+model SuperAdminTotpSecret {
+  id                  String    @id @default(cuid())
+  credentialId        String    @unique
+  secretBase32        String?
+  secretCiphertext    String?
+  secretKeyVersion    String?
+  backupCodes         String[]
+  enrollmentExpiresAt DateTime?
+  createdAt           DateTime  @default(now())
+  verifiedAt          DateTime?
+
+  credential SuperAdminCredential @relation(fields: [credentialId], references: [id], onDelete: Cascade)
+}
+
+model SuperAdminAuthChallenge {
+  id           String    @id @default(cuid())
+  credentialId String
+  tokenHash    String    @unique
+  purpose      String
+  returnTo     String?
+  expiresAt    DateTime
+  maxAttempts  Int       @default(5)
+  attemptCount Int       @default(0)
+  consumedAt   DateTime?
+  createdAt    DateTime  @default(now())
+
+  credential SuperAdminCredential @relation(fields: [credentialId], references: [id], onDelete: Cascade)
+
+  @@index([credentialId, purpose, expiresAt])
+  @@index([expiresAt])
+}
+
+model SuperAdminRateLimitBucket {
+  id              String   @id
+  purpose         String
+  scopeHash       String
+  windowStartedAt DateTime
+  windowEndsAt    DateTime
+  requestCount    Int      @default(0)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@unique([purpose, scopeHash, windowStartedAt])
+  @@index([windowEndsAt])
+}
+
+model SuperAdminAccountLock {
+  id             String    @id @default(cuid())
+  credentialId   String    @unique
+  failedAttempts Int       @default(0)
+  lockedAt       DateTime?
+  lockedUntil    DateTime?
+  lastFailedAt   DateTime?
+  lastFailedIp   String?
+  updatedAt      DateTime  @updatedAt
+
+  credential SuperAdminCredential @relation(fields: [credentialId], references: [id], onDelete: Cascade)
+}
+
+model MaintenanceConfig {
+  id        String    @id @default(cuid())
+  isActive  Boolean   @default(false)
+  message   String?
+  endsAt    DateTime?
+  statusUrl String?
+  updatedAt DateTime  @updatedAt
+  createdAt DateTime  @default(now())
 }

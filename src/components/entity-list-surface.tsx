@@ -47,6 +47,14 @@ import {
   buildCounterpartyStatementCsvFileName,
   buildCounterpartyStatementCsvHref,
 } from "@/lib/report-export";
+import {
+  validateSupplierCategoryAssignment,
+  type EffectiveSupplierCategory,
+} from "@/lib/supplier-category";
+import {
+  validateCustomerTypeAssignment,
+  type EffectiveCustomerType,
+} from "@/lib/customer-type";
 
 const maxXlsxImportFileSizeBytes = 15 * 1024 * 1024;
 
@@ -58,6 +66,8 @@ export type EntityListSurfaceProps = {
   scope?: TenantScope;
   statementRows?: OperationalReportCounterpartyStatementDetailRow[];
   cashBankAccountOptions?: CashBankAccountOption[];
+  customerTypes?: EffectiveCustomerType[];
+  supplierCategories?: EffectiveSupplierCategory[];
   visualVariant?:
     | "customer"
     | "site"
@@ -155,8 +165,15 @@ export function EntityListSurface({
   scope = defaultTenantScope,
   statementRows = [],
   cashBankAccountOptions = [],
+  customerTypes: customerTypesProp,
+  supplierCategories = [],
   visualVariant,
 }: EntityListSurfaceProps) {
+  const customerTypes = useMemo(
+    () => customerTypesProp ?? [],
+    [customerTypesProp],
+  );
+  const isCustomerVariant = visualVariant === "customer";
   const isSupplierVariant = visualVariant === "supplier";
   const isSubcontractorVariant = visualVariant === "subcontractor";
   const isSiteVariant = visualVariant === "site";
@@ -189,6 +206,7 @@ export function EntityListSurface({
     "Tümü",
   );
   const [categoryFilter, setCategoryFilter] = useState("Tümü");
+  const [customerTypeFilter, setCustomerTypeFilter] = useState("Tümü");
   const [contractFilter, setContractFilter] = useState<
     "Sözleşmeli" | "Sözleşmesiz" | "Tümü"
   >("Tümü");
@@ -285,6 +303,9 @@ export function EntityListSurface({
           (!isSupplierVariant ||
             categoryFilter === "Tümü" ||
             row.category === categoryFilter) &&
+          (!isCustomerVariant ||
+            customerTypeFilter === "Tümü" ||
+            row.customerType === customerTypeFilter) &&
           (!isSubcontractorVariant ||
             contractFilter === "Tümü" ||
             (contractFilter === "Sözleşmeli"
@@ -294,8 +315,10 @@ export function EntityListSurface({
     [
       categoryFilter,
       contractFilter,
+      customerTypeFilter,
       definition,
       displayRows,
+      isCustomerVariant,
       isTemplateVariant,
       isSubcontractorVariant,
       isSupplierVariant,
@@ -303,12 +326,25 @@ export function EntityListSurface({
       statusFilter,
     ],
   );
-  const supplierCategories = useMemo(
+  const supplierCategoryFilterValues = useMemo(
     () =>
-      [...new Set(displayRows.map((row) => row.category).filter(Boolean))].sort(
-        (left, right) => left.localeCompare(right, "tr-TR"),
-      ),
-    [displayRows],
+      [
+        ...new Set([
+          ...displayRows.map((row) => row.category).filter(Boolean),
+          ...supplierCategories.map((category) => category.name),
+        ]),
+      ].sort((left, right) => left.localeCompare(right, "tr-TR")),
+    [displayRows, supplierCategories],
+  );
+  const customerTypeFilterValues = useMemo(
+    () =>
+      [
+        ...new Set([
+          ...displayRows.map((row) => row.customerType).filter(Boolean),
+          ...customerTypes.map((customerType) => customerType.name),
+        ]),
+      ].sort((left, right) => left.localeCompare(right, "tr-TR")),
+    [customerTypes, displayRows],
   );
 
   const selectedRow = displayRows.find((row) => row.code === selectedCode);
@@ -520,6 +556,10 @@ export function EntityListSurface({
         workbookData,
         undefined,
         sheetName,
+        {
+          ...(customerTypesProp ? { customerTypes } : {}),
+          supplierCategories,
+        },
       );
 
       setImportCsvText("");
@@ -596,6 +636,10 @@ export function EntityListSurface({
       xlsxImportWorkbookData,
       xlsxImportHeaderMapping,
       xlsxImportSheetName,
+      {
+        ...(customerTypesProp ? { customerTypes } : {}),
+        supplierCategories,
+      },
     );
 
     setImportPreview(preview);
@@ -633,6 +677,10 @@ export function EntityListSurface({
       xlsxImportWorkbookData,
       undefined,
       sheetName,
+      {
+        ...(customerTypesProp ? { customerTypes } : {}),
+        supplierCategories,
+      },
     );
 
     setXlsxImportSheetName(sheetName);
@@ -656,7 +704,15 @@ export function EntityListSurface({
   }
 
   function previewImportRows() {
-    const preview = previewEntityImportCsv(definition, rows, importCsvText);
+    const preview = previewEntityImportCsv(
+      definition,
+      rows,
+      importCsvText,
+      {
+        ...(customerTypesProp ? { customerTypes } : {}),
+        supplierCategories,
+      },
+    );
 
     setImportPreview(preview);
     setImportResult(undefined);
@@ -851,6 +907,44 @@ export function EntityListSurface({
       return;
     }
 
+    if (definition.slug === "tedarikciler") {
+      const currentCategory =
+        draft.mode === "edit"
+          ? rows.find((row) => row.code === draft.originalCode)?.category
+          : undefined;
+      const categoryErrors = validateSupplierCategoryAssignment({
+        categories: supplierCategories,
+        currentValue: currentCategory,
+        value: draft.values.category,
+      });
+
+      if (categoryErrors.length > 0) {
+        setErrors(categoryErrors);
+        setServerErrors([]);
+        setNotice("Tedarikçi kategorisi sözlükle uyumlu olmalı.");
+        return;
+      }
+    }
+
+    if (definition.slug === "musteriler" && customerTypesProp) {
+      const currentCustomerType =
+        draft.mode === "edit"
+          ? rows.find((row) => row.code === draft.originalCode)?.customerType
+          : undefined;
+      const customerTypeErrors = validateCustomerTypeAssignment({
+        customerTypes,
+        currentValue: currentCustomerType,
+        value: draft.values.customerType,
+      });
+
+      if (customerTypeErrors.length > 0) {
+        setErrors(customerTypeErrors);
+        setServerErrors([]);
+        setNotice("Müşteri tipi sözlükle uyumlu olmalı.");
+        return;
+      }
+    }
+
     if (persistence?.createRow || persistence?.updateRow) {
       const result =
         draft.mode === "create" && persistence.createRow
@@ -1031,6 +1125,23 @@ export function EntityListSurface({
         {isTemplateVariant ? (
           <div className="flex flex-col gap-3 bg-surface-raised px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex flex-wrap items-center gap-2">
+              {isCustomerVariant ? (
+                <label className="relative">
+                  <span className="sr-only">Müşteri tipi</span>
+                  <select
+                    className="h-10 rounded-ui-control border border-divider bg-surface-muted px-3 pr-8 text-sm font-semibold text-content outline-none focus:border-brand-primary"
+                    onChange={(event) => setCustomerTypeFilter(event.target.value)}
+                    value={customerTypeFilter}
+                  >
+                    <option value="Tümü">Tüm Müşteri Tipleri</option>
+                    {customerTypeFilterValues.map((customerType) => (
+                      <option key={customerType} value={customerType}>
+                        {customerType}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+              ) : null}
               {isSupplierVariant ? (
                 <label className="relative">
                   <span className="sr-only">Tedarikçi kategorisi</span>
@@ -1040,7 +1151,7 @@ export function EntityListSurface({
                     value={categoryFilter}
                   >
                     <option value="Tümü">Tüm Kategoriler</option>
-                    {supplierCategories.map((category) => (
+                    {supplierCategoryFilterValues.map((category) => (
                       <option key={category} value={category}>{category}</option>
                     ))}
                   </select>
@@ -1254,6 +1365,62 @@ export function EntityListSurface({
                   >
                     <option>Aktif</option>
                     <option>Pasif</option>
+                  </select>
+                ) : column.key === "customerType" &&
+                  definition.slug === "musteriler" ? (
+                  <select
+                    className="mt-1 w-full rounded-ui-control border border-divider bg-surface-muted px-3 py-2 font-normal outline-none"
+                    onChange={(event) =>
+                      updateDraftValue(column.key, event.target.value)
+                    }
+                    value={draft.values[column.key] ?? ""}
+                  >
+                    <option value="">Müşteri tipi seçin</option>
+                    {[
+                      ...customerTypes
+                        .filter((customerType) => customerType.status === "ACTIVE")
+                        .map((customerType) => customerType.name),
+                      ...(draft.values.customerType &&
+                      !customerTypes.some(
+                        (customerType) =>
+                          customerType.name === draft.values.customerType &&
+                          customerType.status === "ACTIVE",
+                      )
+                        ? [draft.values.customerType]
+                        : []),
+                    ].map((customerType) => (
+                      <option key={customerType} value={customerType}>
+                        {customerType}
+                      </option>
+                    ))}
+                  </select>
+                ) : column.key === "category" &&
+                  definition.slug === "tedarikciler" ? (
+                  <select
+                    className="mt-1 w-full rounded-ui-control border border-divider bg-surface-muted px-3 py-2 font-normal outline-none"
+                    onChange={(event) =>
+                      updateDraftValue(column.key, event.target.value)
+                    }
+                    value={draft.values[column.key] ?? ""}
+                  >
+                    <option value="">Kategori seçin</option>
+                    {[
+                      ...supplierCategories
+                        .filter((category) => category.status === "ACTIVE")
+                        .map((category) => category.name),
+                      ...(draft.values.category &&
+                      !supplierCategories.some(
+                        (category) =>
+                          category.name === draft.values.category &&
+                          category.status === "ACTIVE",
+                      )
+                        ? [draft.values.category]
+                        : []),
+                    ].map((category) => (
+                      <option key={category} value={category}>
+                        {category}
+                      </option>
+                    ))}
                   </select>
                 ) : (
                   <input
