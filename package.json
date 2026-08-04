@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "predev": "npm run db:seed",
+    "postinstall": "prisma generate --schema prisma/schema.prisma",
     "build": "next build",
     "prestart": "npm run env:validate:production",
     "db:generate": "prisma generate --schema prisma/schema.prisma",

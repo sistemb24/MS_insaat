@@ -4,7 +4,7 @@ import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import type { SuperAdminAuthActionResult } from "@/lib/super-admin-auth-error";
-import { evaluatePasswordStrength } from "@/lib/super-admin-credential";
+import { evaluatePasswordStrength } from "@/lib/super-admin-password-policy";
 import { PasswordStrength } from "./password-strength";
 
 type SetupWizardProps = {

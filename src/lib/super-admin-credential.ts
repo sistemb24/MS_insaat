@@ -1,5 +1,11 @@
 import { Prisma, type PrismaClient } from "@prisma/client";
 
+export {
+  doPasswordsMatch,
+  evaluatePasswordStrength,
+  type PasswordStrengthResult,
+} from "./super-admin-password-policy";
+
 export const SUPER_ADMIN_SINGLETON_KEY = "platform";
 
 export type SuperAdminCredentialRecord = {
@@ -32,27 +38,6 @@ export class SuperAdminAlreadyExistsError extends Error {
     super("Süper Admin hesabı zaten oluşturulmuş.");
     this.name = "SuperAdminAlreadyExistsError";
   }
-}
-
-export type PasswordStrengthResult = {
-  hasMinLength: boolean;
-  hasUppercase: boolean;
-  hasLowercase: boolean;
-  hasDigitOrSpecial: boolean;
-  isValid: boolean;
-};
-
-export function evaluatePasswordStrength(password: string): PasswordStrengthResult {
-  const hasMinLength = password.length >= 8;
-  const hasUppercase = /[A-Z]/.test(password);
-  const hasLowercase = /[a-z]/.test(password);
-  const hasDigitOrSpecial = /[\d\W_]/.test(password);
-  const isValid = hasMinLength && hasUppercase && hasLowercase && hasDigitOrSpecial;
-  return { hasMinLength, hasUppercase, hasLowercase, hasDigitOrSpecial, isValid };
-}
-
-export function doPasswordsMatch(a: string, b: string): boolean {
-  return a === b;
 }
 
 /** 0 = kilit yok, 15/60 = dakika, null = kalıcı kilit. */

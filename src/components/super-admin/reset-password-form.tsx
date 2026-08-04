@@ -7,7 +7,7 @@ import type { SuperAdminAuthActionResult } from "@/lib/super-admin-auth-error";
 import {
   doPasswordsMatch,
   evaluatePasswordStrength,
-} from "@/lib/super-admin-credential";
+} from "@/lib/super-admin-password-policy";
 import { PasswordStrength } from "./password-strength";
 
 type Props = {

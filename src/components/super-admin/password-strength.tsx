@@ -1,6 +1,6 @@
 "use client";
 
-import { evaluatePasswordStrength } from "@/lib/super-admin-credential";
+import { evaluatePasswordStrength } from "@/lib/super-admin-password-policy";
 
 type PasswordStrengthProps = {
   password: string;
