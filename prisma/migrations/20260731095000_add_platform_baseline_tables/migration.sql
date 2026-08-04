@@ -772,4 +772,3 @@ ALTER TABLE "DocumentFile" ADD CONSTRAINT "DocumentFile_periodId_fkey" FOREIGN K
 
 -- AddForeignKey
 ALTER TABLE "DocumentFile" ADD CONSTRAINT "DocumentFile_folderId_fkey" FOREIGN KEY ("folderId") REFERENCES "DocumentFolder"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
