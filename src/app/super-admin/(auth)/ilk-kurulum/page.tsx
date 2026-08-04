@@ -7,6 +7,7 @@ import { prisma } from "@/lib/prisma";
 import { createSuperAdminCredentialPrismaRepository } from "@/lib/super-admin-credential";
 
 export const metadata: Metadata = { title: "İlk Süper Admin Kurulumu | NOA İnşaat" };
+export const dynamic = "force-dynamic";
 
 export default async function SuperAdminSetupPage() {
   if (await createSuperAdminCredentialPrismaRepository(prisma).existsAny()) {
