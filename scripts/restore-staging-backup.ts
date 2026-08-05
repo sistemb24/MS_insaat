@@ -25,6 +25,10 @@ import {
   evaluateStagingRecoverySource,
 } from "../src/lib/staging-recovery";
 import {
+  evaluateStagingRecoveryFixture,
+  STAGING_RECOVERY_FIXTURE,
+} from "../src/lib/staging-recovery-fixture";
+import {
   readStagingRecoveryInventory,
   readTableCount,
 } from "../src/lib/staging-recovery-postgres";
@@ -89,6 +93,11 @@ async function main() {
     let tenantCount = 0;
     let companyCount = 0;
     let documentFileCount = 0;
+    let fixtureResult = {
+      foreignScopeCount: -1,
+      identityMatches: false,
+      ready: false,
+    };
     try {
       await restoreClient.connect();
       recoveryResult = evaluateStagingRecoverySource(
@@ -100,11 +109,27 @@ async function main() {
       tenantCount = await readTableCount(restoreClient, "Tenant");
       companyCount = await readTableCount(restoreClient, "Company");
       documentFileCount = await readTableCount(restoreClient, "DocumentFile");
+      fixtureResult = await readFixtureEvidence(restoreClient);
+      if (!fixtureResult.ready) {
+        throw new Error("İzole restore sentetik tenant izolasyonu doğrulamasını geçemedi.");
+      }
     } finally {
       await restoreClient.end();
     }
 
     const namespacePrefix = `restore-rehearsal/${restoreDatabaseName}`;
+    const fixtureManifestEntry = manifest.binaryObjects.find(
+      (entry) => entry.sourceKey === STAGING_RECOVERY_FIXTURE.storageKey,
+    );
+    if (!fixtureManifestEntry) {
+      throw new Error("Restore manifestinde sentetik binary fixture bulunamadı.");
+    }
+    if (
+      fixtureManifestEntry.sizeBytes !== STAGING_RECOVERY_FIXTURE.fileSizeBytes ||
+      fixtureManifestEntry.sha256 !== STAGING_RECOVERY_FIXTURE.fileSha256
+    ) {
+      throw new Error("Restore manifesti sentetik binary fixture bütünlüğünü doğrulamadı.");
+    }
     for (const entry of manifest.binaryObjects) {
       const content = await readBackupObject(
         backupClient,
@@ -170,6 +195,11 @@ async function main() {
       databaseBytes: recoveryResult.databaseBytes,
       documentFileCount,
       expectedMigrationCount,
+      fixtureBinarySha256: fixtureManifestEntry.sha256,
+      fixtureForeignScopeCount: fixtureResult.foreignScopeCount,
+      fixtureIdentityMatches: fixtureResult.identityMatches,
+      fixtureStorageKey: STAGING_RECOVERY_FIXTURE.storageKey,
+      fixtureVerified: fixtureResult.ready,
       publicTableCount: recoveryResult.publicTableCount,
       restoreDurationSeconds: Math.round((Date.now() - startedAt) / 1000),
       status: "verified",
@@ -257,6 +287,53 @@ function assertIntegrity(
 
 function sha256(content: Uint8Array) {
   return createHash("sha256").update(content).digest("hex");
+}
+
+async function readFixtureEvidence(client: Client) {
+  const f = STAGING_RECOVERY_FIXTURE;
+  const exact = await client.query<{
+    companyId: string;
+    fileId: string;
+    fileSizeBytes: string;
+    folderId: string;
+    periodId: string;
+    storageKey: string;
+    tenantId: string;
+  }>(
+    `SELECT
+       df."companyId", df.id AS "fileId", df."sizeBytes"::text AS "fileSizeBytes",
+       df."folderId", df."periodId", df."storageKey", df."tenantId"
+     FROM public."DocumentFile" df
+     JOIN public."DocumentFolder" folder
+       ON folder.id = df."folderId" AND folder."tenantId" = df."tenantId"
+     JOIN public."Period" period
+       ON period.id = df."periodId" AND period."tenantId" = df."tenantId"
+     JOIN public."Company" company
+       ON company.id = df."companyId" AND company."tenantId" = df."tenantId"
+     JOIN public."Tenant" tenant ON tenant.id = df."tenantId"
+     WHERE df.id = $1 AND df."tenantId" = $2 AND df."companyId" = $3 AND df."periodId" = $4`,
+    [f.fileId, f.tenantId, f.companyId, f.periodId],
+  );
+  if (exact.rowCount !== 1 || !exact.rows[0]) {
+    throw new Error("Restore edilen sentetik fixture kaydı bulunamadı.");
+  }
+  const foreign = await client.query<{ count: number }>(
+    `SELECT count(*)::integer AS count
+     FROM public."DocumentFile"
+     WHERE id = $1 AND "tenantId" = $2`,
+    [f.fileId, f.foreignTenantId],
+  );
+  const row = exact.rows[0];
+  return evaluateStagingRecoveryFixture({
+    companyId: row.companyId,
+    fileId: row.fileId,
+    fileSizeBytes: Number(row.fileSizeBytes),
+    folderId: row.folderId,
+    foreignScopeCount: foreign.rows[0]?.count ?? 0,
+    periodId: row.periodId,
+    storageKey: row.storageKey,
+    tenantId: row.tenantId,
+  });
 }
 
 async function countMigrationDirectories() {
