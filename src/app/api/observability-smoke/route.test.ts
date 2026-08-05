@@ -3,6 +3,11 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 const sentryMock = vi.hoisted(() => ({
   captureException: vi.fn(() => "event-id"),
   flush: vi.fn(async () => true),
+  getClient: vi.fn(() => ({
+    getDsn: () => ({ projectId: "4511394440151120" }),
+  })),
+  isEnabled: vi.fn(() => true),
+  isInitialized: vi.fn(() => true),
 }));
 
 vi.mock("@sentry/nextjs", () => sentryMock);
@@ -38,7 +43,9 @@ describe("POST /api/observability-smoke", () => {
     expect(response.status).toBe(202);
     expect(await response.json()).toEqual({
       eventId: "event-id",
+      expectedProjectConfigured: true,
       flushed: true,
+      sdkConfigured: true,
       status: "captured",
     });
     expect(sentryMock.captureException).toHaveBeenCalledWith(
