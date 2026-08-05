@@ -63,6 +63,31 @@ içermeden RPO/RTO veya kurtarılabilirlik iddia edilemez.
 - Rollback öncesi yeni backup/checksum alınır; auth güvenlik hardening'i ve
   fail-closed provider sınırları gevşetilmez.
 
+### Staging release rehearsal
+
+1. Tek release SHA için GitHub CI ve Vercel Preview check'in yeşil olduğunu,
+   Vercel deployment kimliği ile `fra1` runtime'ını kaydet.
+2. `staging-recovery-rehearsal.yml` workflow'unu yalnız
+   `confirmation=staging-recovery` girdisiyle çalıştır. Takipli 144 bayt
+   fixture private document bucket'ında aynı kesin anahtarla bulunmalıdır;
+   eksikse workflow fail-closed durur.
+3. `migrate deploy`, migration/table preflight, sentetik tenant+binary backup,
+   checksum, yabancı scope `0`, izole restore ve cleanup kanıtlarını aynı run
+   kimliğinden al.
+4. Güncel ve seçilen önceki güvenli Vercel artifact'ında `/landing`, `/giris`,
+   `/super-admin/giris`, health ve readiness smoke'larını ayrı ayrı geçir.
+5. Yalnız staging aliasını önceki güvenli artifact'a bağla. Destructive DB
+   rollback çalıştırma; schema uyumsuzsa rollback yerine trafik durdurma ve
+   forward-fix kararı ver.
+6. Alias geri dönüşünü `finally` benzeri zorunlu cleanup ile güncel artifact'a
+   yap; aynı smoke'ları ve security/indexing başlıklarını yeniden doğrula.
+7. Sentetik DB/R2 kaynak fixture'larını sil; backup kopyasını onaylı 14 günlük
+   staging retention kapsamında bırak. Credential veya bypass değeri kanıta
+   yazma.
+
+Bu prosedür production aliası, domaini, migration'ı veya trafiği için yetki
+vermez. Her hedef deployment ve alias tam hostname ile önceden doğrulanır.
+
 ## Incident akışı
 
 1. Alarmı/şikayeti zaman, route, release kimliği ve redacted correlation bilgisi

@@ -3561,3 +3561,21 @@ canonical domaini, DNS/TLS/trafik,
 resmi kimlik/KVKK metni ve production retention onayı verilmedi; indexing
 fail-closed kalır. Sıradaki bağımsız çalışma **Faz 36 Dilim 6 — Staging Release
 Rehearsal**dır.
+
+**Dilim 6 staging release rehearsal kapanışı — 05.08.2026:** Release SHA
+`eae8af2` için GitHub CI `31022440491` ve Vercel Preview artifact/check geçti.
+İlk recovery koşusu `31022983039`, temizlenmiş sentetik R2 kaynak nesnesini
+`NoSuchKey` ile fail-closed yakaladı; backup/restore başlamadı ve cleanup geçti.
+Repodaki 144 bayt, kişisel/production veri içermeyen takipli fixture geçici
+yüklenince `31023428795` koşusu 67/67 migration, 114 tablo, bir sentetik
+tenant/company/document, yabancı scope `0`, binary checksum eşleşmesi,
+500.201 bayt DB backupu ve izole DB+R2 restore ile geçti. Backup yaşı 116,
+restore 112 saniyedir; geçici DB/namespace, kaynak DB fixture'ı ve kaynak R2
+nesnesi temizlendi, document bucket `0 B` durumuna döndü. Kararlı staging
+aliası Dilim 5 güvenlik kapılarını içeren önceki `e9ba1bc` artifact'ına alınarak
+landing, tenant giriş, Süper Admin giriş, health ve readiness `200` doğrulandı;
+35,8 saniyelik çevrimde `finally` güvencesiyle güncel artifact'a dönüldü ve
+aynı smoke'lar yeniden geçti. Son landing CSP/HSTS/X-Robots başlıklarını,
+kapalı smoke POST'u `404` sonucunu korur. Dilim 6 tamamlandı; production
+migration/deployment/domain/DNS/trafik yetkisi verilmez. Sıradaki bağımsız
+çalışma **Faz 36 Dilim 7 — Production Go/No-Go**dur.
