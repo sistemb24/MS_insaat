@@ -1,8 +1,8 @@
 # NOA Production Operasyon Runbook'u
 
-Tarih: 04.08.2026
-Durum: Dry-run sözleşmesi; gerçek hosting, backup, object storage ve monitoring
-provider'ı seçilmemiştir.
+Tarih: 05.08.2026
+Durum: Production temeli ve read-only backup/migration preflight sözleşmesi
+hazır; canlı işlem NO-GO
 
 Faz 36 sağlayıcı, ortam ve sorumluluk kararlarının tek güncel kaydı
 `Docs/operasyon/production-topoloji-ve-sahiplik-karar-kaydi.md` dosyasıdır.
@@ -23,6 +23,27 @@ aşağıdaki yayın kapısını kapalı tutar.
    kararı kayda bağlanmalıdır.
 
 ## Migration dry-run
+
+### Production read-only backup ve migration preflight
+
+GitHub Actions workflow'u
+`.github/workflows/production-backup-migration-preflight.yml` yalnız manuel
+dispatch ve tam `production-backup-preflight` onay ifadesiyle çalışır. Bu kapı:
+
+- production DB'de public tablo ve `_prisma_migrations` envanterini yalnız
+  `SELECT` ile okur;
+- iki onaylı private R2 bucket'ında yalnız `HeadBucket` ve sınırlı `List`
+  yapar;
+- bilinmeyen/başarısız/rollback edilmiş migration veya unmanaged şemada
+  fail-closed durur;
+- boş DB'yi tüm migration'lar pending olarak raporlar;
+- backup oluşturma ve migration uygulama yetkisini daima `false` raporlar.
+
+Workflow'da schedule, `pg_dump`, object write/delete, `db:migrate` veya
+`prisma migrate deploy` yoktur. İlk read-only çalıştırma dahi ayrı açık kullanıcı
+onayı ister. Sözleşme kanıtı
+`Docs/UI-baseline/Faz36-production-backup-migration-preflight-sozlesmesi-20260805.md`
+içindedir.
 
 Staging veya izole restore DB'sinde:
 
@@ -115,12 +136,12 @@ kaydında tutulur ve production taahhüdü sayılmaz.
 
 | Alan | Sorumlu | Onaylayan | Mevcut durum |
 |---|---|---|---|
-| Uygulama release/rollback | ATANMADI | ATANMADI | External blocker |
-| PostgreSQL backup/restore/migration | ATANMADI | ATANMADI | External blocker |
-| Hosting, TLS ve secret store | ATANMADI | ATANMADI | External blocker |
-| Monitoring ve incident koordinasyonu | ATANMADI | ATANMADI | External blocker |
-| Object storage ve binary backup | ATANMADI | ATANMADI | External blocker |
-| Retention, KVKK ve hesap kapanışı | ATANMADI | ATANMADI | External blocker |
+| Uygulama release/rollback | Murat Saygı | Murat Saygı | Tek-sorumlu riski kabul edildi; deployment onayı yok |
+| PostgreSQL backup/restore/migration | Murat Saygı | Murat Saygı | Read-only preflight sözleşmesi hazır; çalıştırılmadı |
+| Hosting, TLS ve secret store | Murat Saygı | Murat Saygı | Temel hazır; DNS/TLS/deployment onayı yok |
+| Monitoring ve incident koordinasyonu | Murat Saygı | Murat Saygı | Sentry temeli hazır; production adaptör/alarm kanıtı yok |
+| Object storage ve binary backup | Murat Saygı | Murat Saygı | Ayrı bucket/token hazır; ilk backup yok |
+| Retention, KVKK ve hesap kapanışı | Murat Saygı | Murat Saygı | Backup 30 gün onaylı; hesap kapanışı/legal hold açık |
 
 Bu satırlar atanıp staging kanıtı oluşmadan “production-ready”, “yedekli”,
 “izlenen” veya “SLA'lı” ifadesi kullanılamaz.

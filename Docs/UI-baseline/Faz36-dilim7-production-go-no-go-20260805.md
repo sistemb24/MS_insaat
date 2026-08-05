@@ -42,9 +42,9 @@ içindedir.
 |---|---|---|---|---|
 | P-B01 | Production hosting ve ayrı environment | Vercel Production'da 19 encrypted değişken hazır; deployment ve runtime kabulü yapılmadı | Murat Saygı / Murat Saygı | TEMEL HAZIR / BLOCKER |
 | P-B02 | Production domain, DNS ve TLS | `insaatyonet.com` onaylandı; DNS/Vercel bağlama, TLS ve kapalı trafik kabulü yapılmadı | Murat Saygı / Murat Saygı | KARAR TAMAM / BLOCKER |
-| P-B03 | Ayrı production PostgreSQL | Neon Frankfurt `noa-insaat-production` hazır; DB boş, migration/preflight yapılmadı | Murat Saygı / Murat Saygı | TEMEL HAZIR / BLOCKER |
+| P-B03 | Ayrı production PostgreSQL | Neon Frankfurt `noa-insaat-production` hazır; DB boş, read-only preflight sözleşmesi hazır fakat çalıştırılmadı | Murat Saygı / Murat Saygı | SÖZLEŞME HAZIR / BLOCKER |
 | P-B04 | Ayrı production secret seti ve rotation | Vercel Production ve GitHub encrypted secret setleri ayrı hazır; rotation provası yapılmadı | Murat Saygı / Murat Saygı | TEMEL HAZIR / BLOCKER |
-| P-B05 | Production object storage ve backup | Ayrı private runtime/backup bucket'ları, ayrık tokenlar ve 30 günlük lifecycle hazır; günlük backup/restore ölçülmedi | Murat Saygı / Murat Saygı | TEMEL HAZIR / BLOCKER |
+| P-B05 | Production object storage ve backup | Ayrı private runtime/backup bucket'ları, ayrık tokenlar ve 30 günlük lifecycle hazır; read-only erişim sözleşmesi hazır, backup/restore ölçülmedi | Murat Saygı / Murat Saygı | SÖZLEŞME HAZIR / BLOCKER |
 | P-B06 | Production monitoring ve incident | Ayrı Sentry projesi/DSN hazır; kod staging-only, production redaction/alarm provası yok | Murat Saygı / Murat Saygı | TEMEL HAZIR / BLOCKER |
 | P-B07 | Production RPO/RTO, backup retention ve SLA | 24 saat/8 saat, günlük/30 gün ve hafta içi 09:00–18:00 dış SLA yok onaylandı; ölçülmedi | Murat Saygı / Murat Saygı | KARAR TAMAM / BLOCKER |
 | P-B08 | KVKK, retention ve hesap kapanışı | Veri/hukuk sahibi atandı; hesap kapanışı, legal hold ve destructive delete prosedürü açık | Murat Saygı / Murat Saygı | KISMİ / BLOCKER |

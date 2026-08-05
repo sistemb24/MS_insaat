@@ -3610,3 +3610,19 @@ bulunmaması, production gözlemlenebilirlik adaptörünün staging-only kalmas�
 domain/TLS/yasal içerik kabulünün yapılmaması nedeniyle karar **NO-GO** kalır.
 Kanıt `Docs/UI-baseline/Faz36-production-temeli-20260805.md` içindedir;
 sıradaki bağımsız görev ayrı onaylı production backup/preflight sözleşmesidir.
+
+**Production backup ve migration preflight sözleşmesi — 05.08.2026:** Yalnız
+manuel dispatch ve tam `production-backup-preflight` onayıyla başlayan
+salt-okunur GitHub Actions kapısı hazırlandı. Kapı uzak production PostgreSQL
+migration envanterini ve onaylı ayrı production document/backup R2
+bucket'larının erişimini yalnız read işlemleriyle doğrular; bilinmeyen,
+başarısız, rollback edilmiş veya unmanaged şemada fail-closed durur. Boş DB'yi
+67 migration pending olarak raporlayabilir fakat backup oluşturma ve migration
+uygulama yetkileri daima kapalıdır. Workflow schedule, `pg_dump`, object write,
+`db:migrate` veya `prisma migrate deploy` içermez. Hedefli 6 test, tam 360 test
+dosyası/1.908 test, type-check, Prisma validate, sıfır uyarılı lint, 102
+sayfalık build, `fra1` preflight ve 1.380 dosyalık secret scan yeşildir; gerçek
+preflight çalıştırılmadı ve production verisi okunmadı. Kanıt
+`Docs/UI-baseline/Faz36-production-backup-migration-preflight-sozlesmesi-20260805.md`
+içindedir. Sıradaki ayrı onay kapısı ilk read-only production preflight
+çalıştırmasıdır.

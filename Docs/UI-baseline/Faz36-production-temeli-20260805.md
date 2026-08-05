@@ -70,8 +70,9 @@ restore, migration veya deployment tetiklenmedi.
 1. Neon Free planın yerleşik geçmişi 6 saattir. Onaylı günlük/30 gün backup
    politikası ancak bağımsız production backup workflow'u çalıştırılıp
    checksum ve izole restore ile ölçüldüğünde karşılanmış sayılır.
-2. Production DB boş ve migration uygulanmamıştır. İlk backup/checksum ile
-   migration preflight ayrı açık onay bekler.
+2. Production DB boş ve migration uygulanmamıştır. Read-only backup/migration
+   preflight sözleşmesi hazırdır fakat çalıştırılmamıştır; ilk çalıştırma ile
+   gerçek backup/checksum ayrıca açık onay bekler.
 3. Mevcut Sentry adaptörü staging-only fail-closed davranır. Production DSN
    hazır olsa da production-safe adaptör ve redaction/alarm testi yapılmadan
    monitoring kapısı geçmez.
