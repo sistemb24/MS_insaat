@@ -262,3 +262,18 @@ panelde kesin anahtarla silinip bucket'ın boş olduğu doğrulanarak temizlendi
 Tek seferlik dal push tetikleyicisi kanıt sonrası kaldırıldı; kalıcı workflow
 yalnız açık `workflow_dispatch` onayıyla çalışır. Bu kanıt staging için Dilim 3
 kabulünü kapatır, production yetkisi vermez.
+
+**Dilim 4 redacted error monitoring başlangıcı — 05.08.2026:**
+`@sentry/nextjs` server instrumentation yalnız staging Preview ortamında ve
+provider secret DSN ile etkinleştirildi. SDK'nın varsayılan PII toplaması,
+client telemetry, log, trace ve replay kapalı; outgoing error envelope'u
+allowlist sanitizer ile exception tipi/stack konumu, release, environment ve
+`noa.*` etiketleriyle sınırlandı. Güvenli smoke tanısı ilk DSN'nin beklenen
+Sentry proje kimliğiyle eşleşmediğini gösterdi; doğru anahtar yalnız Vercel
+Preview secret ortamında düzeltildi. `JAVASCRIPT-NEXTJS-1` olayı staging ve
+release kanıtını verdi; ham event JSON denetiminde user/request/IP/geo/cookie/
+header/query/body alanı yoktur. Sentry server-side scrubber'ları açık tutuldu,
+IP saklama ayrıca kapatıldı. Tek seferlik smoke environment anahtarı kanıt
+sonrası silindi ve yeni deployment'ta endpoint `404` ile kapalıdır. Bu kayıt
+yalnız redacted error aktarımını kanıtlar; test alarmı, escalation ve incident
+masa başı provası tamamlanmadan Dilim 4 kapanmaz.

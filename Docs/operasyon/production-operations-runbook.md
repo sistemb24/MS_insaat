@@ -73,8 +73,9 @@ içermeden RPO/RTO veya kurtarılabilirlik iddia edilemez.
 4. Incident sorumlusu rollback/forward-fix/restore kararını ve gerekçesini kaydeder.
 5. Kapanışta timeline, etki, kök neden, veri bütünlüğü sonucu ve takip işi yazılır.
 
-SLA, destek saati, RPO ve RTO henüz onaylı değildir; belge bunları varmış gibi
-göstermez.
+Production SLA, destek saati, RPO ve RTO henüz onaylı değildir; belge bunları
+varmış gibi göstermez. Staging için onaylanan hedefler ve sahiplik ayrı karar
+kaydında tutulur ve production taahhüdü sayılmaz.
 
 ## Retention ve hesap kapanışı
 
@@ -98,3 +99,15 @@ göstermez.
 
 Bu satırlar atanıp staging kanıtı oluşmadan “production-ready”, “yedekli”,
 “izlenen” veya “SLA'lı” ifadesi kullanılamaz.
+
+### Staging monitoring ve incident devri
+
+- Staging monitoring ve incident koordinasyonunun uygulayanı ve onaylayanı
+  Murat Saygı'dır; yedek kişi bulunmaması açık tek-sorumlu riskidir.
+- Sentry error olayı yalnız redacted server envelope'u ile gönderilir. Ham olay
+  user, request, IP, geo, cookie, header, query ve body içermemelidir.
+- Yeni bir olayda önce `environment=staging`, release ve `noa.*` etiketleri
+  doğrulanır; PII veya request verisi görülürse aktarım kapatılır ve olay veri
+  ihlali şüphesiyle Murat Saygı'ya escalate edilir.
+- Alarm/escalation provası henüz tamamlanmadığından staging “izleniyor” kabulü
+  yalnız error aktarımıyla sınırlıdır; Dilim 4 kapanışına esas değildir.

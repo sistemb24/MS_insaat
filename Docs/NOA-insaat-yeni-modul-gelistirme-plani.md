@@ -3502,3 +3502,16 @@ geçici DB/R2 namespace, kaynak DB fixture'ı ve kaynak R2 nesnesi temizlendi.
 24 saat RPO/8 saat RTO staging hedefleri içinde ölçülmüş DB+binary recovery
 kanıtı elde edildi ve Dilim 3 kapandı. Production migration, restore veya
 trafik yetkisi verilmez.
+
+**Dilim 4 redacted error monitoring başlangıcı — 05.08.2026:** Sentry yalnız
+`NOA_RUNTIME_ENV=staging` ve geçerli Preview `SENTRY_DSN` ile çalışan server
+error kanalı olarak bağlandı; client telemetry, log, tracing, replay, PII,
+request/header/cookie/query/body, DB sorgusu ve stack local değişken aktarımı
+kapalıdır. İlk smoke tanısı yanlış Sentry proje DSN'sini fail-closed ortaya
+çıkardı; doğru `javascript-nextjs` proje anahtarı yalnız Vercel Preview secret
+yüzeyinde güncellendi. Sentry issue `JAVASCRIPT-NEXTJS-1` staging/release ve
+yalnız `noa.*` etiketleriyle oluştu; ham olayda user, request, IP, geo, cookie,
+header, query veya body alanı bulunmadı ve provider düzeyinde IP saklama da
+kapatıldı. Geçici smoke anahtarı kaldırıldı; kapanış deployment'ında health
+`ok`, DB readiness `ready` ve smoke endpoint'i yetkili başlıkla dahi `404`
+verdi. Alarm/escalation provası açık olduğundan Dilim 4 henüz kapanmadı.
