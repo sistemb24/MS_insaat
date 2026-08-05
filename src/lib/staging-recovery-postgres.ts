@@ -40,7 +40,7 @@ export async function readTableCount(client: Client, tableName: string) {
     throw new Error("Recovery tablo adı güvenli değil.");
   }
   const result = await client.query<{ count: number }>(
-    `SELECT count(*)::integer AS count FROM "${tableName}"`,
+    `SELECT count(*)::integer AS count FROM public."${tableName}"`,
   );
   return result.rows[0]?.count ?? 0;
 }
@@ -48,7 +48,7 @@ export async function readTableCount(client: Client, tableName: string) {
 async function readAppliedMigrationCount(client: Client) {
   const result = await client.query<{ count: number }>(`
     SELECT count(*)::integer AS count
-    FROM "_prisma_migrations"
+    FROM public."_prisma_migrations"
     WHERE finished_at IS NOT NULL AND rolled_back_at IS NULL
   `);
   return result.rows[0]?.count ?? 0;
