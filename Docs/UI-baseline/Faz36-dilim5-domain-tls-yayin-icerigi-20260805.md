@@ -2,7 +2,7 @@
 
 Tarih: 05.08.2026
 Kapsam: Yalnız staging Preview domain/TLS/header ve yayın kapıları
-Durum: Yerel sözleşme doğrulandı; gerçek Preview kabulü bekleniyor
+Durum: Tamamlandı — staging Preview domain/TLS/header/yayın kapıları doğrulandı
 
 ## Karar sınırı
 
@@ -46,18 +46,32 @@ Durum: Yerel sözleşme doğrulandı; gerçek Preview kabulü bekleniyor
 - Secret scan 1.371 dosyada yüksek güvenli bulgu üretmedi.
 - `git diff --check` geçti.
 
-## Gerçek Preview kabul kapısı
+## Gerçek Preview kabulü
 
-Yeni artifact staging Preview'a ulaştığında aşağıdaki kanıtlar alınacaktır:
+Commit `e9ba1bc` için Vercel deployment ve kararlı branch aliası:
 
-1. `/landing` canonical ve Open Graph URL'si `localhost` değil, güncel HTTPS
-   Vercel branch hostname'i olmalıdır.
-2. `/landing`, `/robots.txt` ve `/sitemap.xml` TLS üzerinden `200` dönmeli;
-   CSP, HSTS ve `X-Robots-Tag` bulunmalıdır.
-3. HTML metadata `noindex, nofollow`, robots body `Disallow: /` ve sitemap boş
-   kalmalıdır.
-4. `/api/health` `200/ok`, `/api/readiness` `200/database ready` ve kapatılmış
-   observability smoke endpoint'i `404` vermelidir.
+- Deployment:
+  `https://insaat-yonetim-2282yi2x5-murat-saygis-projects.vercel.app`
+- Branch aliası:
+  `https://insaat-yonetim-git-agent-faz36-sta-14c1d7-murat-saygis-projects.vercel.app`
+- Runtime build bölgesi: `fra1`
 
-Bu dört madde doğrulanmadan Dilim 5 kapanmaz. Canonical production domaini,
-resmi/yasal yayın girdileri ve production DNS/TLS/trafik yetkisi açık kalır.
+Yetkili Vercel CLI isteğiyle Deployment Protection giriş sayfası değil gerçek
+uygulama yanıtı denetlendi:
+
+- `/landing` → `200`; canonical ve `og:url` branch aliasındaki `/landing`, OG ve
+  Twitter image URL'leri aynı HTTPS origin'indeki `/og-landing.png`. Yanıtta
+  `localhost` yoktur.
+- `/landing`, `/robots.txt` ve `/sitemap.xml` yanıtlarında CSP,
+  `Strict-Transport-Security: max-age=31536000; includeSubDomains` ve
+  `X-Robots-Tag: noindex, nofollow, noarchive` vardır.
+- HTML metadata `noindex, nofollow`; `robots.txt` body `User-Agent: *` ve
+  `Disallow: /`; sitemap boş `urlset` döndürür.
+- `/api/health` → `200 {"status":"ok"}`; `/api/readiness` →
+  `200`, database `ready`; smoke endpoint'ine headersız `POST` →
+  `404 {"status":"not_found"}`.
+- Vercel deployment check ve GitHub CI run `31021982660` geçti.
+
+Bu kanıtlarla staging'e ait Dilim 5 kapanır. Canonical production domaini,
+resmi/yasal yayın girdileri ve production DNS/TLS/trafik yetkisi açık kalır;
+bu staging kabulü production yayın yetkisi vermez.

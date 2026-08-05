@@ -3548,3 +3548,16 @@ dosya/1.902 test, type-check, Prisma validate, lint, 102 sayfalık build,
 `fra1` preflight, 1.371 dosyalık secret scan ve diff-check geçti. Gerçek
 Preview canonical/TLS/header/health kabulü tamamlanmadan Dilim 5 kapanmaz;
 production domaini, DNS, resmi/yasal yayın ve trafik yetkisi açık kalır.
+
+**Dilim 5 staging domain/TLS/yayın kabulü — 05.08.2026:** Commit `e9ba1bc`
+Vercel Preview'da `fra1` bölgesinde yayımlandı. `/landing` canonical, Open Graph
+ve Twitter URL'leri localhost yerine HTTPS kararlı branch aliasına bağlandı;
+metadata `noindex, nofollow` kaldı. Landing, robots ve sitemap yanıtlarında CSP,
+bir yıllık HSTS ve `X-Robots-Tag: noindex, nofollow, noarchive` doğrulandı;
+robots `Disallow: /`, sitemap boş kaldı. Health `200/ok`, DB readiness
+`200/ready`, kapalı smoke POST'u `404` verdi; Vercel check ve GitHub CI
+`31021982660` geçti. Bu staging kabulüyle Dilim 5 tamamlandı. Production
+canonical domaini, DNS/TLS/trafik,
+resmi kimlik/KVKK metni ve production retention onayı verilmedi; indexing
+fail-closed kalır. Sıradaki bağımsız çalışma **Faz 36 Dilim 6 — Staging Release
+Rehearsal**dır.
