@@ -3469,3 +3469,12 @@ Dolayısıyla 24 saat RPO/8 saat RTO henüz ölçülmüş sonuç değil, onaylı
 Hedefli 19 test, tam 355 test dosyası/1.884 test,
 type-check, Prisma validate, lint, Next.js 16.2.9 build/104 sayfa, `fra1`
 preflight ve 1.354 dosyalık secret scan yeşildir.
+
+**Dilim 3 ilk gerçek backup bütünlük provası — 05.08.2026:** Neon PostgreSQL
+18.4 / `pg_dump` 16.14 uyumsuzluğu ilk koşuda fail-closed yakalandı. Workflow
+PGDG `postgresql-client-18` ve client/server major sürüm kapısıyla düzeltildi;
+GitHub Actions `30999968809` koşusunda PostgreSQL 18/18 kapısı, custom-format
+export, R2 manifest yazımı ve bütünlük okuması geçti. Boş staging içeriğinde
+`900` byte DB exportu ve `0` binary nesne doğrulandı. Varsayılan daldaki zamanlı
+çalışma ile izole DB/bucket restore tatbikatı açık olduğundan 24 saat RPO/8
+saat RTO hâlâ onaylı hedef, ölçülmüş sonuç değildir.

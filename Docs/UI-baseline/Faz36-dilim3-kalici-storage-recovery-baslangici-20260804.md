@@ -74,6 +74,22 @@ DB/bucket namespace'e restore edilerek migration status, kritik tablo sayımı,
 tenant izolasyonu ve doküman read smoke'u ölçülmelidir. Bu ölçüm yapılmadan 24
 saat RPO veya 8 saat RTO sağlandı iddiası kurulmaz.
 
-Workflow dosyası kirli ve henüz yayımlanmamış çalışma ağacındadır. Kullanıcı
-tarafından ayrıca commit/push veya varsayılan dala yayın yetkisi verilmeden
-GitHub Actions workflow'u uzak repoda görünmez ve gerçek backup tetiklenmez.
+## İlk gerçek backup bütünlük provası — 05.08.2026
+
+İlk GitHub Actions koşusu Neon PostgreSQL `18.4` ile runner `pg_dump` `16.14`
+uyumsuzluğunu fail-closed yakaladı; tamamlanmış manifest üretmedi. Workflow
+resmi PGDG `postgresql-client-18` kurulumuna alındı ve backup öncesi
+client/server major sürüm karşılaştırması eklendi.
+
+[`30999968809`](https://github.com/sistemb24/MS_insaat/actions/runs/30999968809)
+koşusunda sürüm kapısı `18/18`, PostgreSQL custom-format exportu ve R2'deki en
+son manifestin DB checksum + `pg_restore --list` doğrulaması geçti. Anonim
+backup kimliği
+`20260805T110458Z-24db5b9687d412c7151d1f9a5e8e039e2137e323`, DB export boyutu
+`900` byte ve binary nesne sayısı `0` olarak kaydedildi.
+
+Bu kanıt boş staging içeriğinin backup yazma/okuma bütünlüğünü doğrular; izole
+restore tatbikatı değildir. Workflow varsayılan dala alınmadan günlük schedule
+çalışmaz. Zamanlı backup, yeni izole DB/bucket namespace'e restore, migration
+status, kritik tablo sayımı, tenant izolasyonu ve doküman read smoke'u açık
+kaldığından RPO/RTO henüz ölçülmüş sonuç değildir.

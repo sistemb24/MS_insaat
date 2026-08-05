@@ -215,3 +215,15 @@ RPO/RTO sonucu bu kanıtlar tamamlanana kadar ölçülmüş sayılmaz.
 Hedefli 19 test ile tam 355 dosya/1.884 test, type-check, Prisma validate,
 lint, 104 sayfalık Next.js build, `fra1` preflight ve 1.354 dosyalık secret
 scan yeşildir.
+
+**Dilim 3 ilk gerçek backup bütünlük provası — 05.08.2026:** İlk koşuda Neon
+PostgreSQL 18.4 ile Ubuntu runner `pg_dump` 16.14 sürüm uyumsuzluğu fail-closed
+yakalandı; tamamlanmış manifest oluşmadı. Workflow resmi PGDG
+`postgresql-client-18` kurulumuna ve client/server major sürüm kapısına
+alındı. GitHub Actions `30999968809` koşusunda PostgreSQL 18/18 kapısı,
+custom-format export ve R2 manifest bütünlük doğrulaması geçti. `900` byte DB
+exportu ve `0` binary nesne, boş staging içeriği sınırında doğrulandı. Bu sonuç
+backup yazma/okuma kanıtıdır; varsayılan daldaki zamanlı çalışma ve izole
+DB/bucket restore tatbikatı tamamlanmadığından 24 saat RPO/8 saat RTO henüz
+ölçülmüş sonuç değildir. Koşu kanıtı:
+https://github.com/sistemb24/MS_insaat/actions/runs/30999968809
