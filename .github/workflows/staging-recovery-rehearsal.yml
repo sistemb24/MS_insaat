@@ -1,11 +1,6 @@
 name: Staging Recovery Rehearsal
 
 on:
-  push:
-    branches:
-      - agent/faz36-staging-recovery
-    paths:
-      - .github/workflows/staging-recovery-rehearsal.yml
   workflow_dispatch:
     inputs:
       confirmation:
@@ -22,7 +17,7 @@ concurrency:
 
 jobs:
   recovery:
-    if: ${{ github.event_name == 'push' || inputs.confirmation == 'staging-recovery' }}
+    if: ${{ inputs.confirmation == 'staging-recovery' }}
     runs-on: ubuntu-latest
     timeout-minutes: 120
     env:

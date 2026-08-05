@@ -118,3 +118,28 @@ Kaynak staging DB'de tenant, company, `DocumentFile` ve binary nesne sayıları
 sıfırdır. Bu nedenle ölçüm onaylı 24 saat RPO/8 saat RTO hedeflerinin içinde
 olsa da gerçek tenant izolasyonu ve binary doküman read smoke'u henüz kanıt
 değildir; üretim recovery iddiasına dönüştürülmez.
+
+## Sentetik tenant ve binary recovery kapanışı — 05.08.2026
+
+[GitHub Actions `31008273877`](https://github.com/sistemb24/MS_insaat/actions/runs/31008273877)
+kişisel veya production verisi içermeyen kesin önekli fixture ile uçtan uca
+geçti:
+
+- backup ID:
+  `20260805T130301Z-ff778ddb9386617a05ffa10c86b45fa547cafa4d`;
+- DB: `500.206` byte custom-format dump, restore sonrasında 67/67 migration ve
+  114 public tablo;
+- fixture: bir tenant, bir company, bir period/folder/`DocumentFile` ve yabancı
+  tenant scope'unda `0` sonuç;
+- binary: `noa-recovery-f36-binary-smoke-v1.bin`, `144` byte, SHA-256
+  `fb1f34e0d6d7898f979ee0e9dcd0396a50694ff808c435eb2603211af7045e95`;
+- ölçüm: backup yaşı `180` saniye, restore süresi `175` saniye;
+- cleanup: geçici `noa_restore_*` DB, `restore-rehearsal/` namespace, kaynak DB
+  fixture'ı ve kaynak R2 nesnesi kaldırıldı; doküman bucket'ı yeniden boş
+  doğrulandı.
+
+Fixture'ın tekrar üretilebilir kaynak dosyası repoda kalır; recovery backup
+kopyası onaylı 14 günlük retention'a tabidir. Bu sonuç staging RPO/RTO
+hedefleri içinde ölçülmüş DB+binary restore ve tenant-scope kanıtıdır. Dilim 3
+staging kabulü kapanmıştır; production migration/restore/trafik kapıları
+ayrıdır.

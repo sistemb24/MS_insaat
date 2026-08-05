@@ -3488,3 +3488,17 @@ restore edildi; 67/67 migration ve 114 tablo yeniden doğrulandı, DB/namespace
 cleanup tamamlandı. Boş veri setinde backup yaşı 113 saniye, restore süresi
 109 saniyedir ve staging hedeflerinin içindedir. Tenant/doküman sayısı sıfır
 olduğundan gerçek tenant izolasyonu ve binary doküman read smoke'u açık kalır.
+
+**Dilim 3 sentetik tenant ve binary recovery kapanışı — 05.08.2026:** Kişisel
+ve production verisi içermeyen tek tenant/company/period/`DocumentFile` ile
+`144` byte sentetik R2 nesnesi, backup
+`20260805T130301Z-ff778ddb9386617a05ffa10c86b45fa547cafa4d` içine birlikte
+alındı. GitHub Actions `31008273877` koşusunda izole restore; 67/67 migration,
+114 public tablo, sentetik kayıt kimlikleri, yabancı tenant sorgusunda `0`
+sonuç ve binary SHA-256
+`fb1f34e0d6d7898f979ee0e9dcd0396a50694ff808c435eb2603211af7045e95`
+eşleşmesiyle geçti. Backup yaşı 180 saniye, restore süresi 175 saniyedir;
+geçici DB/R2 namespace, kaynak DB fixture'ı ve kaynak R2 nesnesi temizlendi.
+24 saat RPO/8 saat RTO staging hedefleri içinde ölçülmüş DB+binary recovery
+kanıtı elde edildi ve Dilim 3 kapandı. Production migration, restore veya
+trafik yetkisi verilmez.

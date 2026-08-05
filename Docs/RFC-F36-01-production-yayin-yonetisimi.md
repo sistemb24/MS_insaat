@@ -245,3 +245,20 @@ Bu boş staging şema provası 24 saat RPO/8 saat RTO hedeflerinin içinde kalı
 ancak tenant, company, doküman ve binary nesne sayıları sıfır olduğundan gerçek
 tenant izolasyonu ve doküman read smoke'u tamamlanmış sayılmaz. Production
 migration, production restore veya trafik yetkisi verilmez.
+
+**Dilim 3 sentetik tenant ve binary recovery kapanışı — 05.08.2026:**
+Production verisi içermeyen kesin önekli tek tenant/company/period/folder/file
+fixture'ı ve `144` byte `application/octet-stream` R2 nesnesi ortak recovery
+point'e alındı. [GitHub Actions `31008273877`](https://github.com/sistemb24/MS_insaat/actions/runs/31008273877)
+koşusunda backup
+`20260805T130301Z-ff778ddb9386617a05ffa10c86b45fa547cafa4d`, bir binary nesne
+ve `500.206` byte custom-format DB dumpı ile doğrulandı. İzole restore 67/67
+migration, 114 public tablo, tam fixture kimliği, yabancı tenant scope'unda `0`
+sonuç ve binary SHA-256
+`fb1f34e0d6d7898f979ee0e9dcd0396a50694ff808c435eb2603211af7045e95`
+eşleşmesi verdi. Backup yaşı `180`, restore süresi `175` saniyedir. Geçici
+restore DB/namespace ve kaynak DB fixture'ı otomatik; kaynak R2 fixture nesnesi
+panelde kesin anahtarla silinip bucket'ın boş olduğu doğrulanarak temizlendi.
+Tek seferlik dal push tetikleyicisi kanıt sonrası kaldırıldı; kalıcı workflow
+yalnız açık `workflow_dispatch` onayıyla çalışır. Bu kanıt staging için Dilim 3
+kabulünü kapatır, production yetkisi vermez.
