@@ -16,6 +16,7 @@ describe("security headers", () => {
     expect(headers.get("X-Content-Type-Options")).toBe("nosniff");
     expect(headers.get("X-Frame-Options")).toBe("DENY");
     expect(headers.get("Strict-Transport-Security")).toContain("max-age=31536000");
+    expect(headers.get("X-Robots-Tag")).toBe("noindex, nofollow, noarchive");
   });
 
   it("allows the Next.js development websocket without emitting HSTS", () => {
@@ -26,5 +27,13 @@ describe("security headers", () => {
     expect(headers.get("Content-Security-Policy")).toContain("ws:");
     expect(headers.get("Content-Security-Policy")).toContain("'unsafe-eval'");
     expect(headers.has("Strict-Transport-Security")).toBe(false);
+  });
+
+  it("removes the HTTP indexing block only after publication gates pass", () => {
+    const headers = new Map(
+      createSecurityHeaders(true, true).map(({ key, value }) => [key, value]),
+    );
+
+    expect(headers.has("X-Robots-Tag")).toBe(false);
   });
 });

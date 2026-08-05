@@ -20,12 +20,16 @@ export type PublicSiteConfig = {
 export function getPublicSiteConfig(
   env: Readonly<Record<string, string | undefined>> = process.env,
 ): PublicSiteConfig {
-  const origin = normalizeOrigin(env.APP_BASE_URL);
+  const configuredOrigin = normalizeOrigin(env.APP_BASE_URL);
+  const origin =
+    configuredOrigin ?? resolveStagingVercelOrigin(env) ?? FALLBACK_ORIGIN;
   const missingLegalIdentity = REQUIRED_LEGAL_IDENTITY_KEYS.filter(
     (key) => !env[key]?.trim(),
   );
   const productionOriginReady =
-    isProductionEnvironment(env) && new URL(origin).protocol === "https:";
+    env.NOA_RUNTIME_ENV?.toLowerCase() === "production" &&
+    configuredOrigin !== null &&
+    new URL(configuredOrigin).protocol === "https:";
   const indexingRequested = env.NOA_PUBLIC_INDEXING_ENABLED === "true";
   const legalIdentityReady = missingLegalIdentity.length === 0;
 
@@ -57,20 +61,29 @@ export function createWebsiteJsonLd(config = getPublicSiteConfig()) {
 }
 
 function normalizeOrigin(value: string | undefined) {
-  if (!value) return FALLBACK_ORIGIN;
+  if (!value) return null;
 
   try {
     const url = new URL(value);
     return url.origin;
   } catch {
-    return FALLBACK_ORIGIN;
+    return null;
   }
 }
 
-function isProductionEnvironment(
+function resolveStagingVercelOrigin(
   env: Readonly<Record<string, string | undefined>>,
 ) {
-  return [env.NODE_ENV, env.NOA_RUNTIME_ENV].some(
-    (value) => value?.toLowerCase() === "production",
-  );
+  if (env.NOA_RUNTIME_ENV?.toLowerCase() !== "staging") return null;
+
+  for (const value of [env.VERCEL_BRANCH_URL, env.VERCEL_URL]) {
+    const hostname = value?.trim().replace(/^https?:\/\//i, "").replace(/\/$/, "");
+
+    if (!hostname || !hostname.toLowerCase().endsWith(".vercel.app")) continue;
+
+    const origin = normalizeOrigin(`https://${hostname}`);
+    if (origin) return origin;
+  }
+
+  return null;
 }

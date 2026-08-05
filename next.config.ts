@@ -1,6 +1,11 @@
 import type { NextConfig } from "next";
 
-export function createSecurityHeaders(isProduction: boolean) {
+import { getPublicSiteConfig } from "./src/lib/marketing/public-site-config";
+
+export function createSecurityHeaders(
+  isProduction: boolean,
+  indexingEnabled = false,
+) {
   const scriptSources = ["'self'", "'unsafe-inline'"];
   const connectSources = ["'self'"];
 
@@ -40,15 +45,27 @@ export function createSecurityHeaders(isProduction: boolean) {
     });
   }
 
+  if (!indexingEnabled) {
+    headers.push({
+      key: "X-Robots-Tag",
+      value: "noindex, nofollow, noarchive",
+    });
+  }
+
   return headers;
 }
 
 const nextConfig: NextConfig = {
   allowedDevOrigins: ["127.0.0.1", "192.168.1.104"],
   async headers() {
+    const publicSiteConfig = getPublicSiteConfig(process.env);
+
     return [
       {
-        headers: createSecurityHeaders(process.env.NODE_ENV === "production"),
+        headers: createSecurityHeaders(
+          process.env.NODE_ENV === "production",
+          publicSiteConfig.indexingEnabled,
+        ),
         source: "/:path*",
       },
     ];

@@ -18,6 +18,7 @@ describe("public SEO routes", () => {
     const config = getPublicSiteConfig({
       APP_BASE_URL: "https://app.noa.example",
       NODE_ENV: "production",
+      NOA_RUNTIME_ENV: "production",
       NOA_LEGAL_ADDRESS: "Onaylı adres",
       NOA_LEGAL_COMPANY_NAME: "Onaylı şirket",
       NOA_LEGAL_CONTACT_EMAIL: "legal@noa.example",

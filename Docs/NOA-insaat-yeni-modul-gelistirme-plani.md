@@ -3535,3 +3535,16 @@ Server error aktarımı merkezi ve redacted; log, trace, replay ve client
 telemetry veri minimizasyonu gereği kapalıdır. Tek-sorumlu insan riski
 production öncesi açık kalmak üzere Dilim 4 tamamlandı. Sıradaki bağımsız
 çalışma **Faz 36 Dilim 5 — Domain, TLS ve Yayın İçeriği**dir.
+
+**Dilim 5 yerel domain/TLS/yayın kapısı — 05.08.2026:** Staging metadata
+origin'i açık `APP_BASE_URL` yoksa yalnız Vercel'in HTTPS branch/deployment
+hostname'inden türetilecek şekilde düzeltildi; localhost canonical sızıntısı
+kapatıldı. Vercel staging origin'i production onayı sayılmaz: indexing yalnız
+`NOA_RUNTIME_ENV=production`, açık HTTPS production `APP_BASE_URL`, ayrı enable
+flag'i ve beş resmi/yasal kimlik girdisi birlikte varsa açılır. Aksi durumda
+metadata/robots/sitemap/JSON-LD kapılarına ek olarak tüm rotalarda
+`X-Robots-Tag: noindex, nofollow, noarchive` uygulanır. Hedefli 9 test, tam 359
+dosya/1.902 test, type-check, Prisma validate, lint, 102 sayfalık build,
+`fra1` preflight, 1.371 dosyalık secret scan ve diff-check geçti. Gerçek
+Preview canonical/TLS/header/health kabulü tamamlanmadan Dilim 5 kapanmaz;
+production domaini, DNS, resmi/yasal yayın ve trafik yetkisi açık kalır.
