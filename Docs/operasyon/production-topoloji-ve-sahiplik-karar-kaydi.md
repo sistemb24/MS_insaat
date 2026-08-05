@@ -1,8 +1,9 @@
 # Production Topoloji ve Sahiplik Karar Kaydı
 
-Tarih: 04.08.2026
+Tarih: 05.08.2026
 Faz: 36 / Dilim 1
-Durum: Staging recovery ile gözlemlenebilirlik/incident kabulü kanıtlandı
+Durum: Staging kabulü tamam; production ayrı kaynak ve secret temeli hazır,
+canlı yayın NO-GO
 
 Sağlayıcı seçimini kolaylaştıran güncel ve resmî kaynaklı karşılaştırma
 `Docs/operasyon/production-provider-aday-mimarileri.md` içindedir. Karşılaştırma
@@ -38,14 +39,14 @@ sokmaz.
 
 | Alan | Development — doğrulanan mevcut durum | Staging | Production |
 |---|---|---|---|
-| Uygulama runtime | Yerel Next.js | Vercel `murat-saygis-projects/insaat-yonetim`; `fra1`; Preview deployment doğrulandı | KARAR BEKLİYOR |
-| Domain | `http://localhost:3000` örnek değeri | Geçici korumalı Vercel Preview hostname doğrulandı | KARAR BEKLİYOR |
-| PostgreSQL | Yerel geliştirme bağlantısı | Neon `noa-insaat-staging`; AWS Frankfurt `eu-central-1` | KARAR BEKLİYOR; ayrı DB zorunlu |
-| Secret injection | Yerel environment | Vercel Preview secret seti ayrıldı; değerler yalnız provider yüzeyinde | KARAR BEKLİYOR; ayrı secret seti |
-| Doküman storage | Local adapter, tek instance | R2 `noa-insaat-staging-eu`; EU jurisdiction; private | KARAR BEKLİYOR; local yasak |
-| Monitoring | Provider yok | Sentry `javascript-nextjs`; DE; redacted error, staging email dispatch ve insan kabulü doğrulandı | KARAR BEKLİYOR |
-| Trafik/TLS | Uygulanmaz | Vercel TLS adayı; domain/DNS sahibi bekliyor | KARAR BEKLİYOR |
-| Release artifact | Yerel build | Vercel build artifact adayı; deployment/rehearsal yapılmadı | KARAR BEKLİYOR; staging ile aynı |
+| Uygulama runtime | Yerel Next.js | Vercel `murat-saygis-projects/insaat-yonetim`; `fra1`; Preview deployment doğrulandı | Aynı Vercel proje, ayrı Production environment; 19 encrypted değişken hazır, deploy yok |
+| Domain | `http://localhost:3000` örnek değeri | Geçici korumalı Vercel Preview hostname doğrulandı | `insaatyonet.com` onaylı; DNS/TLS kabulü bekliyor |
+| PostgreSQL | Yerel geliştirme bağlantısı | Neon `noa-insaat-staging`; AWS Frankfurt `eu-central-1` | Neon `noa-insaat-production`; AWS Frankfurt `eu-central-1`; boş/migration bekliyor |
+| Secret injection | Yerel environment | Vercel Preview secret seti ayrıldı; değerler yalnız provider yüzeyinde | Ayrı Vercel Production ve GitHub encrypted secret setleri hazır |
+| Doküman storage | Local adapter, tek instance | R2 `noa-insaat-staging-eu`; EU jurisdiction; private | R2 `noa-insaat-production-eu` ve ayrı backup bucket; private, EU |
+| Monitoring | Provider yok | Sentry `javascript-nextjs`; DE; redacted error, staging email dispatch ve insan kabulü doğrulandı | Sentry `noa-insaat-production`; DSN hazır, production adaptör/alarm testi bekliyor |
+| Trafik/TLS | Uygulanmaz | Vercel TLS adayı; domain/DNS sahibi bekliyor | DNS/TLS/indexing/trafik değiştirilmedi |
+| Release artifact | Yerel build | Vercel build artifact adayı; deployment/rehearsal yapılmadı | Staging ile aynı artifact adayı; production deployment bekliyor |
 
 Development sütunu production yeterliliği anlamına gelmez. `.env.example`
 içindeki localhost değeri yalnız örnektir ve production domain kararı sayılmaz.
@@ -74,6 +75,12 @@ değerleri repo veya belgeye yazılmadı. Doküman bucket'ından ayrı
 lifecycle kuralı etkinleştirildi. Gerçek deployment, migration, backup ve
 izole restore yapılmadığından RPO/RTO sağlandı iddiası henüz kurulmaz.
 
+05.08.2026 tarihinde kullanıcı Production Aday A ve `insaatyonet.com`
+kararını ayrıca onayladı. Ayrı Neon Frankfurt production projesi, private R2
+EU runtime/backup bucket'ları, Sentry DE production projesi ve Vercel
+Production/GitHub encrypted secret yüzeyleri hazırlandı. Bu işlem migration,
+deployment, DNS/TLS, indexing, PR merge veya trafik açma yetkisi değildir.
+
 SMTP/SMS, PSP, Open Banking, GİB, Arvento ve outbound webhook worker bu
 matrisin sağlayıcı seçimine dahil değildir; her biri ayrı RFC ve onay gerektirir.
 
@@ -88,6 +95,9 @@ matrisin sağlayıcı seçimine dahil değildir; her biri ayrı RFC ve onay gere
 | Monitoring ve incident koordinasyonu | Murat Saygı | Murat Saygı | YOK — staging tek-sorumlu riski | ONAYLI / STAGING |
 | KVKK, retention ve hesap kapanışı | Murat Saygı | Murat Saygı | YOK — production öncesi yeniden karar | ONAYLI / STAGING |
 | Resmi şirket/yayın içeriği | Murat Saygı | Murat Saygı | YOK — production öncesi yeniden karar | ONAYLI / STAGING |
+| Production release, hosting ve DNS/TLS | Murat Saygı | Murat Saygı | YOK — tek-sorumlu riski kabul edildi | ONAYLI / PRODUCTION KARARI |
+| Production DB recovery ve storage | Murat Saygı | Murat Saygı | YOK — tek-sorumlu riski kabul edildi | ONAYLI / PRODUCTION KARARI |
+| Production veri/hukuk | Murat Saygı | Murat Saygı | YOK — tek-sorumlu riski kabul edildi | ONAYLI / PRODUCTION KARARI |
 
 Rol aynı kişide birleşecekse hem sorumlu hem onaylayan hücresinde açıkça
 gösterilir; boş veya örtük sahiplik kabul edilmez.
@@ -103,6 +113,11 @@ gösterilir; boş veya örtük sahiplik kabul edilmez.
 | Staging hesap kapatma ve legal hold | Sentetik veri; production kararı değildir | Murat Saygı / Murat Saygı | ONAYLANDI / STAGING |
 | Staging destek saatleri ve SLA | Hafta içi 09:00–18:00; dış SLA yok | Murat Saygı / Murat Saygı | ONAYLANDI |
 | Staging incident severity/escalation | SEV-1/2/3; tek sorumlu Murat Saygı | Murat Saygı / Murat Saygı | ONAYLANDI / TEK-SORUMLU RİSKİ |
+| Production hedef RPO | 24 saat | Murat Saygı / Murat Saygı | ONAYLANDI / HENÜZ ÖLÇÜLMEDİ |
+| Production hedef RTO | 8 saat | Murat Saygı / Murat Saygı | ONAYLANDI / HENÜZ ÖLÇÜLMEDİ |
+| Production backup sıklığı ve retention | Günlük; 30 gün | Murat Saygı / Murat Saygı | ONAYLANDI / WORKFLOW BEKLİYOR |
+| Production destek saatleri ve SLA | Hafta içi 09:00–18:00; dış SLA yok | Murat Saygı / Murat Saygı | ONAYLANDI |
+| Production resmi yayın kimliği | MS İNŞAAT; Atakum-Samsun; `info@msinsaat.com`; veri sorumlusu Murat Saygı; hukuk onayı 05.08.2026 | Murat Saygı / Murat Saygı | ONAYLANDI / İÇERİK KABULÜ BEKLİYOR |
 
 Staging RPO 24 saat, RTO 8 saat, günlük backup/14 gün retention, sentetik
 staging veri/log retention üst sınırı 30 gün, dış SLA yok ve hafta içi

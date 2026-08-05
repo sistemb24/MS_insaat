@@ -6,15 +6,16 @@ Kapsam: Salt-okunur production hazırlık denetimi ve ayrı canlı yayın onay p
 
 ## Yönetici özeti
 
-Release adayı kod, CI, staging runtime, migration, tenant izolasyonu,
-DB+binary recovery, redacted monitoring ve uygulama rollback provası açısından
-yeşildir. Bu kanıtlar yalnız staging kapsamındadır. Production kaynakları,
-politikaları, sahiplik imzaları ve resmi yayın girdileri tamamlanmadığı için
-production migration, deployment, domain/DNS değişikliği, indexing ve trafik
-açma kapalıdır.
+Release adayı kod, CI ve staging kabul kapıları açısından yeşildir. Kullanıcı
+Production Aday A'yı, `insaatyonet.com` domain kararını, sahiplik/politika
+girdilerini ve resmi yayın kimliğini onayladı. Bu yetkiyle ayrı production
+Neon, R2 ve Sentry kaynakları ile Vercel/GitHub secret yüzeyleri hazırlandı.
+Ancak gerçek production backup/restore, migration preflight, production-safe
+monitoring, deployment, DNS/TLS ve kapalı trafik provası yapılmadığı için
+production migration, deployment, indexing ve trafik açma kapalıdır.
 
-Bu karar bir yazılım regresyonu değildir. Eksikler dış karar ve production
-altyapısı eksikleridir; staging değerleri production taahhüdü sayılmamıştır.
+Bu karar bir yazılım regresyonu değildir. Production temeli hazırdır; canlı
+işlem kapıları ve ölçülmüş production recovery/monitoring kanıtları eksiktir.
 
 ## Kanıt indeksi
 
@@ -39,16 +40,16 @@ içindedir.
 
 | Kimlik | Zorunlu kapı | Salt-okunur mevcut durum | Karar sahibi / onaylayan | Durum |
 |---|---|---|---|---|
-| P-B01 | Production hosting ve ayrı environment | Vercel Production'da environment variable yok; tek production deployment `dpl_ArfCNdipMAxoTp2asvu9F1idRBBg` `Error` | ATANMADI / ATANMADI | BLOCKER |
-| P-B02 | Production domain, DNS ve TLS | Hesapta `insaatyonet.com` var; production domaini olarak onaylanmadı, DNS yapılandırması eksik ve hostname çözülmüyor | ATANMADI / ATANMADI | BLOCKER |
-| P-B03 | Ayrı production PostgreSQL | Provider, bölge, kaynak ve erişim kararı yok | ATANMADI / ATANMADI | BLOCKER |
-| P-B04 | Ayrı production secret seti ve rotation | Production secret seti yok; staging credential'ları taşınamaz | ATANMADI / ATANMADI | BLOCKER |
-| P-B05 | Production object storage ve backup | Ayrı bucket/credential, encryption/retention ve ortak DB+binary recovery point kararı yok | ATANMADI / ATANMADI | BLOCKER |
-| P-B06 | Production monitoring ve incident | Production Sentry/DPA/alarm/escalation hedefi yok | ATANMADI / ATANMADI | BLOCKER |
-| P-B07 | Production RPO/RTO, backup retention ve SLA | Yalnız staging için 24 saat/8 saat/14 gün ve dış SLA yok kararı var | ATANMADI / ATANMADI | BLOCKER |
-| P-B08 | KVKK, retention ve hesap kapanışı | Production süreleri, legal hold ve destructive delete yetkisi onaylanmadı | ATANMADI / ATANMADI | BLOCKER |
-| P-B09 | Resmi yayın içeriği | Şirket adı, adres, resmi iletişim, veri sorumlusu ve hukuk onay tarihi yayın girdileri yok | ATANMADI / ATANMADI | BLOCKER |
-| P-B10 | Operasyon ayrılığı ve değişiklik penceresi | Tüm staging rolleri tek kişide; production rolleri ve yedek/escalation atanmadı | ATANMADI / ATANMADI | BLOCKER |
+| P-B01 | Production hosting ve ayrı environment | Vercel Production'da 19 encrypted değişken hazır; deployment ve runtime kabulü yapılmadı | Murat Saygı / Murat Saygı | TEMEL HAZIR / BLOCKER |
+| P-B02 | Production domain, DNS ve TLS | `insaatyonet.com` onaylandı; DNS/Vercel bağlama, TLS ve kapalı trafik kabulü yapılmadı | Murat Saygı / Murat Saygı | KARAR TAMAM / BLOCKER |
+| P-B03 | Ayrı production PostgreSQL | Neon Frankfurt `noa-insaat-production` hazır; DB boş, migration/preflight yapılmadı | Murat Saygı / Murat Saygı | TEMEL HAZIR / BLOCKER |
+| P-B04 | Ayrı production secret seti ve rotation | Vercel Production ve GitHub encrypted secret setleri ayrı hazır; rotation provası yapılmadı | Murat Saygı / Murat Saygı | TEMEL HAZIR / BLOCKER |
+| P-B05 | Production object storage ve backup | Ayrı private runtime/backup bucket'ları, ayrık tokenlar ve 30 günlük lifecycle hazır; günlük backup/restore ölçülmedi | Murat Saygı / Murat Saygı | TEMEL HAZIR / BLOCKER |
+| P-B06 | Production monitoring ve incident | Ayrı Sentry projesi/DSN hazır; kod staging-only, production redaction/alarm provası yok | Murat Saygı / Murat Saygı | TEMEL HAZIR / BLOCKER |
+| P-B07 | Production RPO/RTO, backup retention ve SLA | 24 saat/8 saat, günlük/30 gün ve hafta içi 09:00–18:00 dış SLA yok onaylandı; ölçülmedi | Murat Saygı / Murat Saygı | KARAR TAMAM / BLOCKER |
+| P-B08 | KVKK, retention ve hesap kapanışı | Veri/hukuk sahibi atandı; hesap kapanışı, legal hold ve destructive delete prosedürü açık | Murat Saygı / Murat Saygı | KISMİ / BLOCKER |
+| P-B09 | Resmi yayın içeriği | Resmi kimlik ve hukuk onay tarihi hazır; gerçek hukuk sayfası içeriği/indexing onayı açık | Murat Saygı / Murat Saygı | KISMİ / BLOCKER |
+| P-B10 | Operasyon ayrılığı ve değişiklik penceresi | Tüm roller Murat Saygı; bağımsız yedek yok ve tek-sorumlu riski kabul edildi; pencere/abort yetkisi açık | Murat Saygı / Murat Saygı | KISMİ / BLOCKER |
 | P-B11 | Merge ve canlı işlem yetkisi | PR draft; production migration/deployment/DNS/trafik için ayrı açık onay yok | Murat Saygı / Murat Saygı | BLOCKER |
 
 GitHub Actions'ın `actions/checkout@v4`, `actions/setup-node@v4` ve
@@ -96,7 +97,9 @@ yetkili onayla son çaredir.
 ## Karar kaydı
 
 - Mevcut karar: **NO-GO**.
-- Production değişikliği: yapılmadı.
+- Production temel kaynakları ve secret yüzeyleri: hazırlandı; kanıt
+  `Docs/UI-baseline/Faz36-production-temeli-20260805.md` içindedir.
+- Production canlı işlemi: yapılmadı.
 - Production verisi: okunmadı veya kopyalanmadı.
 - Domain/DNS/TLS/trafik: değiştirilmedi.
 - PR: merge edilmedi; draft durumda bırakıldı.

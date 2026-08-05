@@ -3594,3 +3594,19 @@ indexing, PR merge veya trafik değişikliği yapılmadı. Kanıt paketi
 `Docs/UI-baseline/Faz36-dilim7-production-go-no-go-20260805.md` içindedir;
 sıradaki adım P-B01–P-B11 karar girdilerinin kullanıcı tarafından
 tamamlanmasıdır.
+
+**Dilim 7 production temel hazırlığı — 05.08.2026:** Kullanıcı Production
+Aday A, `insaatyonet.com`, tüm birincil sahiplikler, tek-sorumlu risk kabulü,
+24 saat RPO/8 saat RTO, günlük backup/30 gün retention, destek penceresi ve
+resmi yayın kimliğini onayladı. Ayrı Neon Frankfurt production projesi,
+private R2 EU runtime ve backup bucket'ları, 30 günlük lifecycle, ayrık
+least-privilege R2 tokenları, Sentry DE production projesi, 19 encrypted
+Vercel Production değişkeni ile beş GitHub encrypted secret ve dört açık
+repository değişkeni hazırlandı. Credential değerleri yalnız provider secret
+yüzeylerinde tutuldu; migration, backup/restore, deployment, DNS/TLS,
+indexing, PR merge ve trafik işlemi yapılmadı. Neon Free yerleşik geçmişinin
+6 saatle sınırlı olması, production backup/restore ve RPO/RTO ölçümünün
+bulunmaması, production gözlemlenebilirlik adaptörünün staging-only kalması ve
+domain/TLS/yasal içerik kabulünün yapılmaması nedeniyle karar **NO-GO** kalır.
+Kanıt `Docs/UI-baseline/Faz36-production-temeli-20260805.md` içindedir;
+sıradaki bağımsız görev ayrı onaylı production backup/preflight sözleşmesidir.
