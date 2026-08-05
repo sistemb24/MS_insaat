@@ -95,6 +95,30 @@ describe("ChequeSurface", () => {
     expect(screen.getByText("Delta Yapı A.Ş.")).toBeTruthy();
   });
 
+  test("applies the global search deep-link query and highlights its record", () => {
+    render(
+      <ChequeSurface
+        highlightedRecordId="cheque-1"
+        initialSearchQuery="CEK-0001"
+        permissions={{ canMutateCheques: false }}
+        rows={[
+          cheque,
+          { ...cheque, id: "cheque-2", documentNo: "CEK-0002" },
+        ]}
+      />,
+    );
+
+    expect(screen.getByLabelText("Çek ara").getAttribute("value")).toBe("CEK-0001");
+    expect(screen.queryByText("CEK-0002")).toBeNull();
+    const highlightedRow = screen.getByRole("row", { name: /CEK-0001/i });
+    expect(highlightedRow.getAttribute("data-highlighted")).toBe("true");
+    expect(
+      screen.getByRole("button", { name: "Tahsil Et CEK-0001" }).hasAttribute(
+        "disabled",
+      ),
+    ).toBe(true);
+  });
+
   test("shows the linked ledger document for a collected cheque", () => {
     render(
       <ChequeSurface

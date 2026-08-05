@@ -19,6 +19,7 @@ export type IconName =
   | "file"
   | "gavel"
   | "info"
+  | "life-buoy"
   | "loader"
   | "plus"
   | "receipt"
@@ -145,6 +146,13 @@ const paths: Record<IconName, React.ReactNode> = {
       <circle cx="12" cy="12" r="9" />
       <path d="M12 11v6" />
       <path d="M12 7h.01" />
+    </>
+  ),
+  "life-buoy": (
+    <>
+      <circle cx="12" cy="12" r="9" />
+      <circle cx="12" cy="12" r="3" />
+      <path d="m5.64 5.64 4.24 4.24M14.12 14.12l4.24 4.24M18.36 5.64l-4.24 4.24M9.88 14.12l-4.24 4.24" />
     </>
   ),
   loader: (

@@ -7,8 +7,19 @@ import { createPasswordHash } from "./password-hash";
 import { getP0SettingsContract } from "./settings-contract";
 import type { TenantScope } from "./tenant-scope";
 import { validateTenantScope } from "./tenant-scope";
+import type {
+  AccessProfileAssignmentSnapshot,
+  AccessProfileSnapshot,
+} from "./access-profile";
+import {
+  createInvitationAccessProfileAssignment,
+  normalizeInvitationAccessProfileId,
+  validateInvitationAccessProfile,
+  validateInvitationAccessProfileSelection,
+} from "./user-invitation-access-profile";
 
 export type UserInvitationRow = {
+  accessProfileId?: string;
   acceptedAt?: string;
   companyId: string;
   createdAt: string;
@@ -26,6 +37,7 @@ export type UserInvitationRow = {
 };
 
 export type UserInvitationCreateValues = {
+  accessProfileId?: string;
   email: string;
   role: string;
 };
@@ -88,6 +100,7 @@ export type UserInvitationResult<T> =
 export type UserInvitationRepository = {
   acceptInvitation(input: {
     acceptedAt: string;
+    accessProfileAssignment?: AccessProfileAssignmentSnapshot;
     credential: UserInvitationCredentialCreate;
     invitation: UserInvitationRow;
     scopeAccess: UserInvitationScopeAccessCreate;
@@ -104,6 +117,13 @@ export type UserInvitationRepository = {
   findByTokenHash(input: {
     tokenHash: string;
   }): Promise<UserInvitationRow | null>;
+  findAccessProfile(input: {
+    companyId: string;
+    profileId: string;
+    tenantId: string;
+  }): Promise<
+    Pick<AccessProfileSnapshot, "companyId" | "id" | "status" | "tenantId"> | null
+  >;
   revokeInvitation(input: {
     invitation: UserInvitationRow;
     revokedAt: string;
@@ -115,6 +135,13 @@ export type UserInvitationRepository = {
     tokenHash: string;
   }): Promise<UserInvitationRow>;
 };
+
+export class UserInvitationRepositoryError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "UserInvitationRepositoryError";
+  }
+}
 
 export function createUserInvitationService({
   appBaseUrl = "http://localhost:3000",
@@ -147,8 +174,18 @@ export function createUserInvitationService({
             tokenHash: hashInviteToken(normalized.token),
           })
         : null;
+      const accessProfile = invitation?.accessProfileId
+        ? await repository.findAccessProfile({
+            companyId: invitation.companyId,
+            profileId: invitation.accessProfileId,
+            tenantId: invitation.tenantId,
+          })
+        : null;
       const errors = [
         ...validateInvitationForAccept(invitation, now()),
+        ...(invitation?.accessProfileId
+          ? validateInvitationAccessProfile(accessProfile)
+          : []),
         ...validateAcceptValues(normalized),
       ];
 
@@ -182,17 +219,28 @@ export function createUserInvitationService({
       const role = mapUserTypeToSessionRole(invitation.role);
       const licenseLabel = "Pilot P0";
 
-      await repository.acceptInvitation({
-        acceptedAt,
-        credential: {
+      try {
+        await repository.acceptInvitation({
+          acceptedAt,
+          accessProfileAssignment: invitation.accessProfileId
+            ? createInvitationAccessProfileAssignment({
+                acceptedAt,
+                companyId: invitation.companyId,
+                periodId: invitation.periodId,
+                profileId: invitation.accessProfileId,
+                tenantId: invitation.tenantId,
+                userId,
+              })
+            : undefined,
+          credential: {
           defaultSessionId: sessionId,
           email: invitation.email,
           passwordHash: passwordHasher(normalized.password),
           tenantId: invitation.tenantId,
           userId,
         },
-        invitation,
-        scopeAccess: {
+          invitation,
+          scopeAccess: {
           companyId: invitation.companyId,
           id: accessId,
           isActive: true,
@@ -203,7 +251,7 @@ export function createUserInvitationService({
           tenantId: invitation.tenantId,
           userId,
         },
-        session: {
+          session: {
           companyId: invitation.companyId,
           expiresAt: null,
           id: sessionId,
@@ -213,13 +261,23 @@ export function createUserInvitationService({
           tenantId: invitation.tenantId,
           userId,
         },
-        user: {
+          user: {
           email: invitation.email,
           id: userId,
           name: normalized.fullName || invitation.email.split("@")[0] || invitation.email,
           tenantId: invitation.tenantId,
-        },
-      });
+          },
+        });
+      } catch (error) {
+        return {
+          ok: false,
+          errors: [
+            error instanceof UserInvitationRepositoryError
+              ? error.message
+              : "Davet kabulü atomik olarak tamamlanamadı.",
+          ],
+        };
+      }
       await auditLogRepository?.record({
         action: "user-invitation.accept",
         actorUserId: userId,
@@ -228,6 +286,9 @@ export function createUserInvitationService({
         entityLabel: formatInvitationEntityLabel(invitation),
         entityType: "user-invitation",
         metadata: {
+          ...(invitation.accessProfileId
+            ? { accessProfileId: invitation.accessProfileId }
+            : {}),
           email: invitation.email,
           role: invitation.role,
           sessionId,
@@ -259,10 +320,20 @@ export function createUserInvitationService({
       UserInvitationResult<{ invitation: UserInvitationRow; token: string }>
     > {
       const normalized = normalizeCreateValues(values);
+      const accessProfile = normalized.accessProfileId
+        ? await repository.findAccessProfile({
+            companyId: scope.companyId,
+            profileId: normalized.accessProfileId,
+            tenantId: scope.tenantId,
+          })
+        : null;
       const errors = [
         ...validateTenantScope(scope),
         ...validateCreatePermission(scope),
         ...validateCreateValues(normalized),
+        ...(normalized.accessProfileId
+          ? validateInvitationAccessProfile(accessProfile)
+          : []),
       ];
 
       if (errors.length > 0) {
@@ -273,6 +344,7 @@ export function createUserInvitationService({
       const token = tokenFactory();
       const invitation: UserInvitationRow = {
         acceptedAt: undefined,
+        accessProfileId: normalized.accessProfileId,
         companyId: scope.companyId,
         createdAt: timestamp,
         email: normalized.email,
@@ -297,6 +369,9 @@ export function createUserInvitationService({
           entityType: "user-invitation",
           occurredAt: timestamp,
           metadata: {
+            ...(persistedInvitation.accessProfileId
+              ? { accessProfileId: persistedInvitation.accessProfileId }
+              : {}),
             email: persistedInvitation.email,
             expiresAt: persistedInvitation.expiresAt,
             role: persistedInvitation.role,
@@ -555,14 +630,18 @@ function resolveResendStatus(invitation: UserInvitationRow, nowIso: string) {
 }
 
 export function createSeededUserInvitationMemoryRepository({
+  acceptedAssignments = [],
+  accessProfiles = [],
   invitations = [],
 }: {
+  acceptedAssignments?: AccessProfileAssignmentSnapshot[];
+  accessProfiles?: AccessProfileSnapshot[];
   invitations?: UserInvitationRow[];
 } = {}): UserInvitationRepository {
   const rows = [...invitations];
 
   return {
-    async acceptInvitation({ acceptedAt, credential, invitation, scopeAccess, session, user }) {
+    async acceptInvitation({ acceptedAt, accessProfileAssignment, credential, invitation, scopeAccess, session, user }) {
       const index = rows.findIndex((row) => row.id === invitation.id);
 
       if (index >= 0) {
@@ -575,6 +654,9 @@ export function createSeededUserInvitationMemoryRepository({
       }
 
       void credential;
+      if (accessProfileAssignment) {
+        acceptedAssignments.push(accessProfileAssignment);
+      }
       void scopeAccess;
       void session;
       void user;
@@ -600,6 +682,17 @@ export function createSeededUserInvitationMemoryRepository({
 
     async findByTokenHash({ tokenHash }) {
       return rows.find((row) => row.tokenHash === tokenHash) ?? null;
+    },
+
+    async findAccessProfile({ companyId, profileId, tenantId }) {
+      return (
+        accessProfiles.find(
+          (profile) =>
+            profile.id === profileId &&
+            profile.companyId === companyId &&
+            profile.tenantId === tenantId,
+        ) ?? null
+      );
     },
 
     async revokeInvitation({ invitation, revokedAt }) {
@@ -646,6 +739,7 @@ function normalizeCreateValues(
   values: UserInvitationCreateValues,
 ): UserInvitationCreateValues {
   return {
+    accessProfileId: normalizeInvitationAccessProfileId(values.accessProfileId),
     email: values.email.trim().toLowerCase(),
     role: values.role.trim(),
   };
@@ -681,6 +775,8 @@ function validateCreateValues(values: UserInvitationCreateValues) {
   if (!allowedRoles.has(values.role)) {
     errors.push("Geçerli kullanıcı tipi seçilmelidir.");
   }
+
+  errors.push(...validateInvitationAccessProfileSelection(values));
 
   return errors;
 }

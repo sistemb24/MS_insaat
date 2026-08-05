@@ -208,6 +208,24 @@ const moduleContentBySlug: Record<string, ModuleContent> = {
       },
     ],
   },
+  "destek-merkezi": {
+    title: "Destek Merkezi",
+    eyebrow: "P2 kullanıcı desteği",
+    summary:
+      "Kullanıcıların kendi destek taleplerini açtığı, yanıtları izlediği ve tenant yöneticilerinin çözüm sürecini yönettiği güvenli çalışma alanı.",
+    templateSources: ["Parsek-Destek Merkezi-01.png"],
+    primaryActions: ["Yeni Talep", "Taleplerim", "Durum Takibi"],
+    metrics: defaultMetrics,
+  },
+  "bilgi-merkezi": {
+    title: "Bilgi Merkezi",
+    eyebrow: "P2 şirket duyuruları",
+    summary:
+      "Şirket duyuruları, planlı bakımlar, güncellemeler ve haberler için kategorili, aranabilir yayın akışı.",
+    templateSources: ["Parsek-Bilgi Merkezi.png"],
+    primaryActions: ["Yeni Duyuru", "Kategori Filtresi", "Detay Görünümü"],
+    metrics: defaultMetrics,
+  },
   "e-fatura-yonetimi": {
     title: "E-Fatura Yönetimi",
     eyebrow: "P2 e-Fatura API başlangıcı",
@@ -276,6 +294,15 @@ const moduleContentBySlug: Record<string, ModuleContent> = {
       "personel_maaş_ve_bordro_yönetimi.html",
     ],
     primaryActions: ["Yeni Personel", "Ödeme", "Zimmet"],
+    metrics: defaultMetrics,
+  },
+  isg: {
+    title: "İSG Operasyon Merkezi",
+    eyebrow: "Faz 14 operasyon ve takip",
+    summary:
+      "İş kazası, eğitim, saha denetimi, bulgu ve KKD zimmetini aynı kapsamda takip edin.",
+    templateSources: ["İSG operasyon çekirdeği", "AppShell çalışma alanı"],
+    primaryActions: ["İş Kazası", "Eğitim", "Denetim", "KKD Zimmeti"],
     metrics: defaultMetrics,
   },
   "kasa-banka": {

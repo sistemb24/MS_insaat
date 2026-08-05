@@ -11,6 +11,7 @@ import { getP0BaseCurrencyTransactionValue } from "./settings-contract";
 
 export type CashBankMovementDirection = "Giriş" | "Çıkış";
 export type CashBankMovementType =
+  | "Avans Ödemesi"
   | "Çek Tahsilatı"
   | "Fatura Ödemesi"
   | "Gider Ödemesi"

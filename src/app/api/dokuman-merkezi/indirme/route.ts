@@ -1,20 +1,18 @@
-import { basename, join } from "node:path";
+import { basename } from "node:path";
 
 import { createDocumentCenterPrismaRepository, type DocumentCenterPrismaClientLike } from "@/lib/document-center-prisma-repository";
-import { createLocalDocumentStorage } from "@/lib/document-storage";
+import { createDocumentStorageRuntime } from "@/lib/document-storage-runtime";
 import { prisma } from "@/lib/prisma";
 import { getActiveTenantScope } from "@/lib/server-active-scope";
+import { accessProfileService } from "@/lib/access-profile-runtime";
+import { canUseDocumentPermission } from "@/lib/access-profile";
 
 export const runtime = "nodejs";
 
 const documentCenterRepository = createDocumentCenterPrismaRepository(
   prisma as unknown as DocumentCenterPrismaClientLike,
 );
-const documentStorage = createLocalDocumentStorage({
-  rootDir:
-    process.env.NOA_DOCUMENT_STORAGE_DIR ??
-    join(process.cwd(), ".noa-storage", "documents"),
-});
+const documentStorage = createDocumentStorageRuntime().storage;
 
 export async function GET(request: Request) {
   const url = new URL(request.url);
@@ -24,7 +22,28 @@ export async function GET(request: Request) {
     return Response.json({ ok: false, errors: ["Dosya seçimi zorunludur."] }, { status: 400 });
   }
 
-  const scope = await getActiveTenantScope();
+  const baseScope = await getActiveTenantScope();
+  const scope =
+    baseScope.userRole === "viewer"
+      ? {
+          ...baseScope,
+          documentAccess: await accessProfileService.resolveDocumentAccess({
+            scope: baseScope,
+          }),
+        }
+      : baseScope;
+  if (
+    !canUseDocumentPermission(
+      scope.userRole,
+      scope.documentAccess,
+      "document.view",
+    )
+  ) {
+    return Response.json(
+      { ok: false, errors: ["Yetki profiliniz doküman indirmeye izin vermiyor."] },
+      { status: 403 },
+    );
+  }
   const files = await documentCenterRepository.listFiles({ scope });
   const file = files.find((item) => item.id === fileId);
 

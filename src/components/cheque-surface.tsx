@@ -46,6 +46,8 @@ type ChequeSurfaceProps = {
     >;
   };
   rows: ChequeRow[];
+  initialSearchQuery?: string;
+  highlightedRecordId?: string;
   today?: string;
 };
 
@@ -69,6 +71,8 @@ export function ChequeSurface({
   permissions = { canMutateCheques: true },
   persistence,
   rows,
+  initialSearchQuery = "",
+  highlightedRecordId,
   today = new Date().toISOString().slice(0, 10),
 }: ChequeSurfaceProps) {
   const [displayRows, setDisplayRows] = useState(rows);
@@ -80,7 +84,7 @@ export function ChequeSurface({
   const [isSaving, setIsSaving] = useState(false);
   const [printNotice, setPrintNotice] = useState("");
   const [errors, setErrors] = useState<string[]>([]);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState(initialSearchQuery);
   const [statusFilter, setStatusFilter] = useState<"Tümü" | ChequeRow["status"]>(
     "Tümü",
   );
@@ -462,7 +466,17 @@ export function ChequeSurface({
                     permissions.canMutateCheques && row.status === "Portföyde";
 
                   return (
-                    <tr className="hover:bg-brand-primary-subtle" key={row.id}>
+                    <tr
+                      className={
+                        row.id === highlightedRecordId
+                          ? "bg-brand-primary-subtle ring-1 ring-inset ring-brand-primary"
+                          : "hover:bg-brand-primary-subtle"
+                      }
+                      data-highlighted={
+                        row.id === highlightedRecordId ? "true" : undefined
+                      }
+                      key={row.id}
+                    >
                       <td className="px-4 py-3 font-mono text-xs">
                         {row.documentNo}
                       </td>

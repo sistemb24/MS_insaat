@@ -11,7 +11,6 @@ import {
   getP0BaseCurrencyDisplayValue,
   getP0BaseCurrencyTransactionValue,
   getP0CurrencyPolicyDisplayValue,
-  getP0DefaultVatRateInputValue,
 } from "@/lib/settings-contract";
 import { Icon, type IconName } from "@/components/ui";
 
@@ -47,6 +46,8 @@ type ExpenseSurfaceProps = {
     createExpense?: (values: ExpenseCreateValues) => Promise<ExpenseCreateActionResult>;
   };
   rows: ExpenseRow[];
+  defaultVatRate?: number;
+  showVatBreakdown?: boolean;
   today?: string;
 };
 
@@ -70,6 +71,8 @@ export function ExpenseSurface({
   permissions = { canMutateExpenses: true },
   persistence,
   rows,
+  defaultVatRate = 20,
+  showVatBreakdown = true,
   today = new Date().toISOString().slice(0, 10),
 }: ExpenseSurfaceProps) {
   const [displayRows, setDisplayRows] = useState(rows);
@@ -112,7 +115,7 @@ export function ExpenseSurface({
       expenseDate: today,
       movementGroup: "",
       siteCode: lookups.sites[0]?.code ?? "",
-      vatRate: getP0DefaultVatRateInputValue(),
+      vatRate: String(defaultVatRate),
     });
   }
 
@@ -319,7 +322,7 @@ export function ExpenseSurface({
       <div aria-label="Gider özet metrikleri" className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <Metric icon="wallet" label="Toplam Gider" tone="warning" value={formatMoney(grandTotal)} />
         <Metric icon="calendar" label="Bu Ay" value={formatMoney(currentMonthTotal)} />
-        <Metric detail={`${activeRows.length} aktif kayıt`} icon="receipt" label="KDV Toplamı" tone="success" value={formatMoney(vatTotal)} />
+        {showVatBreakdown ? <Metric detail={`${activeRows.length} aktif kayıt`} icon="receipt" label="KDV Toplamı" tone="success" value={formatMoney(vatTotal)} /> : null}
         <Metric detail={`${paymentLinkedCount}/${activeRows.length} ödeme bağlantılı`} icon="bank" label="Ödeme Bağlantısı" value={String(paymentLinkedCount)} />
       </div>
 

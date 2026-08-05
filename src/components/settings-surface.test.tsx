@@ -94,6 +94,132 @@ describe("SettingsSurface", () => {
     expect(screen.getByText("Gider kaydı oluşturma ve ödeme hareketi")).toBeTruthy();
   });
 
+  test("persists editable finance settings for an admin in an open period", async () => {
+    const saveFinanceSettings = vi.fn().mockResolvedValue({
+      data: {
+        idempotent: false,
+        settings: {
+          canManage: true,
+          defaultVatRate: 18,
+          revisionNo: 2,
+          showVatBreakdown: false,
+          source: "persisted",
+          updatedAt: "2026-07-30T12:00:00.000Z",
+          updatedBy: "user-main",
+        },
+      },
+      ok: true,
+    });
+
+    render(
+      <SettingsSurface
+        context={{ ...createTenantScope(), userRole: "admin" }}
+        financeSettings={{
+          canManage: true,
+          defaultVatRate: 20,
+          revisionNo: 1,
+          showVatBreakdown: true,
+          source: "persisted",
+          updatedAt: "2026-07-30T11:00:00.000Z",
+          updatedBy: "user-main",
+        }}
+        persistence={{ saveFinanceSettings }}
+      />,
+    );
+
+    fireEvent.change(
+      screen.getByRole("spinbutton", { name: "Varsayılan KDV oranı (%)" }),
+      { target: { value: "18" } },
+    );
+    fireEvent.click(
+      screen.getByRole("checkbox", { name: "KDV toplam kırılımını göster" }),
+    );
+    fireEvent.click(
+      screen.getByRole("button", { name: "Finans ayarlarını kaydet" }),
+    );
+
+    await waitFor(() => expect(saveFinanceSettings).toHaveBeenCalledTimes(1));
+    expect(saveFinanceSettings).toHaveBeenCalledWith(
+      expect.objectContaining({
+        defaultVatRate: 18,
+        expectedRevisionNo: 1,
+        showVatBreakdown: false,
+      }),
+    );
+    expect(await screen.findByText("Kalıcı kayıt · Revizyon 2")).toBeTruthy();
+  });
+
+  test("persists company profile for an admin without changing the scope label", async () => {
+    const saveCompanyProfile = vi.fn().mockResolvedValue({
+      data: {
+        idempotent: false,
+        profile: {
+          addressLine: "Atatürk Cad. No: 10",
+          canManage: true,
+          city: "İstanbul",
+          district: "Kadıköy",
+          email: "bilgi@ornek.com",
+          legalName: "Örnek İnşaat A.Ş.",
+          mersisNumber: "0123456789012345",
+          phone: "+90 212 555 00 00",
+          postalCode: "34710",
+          revisionNo: 2,
+          source: "persisted",
+          taxNumber: "1234567890",
+          taxOffice: "Kadıköy",
+          updatedAt: "2026-07-30T15:00:00.000Z",
+          updatedBy: "user-main",
+        },
+      },
+      ok: true,
+    });
+
+    render(
+      <SettingsSurface
+        companyProfile={{
+          addressLine: "",
+          canManage: true,
+          city: "",
+          district: "",
+          email: "",
+          legalName: "DEMO İNŞAAT",
+          mersisNumber: "",
+          phone: "",
+          postalCode: "",
+          revisionNo: 1,
+          source: "persisted",
+          taxNumber: "",
+          taxOffice: "",
+          updatedAt: "2026-07-30T14:00:00.000Z",
+          updatedBy: "user-main",
+        }}
+        context={{ ...createTenantScope(), periodClosed: true, userRole: "admin" }}
+        persistence={{ saveCompanyProfile }}
+      />,
+    );
+
+    fireEvent.change(screen.getByRole("textbox", { name: "Hukuki unvan" }), {
+      target: { value: "Örnek İnşaat A.Ş." },
+    });
+    fireEvent.change(screen.getByRole("textbox", { name: "Vergi numarası" }), {
+      target: { value: "1234567890" },
+    });
+    fireEvent.click(
+      screen.getByRole("button", { name: "Firma profilini kaydet" }),
+    );
+
+    await waitFor(() => expect(saveCompanyProfile).toHaveBeenCalledTimes(1));
+    expect(saveCompanyProfile).toHaveBeenCalledWith(
+      expect.objectContaining({
+        expectedRevisionNo: 1,
+        legalName: "Örnek İnşaat A.Ş.",
+        taxNumber: "1234567890",
+      }),
+    );
+    expect(screen.getByText("DEMO İNŞAAT")).toBeTruthy();
+    expect(await screen.findByText("Kalıcı kayıt · Revizyon 2")).toBeTruthy();
+  });
+
   test("prints the visible P0 settings summary scope", () => {
     const print = vi.fn();
 
@@ -122,7 +248,7 @@ describe("SettingsSurface", () => {
     );
 
     expect(screen.getByRole("status").textContent).toBe(
-      "Finans ayarı düzenleme P0 kapsamında salt okunur; fatura ve hakediş hesaplamalarını etkileyen kalıcı yazım ayrı dilimde açılacaktır.",
+      "Kalıcı finans ayarları aşağıdaki panelden yönetilebilir; değişiklikler yalnız yeni finans belgelerine varsayılan olur.",
     );
 
     fireEvent.click(
@@ -1930,13 +2056,29 @@ describe("SettingsSurface", () => {
         deactivatedAccess: {
           email: "isg@example.com",
           id: "access-1",
+          role: "viewer",
+          userId: "isg-user",
           userName: "İSG Kullanıcısı",
         },
+        removedAccessProfileId: "profile-1",
       },
     });
 
     render(
       <SettingsSurface
+        accessProfileOverview={{
+          canManage: true,
+          permissions: [],
+          profiles: [],
+          users: [
+            {
+              assignment: null,
+              email: "isg@example.com",
+              name: "İSG Kullanıcısı",
+              userId: "isg-user",
+            },
+          ],
+        }}
         context={createTenantScope()}
         persistence={{ deactivateUser }}
         userManagementOverview={{
@@ -1948,6 +2090,7 @@ describe("SettingsSurface", () => {
               id: "access-1",
               role: "viewer",
               statusLabel: "Aktif",
+              userId: "isg-user",
             },
           ],
           auditLogs: [],
@@ -1977,8 +2120,86 @@ describe("SettingsSurface", () => {
     expect(
       within(
         screen.getByRole("table", { name: "P1 Aktif Kullanıcılar" }),
-      ).queryByText("İSG Kullanıcısı"),
+    ).queryByText("İSG Kullanıcısı"),
     ).toBeNull();
+    await waitFor(() => {
+      expect(
+        within(
+          screen.getByRole("region", { name: "Özel Yetki Profilleri" }),
+        ).queryByText("İSG Kullanıcısı"),
+      ).toBeNull();
+    });
+  });
+
+  test("removes a viewer from the assignment panel after a role change", async () => {
+    const updateUserRole = vi.fn().mockResolvedValue({
+      data: {
+        removedAccessProfileId: "profile-1",
+        updatedAccess: {
+          email: "isg@example.com",
+          id: "access-1",
+          role: "accounting",
+          userId: "isg-user",
+          userName: "İSG Kullanıcısı",
+        },
+      },
+      ok: true,
+    });
+
+    render(
+      <SettingsSurface
+        accessProfileOverview={{
+          canManage: true,
+          permissions: [],
+          profiles: [],
+          users: [
+            {
+              assignment: null,
+              email: "isg@example.com",
+              name: "İSG Kullanıcısı",
+              userId: "isg-user",
+            },
+          ],
+        }}
+        context={{ ...createTenantScope(), userRole: "admin" }}
+        persistence={{ updateUserRole }}
+        userManagementOverview={{
+          activeUsers: [
+            {
+              companyName: "DEMO İNŞAAT",
+              email: "isg@example.com",
+              fullName: "İSG Kullanıcısı",
+              id: "access-1",
+              role: "viewer",
+              statusLabel: "Aktif",
+              userId: "isg-user",
+            },
+          ],
+          auditLogs: [],
+          invitations: [],
+          summary: {
+            acceptedInvitationCount: 0,
+            activeUserCount: 1,
+            pendingInvitationCount: 0,
+          },
+        }}
+      />,
+    );
+
+    fireEvent.change(screen.getByRole("combobox", { name: "Rol İSG Kullanıcısı" }), {
+      target: { value: "accounting" },
+    });
+
+    await waitFor(() => {
+      expect(updateUserRole).toHaveBeenCalledWith("access-1", "accounting");
+    });
+    await waitFor(() => {
+      expect(
+        within(
+          screen.getByRole("region", { name: "Özel Yetki Profilleri" }),
+        ).queryByText("İSG Kullanıcısı"),
+      ).toBeNull();
+    });
   });
 
   test("disables self access deactivation in the user management table", () => {
@@ -2176,6 +2397,78 @@ describe("SettingsSurface", () => {
         name: "Daveti İptal Et expired@example.com",
       }),
     ).toBeTruthy();
+  });
+  test("requires and sends an active profile for a custom RBAC invitation", async () => {
+    const createInvitation = vi.fn().mockResolvedValue({
+      data: {
+        invitation: {
+          accessProfileId: "profile-reader",
+          email: "ozel@example.com",
+          expiresAt: "2026-08-07T10:00:00.000Z",
+          id: "invite-custom",
+          role: "Özel (RBAC ile Yönetilen)",
+          status: "pending",
+        },
+        token: "invite-token",
+      },
+      ok: true,
+    });
+
+    render(
+      <SettingsSurface
+        accessProfileOverview={{
+          canManage: true,
+          permissions: [],
+          profiles: [
+            {
+              companyId: "company-demo-insaat",
+              createdAt: "2026-07-31T10:00:00.000Z",
+              createdBy: "user-admin",
+              description: "Doküman okuma",
+              id: "profile-reader",
+              lastMutationKey: "profile-create",
+              name: "Doküman Okuyucu",
+              normalizedName: "doküman okuyucu",
+              permissions: ["document.view"],
+              revisionNo: 1,
+              status: "ACTIVE",
+              tenantId: "tenant-noa-demo",
+              updatedAt: "2026-07-31T10:00:00.000Z",
+              updatedBy: "user-admin",
+            },
+          ],
+          users: [],
+        }}
+        context={{ ...createTenantScope(), userRole: "admin" }}
+        persistence={{ createInvitation }}
+      />,
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Kullanıcı Davet Et" }));
+    const inviteDialog = screen.getByRole("dialog", {
+      name: "Kullanıcı Davet Et",
+    });
+    fireEvent.change(within(inviteDialog).getByRole("textbox", { name: "E-posta" }), {
+      target: { value: "ozel@example.com" },
+    });
+    fireEvent.change(within(inviteDialog).getByRole("combobox", { name: "Rol" }), {
+      target: { value: "Özel (RBAC ile Yönetilen)" },
+    });
+    const sendButton = within(inviteDialog).getByRole("button", { name: "Davet Gönder" });
+    expect((sendButton as HTMLButtonElement).disabled).toBe(true);
+    fireEvent.change(
+      within(inviteDialog).getByRole("combobox", { name: "Yetki profili" }),
+      { target: { value: "profile-reader" } },
+    );
+    expect((sendButton as HTMLButtonElement).disabled).toBe(false);
+    fireEvent.click(sendButton);
+
+    await waitFor(() => expect(createInvitation).toHaveBeenCalledTimes(1));
+    expect(createInvitation).toHaveBeenCalledWith({
+      accessProfileId: "profile-reader",
+      email: "ozel@example.com",
+      role: "Özel (RBAC ile Yönetilen)",
+    });
   });
 });
 

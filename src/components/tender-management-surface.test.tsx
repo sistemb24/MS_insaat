@@ -125,6 +125,30 @@ describe("TenderManagementSurface", () => {
     ).toBe("true");
   });
 
+  test("applies the global search deep-link query and highlights its tender", () => {
+    render(
+      <TenderManagementSurface
+        highlightedRecordId="tender-school"
+        initialSearchQuery="IHL-SCHOOL"
+        rows={[
+          createTender({ id: "tender-road", tenderNo: "IHL-ROAD" }),
+          createTender({ id: "tender-school", tenderNo: "IHL-SCHOOL" }),
+        ]}
+      />,
+    );
+
+    expect(
+      screen.getByRole("searchbox", { name: "İhale ara" }).getAttribute("value"),
+    ).toBe("IHL-SCHOOL");
+    const table = screen.getByRole("table", { name: "İhale listesi tablosu" });
+    expect(within(table).queryByText("IHL-ROAD")).toBeNull();
+    expect(
+      within(table)
+        .getByRole("row", { name: /IHL-SCHOOL/i })
+        .getAttribute("data-highlighted"),
+    ).toBe("true");
+  });
+
   test("opens, focuses and dismisses the canonical three-tab tender form", () => {
     render(<TenderManagementSurface rows={[]} today="2026-07-01T09:00:00" />);
 

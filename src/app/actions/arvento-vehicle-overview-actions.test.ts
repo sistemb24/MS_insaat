@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, test, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 
 import { defaultTenantScope } from "@/lib/tenant-scope";
 
@@ -109,6 +109,8 @@ function mockKurumsalSubscription() {
 
 describe("arvento vehicle overview actions", () => {
   beforeEach(() => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date("2026-08-02T00:00:00.000Z"));
     getActiveTenantScopeMock.mockReset();
     ensureTenantScopeMock.mockReset();
     revalidatePathMock.mockReset();
@@ -130,6 +132,10 @@ describe("arvento vehicle overview actions", () => {
     prismaMock.vehicle.findMany.mockResolvedValue([]);
     prismaMock.auditLog.create.mockResolvedValue({});
     prismaMock.auditLog.findMany.mockResolvedValue([]);
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
   });
 
   test("blocks vehicle overview loading when Arvento fleet access is locked", async () => {

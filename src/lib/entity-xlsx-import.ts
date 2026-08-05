@@ -2,7 +2,10 @@ import * as XLSX from "xlsx";
 
 import type { EntityDefinition, EntityRow } from "./entities";
 import type { EntityImportPreview } from "./entity-import";
-import { previewEntityImportCsv } from "./entity-import";
+import {
+  previewEntityImportCsv,
+  type EntityImportValidationContext,
+} from "./entity-import";
 
 export type EntityImportXlsxHeaderInspection = {
   fileErrors: string[];
@@ -19,6 +22,7 @@ export function previewEntityImportXlsx(
   workbookData: ArrayBuffer | Uint8Array,
   headerMapping?: Record<string, string>,
   sheetName?: string,
+  context?: EntityImportValidationContext,
 ): EntityImportPreview {
   const workbook = XLSX.read(workbookData, { type: "array" });
   const selectedSheetName = resolveSheetName(workbook, sheetName);
@@ -42,6 +46,7 @@ export function previewEntityImportXlsx(
     definition,
     existingRows,
     buildSemicolonCsv(mapRecordsByExpectedHeaders(definition, records, headerMapping)),
+    context,
   );
 }
 

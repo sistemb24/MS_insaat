@@ -1,10 +1,9 @@
-import { join } from "node:path";
-
 import { beforeEach, describe, expect, test, vi } from "vitest";
 
 const revalidatePathMock = vi.hoisted(() => vi.fn());
-const createLocalDocumentStorageMock = vi.hoisted(() => vi.fn(() => ({
-  putObject: vi.fn(),
+const createDocumentStorageRuntimeMock = vi.hoisted(() => vi.fn(() => ({
+  provider: "local",
+  storage: { putObject: vi.fn() },
 })));
 const createDocumentCenterServiceMock = vi.hoisted(() => vi.fn(() => ({
   createFileMetadata: vi.fn(),
@@ -52,8 +51,8 @@ vi.mock("@/lib/document-center-service", () => ({
   })),
 }));
 
-vi.mock("@/lib/document-storage", () => ({
-  createLocalDocumentStorage: createLocalDocumentStorageMock,
+vi.mock("@/lib/document-storage-runtime", () => ({
+  createDocumentStorageRuntime: createDocumentStorageRuntimeMock,
 }));
 
 vi.mock("@/lib/document-storage-key", () => ({
@@ -67,21 +66,9 @@ describe("document-center-actions", () => {
     delete process.env.NOA_DOCUMENT_STORAGE_DIR;
   });
 
-  test("uses the default local document storage root when no environment override is set", async () => {
+  test("uses the shared document storage runtime port", async () => {
     await import("./document-center-actions");
 
-    expect(createLocalDocumentStorageMock).toHaveBeenCalledWith({
-      rootDir: join(process.cwd(), ".noa-storage", "documents"),
-    });
-  });
-
-  test("uses the environment override for the local document storage root", async () => {
-    process.env.NOA_DOCUMENT_STORAGE_DIR = "D:\\tmp\\noa-documents";
-
-    await import("./document-center-actions");
-
-    expect(createLocalDocumentStorageMock).toHaveBeenCalledWith({
-      rootDir: "D:\\tmp\\noa-documents",
-    });
+    expect(createDocumentStorageRuntimeMock).toHaveBeenCalledOnce();
   });
 });

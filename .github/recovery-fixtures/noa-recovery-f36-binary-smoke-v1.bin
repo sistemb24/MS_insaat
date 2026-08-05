@@ -1,0 +1,3 @@
+NOA staging recovery fixture v1
+Synthetic content only; no personal or production data.
+Purpose: database and R2 backup/restore checksum proof.

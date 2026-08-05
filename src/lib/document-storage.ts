@@ -44,7 +44,7 @@ export function createLocalDocumentStorage({
 
   return {
     async deleteObject(storageKey) {
-      const safeKey = normalizeStorageKey(storageKey);
+      const safeKey = normalizeDocumentStorageKey(storageKey);
       const absolutePath = resolveStoragePath(resolvedRoot, safeKey);
 
       try {
@@ -70,7 +70,7 @@ export function createLocalDocumentStorage({
     },
 
     async putObject({ content, contentType, storageKey }) {
-      const safeKey = normalizeStorageKey(storageKey);
+      const safeKey = normalizeDocumentStorageKey(storageKey);
       const absolutePath = resolveStoragePath(resolvedRoot, safeKey);
       const bytes =
         content instanceof Uint8Array ? content : new Uint8Array(content);
@@ -88,7 +88,7 @@ export function createLocalDocumentStorage({
     },
 
     async readObject(storageKey) {
-      const safeKey = normalizeStorageKey(storageKey);
+      const safeKey = normalizeDocumentStorageKey(storageKey);
       const absolutePath = resolveStoragePath(resolvedRoot, safeKey);
       const content = await readFile(absolutePath);
 
@@ -102,7 +102,7 @@ export function createLocalDocumentStorage({
   };
 }
 
-function normalizeStorageKey(storageKey: string) {
+export function normalizeDocumentStorageKey(storageKey: string) {
   const normalizedKey = storageKey.replace(/\\/g, "/").trim();
 
   if (
@@ -118,7 +118,9 @@ function normalizeStorageKey(storageKey: string) {
 }
 
 function resolveStoragePath(rootDir: string, storageKey: string) {
-  const absolutePath = resolve(join(rootDir, normalize(storageKey)));
+  const absolutePath = resolve(
+    join(rootDir, normalize(normalizeDocumentStorageKey(storageKey))),
+  );
   const relativePath = relative(rootDir, absolutePath);
 
   if (relativePath.startsWith("..") || isAbsolute(relativePath)) {

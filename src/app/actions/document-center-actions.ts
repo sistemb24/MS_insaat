@@ -1,7 +1,5 @@
 "use server";
 
-import { join } from "node:path";
-
 import { revalidatePath } from "next/cache";
 
 import {
@@ -13,7 +11,6 @@ import {
   type DocumentCenterPrismaClientLike,
 } from "@/lib/document-center-prisma-repository";
 import {
-  canMutateDocumentCenter,
   createDocumentFileDraft,
   createDocumentCenterService,
   type DocumentCenterResult,
@@ -23,9 +20,11 @@ import {
   type DocumentUserFolderCreateValues,
   type DocumentUploadFileLike,
 } from "@/lib/document-center-service";
-import { createLocalDocumentStorage } from "@/lib/document-storage";
+import { canUseDocumentPermission } from "@/lib/access-profile";
+import { createDocumentStorageRuntime } from "@/lib/document-storage-runtime";
 import { createDocumentStorageKey } from "@/lib/document-storage-key";
 import { prisma } from "@/lib/prisma";
+import { accessProfileService } from "@/lib/access-profile-runtime";
 
 import { getSubscriptionFeatureActionContext } from "./subscription-feature-action-guard";
 
@@ -39,11 +38,7 @@ const documentCenterService = createDocumentCenterService({
   now: () => new Date().toISOString(),
   repository: documentCenterRepository,
 });
-const documentStorage = createLocalDocumentStorage({
-  rootDir:
-    process.env.NOA_DOCUMENT_STORAGE_DIR ??
-    join(process.cwd(), ".noa-storage", "documents"),
-});
+const documentStorage = createDocumentStorageRuntime().storage;
 
 export async function listDocumentCenterAction() {
   const context = await getDocumentCenterActionContext();
@@ -174,10 +169,16 @@ export async function createDocumentFileAction(
     return context.result;
   }
 
-  if (!canMutateDocumentCenter(context.scope)) {
+  if (
+    !canUseDocumentPermission(
+      context.scope.userRole,
+      context.scope.documentAccess,
+      "document.file.create",
+    )
+  ) {
     return {
       ok: false,
-      errors: ["Döküman işlemi için muhasebe veya admin yetkisi gereklidir."],
+      errors: ["Yetki profiliniz dosya yüklemeye izin vermiyor."],
     };
   }
 
@@ -350,7 +351,17 @@ function getErrorMessage(error: unknown) {
   return error instanceof Error ? error.message : "Bilinmeyen storage hatası";
 }
 
-function getDocumentCenterActionContext() {
-  return getSubscriptionFeatureActionContext("document-center");
+async function getDocumentCenterActionContext() {
+  const context = await getSubscriptionFeatureActionContext("document-center");
+  if (!context.ok || context.scope.userRole !== "viewer") return context;
+  return {
+    ...context,
+    scope: {
+      ...context.scope,
+      documentAccess: await accessProfileService.resolveDocumentAccess({
+        scope: context.scope,
+      }),
+    },
+  };
 }
 

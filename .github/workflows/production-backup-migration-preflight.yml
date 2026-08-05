@@ -1,0 +1,49 @@
+name: Production Backup and Migration Preflight (Read-only)
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirmation:
+        description: Type production-backup-preflight for read-only inspection
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: noa-production-recovery
+  cancel-in-progress: false
+
+jobs:
+  preflight:
+    if: ${{ inputs.confirmation == 'production-backup-preflight' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      DATABASE_URL: ${{ secrets.PRODUCTION_DATABASE_URL }}
+      NOA_PRODUCTION_PREFLIGHT_CONFIRMATION: ${{ inputs.confirmation }}
+      NOA_RELEASE_ID: ${{ github.sha }}
+      NOA_RUNTIME_ENV: production
+      R2_ACCESS_KEY_ID: ${{ secrets.PRODUCTION_R2_READ_ACCESS_KEY_ID }}
+      R2_SECRET_ACCESS_KEY: ${{ secrets.PRODUCTION_R2_READ_SECRET_ACCESS_KEY }}
+      R2_BUCKET: ${{ vars.PRODUCTION_R2_BUCKET }}
+      R2_ENDPOINT: ${{ vars.PRODUCTION_R2_ENDPOINT }}
+      R2_BACKUP_ACCESS_KEY_ID: ${{ secrets.PRODUCTION_R2_BACKUP_ACCESS_KEY_ID }}
+      R2_BACKUP_SECRET_ACCESS_KEY: ${{ secrets.PRODUCTION_R2_BACKUP_SECRET_ACCESS_KEY }}
+      R2_BACKUP_BUCKET: ${{ vars.PRODUCTION_R2_BACKUP_BUCKET }}
+      R2_BACKUP_ENDPOINT: ${{ vars.PRODUCTION_R2_BACKUP_ENDPOINT }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Validate Prisma schema without database mutation
+        run: pnpm db:validate
+      - name: Inspect production backup access and migration inventory
+        run: pnpm production:recovery:preflight

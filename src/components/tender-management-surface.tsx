@@ -25,6 +25,8 @@ import {
 } from "@/lib/tender-service";
 
 type TenderManagementSurfaceProps = {
+  highlightedRecordId?: string;
+  initialSearchQuery?: string;
   persistence?: {
     createTender?: (
       values: TenderCreateValues,
@@ -154,6 +156,8 @@ function createInitialTenderDraftForm(): TenderDraftFormValues {
 }
 
 export function TenderManagementSurface({
+  highlightedRecordId,
+  initialSearchQuery = "",
   persistence,
   rows,
   today = new Date().toISOString(),
@@ -190,7 +194,7 @@ export function TenderManagementSurface({
   const [activeDeadlineFilter, setActiveDeadlineFilter] =
     useState<TenderDeadlineFilter>("all");
   const [activeView, setActiveView] = useState<TenderView>("list");
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState(initialSearchQuery);
   const summary = summarizeTenders(displayRows, today);
   const filteredRows =
     displayRows.filter((row) => {
@@ -812,6 +816,7 @@ export function TenderManagementSurface({
             activeStatusFilter={activeStatusFilter}
             activeDeadlineFilter={activeDeadlineFilter}
             allRowCount={displayRows.length}
+            highlightedRecordId={highlightedRecordId}
             onConvertToSite={openSiteConversion}
             onEditBoq={openBoqEditor}
             onTransitionStatus={transitionTenderStatus}
@@ -1979,6 +1984,7 @@ function TenderList({
   activeStatusFilter,
   activeDeadlineFilter,
   allRowCount,
+  highlightedRecordId,
   onConvertToSite,
   onEditBoq,
   onTransitionStatus,
@@ -1988,6 +1994,7 @@ function TenderList({
   activeStatusFilter: TenderStatus | "all";
   activeDeadlineFilter: TenderDeadlineFilter;
   allRowCount: number;
+  highlightedRecordId?: string;
   onConvertToSite: (row: TenderRow) => void;
   onEditBoq: (row: TenderRow) => void;
   onTransitionStatus: (tenderId: string, status: TenderStatus) => void;
@@ -2041,7 +2048,17 @@ function TenderList({
               </tr>
             ) : null}
             {rows.map((row) => (
-              <tr className="hover:bg-surface-muted" key={row.id}>
+              <tr
+                className={
+                  row.id === highlightedRecordId
+                    ? "bg-brand-primary-subtle ring-1 ring-inset ring-brand-primary"
+                    : "hover:bg-surface-muted"
+                }
+                data-highlighted={
+                  row.id === highlightedRecordId ? "true" : undefined
+                }
+                key={row.id}
+              >
                 <td className="px-4 py-3">
                   <span className="block font-mono text-xs font-semibold">
                     {row.tenderNo}

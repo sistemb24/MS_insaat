@@ -13,12 +13,14 @@ import {
   type DocumentFileRow,
   type DocumentFolderColor,
   type DocumentFolderRow,
+  type DocumentCenterCapabilities,
   type DocumentFileMetadataCreateValues,
   type DocumentUserFolderCreateValues,
 } from "@/lib/document-center-service";
 import { createDocumentStorageKey } from "@/lib/document-storage-key";
 
 type DocumentCenterSurfaceProps = {
+  capabilities?: DocumentCenterCapabilities;
   folders: DocumentFolderRow[];
   initialFiles?: DocumentFileRow[];
   initialTrashedFiles?: DocumentFileRow[];
@@ -80,6 +82,13 @@ const folderColorClass: Record<DocumentFolderColor, string> = {
 };
 
 export function DocumentCenterSurface({
+  capabilities = {
+    canCreateFile: true,
+    canManageFolders: true,
+    canRenameFile: true,
+    canTrashRestoreFile: true,
+    canView: true,
+  },
   folders,
   initialFiles = [],
   initialTrashedFiles = [],
@@ -389,20 +398,20 @@ export function DocumentCenterSurface({
             </p>
           </div>
           <div className="flex flex-wrap items-center gap-2">
-            <button
+            {capabilities.canManageFolders ? <button
               className="h-10 rounded-ui-control border border-divider bg-surface-raised px-4 text-sm font-semibold text-content shadow-sm hover:border-brand-primary hover:text-brand-primary"
               onClick={() => setFolderPanelOpen((isOpen) => !isOpen)}
               type="button"
             >
               Yeni Klasör
-            </button>
-            <button
+            </button> : null}
+            {capabilities.canCreateFile ? <button
               className="h-10 rounded-ui-control bg-brand-primary px-4 text-sm font-semibold text-on-brand shadow-sm hover:opacity-90"
               onClick={() => setUploadPanelOpen((isOpen) => !isOpen)}
               type="button"
             >
               Dosya Yükle
-            </button>
+            </button> : null}
           </div>
         </div>
         </div>
@@ -611,9 +620,9 @@ export function DocumentCenterSurface({
       </div>
 
       {viewMode === "grid" ? (
-        <FolderGrid folders={visibleFolderRows} onDeleteFolder={handleDeleteFolder} onRenameFolder={handleRenameFolder} />
+        <FolderGrid folders={visibleFolderRows} onDeleteFolder={capabilities.canManageFolders ? handleDeleteFolder : undefined} onRenameFolder={capabilities.canManageFolders ? handleRenameFolder : undefined} />
       ) : (
-        <FolderTable folders={visibleFolderRows} onDeleteFolder={handleDeleteFolder} onRenameFolder={handleRenameFolder} />
+        <FolderTable folders={visibleFolderRows} onDeleteFolder={capabilities.canManageFolders ? handleDeleteFolder : undefined} onRenameFolder={capabilities.canManageFolders ? handleRenameFolder : undefined} />
       )}
 
       {documentFiles.length > 0 && visibleDocumentFiles.length === 0 ? (
@@ -636,12 +645,20 @@ export function DocumentCenterSurface({
           files={visibleDocumentFiles}
           folders={folderRows}
           onMoveToTrash={
-            activeTab === "Çöp Kutusu" ? undefined : handleMoveFileToTrash
+            activeTab === "Çöp Kutusu" || !capabilities.canTrashRestoreFile
+              ? undefined
+              : handleMoveFileToTrash
           }
           onRestoreFromTrash={
-            activeTab === "Çöp Kutusu" ? handleRestoreFileFromTrash : undefined
+            activeTab === "Çöp Kutusu" && capabilities.canTrashRestoreFile
+              ? handleRestoreFileFromTrash
+              : undefined
           }
-          onRenameFile={activeTab === "Çöp Kutusu" ? undefined : handleRenameFile}
+          onRenameFile={
+            activeTab === "Çöp Kutusu" || !capabilities.canRenameFile
+              ? undefined
+              : handleRenameFile
+          }
         />
       ) : null}
     </section>
@@ -701,7 +718,7 @@ function FolderGrid({ folders, onDeleteFolder, onRenameFolder }: { folders: Docu
           </p>
           <div className="mt-4 flex items-center justify-between gap-3 border-t border-divider pt-3 text-xs text-content-subtle">
             <span>{getAccessLevelLabel(folder.accessLevel)}</span>
-            <button
+            {onDeleteFolder ? <button
               aria-label={
                 folder.isSystem
                   ? `${folder.name} sistem klasörü silinemez`
@@ -713,8 +730,8 @@ function FolderGrid({ folders, onDeleteFolder, onRenameFolder }: { folders: Docu
               type="button"
             >
               Sil
-            </button>
-            <button className="rounded-ui-control border border-divider px-2 py-1 text-xs font-semibold disabled:cursor-not-allowed disabled:opacity-55" disabled={!folder.canRename} onClick={() => onRenameFolder?.(folder)} type="button">Adlandır</button>
+            </button> : null}
+            {onRenameFolder ? <button className="rounded-ui-control border border-divider px-2 py-1 text-xs font-semibold disabled:cursor-not-allowed disabled:opacity-55" disabled={!folder.canRename} onClick={() => onRenameFolder(folder)} type="button">Adlandır</button> : null}
           </div>
         </article>
       ))}
@@ -745,7 +762,7 @@ function FolderTable({
               <th className="px-4 py-3 font-semibold">Boyut</th>
               <th className="px-4 py-3 font-semibold">Tarih</th>
               <th className="px-4 py-3 font-semibold">Oluşturan</th>
-              <th className="px-4 py-3 font-semibold">İşlem</th>
+              {onDeleteFolder || onRenameFolder ? <th className="px-4 py-3 font-semibold">İşlem</th> : null}
             </tr>
           </thead>
           <tbody className="divide-y divide-divider">
@@ -765,8 +782,8 @@ function FolderTable({
                 </td>
                 <td className="px-4 py-3">{formatDate(folder.createdAt)}</td>
                 <td className="px-4 py-3">{folder.createdBy}</td>
-                <td className="px-4 py-3">
-                  <button
+                {onDeleteFolder || onRenameFolder ? <td className="px-4 py-3">
+                  {onDeleteFolder ? <button
                     aria-label={
                       folder.isSystem
                         ? `${folder.name} sistem klasörü silinemez`
@@ -778,9 +795,9 @@ function FolderTable({
                     type="button"
                   >
                     Sil
-                  </button>
-                  <button className="ml-2 rounded-ui-control border border-divider px-2 py-1 text-xs font-semibold disabled:cursor-not-allowed disabled:opacity-55" disabled={!folder.canRename} onClick={() => onRenameFolder?.(folder)} type="button">Adlandır</button>
-                </td>
+                  </button> : null}
+                  {onRenameFolder ? <button className="ml-2 rounded-ui-control border border-divider px-2 py-1 text-xs font-semibold disabled:cursor-not-allowed disabled:opacity-55" disabled={!folder.canRename} onClick={() => onRenameFolder(folder)} type="button">Adlandır</button> : null}
+                </td> : null}
               </tr>
             ))}
           </tbody>

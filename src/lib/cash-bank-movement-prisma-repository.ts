@@ -225,6 +225,7 @@ function readDirection(value: string): CashBankMovementDirection {
 
 function readMovementType(value: string): CashBankMovementType {
   if (
+    value === "Avans Ödemesi" ||
     value === "Fatura Ödemesi" ||
     value === "Gider Ödemesi" ||
     value === "Hakediş Ödemesi" ||

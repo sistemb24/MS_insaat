@@ -208,6 +208,25 @@ describe("PurchaseInvoiceSurface", () => {
     expect(highlightedRow?.getAttribute("data-highlighted")).toBe("true");
   });
 
+  test("prefers the exact global-search record id when highlighting", () => {
+    const duplicateDocument = {
+      ...invoice,
+      id: "invoice-duplicate",
+    };
+
+    render(
+      <PurchaseInvoiceSurface
+        highlightedDocumentNo={invoice.documentNo}
+        highlightedRecordId="invoice-duplicate"
+        rows={[invoice, duplicateDocument]}
+      />,
+    );
+
+    const rows = screen.getAllByRole("row", { name: /FAT-0006/i });
+    expect(rows[0]?.getAttribute("data-highlighted")).toBeNull();
+    expect(rows[1]?.getAttribute("data-highlighted")).toBe("true");
+  });
+
   test("renders purchase invoice audit history grouped by invoice", () => {
     render(
       <PurchaseInvoiceSurface

@@ -106,13 +106,84 @@ Mevcut `ConstructionDeductionMovement` gerçekleşmiş hareketi tutar; tekrar ku
 
 İlk sürüm client/server hesaplama sonucu olarak geçici çalışabilir. Kaydetme, karşılaştırma, paylaşma veya onay akışı istenirse model/RBAC/audit gerekir.
 
+> Uygulama durumu (23.07.2026): `RFC-F11-01` onaylandı. Öneri yalnız
+> Hakediş Pro poz bazlı metraj simülasyonunu; normalize scenario/revision/line
+> snapshot'ları, iç karşılaştırma, admin onayı ve arşiv yaşam döngüsüyle ele
+> alır. İhale BOQ, gerçek metraja aktarım, public paylaşım ve import staging
+> kapsam dışıdır. Dilim 1 Domain Çekirdeği ve Dilim 2 Şema/Repository
+> tamamlandı. Üç normalize tablo additive migration ile eklendi; repository
+> scope, append-only revizyon, concurrency ve idempotency kurallarını 13 yeni
+> testle doğrular. Gerçek simülasyon verisi yoktur. Sıradaki bağımsız dilim
+> Server Action ve Audit'tir.
+>
+> Dilim 3 (23.07.2026): Session scope + abonelik + dönem + RBAC kontrollü
+> list/detail/create/revise/clone/approve/archive/compare action'ları ve atomik
+> merkezi audit tamamlandı. Create/revise sunucuda yeniden hesaplanır;
+> idempotent retry audit çoğaltmaz. Sıradaki dilim Hakediş Pro UI'dır.
+>
+> Dilim 4 (23.07.2026): Mevcut geçici hesap korunarak kalıcı kaydetme, geçmiş,
+> append-only revizyon, klon, karşılaştırma, admin onay/arşiv, stale-source
+> uyarısı ve `/hakedis?senaryo=<id>` iç deep-link UI'sı tamamlandı. Viewer
+> mutasyon kontrolleri DOM'a eklenmez. Gerçek raporda yazmasız görsel ön kabul
+> geçti; sıradaki dilim Gerçek Veri ve Kapanış'tır.
+>
+> Dilim 5 (23.07.2026): İki gerçek demo senaryosu dört append-only revizyonla
+> oluşturuldu; A onaylandı, B arşivlendi. Accounting/admin/viewer, deep-link,
+> compare, audit/scope izolasyonu, source mutabakatı, mobil/desktop, light/dark,
+> print ve odak kabulü geçti. `npm run hakedis:scenario:verify` kapanış
+> mutabakatını kalıcılaştırır. RFC-F11-01 ve F2-03 tamamlandı.
+
 ### F2-04 — Import staging ve geçmiş
 
 İlk sürüm dosyayı parse eder, doğrulama raporu üretir ve kullanıcı onayından sonra mevcut create action'larına aktarır. Kalıcı dosya/job/satır hata geçmişi istenirse yaşam döngüsü, PII, dosya saklama ve rollback mini-RFC'si gerekir.
 
+> Planlama kapısı (23.07.2026): `RFC-F12-01-kalici-import-staging-gecmisi.md`
+> hazırlandı. Öneri yalnız Hakediş Pro metraj CSV'sini; kalıcı batch/satır/event
+> geçmişi, sunucu doğrulaması, açık onay, idempotent ve all-or-nothing metraj
+> uygulamasıyla ele alır. Dosya byte'ı, XLSX, genel import motoru, dış storage,
+> worker ve destructive rollback kapsam dışıdır. 10 varsayım kullanıcı onayı
+> bekler; onaydan önce şema veya uygulama değişikliği yapılmayacaktır.
+>
+> Dilim 1 (23.07.2026): 10 varsayım onaylandı. Strict UTF-8 CSV parser'ı,
+> 2 MiB/500 satır sınırı, sürümlü mapping, normalize satır/hata DTO'ları,
+> formula nötrleştirme, SHA-256, tam scope idempotency, lifecycle ve RBAC
+> çekirdeği 25 hedefli testle tamamlandı. Şema/repository/UI/veri değişmedi.
+>
+> Dilim 2 (23.07.2026): Normalize batch/row/event şeması ve migration
+> uygulandı. Full-scope repository create/list/detail/validate/apply/cancel,
+> kaynak sürümü, idempotency, optimistic status, row-line bağlantısı ve mevcut
+> snapshot hesabıyla all-or-nothing apply sağlar. Tablolar `0/0/0`; gerçek
+> import yazılmadı.
+>
+> Dilim 3 (23.07.2026): Scoped list/detail ve upload/validate/apply/cancel
+> Server Action'ları eklendi. Abonelik, oturum, tam scope, rol ve dönem
+> guard'ları uygulanır; CSV sunucuda byte'tan yeniden parse edilir. Event ve
+> güvenli merkezi audit aynı transaction'dadır; idempotent terminal retry
+> geçmişi veya metrajı çoğaltmaz. UI/gerçek veri değişmedi.
+>
+> Dilim 4 (23.07.2026): Kalıcı import UI, satır/hata/event görünümü, açık apply
+> onayı, geçmiş, oluşan föy bağlantısı ve `/hakedis?import=<id>` deep-link'i
+> tamamlandı. Viewer kalıcı paneli DOM'a almaz; responsive, tema, print, odak ve
+> yazmasız tarayıcı kabulü geçti. Sırada Gerçek Veri ve Kapanış vardır.
+>
+> Dilim 5 (28.07.2026): Gerçek kabul yalnız `F12-KABUL-20260728 / F12-HAK-001`
+> izole taslak kaynağında tamamlandı. Geçerli CSV `CREATED → VALIDATED →
+> APPLIED` ile `3.5 m3 / 3.500 TL` sonucuna ulaştı; create/apply retry'ları
+> idempotenttir. Hatalı CSV tek `ITEM_NOT_FOUND` taslak satırında kaldı ve
+> metraj yazmadı. Dört merkezi audit, güvenli metadata, sıfır cross-scope,
+> gerçek deep-link/UI/tema/mobil/print/erişilebilirlik kabulü ve
+> `npm run hakedis:import:scenario:verify` doğrulaması geçti. RFC-F12-01 ve
+> F2-04 tamamlandı.
+
 ### F2-05 — Gerçek dış entegrasyonlar
 
 Open Banking, Arvento, GİB, ödeme sağlayıcısı veya outbound webhook worker erişimi/kimlik bilgisi yoktur. Şablondaki sync/map/status kontrolleri gerçek bağlantı varmış gibi gösterilmeyecektir.
+
+28.07.2026 tarihinde `Docs/RFC-F13-01-saglayici-onayli-dis-entegrasyon-kapisi.md`
+ile provider-bağımsız onay kapısı hazırlandı ve on varsayım kullanıcı tarafından
+onaylandı. Tek sağlayıcı ve tek operasyon seçimi, resmi sandbox sözleşmesi ve
+güvenli credential teslim yöntemi beklenir; bu kayıt uygulama, dış çağrı veya
+şema genişletmesi anlamına gelmez.
 
 ## 4. Bu Fazda Reddedilen Şema Genişletmeleri
 
@@ -173,10 +244,20 @@ devam eder.
 
 | F2 kapısı | Nihai durum |
 |---|---|
-| F2-01 Global scoped arama | Bekliyor; ayrı mini-RFC ve indeks/yetki kararı gerekir. |
+| F2-01 Global scoped arama | Tamamlandı. `RFC-F10-01` Dilim 1–5 kapandı; 55 kayıt/scope ve en kötü p95 18,47 ms ile migration gerekmiyor. |
 | F2-02 Kesinti kuralı ve şablonu | RFC-F8-01 sınırında tamamlandı ve gerçek veriyle kabul edildi. |
-| F2-03 Kalıcı simülasyon senaryosu | Bekliyor; mevcut simülasyon geçici hesap olarak kalır. |
-| F2-04 Kalıcı import staging/geçmişi | Bekliyor; mevcut aktarım önizleme ve onaylı import ile sınırlıdır. |
-| F2-05 Gerçek dış entegrasyonlar | Bekliyor; kimlik bilgisi/provider olmadan sandbox/plan sınırı korunur. |
+| F2-03 Kalıcı simülasyon senaryosu | Tamamlandı. `RFC-F11-01` Dilim 1–5 kapandı; gerçek veri, rol, deep-link, audit/scope ve görsel kabul geçti. |
+| F2-04 Kalıcı import staging/geçmişi | Tamamlandı. `RFC-F12-01` Dilim 1–5 kapandı; izole gerçek CSV kabulü, idempotency, audit/scope, deep-link ve görsel kabul `npm run hakedis:import:scenario:verify` ile kalıcılaştırıldı. |
+| F2-05 Gerçek dış entegrasyonlar | Dilim 0 açık; Open Banking salt-okunur hareket önizlemesi ve on varsayım onaylandı. Belirli sağlayıcı, resmi sandbox sözleşmesi, güvenli credential teslimi ve kabul scope'u olmadan sandbox/plan sınırı korunur. |
 
 Faz 9 kapanışı bu bekleyen kapıları otomatik olarak onaylamaz. Yeni işlev talebi ilgili mini-RFC, veri yaşam döngüsü, RBAC, audit ve migration kararıyla ayrı bir fazda ele alınır.
+
+F2-01 uygulaması onaylı sınırda başladı. Domain tipleri, sorgu hazırlama,
+ranking, limitler, navigasyon sonuçları, federatif Prisma repository, aktif
+oturum kapsamlı server action ve ortak AppShell command dialog'u tamamlandı.
+Kaynaklar, hassas veri istisnaları, performans eşiği ve rollback kararı
+`Docs/RFC-F10-01-global-scoped-arama.md` içinde tanımlıdır. Fatura, çek ve
+ihale deep-link'leri ile gerçek veri/rol/responsive/tema kabulü tamamlandı.
+Üç scope ve 720 örnekte en yüksek hacim 55, en kötü p95 18,47 ms ölçüldü;
+10.000/300 ms eşikleri geçildi. FTS/GIN, projection ve migration açılmadan
+F2-01 kapandı.

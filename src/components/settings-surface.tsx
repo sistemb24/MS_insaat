@@ -48,6 +48,46 @@ import type { SubscriptionFeatureAccessRow } from "@/lib/subscription-service";
 import type { TenantScope } from "@/lib/tenant-scope";
 import type { LedgerJournalDraft, LedgerJournalRow } from "@/lib/ledger-service";
 import type { AuditLogEntry } from "@/lib/audit-log";
+import {
+  createCompanyProfileFallback,
+  type CompanyProfileSaveInput,
+  type CompanyProfileValues,
+  type EffectiveCompanyProfile,
+} from "@/lib/company-profile";
+import type { CompanyProfileResult } from "@/lib/company-profile-service";
+import type { EffectiveCompanyBrandAsset } from "@/lib/company-brand-asset";
+import type { CompanyBrandAssetResult } from "@/lib/company-brand-asset-service";
+import type {
+  EffectiveSupplierCategory,
+  SupplierCategorySaveValues,
+  SupplierCategoryStatusValues,
+} from "@/lib/supplier-category";
+import type { SupplierCategoryResult } from "@/lib/supplier-category-service";
+import type {
+  CustomerTypeSaveValues,
+  CustomerTypeStatusValues,
+  EffectiveCustomerType,
+} from "@/lib/customer-type";
+import type { CustomerTypeResult } from "@/lib/customer-type-service";
+import type {
+  AccessProfileAssignmentValues,
+  AccessProfileOverview,
+  AccessProfileSaveValues,
+  AccessProfileStatusValues,
+} from "@/lib/access-profile";
+import type { AccessProfileResult } from "@/lib/access-profile-service";
+import { CUSTOM_RBAC_USER_TYPE } from "@/lib/user-invitation-access-profile";
+import type {
+  CompanyLocationDirectoryRow,
+  CompanyLocationSaveInput,
+} from "@/lib/company-location";
+import type { CompanyLocationResult } from "@/lib/company-location-service";
+import {
+  FINANCE_SETTINGS_FALLBACK,
+  type EffectiveFinanceSettings,
+  type FinanceSettingsSaveInput,
+} from "@/lib/finance-settings";
+import type { FinanceSettingsResult } from "@/lib/finance-settings-service";
 import type {
   UserInvitationCreateValues,
   UserInvitationResult,
@@ -58,6 +98,11 @@ import type {
   UserManagementResult,
 } from "@/lib/user-management-service";
 import { LedgerSurface } from "@/components/ledger-surface";
+import { CompanyLocationDirectoryPanel } from "@/components/company-location-directory-panel";
+import { CompanyBrandAssetPanel } from "@/components/company-brand-asset-panel";
+import { SupplierCategoryPanel } from "@/components/supplier-category-panel";
+import { CustomerTypePanel } from "@/components/customer-type-panel";
+import { AccessProfilePanel } from "@/components/access-profile-panel";
 import { getRbacPermissionRoles, type RbacPermission } from "@/lib/rbac";
 
 type BankTransactionStatusFilter =
@@ -111,7 +156,96 @@ type SettingsSurfaceProps = {
   bankIntegrationFeatureAccess?: SubscriptionFeatureAccessRow;
   bankIntegrationOverview?: BankIntegrationOverview;
   context: TenantScope;
+  companyLocations?: CompanyLocationDirectoryRow[];
+  companyBrandAsset?: EffectiveCompanyBrandAsset;
+  companyProfile?: EffectiveCompanyProfile;
+  customerTypes?: EffectiveCustomerType[];
+  accessProfileOverview?: AccessProfileOverview;
+  supplierCategories?: EffectiveSupplierCategory[];
+  financeSettings?: EffectiveFinanceSettings;
   persistence?: {
+    assignAccessProfile?: (
+      values: AccessProfileAssignmentValues,
+    ) => Promise<AccessProfileResult<{ assignment: AccessProfileOverview["users"][number]["assignment"]; idempotent: boolean }>>;
+    changeAccessProfileStatus?: (
+      values: AccessProfileStatusValues,
+    ) => Promise<AccessProfileResult<{ idempotent: boolean; profile: AccessProfileOverview["profiles"][number] }>>;
+    changeCustomerTypeStatus?: (
+      values: CustomerTypeStatusValues,
+    ) => Promise<
+      CustomerTypeResult<{
+        customerType: EffectiveCustomerType;
+        idempotent: boolean;
+      }>
+    >;
+    changeSupplierCategoryStatus?: (
+      values: SupplierCategoryStatusValues,
+    ) => Promise<
+      SupplierCategoryResult<{
+        category: EffectiveSupplierCategory;
+        idempotent: boolean;
+      }>
+    >;
+    removeCompanyBrandAsset?: (values: {
+      expectedRevisionNo: number;
+      requestKey: string;
+    }) => Promise<
+      CompanyBrandAssetResult<{
+        asset: EffectiveCompanyBrandAsset;
+        idempotent: boolean;
+      }>
+    >;
+    saveCompanyLocation?: (
+      values: CompanyLocationSaveInput,
+    ) => Promise<
+      CompanyLocationResult<{
+        idempotent: boolean;
+        location: CompanyLocationDirectoryRow;
+      }>
+    >;
+    saveCompanyProfile?: (
+      values: CompanyProfileSaveInput,
+    ) => Promise<
+      CompanyProfileResult<{
+        idempotent: boolean;
+        profile: EffectiveCompanyProfile;
+      }>
+    >;
+    saveCustomerType?: (
+      values: CustomerTypeSaveValues,
+    ) => Promise<
+      CustomerTypeResult<{
+        customerType: EffectiveCustomerType;
+        idempotent: boolean;
+      }>
+    >;
+    saveAccessProfile?: (
+      values: AccessProfileSaveValues,
+    ) => Promise<AccessProfileResult<{ idempotent: boolean; profile: AccessProfileOverview["profiles"][number] }>>;
+    saveSupplierCategory?: (
+      values: SupplierCategorySaveValues,
+    ) => Promise<
+      SupplierCategoryResult<{
+        category: EffectiveSupplierCategory;
+        idempotent: boolean;
+      }>
+    >;
+    uploadCompanyBrandAsset?: (
+      formData: FormData,
+    ) => Promise<
+      CompanyBrandAssetResult<{
+        asset: EffectiveCompanyBrandAsset;
+        idempotent: boolean;
+      }>
+    >;
+    saveFinanceSettings?: (
+      values: FinanceSettingsSaveInput,
+    ) => Promise<
+      FinanceSettingsResult<{
+        idempotent: boolean;
+        settings: EffectiveFinanceSettings;
+      }>
+    >;
     postLedgerJournal?: (draft: LedgerJournalDraft) => Promise<
       | { ok: true; data: LedgerJournalRow }
       | { ok: false; errors: string[] }
@@ -170,14 +304,26 @@ type SettingsSurfaceProps = {
         deactivatedAccess: {
           email: string | null;
           id: string;
+          role: string;
+          userId: string;
           userName: string;
         };
+        removedAccessProfileId: string | null;
       }>
     >;
     updateUserRole?: (
       accessId: string,
       role: "admin" | "accounting" | "viewer",
-    ) => Promise<UserManagementResult<{ updatedAccess: { email: string | null; id: string; role: string; userName: string } }>>;
+    ) => Promise<UserManagementResult<{
+      removedAccessProfileId: string | null;
+      updatedAccess: {
+        email: string | null;
+        id: string;
+        role: string;
+        userId: string;
+        userName: string;
+      };
+    }>>;
     resendInvitation?: (
       invitationId: string,
     ) => Promise<
@@ -215,6 +361,7 @@ type SettingsSurfaceProps = {
 };
 
 export function SettingsSurface({
+  accessProfileOverview,
   ledgerEntries = [],
   ledgerAuditEntries = [],
   ledgerPeriodClosed = false,
@@ -224,6 +371,37 @@ export function SettingsSurface({
   bankIntegrationFeatureAccess,
   bankIntegrationOverview = emptyBankIntegrationOverview,
   context,
+  companyLocations: initialCompanyLocations = [],
+  companyBrandAsset: initialCompanyBrandAsset = {
+    canManage: context.userRole === "admin",
+    dataUrl: null,
+    height: null,
+    mimeType: null,
+    revisionNo: 0,
+    sizeBytes: 0,
+    source: "none",
+    updatedAt: null,
+    updatedBy: null,
+    width: null,
+  },
+  companyProfile: initialCompanyProfile = {
+    ...createCompanyProfileFallback(context.companyName),
+    canManage: context.userRole === "admin",
+    revisionNo: 0,
+    source: "fallback",
+    updatedAt: null,
+    updatedBy: null,
+  },
+  financeSettings: initialFinanceSettings = {
+    ...FINANCE_SETTINGS_FALLBACK,
+    canManage: context.userRole === "admin" && !context.periodClosed,
+    revisionNo: 0,
+    source: "fallback",
+    updatedAt: null,
+    updatedBy: null,
+  },
+  customerTypes = [],
+  supplierCategories = [],
   persistence,
   userManagementOverview = emptyUserManagementOverview,
 }: SettingsSurfaceProps) {
@@ -247,9 +425,46 @@ export function SettingsSurface({
   const [notice, setNotice] = useState("");
   const [inviteEmail, setInviteEmail] = useState("");
   const [inviteRole, setInviteRole] = useState("");
+  const [inviteAccessProfileId, setInviteAccessProfileId] = useState("");
   const [isInvitePanelOpen, setIsInvitePanelOpen] = useState(false);
   const [overview, setOverview] = useState(userManagementOverview);
+  const [companyProfile, setCompanyProfile] = useState(initialCompanyProfile);
+  const [companyBrandAsset, setCompanyBrandAsset] = useState(
+    initialCompanyBrandAsset,
+  );
+  const [companyLocations, setCompanyLocations] = useState(
+    initialCompanyLocations,
+  );
+  const [isSavingCompanyProfile, setIsSavingCompanyProfile] = useState(false);
+  const [financeSettings, setFinanceSettings] = useState(initialFinanceSettings);
+  const [isSavingFinanceSettings, setIsSavingFinanceSettings] = useState(false);
   const settingsContract = getP0SettingsContract();
+  const financeDisplayRows = settingsContract.financeDisplayRows.map((row) => {
+    if (row.label === "Varsayılan KDV") {
+      return { ...row, value: `%${financeSettings.defaultVatRate}` };
+    }
+    if (row.label === "KDV Dağılımı") {
+      return {
+        ...row,
+        value: financeSettings.showVatBreakdown
+          ? "KDV dağılımı aktif"
+          : "KDV dağılımı kapalı",
+      };
+    }
+    return row;
+  });
+  const financePolicyRows = settingsContract.financePolicyRows.map((row) => {
+    if (row.field === "defaultVatRate") {
+      return { ...row, value: `%${financeSettings.defaultVatRate}` };
+    }
+    if (row.field === "showVatBreakdown") {
+      return {
+        ...row,
+        value: financeSettings.showVatBreakdown ? "Aktif" : "Kapalı",
+      };
+    }
+    return row;
+  });
   const arventoCredentialReadiness = getArventoCredentialReadiness({
     pin1: arventoPin1,
     pin2: arventoPin2,
@@ -260,9 +475,102 @@ export function SettingsSurface({
     window.print();
   }
 
+  async function handleSaveFinanceSettings(values: FinanceSettingsSaveInput) {
+    if (!persistence?.saveFinanceSettings || !financeSettings.canManage) return;
+    setIsSavingFinanceSettings(true);
+    const result = await persistence.saveFinanceSettings(values);
+    setIsSavingFinanceSettings(false);
+
+    if (!result.ok) {
+      setNotice(result.errors.join(" "));
+      return;
+    }
+
+    setFinanceSettings(result.data.settings);
+    setNotice(
+      result.data.idempotent
+        ? "Finans ayarları daha önce kaydedilmiş işlemden okundu."
+        : "Finans ayarları kaydedildi; yeni finans belgelerinde uygulanacak.",
+    );
+  }
+
+  async function handleSaveCompanyProfile(values: CompanyProfileSaveInput) {
+    if (!persistence?.saveCompanyProfile || !companyProfile.canManage) return;
+    setIsSavingCompanyProfile(true);
+    const result = await persistence.saveCompanyProfile(values);
+    setIsSavingCompanyProfile(false);
+
+    if (!result.ok) {
+      setNotice(result.errors.join(" "));
+      return;
+    }
+
+    setCompanyProfile(result.data.profile);
+    setNotice(
+      result.data.idempotent
+        ? "Firma profili daha önce kaydedilmiş işlemden okundu."
+        : "Firma profili kaydedildi; yeni belge başlıklarında uygulanacak.",
+    );
+  }
+
+  async function handleUploadCompanyBrandAsset(formData: FormData) {
+    if (!persistence?.uploadCompanyBrandAsset || !companyBrandAsset.canManage) {
+      return { errors: ["Firma logosu yükleme yetkisi bulunamadı."], ok: false as const };
+    }
+    const result = await persistence.uploadCompanyBrandAsset(formData);
+    if (result.ok) setCompanyBrandAsset(result.data.asset);
+    return result;
+  }
+
+  async function handleRemoveCompanyBrandAsset(values: {
+    expectedRevisionNo: number;
+    requestKey: string;
+  }) {
+    if (!persistence?.removeCompanyBrandAsset || !companyBrandAsset.canManage) {
+      return { errors: ["Firma logosu kaldırma yetkisi bulunamadı."], ok: false as const };
+    }
+    const result = await persistence.removeCompanyBrandAsset(values);
+    if (result.ok) setCompanyBrandAsset(result.data.asset);
+    return result;
+  }
+
+  async function handleSaveCompanyLocation(values: CompanyLocationSaveInput) {
+    if (!persistence?.saveCompanyLocation || context.userRole !== "admin") {
+      return false;
+    }
+    const result = await persistence.saveCompanyLocation(values);
+    if (!result.ok) {
+      setNotice(result.errors.join(" "));
+      return false;
+    }
+    setCompanyLocations((current) => {
+      const index = current.findIndex(
+        (row) => row.id === result.data.location.id,
+      );
+      if (index < 0) {
+        return [...current, result.data.location].sort((left, right) =>
+          left.code.localeCompare(right.code, "tr"),
+        );
+      }
+      return current.map((row, rowIndex) =>
+        rowIndex === index ? result.data.location : row,
+      );
+    });
+    setNotice(
+      result.data.idempotent
+        ? "Lokasyon daha önce kaydedilmiş işlemden okundu."
+        : "Şirket lokasyonu kaydedildi.",
+    );
+    return true;
+  }
+
   async function handlePrepareInvite() {
     const selectedRole = inviteRole || settingsContract.userTypeRows[0]?.type || "";
     const result = await persistence?.createInvitation?.({
+      accessProfileId:
+        selectedRole === CUSTOM_RBAC_USER_TYPE
+          ? inviteAccessProfileId
+          : undefined,
       email: inviteEmail.trim(),
       role: selectedRole,
     });
@@ -777,9 +1085,49 @@ export function SettingsSurface({
         <div className="grid gap-4">
           <div className="grid scroll-mt-20 gap-4" id="settings-general">
             <ContextPanel context={context} rows={settingsContract.companyDisplayRows} />
+            <CompanyProfilePanel
+              isSaving={isSavingCompanyProfile}
+              key={`${companyProfile.source}:${companyProfile.revisionNo}:${companyProfile.updatedAt ?? companyProfile.legalName}`}
+              onSave={handleSaveCompanyProfile}
+              profile={companyProfile}
+            />
+            <CompanyBrandAssetPanel
+              asset={companyBrandAsset}
+              onRemove={handleRemoveCompanyBrandAsset}
+              onUpload={handleUploadCompanyBrandAsset}
+            />
+            <CompanyLocationDirectoryPanel
+              canManage={context.userRole === "admin"}
+              locations={companyLocations}
+              onSave={handleSaveCompanyLocation}
+            />
+            <SupplierCategoryPanel
+              canManage={context.userRole === "admin"}
+              categories={supplierCategories}
+              onChangeStatus={persistence?.changeSupplierCategoryStatus}
+              onSave={persistence?.saveSupplierCategory}
+            />
+            <CustomerTypePanel
+              canManage={context.userRole === "admin"}
+              customerTypes={customerTypes}
+              onChangeStatus={persistence?.changeCustomerTypeStatus}
+              onSave={persistence?.saveCustomerType}
+            />
+            {accessProfileOverview ? (
+              <AccessProfilePanel
+                activeUsers={overview.activeUsers}
+                onAssign={persistence?.assignAccessProfile}
+                onChangeStatus={persistence?.changeAccessProfileStatus}
+                onSave={persistence?.saveAccessProfile}
+                overview={accessProfileOverview}
+              />
+            ) : null}
             <FinancePanel
-              policyRows={settingsContract.financePolicyRows}
-              rows={settingsContract.financeDisplayRows}
+              isSaving={isSavingFinanceSettings}
+              onSave={handleSaveFinanceSettings}
+              policyRows={financePolicyRows}
+              rows={financeDisplayRows}
+              settings={financeSettings}
             />
           </div>
           <div className="grid scroll-mt-20 gap-4" id="settings-integrations">
@@ -891,17 +1239,28 @@ export function SettingsSurface({
               rows={settingsContract.roleRows}
             />
             <UserManagementPanel
+            accessProfiles={
+              accessProfileOverview?.profiles.filter(
+                (profile) => profile.status === "ACTIVE",
+              ) ?? []
+            }
             currentUserId={context.userId}
+            inviteAccessProfileId={inviteAccessProfileId}
             inviteEmail={inviteEmail}
             invitePolicy={settingsContract.userInvitePolicy}
             inviteRole={inviteRole || settingsContract.userTypeRows[0]?.type || ""}
             isInvitePanelOpen={isInvitePanelOpen}
+            onInviteAccessProfileChange={setInviteAccessProfileId}
             onInviteEmailChange={setInviteEmail}
-            onInviteRoleChange={setInviteRole}
+            onInviteRoleChange={(value) => {
+              setInviteRole(value);
+              if (value !== CUSTOM_RBAC_USER_TYPE) setInviteAccessProfileId("");
+            }}
             onDeactivateUser={(accessId) => void handleDeactivateUser(accessId)}
             onUpdateUserRole={(accessId, role) => void handleUpdateUserRole(accessId, role)}
             onOpenInvitePanel={() => {
               setInviteRole(settingsContract.userTypeRows[0]?.type || "");
+              setInviteAccessProfileId("");
               setIsInvitePanelOpen(true);
             }}
             onPrepareInvite={() => void handlePrepareInvite()}
@@ -957,13 +1316,238 @@ function ContextPanel({
   );
 }
 
+function CompanyProfilePanel({
+  isSaving,
+  onSave,
+  profile,
+}: {
+  isSaving: boolean;
+  onSave: (values: CompanyProfileSaveInput) => Promise<void>;
+  profile: EffectiveCompanyProfile;
+}) {
+  const [draft, setDraft] = useState<CompanyProfileValues>(() =>
+    profileValues(profile),
+  );
+
+  function update(field: keyof CompanyProfileValues, value: string) {
+    setDraft((current) => ({ ...current, [field]: value }));
+  }
+
+  function submit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    void onSave({
+      ...draft,
+      expectedRevisionNo: profile.revisionNo,
+      requestKey: `company-profile-${Date.now()}-${Math.random().toString(16).slice(2)}`,
+    });
+  }
+
+  const disabled = !profile.canManage || isSaving;
+
+  return (
+    <section
+      aria-label="Kalıcı firma profili"
+      className="overflow-hidden rounded-ui-panel border border-divider bg-surface-raised"
+    >
+      <div className="border-b border-divider px-4 py-3">
+        <h2 className="text-sm font-semibold">Hukuki ve İletişim Profili</h2>
+        <p className="mt-1 text-xs text-content-subtle">
+          Belge başlıklarında kullanılır; AppShell firma etiketi ve lokasyon
+          modu değişmez.
+        </p>
+      </div>
+      <form
+        className="grid gap-4 p-4 sm:grid-cols-2"
+        onSubmit={submit}
+      >
+        <ProfileField label="Hukuki unvan" wide>
+          <input
+            className={profileControlClass}
+            disabled={disabled}
+            maxLength={200}
+            onChange={(event) => update("legalName", event.target.value)}
+            required
+            value={draft.legalName}
+          />
+        </ProfileField>
+        <ProfileField label="Vergi dairesi">
+          <input
+            className={profileControlClass}
+            disabled={disabled}
+            maxLength={100}
+            onChange={(event) => update("taxOffice", event.target.value)}
+            value={draft.taxOffice}
+          />
+        </ProfileField>
+        <ProfileField label="Vergi numarası">
+          <input
+            className={profileControlClass}
+            disabled={disabled}
+            inputMode="numeric"
+            maxLength={11}
+            onChange={(event) => update("taxNumber", event.target.value)}
+            value={draft.taxNumber}
+          />
+        </ProfileField>
+        <ProfileField label="MERSİS numarası">
+          <input
+            className={profileControlClass}
+            disabled={disabled}
+            inputMode="numeric"
+            maxLength={16}
+            onChange={(event) => update("mersisNumber", event.target.value)}
+            value={draft.mersisNumber}
+          />
+        </ProfileField>
+        <ProfileField label="Telefon">
+          <input
+            className={profileControlClass}
+            disabled={disabled}
+            maxLength={30}
+            onChange={(event) => update("phone", event.target.value)}
+            type="tel"
+            value={draft.phone}
+          />
+        </ProfileField>
+        <ProfileField label="Firma e-postası">
+          <input
+            className={profileControlClass}
+            disabled={disabled}
+            maxLength={254}
+            onChange={(event) => update("email", event.target.value)}
+            type="email"
+            value={draft.email}
+          />
+        </ProfileField>
+        <ProfileField label="Adres" wide>
+          <textarea
+            className={`${profileControlClass} min-h-20 py-2`}
+            disabled={disabled}
+            maxLength={300}
+            onChange={(event) => update("addressLine", event.target.value)}
+            value={draft.addressLine}
+          />
+        </ProfileField>
+        <ProfileField label="İlçe">
+          <input
+            className={profileControlClass}
+            disabled={disabled}
+            maxLength={100}
+            onChange={(event) => update("district", event.target.value)}
+            value={draft.district}
+          />
+        </ProfileField>
+        <ProfileField label="İl">
+          <input
+            className={profileControlClass}
+            disabled={disabled}
+            maxLength={100}
+            onChange={(event) => update("city", event.target.value)}
+            value={draft.city}
+          />
+        </ProfileField>
+        <ProfileField label="Posta kodu">
+          <input
+            className={profileControlClass}
+            disabled={disabled}
+            maxLength={10}
+            onChange={(event) => update("postalCode", event.target.value)}
+            value={draft.postalCode}
+          />
+        </ProfileField>
+        <div className="flex flex-wrap items-center gap-3 sm:col-span-2">
+          <button
+            className="rounded-ui-control bg-brand-primary px-4 py-2 text-sm font-semibold text-on-brand disabled:cursor-not-allowed disabled:opacity-50"
+            disabled={disabled}
+            type="submit"
+          >
+            {isSaving ? "Kaydediliyor…" : "Firma profilini kaydet"}
+          </button>
+          <span className="text-xs text-content-muted">
+            {profile.source === "persisted"
+              ? `Kalıcı kayıt · Revizyon ${profile.revisionNo}`
+              : "Company.name fallback · henüz kalıcı profil yok"}
+          </span>
+          {!profile.canManage ? (
+            <span className="text-xs font-semibold text-warning">
+              Bu kapsamda salt okunur.
+            </span>
+          ) : null}
+        </div>
+      </form>
+    </section>
+  );
+}
+
+function ProfileField({
+  children,
+  label,
+  wide = false,
+}: {
+  children: React.ReactNode;
+  label: string;
+  wide?: boolean;
+}) {
+  return (
+    <label
+      className={`grid gap-1 text-sm font-semibold text-content ${
+        wide ? "sm:col-span-2" : ""
+      }`}
+    >
+      {label}
+      {children}
+    </label>
+  );
+}
+
+function profileValues(profile: EffectiveCompanyProfile): CompanyProfileValues {
+  return {
+    addressLine: profile.addressLine,
+    city: profile.city,
+    district: profile.district,
+    email: profile.email,
+    legalName: profile.legalName,
+    mersisNumber: profile.mersisNumber,
+    phone: profile.phone,
+    postalCode: profile.postalCode,
+    taxNumber: profile.taxNumber,
+    taxOffice: profile.taxOffice,
+  };
+}
+
+const profileControlClass =
+  "min-h-10 w-full rounded-ui-control border border-divider bg-surface-raised px-3 text-sm outline-none transition focus:border-brand-primary disabled:cursor-not-allowed disabled:opacity-60";
+
 function FinancePanel({
+  isSaving,
+  onSave,
   policyRows,
   rows,
+  settings,
 }: {
+  isSaving: boolean;
+  onSave: (values: FinanceSettingsSaveInput) => Promise<void>;
   policyRows: SettingsFinancePolicyRow[];
   rows: { label: string; value: string }[];
+  settings: EffectiveFinanceSettings;
 }) {
+  const [defaultVatRate, setDefaultVatRate] = useState(
+    String(settings.defaultVatRate),
+  );
+  const [showVatBreakdown, setShowVatBreakdown] = useState(
+    settings.showVatBreakdown,
+  );
+
+  function submit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    void onSave({
+      defaultVatRate: Number(defaultVatRate),
+      expectedRevisionNo: settings.revisionNo,
+      requestKey: `finance-settings-${Date.now()}-${Math.random().toString(16).slice(2)}`,
+      showVatBreakdown,
+    });
+  }
+
   return (
     <section
       aria-label="Finans Ayarları"
@@ -985,6 +1569,53 @@ function FinancePanel({
           </article>
         ))}
       </div>
+      <form
+        aria-label="Kalıcı finans ayarları"
+        className="grid gap-4 border-t border-divider bg-surface-subtle p-4 sm:grid-cols-2"
+        onSubmit={submit}
+      >
+        <label className="grid gap-1 text-sm font-semibold text-content">
+          Varsayılan KDV oranı (%)
+          <input
+            className="rounded-ui-control border border-divider bg-surface-raised px-3 py-2 font-mono disabled:cursor-not-allowed disabled:opacity-60"
+            disabled={!settings.canManage || isSaving}
+            max="100"
+            min="0"
+            onChange={(event) => setDefaultVatRate(event.target.value)}
+            step="0.01"
+            type="number"
+            value={defaultVatRate}
+          />
+        </label>
+        <label className="flex items-center gap-3 rounded-ui-control border border-divider bg-surface-raised px-3 py-2 text-sm font-semibold text-content">
+          <input
+            checked={showVatBreakdown}
+            disabled={!settings.canManage || isSaving}
+            onChange={(event) => setShowVatBreakdown(event.target.checked)}
+            type="checkbox"
+          />
+          KDV toplam kırılımını göster
+        </label>
+        <div className="flex flex-wrap items-center gap-3 sm:col-span-2">
+          <button
+            className="rounded-ui-control bg-brand-primary px-4 py-2 text-sm font-semibold text-on-brand disabled:cursor-not-allowed disabled:opacity-50"
+            disabled={!settings.canManage || isSaving}
+            type="submit"
+          >
+            {isSaving ? "Kaydediliyor…" : "Finans ayarlarını kaydet"}
+          </button>
+          <span className="text-xs text-content-muted">
+            {settings.source === "persisted"
+              ? `Kalıcı kayıt · Revizyon ${settings.revisionNo}`
+              : "Varsayılan sözleşme · henüz kalıcı kayıt yok"}
+          </span>
+          {!settings.canManage ? (
+            <span className="text-xs font-semibold text-warning">
+              Bu kapsamda salt okunur.
+            </span>
+          ) : null}
+        </div>
+      </form>
       <div className="border-t border-divider px-4 py-3">
         <h3 className="text-sm font-semibold">KDV ve Döviz Davranışı</h3>
       </div>
@@ -2610,12 +3241,15 @@ function RbacPermissionPanel({ currentRole }: { currentRole: TenantScope["userRo
 }
 
 function UserManagementPanel({
+  accessProfiles,
   currentUserId,
+  inviteAccessProfileId,
   inviteEmail,
   invitePolicy,
   inviteRole,
   isInvitePanelOpen,
   onInviteEmailChange,
+  onInviteAccessProfileChange,
   onInviteRoleChange,
   onDeactivateUser,
   onUpdateUserRole,
@@ -2626,11 +3260,14 @@ function UserManagementPanel({
   overview,
   userTypeRows,
 }: {
+  accessProfiles: AccessProfileOverview["profiles"];
   currentUserId: string;
+  inviteAccessProfileId: string;
   inviteEmail: string;
   invitePolicy: SettingsUserInvitePolicy;
   inviteRole: string;
   isInvitePanelOpen: boolean;
+  onInviteAccessProfileChange: (value: string) => void;
   onInviteEmailChange: (value: string) => void;
   onInviteRoleChange: (value: string) => void;
   onDeactivateUser: (accessId: string) => void;
@@ -3196,7 +3833,7 @@ function UserManagementPanel({
           role="dialog"
         >
           <p className="text-sm font-semibold">{invitePolicy.helperText}</p>
-          <div className="mt-3 grid gap-3 md:grid-cols-[1fr_280px_auto] md:items-end">
+          <div className="mt-3 grid gap-3 md:grid-cols-2 md:items-end xl:grid-cols-[1fr_280px_280px_auto]">
             <label className="grid gap-1 text-sm font-medium">
               E-posta
               <input
@@ -3220,9 +3857,32 @@ function UserManagementPanel({
                 ))}
               </select>
             </label>
+            {inviteRole === CUSTOM_RBAC_USER_TYPE ? (
+              <label className="grid gap-1 text-sm font-medium">
+                Yetki profili
+                <select
+                  className="rounded-ui-control border border-divider bg-surface-raised px-3 py-2 text-sm text-content"
+                  onChange={(event) =>
+                    onInviteAccessProfileChange(event.target.value)
+                  }
+                  value={inviteAccessProfileId}
+                >
+                  <option value="">Aktif profil seçin</option>
+                  {accessProfiles.map((profile) => (
+                    <option key={profile.id} value={profile.id}>
+                      {profile.name}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            ) : null}
             <button
               className="rounded-ui-control border border-divider bg-surface-raised px-3 py-2 text-sm font-semibold transition hover:bg-brand-primary-subtle"
               onClick={onPrepareInvite}
+              disabled={
+                inviteRole === CUSTOM_RBAC_USER_TYPE &&
+                !inviteAccessProfileId
+              }
               type="button"
             >
               Davet Gönder

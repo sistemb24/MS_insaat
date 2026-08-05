@@ -180,6 +180,129 @@ describe("EntityListSurface", () => {
     expect(screen.getByLabelText("Sözleşme Başlangıç")).toBeDefined();
     expect(screen.getByLabelText("Sözleşme Bitiş")).toBeDefined();
   });
+
+  it("uses active supplier dictionary options and blocks an inactive new assignment", () => {
+    const definition = getEntityDefinition("tedarikciler");
+    expect(definition).toBeDefined();
+
+    render(
+      <EntityListSurface
+        definition={definition!}
+        initialRows={[]}
+        supplierCategories={[
+          {
+            canManage: true,
+            description: "",
+            id: "active-category",
+            name: "Malzeme",
+            normalizedName: "malzeme",
+            revisionNo: 1,
+            source: "managed",
+            status: "ACTIVE",
+            updatedAt: "2026-07-31T00:00:00.000Z",
+            updatedBy: "admin",
+            usageCount: 0,
+          },
+          {
+            canManage: true,
+            description: "",
+            id: "inactive-category",
+            name: "Hizmet",
+            normalizedName: "hizmet",
+            revisionNo: 2,
+            source: "managed",
+            status: "INACTIVE",
+            updatedAt: "2026-07-31T00:00:00.000Z",
+            updatedBy: "admin",
+            usageCount: 1,
+          },
+        ]}
+      />,
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Yeni" }));
+    const category = screen.getByLabelText("Kategori") as HTMLSelectElement;
+    expect(within(category).getByRole("option", { name: "Malzeme" })).toBeDefined();
+    expect(within(category).queryByRole("option", { name: "Hizmet" })).toBeNull();
+  });
+
+  it("uses the customer type dictionary in filters and new customer forms", () => {
+    const definition = getEntityDefinition("musteriler");
+    expect(definition).toBeDefined();
+
+    render(
+      <EntityListSurface
+        customerTypes={[
+          {
+            canManage: true,
+            description: "",
+            id: "active-customer-type",
+            name: "Kurumsal",
+            normalizedName: "kurumsal",
+            revisionNo: 1,
+            source: "managed",
+            status: "ACTIVE",
+            updatedAt: "2026-07-31T00:00:00.000Z",
+            updatedBy: "admin",
+            usageCount: 1,
+          },
+          {
+            canManage: true,
+            description: "",
+            id: "inactive-customer-type",
+            name: "Kamu",
+            normalizedName: "kamu",
+            revisionNo: 2,
+            source: "managed",
+            status: "INACTIVE",
+            updatedAt: "2026-07-31T00:00:00.000Z",
+            updatedBy: "admin",
+            usageCount: 1,
+          },
+        ]}
+        definition={definition!}
+        initialRows={[
+          {
+            balance: "0,00 TL",
+            code: "MUS-0001",
+            customerType: "Kurumsal",
+            email: "kurumsal@example.com",
+            name: "Kurumsal Müşteri",
+            phone: "0 242 000 00 00",
+            status: "Aktif",
+            taxNumber: "1111111111",
+          },
+          {
+            balance: "0,00 TL",
+            code: "MUS-0002",
+            customerType: "Kamu",
+            email: "kamu@example.com",
+            name: "Kamu Müşterisi",
+            phone: "0 242 111 11 11",
+            status: "Aktif",
+            taxNumber: "2222222222",
+          },
+        ]}
+        visualVariant="customer"
+      />,
+    );
+
+    fireEvent.change(screen.getByLabelText("Müşteri tipi"), {
+      target: { value: "Kamu" },
+    });
+    expect(screen.getByRole("row", { name: /MUS-0002/ })).toBeDefined();
+    expect(screen.queryByRole("row", { name: /MUS-0001/ })).toBeNull();
+
+    fireEvent.click(screen.getByRole("button", { name: "Yeni Müşteri" }));
+    const customerType = screen.getByLabelText("Müşteri Tipi");
+    expect(
+      within(customerType).getByRole("option", { name: "Kurumsal" }),
+    ).toBeDefined();
+    expect(
+      within(customerType).queryByRole("option", { name: "Kamu" }),
+    ).toBeNull();
+  });
+
   it("uses server actions when persistence handlers are provided", async () => {
     const definition = getEntityDefinition("tedarikciler");
     const createRow = vi.fn(async (_slug: string, values) => ({

@@ -22,6 +22,20 @@ export type UserManagementUserAccessRecord = {
   userName: string;
 };
 
+export type UserManagementAccessProfileAssignmentRecord = {
+  companyId: string;
+  id: string;
+  periodId: string;
+  profileId: string;
+  tenantId: string;
+  userId: string;
+};
+
+export type UserManagementAccessMutationRecord = {
+  access: UserManagementUserAccessRecord;
+  removedAssignment: UserManagementAccessProfileAssignmentRecord | null;
+};
+
 export type UserManagementInvitationRecord = {
   companyId: string;
   email: string;
@@ -102,12 +116,12 @@ export type UserManagementRepository = {
   deactivateUserAccess(input: {
     accessId: string;
     scope: TenantScope;
-  }): Promise<UserManagementUserAccessRecord | null>;
+  }): Promise<UserManagementAccessMutationRecord | null>;
   updateUserAccessRole(input: {
     accessId: string;
     role: UserManagementRole;
     scope: TenantScope;
-  }): Promise<UserManagementUserAccessRecord | null>;
+  }): Promise<UserManagementAccessMutationRecord | null>;
   listActiveUserAccesses(input: {
     scope: TenantScope;
   }): Promise<UserManagementUserAccessRecord[]>;
@@ -118,6 +132,13 @@ export type UserManagementRepository = {
     scope: TenantScope;
   }): Promise<UserManagementInvitationRecord[]>;
 };
+
+export class UserManagementRepositoryError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "UserManagementRepositoryError";
+  }
+}
 
 export function createUserManagementService({
   auditLogReadRepository,
@@ -131,7 +152,20 @@ export function createUserManagementService({
   repository: UserManagementRepository;
 }) {
   return {
-    async updateUserAccessRole({ accessId, role, scope }: { accessId: string; role: UserManagementRole; scope: TenantScope }): Promise<UserManagementResult<{ updatedAccess: UserManagementUserAccessRecord }>> {
+    async updateUserAccessRole({
+      accessId,
+      role,
+      scope,
+    }: {
+      accessId: string;
+      role: UserManagementRole;
+      scope: TenantScope;
+    }): Promise<
+      UserManagementResult<{
+        removedAccessProfileId: string | null;
+        updatedAccess: UserManagementUserAccessRecord;
+      }>
+    > {
       if (scope.userRole !== "admin") {
         return { ok: false, errors: ["Kullanıcı rolü değiştirme yetkisi yalnız admin rolündedir."] };
       }
@@ -143,18 +177,57 @@ export function createUserManagementService({
       if (access.userId === scope.userId && role !== "admin") {
         return { ok: false, errors: ["Kendi admin rolünüzü bu ekrandan düşüremezsiniz."] };
       }
-      if (access.role === role) return { ok: true, data: { updatedAccess: access } };
-      const updatedAccess = await repository.updateUserAccessRole({ accessId, role, scope });
-      if (!updatedAccess) return { ok: false, errors: ["Kullanıcı erişimi bulunamadı."] };
-      await auditLogRepository?.record(createAuditLogEntry(scope, {
-        action: "user-management.role-change",
-        entityId: updatedAccess.id,
-        entityLabel: `${updatedAccess.userName} / ${updatedAccess.email ?? "-"}`,
-        entityType: "user-access",
-        occurredAt: now(),
-        metadata: { email: updatedAccess.email ?? "-", role: updatedAccess.role, statusFrom: access.role, statusTo: updatedAccess.role, userId: updatedAccess.userId },
-      }));
-      return { ok: true, data: { updatedAccess } };
+      if (access.role === role) {
+        return {
+          ok: true,
+          data: { removedAccessProfileId: null, updatedAccess: access },
+        };
+      }
+      try {
+        const mutation = await repository.updateUserAccessRole({
+          accessId,
+          role,
+          scope,
+        });
+        if (!mutation) {
+          return { ok: false, errors: ["Kullanıcı erişimi bulunamadı."] };
+        }
+        const { access: updatedAccess, removedAssignment } = mutation;
+        await auditLogRepository?.record(
+          createAuditLogEntry(scope, {
+            action: "user-management.role-change",
+            entityId: updatedAccess.id,
+            entityLabel: `${updatedAccess.userName} / ${updatedAccess.email ?? "-"}`,
+            entityType: "user-access",
+            occurredAt: now(),
+            metadata: {
+              email: updatedAccess.email ?? "-",
+              ...(removedAssignment
+                ? {
+                    accessProfileRemovalReason: "role-change",
+                    removedAccessProfileId: removedAssignment.profileId,
+                  }
+                : {}),
+              role: updatedAccess.role,
+              statusFrom: access.role,
+              statusTo: updatedAccess.role,
+              userId: updatedAccess.userId,
+            },
+          }),
+        );
+        return {
+          ok: true,
+          data: {
+            removedAccessProfileId: removedAssignment?.profileId ?? null,
+            updatedAccess,
+          },
+        };
+      } catch (error) {
+        return userManagementMutationFailure(
+          error,
+          "Kullanıcı rolü ve yetki profili birlikte güncellenemedi.",
+        );
+      }
     },
     async deactivateUserAccess({
       accessId,
@@ -165,6 +238,7 @@ export function createUserManagementService({
     }): Promise<
       UserManagementResult<{
         deactivatedAccess: UserManagementUserAccessRecord;
+        removedAccessProfileId: string | null;
       }>
     > {
       if (scope.userRole !== "admin") {
@@ -190,38 +264,53 @@ export function createUserManagementService({
         };
       }
 
-      const deactivatedAccess = await repository.deactivateUserAccess({
-        accessId,
-        scope,
-      });
+      try {
+        const mutation = await repository.deactivateUserAccess({
+          accessId,
+          scope,
+        });
 
-      if (!deactivatedAccess) {
-        return { ok: false, errors: ["Kullanıcı erişimi bulunamadı."] };
-      }
+        if (!mutation) {
+          return { ok: false, errors: ["Kullanıcı erişimi bulunamadı."] };
+        }
+        const { access: deactivatedAccess, removedAssignment } = mutation;
 
-      await auditLogRepository?.record(
-        createAuditLogEntry(scope, {
-          action: "user-management.deactivate",
-          entityId: deactivatedAccess.id,
-          entityLabel: `${deactivatedAccess.userName} / ${deactivatedAccess.email ?? "-"}`,
-          entityType: "user-access",
-          occurredAt: now(),
-          metadata: {
-            email: deactivatedAccess.email ?? "-",
-            role: deactivatedAccess.role,
-            statusFrom: "active",
-            statusTo: "inactive",
-            userId: deactivatedAccess.userId,
+        await auditLogRepository?.record(
+          createAuditLogEntry(scope, {
+            action: "user-management.deactivate",
+            entityId: deactivatedAccess.id,
+            entityLabel: `${deactivatedAccess.userName} / ${deactivatedAccess.email ?? "-"}`,
+            entityType: "user-access",
+            occurredAt: now(),
+            metadata: {
+              email: deactivatedAccess.email ?? "-",
+              ...(removedAssignment
+                ? {
+                    accessProfileRemovalReason: "access-deactivation",
+                    removedAccessProfileId: removedAssignment.profileId,
+                  }
+                : {}),
+              role: deactivatedAccess.role,
+              statusFrom: "active",
+              statusTo: "inactive",
+              userId: deactivatedAccess.userId,
+            },
+          }),
+        );
+
+        return {
+          ok: true,
+          data: {
+            deactivatedAccess,
+            removedAccessProfileId: removedAssignment?.profileId ?? null,
           },
-        }),
-      );
-
-      return {
-        ok: true,
-        data: {
-          deactivatedAccess,
-        },
-      };
+        };
+      } catch (error) {
+        return userManagementMutationFailure(
+          error,
+          "Kullanıcı erişimi ve yetki profili birlikte devre dışı bırakılamadı.",
+        );
+      }
     },
 
     async listOverview({
@@ -345,10 +434,12 @@ function formatAuditDateFromIso(value: string) {
 }
 
 export function createSeededUserManagementMemoryRepository({
+  accessProfileAssignments = [],
   emailOutboxMessages = [],
   invitations = [],
   userAccesses = [],
 }: {
+  accessProfileAssignments?: UserManagementAccessProfileAssignmentRecord[];
   emailOutboxMessages?: UserManagementEmailOutboxRecord[];
   invitations?: UserManagementInvitationRecord[];
   userAccesses?: UserManagementUserAccessRecord[];
@@ -357,8 +448,17 @@ export function createSeededUserManagementMemoryRepository({
     async updateUserAccessRole({ accessId, role, scope }) {
       const index = userAccesses.findIndex((access) => access.id === accessId && isSameScope(access, scope) && access.isActive);
       if (index === -1) return null;
-      userAccesses[index] = { ...userAccesses[index]!, role };
-      return userAccesses[index]!;
+      const access = userAccesses[index]!;
+      const removedAssignment =
+        role === "viewer"
+          ? null
+          : removeMemoryAccessProfileAssignment(
+              accessProfileAssignments,
+              scope,
+              access.userId,
+            );
+      userAccesses[index] = { ...access, role };
+      return { access: userAccesses[index]!, removedAssignment };
     },
     async deactivateUserAccess({ accessId, scope }) {
       const index = userAccesses.findIndex(
@@ -371,10 +471,15 @@ export function createSeededUserManagementMemoryRepository({
       }
 
       const access = userAccesses[index]!;
+      const removedAssignment = removeMemoryAccessProfileAssignment(
+        accessProfileAssignments,
+        scope,
+        access.userId,
+      );
       const deactivatedAccess = { ...access, isActive: false };
       userAccesses[index] = deactivatedAccess;
 
-      return deactivatedAccess;
+      return { access: deactivatedAccess, removedAssignment };
     },
     async listActiveUserAccesses({ scope }) {
       return userAccesses.filter(
@@ -387,6 +492,31 @@ export function createSeededUserManagementMemoryRepository({
     async listInvitations({ scope }) {
       return invitations.filter((invitation) => isSameScope(invitation, scope));
     },
+  };
+}
+
+function removeMemoryAccessProfileAssignment(
+  assignments: UserManagementAccessProfileAssignmentRecord[],
+  scope: TenantScope,
+  userId: string,
+) {
+  const index = assignments.findIndex(
+    (assignment) =>
+      isSameScope(assignment, scope) && assignment.userId === userId,
+  );
+  if (index === -1) return null;
+  return assignments.splice(index, 1)[0] ?? null;
+}
+
+function userManagementMutationFailure<T>(
+  error: unknown,
+  fallback: string,
+): UserManagementResult<T> {
+  return {
+    errors: [
+      error instanceof UserManagementRepositoryError ? error.message : fallback,
+    ],
+    ok: false,
   };
 }
 

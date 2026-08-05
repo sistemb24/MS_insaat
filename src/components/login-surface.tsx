@@ -3,12 +3,14 @@ import type { SessionOption } from "@/lib/session-options";
 type LoginSurfaceProps = {
   loginAction: (formData: FormData) => void | Promise<void>;
   loginError?: boolean;
+  rateLimitError?: boolean;
   sessionOptions: SessionOption[];
 };
 
 export function LoginSurface({
   loginAction,
   loginError = false,
+  rateLimitError = false,
   sessionOptions,
 }: LoginSurfaceProps) {
   return (
@@ -30,6 +32,11 @@ export function LoginSurface({
           {loginError ? (
             <div className="rounded-ui-panel border border-[var(--ds-danger)] bg-danger-subtle p-3 text-sm font-semibold text-[var(--ds-danger)]">
               E-posta veya şifre hatalı.
+            </div>
+          ) : null}
+          {rateLimitError ? (
+            <div className="rounded-ui-panel border border-[var(--ds-danger)] bg-danger-subtle p-3 text-sm font-semibold text-[var(--ds-danger)]">
+              Çok fazla giriş denemesi yapıldı. Lütfen daha sonra tekrar deneyin.
             </div>
           ) : null}
           <div className="space-y-2">

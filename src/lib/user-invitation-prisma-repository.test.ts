@@ -77,6 +77,7 @@ describe("user invitation prisma repository", () => {
       {
         data: {
           acceptedAt: null,
+          accessProfileId: null,
           companyId: defaultTenantScope.companyId,
           createdAt: new Date("2026-07-02T10:00:00.000Z"),
           email: "isg@example.com",

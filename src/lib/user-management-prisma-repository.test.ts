@@ -226,16 +226,19 @@ describe("user management prisma repository", () => {
         scope,
       }),
     ).resolves.toEqual({
-      companyId: scope.companyId,
-      companyName: scope.companyName,
-      email: "isg@example.com",
-      id: "access-1",
-      isActive: false,
-      periodId: scope.periodId,
-      role: "viewer",
-      tenantId: scope.tenantId,
-      userId: "isg-user",
-      userName: "İSG Kullanıcısı",
+      access: {
+        companyId: scope.companyId,
+        companyName: scope.companyName,
+        email: "isg@example.com",
+        id: "access-1",
+        isActive: false,
+        periodId: scope.periodId,
+        role: "viewer",
+        tenantId: scope.tenantId,
+        userId: "isg-user",
+        userName: "İSG Kullanıcısı",
+      },
+      removedAssignment: null,
     });
     expect(calls).toEqual([
       {
@@ -269,4 +272,134 @@ describe("user management prisma repository", () => {
       },
     ]);
   });
+
+  test("updates role and removes the scoped assignment in one transaction", async () => {
+    const calls: unknown[] = [];
+    const client = {
+      appUserScopeAccess: {
+        async findFirst(input: unknown) {
+          calls.push({ findFirst: input });
+          return createAccessRecord();
+        },
+        async findMany() {
+          throw new Error("not used");
+        },
+        async update(input: unknown) {
+          calls.push({ update: input });
+          return createAccessRecord({ role: "accounting" });
+        },
+      },
+      emailOutbox: {
+        async findMany() {
+          throw new Error("not used");
+        },
+      },
+      userAccessProfileAssignment: {
+        async deleteMany(input: unknown) {
+          calls.push({ deleteAssignment: input });
+          return { count: 1 };
+        },
+        async findFirst(input: unknown) {
+          calls.push({ findAssignment: input });
+          return {
+            companyId: scope.companyId,
+            id: "assignment-1",
+            periodId: scope.periodId,
+            profileId: "profile-1",
+            tenantId: scope.tenantId,
+            userId: "isg-user",
+          };
+        },
+      },
+      userInvitation: {
+        async findMany() {
+          throw new Error("not used");
+        },
+      },
+    };
+    const repository = createUserManagementPrismaRepository({
+      ...client,
+      async $transaction(callback) {
+        calls.push({ transaction: "begin" });
+        const result = await callback(client);
+        calls.push({ transaction: "commit" });
+        return result;
+      },
+    });
+
+    await expect(
+      repository.updateUserAccessRole({
+        accessId: "access-1",
+        role: "accounting",
+        scope,
+      }),
+    ).resolves.toMatchObject({
+      access: { role: "accounting", userId: "isg-user" },
+      removedAssignment: {
+        id: "assignment-1",
+        profileId: "profile-1",
+      },
+    });
+    expect(calls).toEqual([
+      { transaction: "begin" },
+      {
+        findFirst: {
+          include: { company: true, user: true },
+          where: {
+            companyId: scope.companyId,
+            id: "access-1",
+            isActive: true,
+            periodId: scope.periodId,
+            tenantId: scope.tenantId,
+          },
+        },
+      },
+      {
+        findAssignment: {
+          where: {
+            companyId: scope.companyId,
+            periodId: scope.periodId,
+            tenantId: scope.tenantId,
+            userId: "isg-user",
+          },
+        },
+      },
+      {
+        update: {
+          data: { role: "accounting" },
+          include: { company: true, user: true },
+          where: { id: "access-1" },
+        },
+      },
+      {
+        deleteAssignment: {
+          where: {
+            companyId: scope.companyId,
+            id: "assignment-1",
+            periodId: scope.periodId,
+            tenantId: scope.tenantId,
+            userId: "isg-user",
+          },
+        },
+      },
+      { transaction: "commit" },
+    ]);
+  });
 });
+
+function createAccessRecord(overrides: Record<string, unknown> = {}) {
+  return {
+    company: { id: scope.companyId, name: scope.companyName },
+    id: "access-1",
+    isActive: true,
+    periodId: scope.periodId,
+    role: "viewer",
+    tenantId: scope.tenantId,
+    user: {
+      email: "isg@example.com",
+      id: "isg-user",
+      name: "İSG Kullanıcısı",
+    },
+    ...overrides,
+  };
+}

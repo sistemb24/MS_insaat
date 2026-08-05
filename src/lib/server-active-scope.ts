@@ -5,38 +5,29 @@ import { prisma } from "./prisma";
 import { listAccessibleSessionRecordsForUser } from "./session-access-service";
 import { sessionRecordToOption } from "./session-options";
 import { createSessionScopePrismaRepository } from "./session-scope-prisma-repository";
-import {
-  resolveTenantScopeFromSessionStore,
-  SESSION_COOKIE_NAME,
-} from "./session-scope";
+import { SESSION_COOKIE_NAME } from "./session-scope";
+import { createTenantAuthSessionPrismaRepository } from "./tenant-auth-session-prisma-repository";
 import { createUserScopeAccessPrismaRepository } from "./user-scope-access-prisma-repository";
 
 const sessionScopeRepository = createSessionScopePrismaRepository(prisma);
+const tenantAuthSessionRepository = createTenantAuthSessionPrismaRepository(prisma);
 const userScopeAccessRepository = createUserScopeAccessPrismaRepository(prisma);
 
 export async function getActiveTenantScope() {
-  const sessionId = await getActiveSessionId();
-
-  return resolveTenantScopeFromSessionStore({
-    now: new Date(),
-    repository: sessionScopeRepository,
-    sessionId,
-  });
+  return (await requireTenantAuthSession()).scope;
 }
 
 export async function getActiveSessionState() {
-  const sessionId = await getActiveSessionId();
   const now = new Date();
-  const scope = await resolveTenantScopeFromSessionStore({
-    now,
-    repository: sessionScopeRepository,
-    sessionId,
-  });
+  const authSession = await requireTenantAuthSession(now);
 
   return {
-    sessionId,
-    sessionOptions: await listActiveSessionOptionsForUser(now, scope.userId),
-    scope,
+    sessionId: authSession.scopeSessionId,
+    sessionOptions: await listActiveSessionOptionsForUser(
+      now,
+      authSession.userId,
+    ),
+    scope: authSession.scope,
   };
 }
 
@@ -49,19 +40,12 @@ export async function getActiveSessionState() {
  * visit to `/` would otherwise render the dashboard again.
  */
 export async function requireActiveSessionState() {
-  const sessionId = await getActiveSessionId();
-  const record = sessionId
-    ? await sessionScopeRepository.findById(sessionId)
-    : null;
-
-  if (!record || (record.expiresAt && record.expiresAt.getTime() <= Date.now())) {
-    redirect("/giris");
-  }
-
   return getActiveSessionState();
 }
 
 export async function getActiveSessionOptions() {
+  if (process.env.NODE_ENV === "production") return [];
+
   return listActiveSessionOptions(new Date());
 }
 
@@ -69,6 +53,17 @@ async function getActiveSessionId() {
   const cookieStore = await cookies();
 
   return cookieStore.get(SESSION_COOKIE_NAME)?.value;
+}
+
+async function requireTenantAuthSession(now = new Date()) {
+  const sessionId = await getActiveSessionId();
+  const authSession = sessionId
+    ? await tenantAuthSessionRepository.findActiveById({ id: sessionId, now })
+    : null;
+
+  if (!authSession) redirect("/giris");
+
+  return authSession;
 }
 
 async function listActiveSessionOptions(now: Date) {

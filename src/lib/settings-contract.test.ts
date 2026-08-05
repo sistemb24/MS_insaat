@@ -112,12 +112,12 @@ describe("settings contract", () => {
       {
         label: "Firma Bilgilerini Düzenle",
         message:
-          "Firma bilgileri düzenleme P0 kapsamında salt okunur; kalıcı firma parametresi yazımı ayrı ayar servisinde açılacaktır.",
+          "Kalıcı firma hukuki ve iletişim profili aşağıdaki panelden yönetilebilir; kapsam etiketi ve lokasyon modu değişmez.",
       },
       {
         label: "Finans Ayarlarını Düzenle",
         message:
-          "Finans ayarı düzenleme P0 kapsamında salt okunur; fatura ve hakediş hesaplamalarını etkileyen kalıcı yazım ayrı dilimde açılacaktır.",
+          "Kalıcı finans ayarları aşağıdaki panelden yönetilebilir; değişiklikler yalnız yeni finans belgelerine varsayılan olur.",
       },
       {
         label: "Rol Matrisini Düzenle",

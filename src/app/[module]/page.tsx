@@ -1,5 +1,8 @@
 import { notFound } from "next/navigation";
 
+import { globalSearchAction } from "@/app/actions/global-search-actions";
+import { parseGlobalSearchDeepLinkParams } from "@/lib/global-search-domain";
+
 import {
   approveManualBankTransactionMatchAction,
   createCashBankMovementFromBankTransactionAction,
@@ -20,6 +23,15 @@ import {
   testArventoSandboxConnectionAction,
   updateVehicleCardAction,
 } from "@/app/actions/arvento-fleet-actions";
+import {
+  listVehicleFleetAuditLogsAction,
+  listVehicleFleetLookupsAction,
+  listVehicleFleetOverviewAction,
+} from "@/app/actions/vehicle-fleet-actions";
+import {
+  listVehicleTireAuditLogsAction,
+  listVehicleTireRecordsAction,
+} from "@/app/actions/vehicle-tire-actions";
 import {
   createApiKeyAction,
   listApiKeyOverviewAction,
@@ -53,6 +65,22 @@ import {
   updateEntityRowAction,
 } from "@/app/actions/entity-actions";
 import {
+  changeSupplierCategoryStatusAction,
+  listSupplierCategoriesAction,
+  saveSupplierCategoryAction,
+} from "@/app/actions/supplier-category-actions";
+import {
+  changeCustomerTypeStatusAction,
+  listCustomerTypesAction,
+  saveCustomerTypeAction,
+} from "@/app/actions/customer-type-actions";
+import {
+  assignAccessProfileAction,
+  changeAccessProfileStatusAction,
+  listAccessProfilesAction,
+  saveAccessProfileAction,
+} from "@/app/actions/access-profile-actions";
+import {
   createDocumentFileAction,
   createDocumentFolderAction,
   deleteDocumentFolderAction,
@@ -74,6 +102,23 @@ import {
   createExpenseAction,
   listExpensesAction,
 } from "@/app/actions/expense-actions";
+import {
+  getFinanceSettingsAction,
+  saveFinanceSettingsAction,
+} from "@/app/actions/finance-settings-actions";
+import {
+  getCompanyProfileAction,
+  saveCompanyProfileAction,
+} from "@/app/actions/company-profile-actions";
+import {
+  getCompanyBrandAssetAction,
+  removeCompanyBrandAssetAction,
+  uploadCompanyBrandAssetAction,
+} from "@/app/actions/company-brand-asset-actions";
+import {
+  listCompanyLocationsAction,
+  saveCompanyLocationAction,
+} from "@/app/actions/company-location-actions";
 import {
   getNotificationUnreadCountAction,
   listNotificationCenterAction,
@@ -180,6 +225,14 @@ import {
   transitionTenderStatusAction,
   updateTenderBoqAction,
 } from "@/app/actions/tender-actions";
+import { WorkplaceSafetySurface } from "@/components/workplace-safety-surface";
+import { MobileSafetyChecklistSurface } from "@/components/mobile-safety-checklist-surface";
+import { SupportTicketSurface } from "@/components/support-ticket-surface";
+import { AnnouncementCenterSurface } from "@/components/announcement-center-surface";
+import { EmployeeLeaveSurface } from "@/components/employee-leave-surface";
+import { EmployeeAdvanceSurface } from "@/components/employee-advance-surface";
+import { EmployeeTransferSurface } from "@/components/employee-transfer-surface";
+import { HrDashboardSurface } from "@/components/hr-dashboard-surface";
 import { AppShell } from "@/components/app-shell";
 import { ApiKeyManagementSurface } from "@/components/api-key-management-surface";
 import { CashBankSurface } from "@/components/cash-bank-surface";
@@ -207,6 +260,8 @@ import { SubscriptionSurface } from "@/components/subscription-surface";
 import { TenderManagementSurface } from "@/components/tender-management-surface";
 import { TimesheetSurface } from "@/components/timesheet-surface";
 import { VehicleFleetSurface } from "@/components/vehicle-fleet-surface";
+import { VehicleFleetOperationsSurface } from "@/components/vehicle-fleet-operations-surface";
+import { VehicleTireOperationsSurface } from "@/components/vehicle-tire-operations-surface";
 import type { AuditLogEntry } from "@/lib/audit-log";
 import {
   createAuditLogPrismaRepository,
@@ -289,8 +344,68 @@ export default async function ModulePage({
     string | string[] | undefined
   > = searchParams ? await searchParams : {};
   const requestedDocumentNo = getSingleSearchParam(resolvedSearchParams.evrak);
+  const requestedImportBatchId = getSingleSearchParam(resolvedSearchParams.import);
+  const requestedSafetyRecordId = getSingleSearchParam(resolvedSearchParams.isg);
+  const requestedSafetyChecklistRunId = getSingleSearchParam(resolvedSearchParams.checklist);
+  const requestedSupportTicketId = getSingleSearchParam(resolvedSearchParams.ticket);
+  const requestedAnnouncementId = getSingleSearchParam(resolvedSearchParams.announcement);
+  const requestedEmployeeLeaveId = getSingleSearchParam(resolvedSearchParams.leave);
+  const requestedEmployeeAdvanceId = getSingleSearchParam(resolvedSearchParams.advance);
+  const requestedEmployeeTransferId = getSingleSearchParam(resolvedSearchParams.transfer);
+  const globalSearchDeepLink = parseGlobalSearchDeepLinkParams({
+    ara: resolvedSearchParams.ara,
+    kayit: resolvedSearchParams.kayit,
+  });
+  const highlightedDocumentNo =
+    globalSearchDeepLink?.query ?? requestedDocumentNo;
+  const highlightedRecordId = globalSearchDeepLink?.recordId;
   const activeSession = await requireActiveSessionState();
   const activeScope = activeSession.scope;
+  const financeSettingsResult =
+    module === "ayarlar" ||
+    module === "giderler" ||
+    module === "faturalar" ||
+    module === "hakedis"
+      ? await getFinanceSettingsAction()
+      : undefined;
+  const financeSettings = financeSettingsResult?.ok
+    ? financeSettingsResult.data.settings
+    : undefined;
+  const companyProfileResult =
+    module === "ayarlar" || module === "faturalar" || module === "hakedis"
+      ? await getCompanyProfileAction()
+      : undefined;
+  const companyProfile = companyProfileResult?.ok
+    ? companyProfileResult.data.profile
+    : undefined;
+  const companyBrandAssetResult =
+    module === "ayarlar" || module === "faturalar" || module === "hakedis"
+      ? await getCompanyBrandAssetAction()
+      : undefined;
+  const companyBrandAsset = companyBrandAssetResult?.ok
+    ? companyBrandAssetResult.data.asset
+    : undefined;
+  const companyLocationsResult =
+    module === "ayarlar" ? await listCompanyLocationsAction() : undefined;
+  const companyLocations = companyLocationsResult?.ok
+    ? companyLocationsResult.data.locations
+    : undefined;
+  const supplierCategoriesResult =
+    module === "ayarlar" || module === "tedarikciler"
+      ? await listSupplierCategoriesAction()
+      : undefined;
+  const supplierCategories = supplierCategoriesResult?.ok
+    ? supplierCategoriesResult.data.categories
+    : [];
+  const customerTypesResult =
+    module === "ayarlar" || module === "musteriler"
+      ? await listCustomerTypesAction()
+      : undefined;
+  const customerTypes = customerTypesResult?.ok
+    ? customerTypesResult.data.customerTypes
+    : [];
+  const accessProfilesResult =
+    module === "ayarlar" ? await listAccessProfilesAction() : undefined;
   const entityDefinition = getEntityDefinition(module);
   const content = getModuleContent(module);
   const subscriptionOverviewResult =
@@ -464,6 +579,26 @@ export default async function ModulePage({
     module === "araclar" && canLoadRouteData
       ? await listArventoVehicleFleetOverviewAction()
       : undefined;
+  const vehicleFleetOperationsResult =
+    module === "araclar" && canLoadRouteData
+      ? await listVehicleFleetOverviewAction()
+      : undefined;
+  const vehicleFleetAuditResult =
+    module === "araclar" && canLoadRouteData
+      ? await listVehicleFleetAuditLogsAction()
+      : undefined;
+  const vehicleFleetLookupsResult =
+    module === "araclar" && canLoadRouteData
+      ? await listVehicleFleetLookupsAction()
+      : undefined;
+  const vehicleTireRecordsResult =
+    module === "araclar" && canLoadRouteData
+      ? await listVehicleTireRecordsAction()
+      : undefined;
+  const vehicleTireAuditResult =
+    module === "araclar" && canLoadRouteData
+      ? await listVehicleTireAuditLogsAction()
+      : undefined;
   const apiKeyOverviewResult =
     module === "api-yonetimi" ? await listApiKeyOverviewAction() : undefined;
   const webhookEndpointOverviewResult =
@@ -542,6 +677,7 @@ export default async function ModulePage({
       activeSessionId={activeSession.sessionId}
       context={activeScope}
       currentPath={`/${module}`}
+      globalSearchAction={globalSearchAction}
       notificationUnreadCount={notificationUnreadCount}
       sessionOptions={activeSession.sessionOptions}
       signOutAction={signOutActiveSessionAction}
@@ -581,7 +717,10 @@ export default async function ModulePage({
                 ? purchaseInvoiceAuditResult.data.rows
                 : [],
             ),
-            highlightedDocumentNo: requestedDocumentNo,
+            companyProfile,
+            companyBrandAsset,
+            highlightedDocumentNo,
+            highlightedRecordId,
             lookups: {
               sites: toLookupOptions(siteRowsResult),
               suppliers: toLookupOptions(supplierRowsResult),
@@ -600,6 +739,8 @@ export default async function ModulePage({
               updateInvoice: updatePurchaseInvoiceAction,
             },
             rows: purchaseInvoiceResult?.ok ? purchaseInvoiceResult.data.rows : [],
+            defaultVatRate: financeSettings?.defaultVatRate,
+            showVatBreakdown: financeSettings?.showVatBreakdown,
             stockCardOptions: toStockCardOptions(stockCardRowsResult),
           }}
           sales={{
@@ -609,7 +750,10 @@ export default async function ModulePage({
             auditLogsByEntityId: groupAuditLogsByEntityId(
               salesInvoiceAuditResult?.ok ? salesInvoiceAuditResult.data.rows : [],
             ),
-            highlightedDocumentNo: requestedDocumentNo,
+            companyProfile,
+            companyBrandAsset,
+            highlightedDocumentNo,
+            highlightedRecordId,
             lookups: {
               customers: toLookupOptions(customerRowsResult),
               sites: toLookupOptions(siteRowsResult),
@@ -629,6 +773,8 @@ export default async function ModulePage({
               updateInvoice: updateSalesInvoiceAction,
             },
             rows: salesInvoiceResult?.ok ? salesInvoiceResult.data.rows : [],
+            defaultVatRate: financeSettings?.defaultVatRate,
+            showVatBreakdown: financeSettings?.showVatBreakdown,
             stockCardOptions: toStockCardOptions(stockCardRowsResult),
           }}
         />
@@ -638,6 +784,8 @@ export default async function ModulePage({
           auditLogsByEntityId={groupAuditLogsByEntityId(
             chequeAuditResult?.ok ? chequeAuditResult.data.rows : [],
           )}
+          highlightedRecordId={highlightedRecordId}
+          initialSearchQuery={globalSearchDeepLink?.query}
           permissions={{
             canMutateCheques: canMutateCheques(activeScope),
           }}
@@ -687,6 +835,8 @@ export default async function ModulePage({
             createExpense: createExpenseAction,
           }}
           rows={expenseResult?.ok ? expenseResult.data.rows : []}
+          defaultVatRate={financeSettings?.defaultVatRate}
+          showVatBreakdown={financeSettings?.showVatBreakdown}
         />
       ) : module === "stok-depo" ? (
         <>
@@ -753,6 +903,8 @@ export default async function ModulePage({
         </>
       ) : module === "ihale-yonetimi" ? (
         <TenderManagementSurface
+          highlightedRecordId={highlightedRecordId}
+          initialSearchQuery={globalSearchDeepLink?.query}
           persistence={{
             convertTenderToSite: convertTenderToSiteAction,
             createTender: createTenderAction,
@@ -780,6 +932,11 @@ export default async function ModulePage({
         />
       ) : module === "dokuman-merkezi" ? (
         <DocumentCenterSurface
+          capabilities={
+            documentCenterResult?.ok
+              ? documentCenterResult.data.capabilities
+              : undefined
+          }
           folders={
             documentCenterResult?.ok
               ? documentCenterResult.data.folders
@@ -805,7 +962,18 @@ export default async function ModulePage({
         />
       ) : module === "hakedis" ? (
         <>
-        <ConstructionProgressPaymentSurface />
+        <ConstructionProgressPaymentSurface
+          canManageMeasurementImports={
+            activeScope.userRole === "admin"
+            || activeScope.userRole === "accounting"
+          }
+          initialImportBatchId={requestedImportBatchId}
+          initialSimulationScenarioId={
+            requestedImportBatchId
+              ? undefined
+              : getSingleSearchParam(resolvedSearchParams.senaryo)
+          }
+        />
         <ProgressPaymentSurface
           accountOptions={toCashBankAccountOptions(
             progressPaymentAccountRowsResult,
@@ -815,6 +983,8 @@ export default async function ModulePage({
               ? progressPaymentAuditResult.data.rows
               : [],
           )}
+          companyProfile={companyProfile}
+          companyBrandAsset={companyBrandAsset}
           lookups={{
             counterparties: toLookupOptions(progressPaymentCounterpartyRowsResult),
             sites: toLookupOptions(progressPaymentSiteRowsResult),
@@ -836,7 +1006,20 @@ export default async function ModulePage({
           rows={
             progressPaymentResult?.ok ? progressPaymentResult.data.rows : []
           }
+          defaultVatRate={financeSettings?.defaultVatRate}
+          showVatBreakdown={financeSettings?.showVatBreakdown}
         />
+        </>
+      ) : module === "isg" ? (
+        <>
+          <WorkplaceSafetySurface
+            canMutate={activeScope.userRole !== "viewer" && !activeScope.periodClosed}
+            initialRecordId={requestedSafetyRecordId}
+          />
+          <MobileSafetyChecklistSurface
+            canMutate={activeScope.userRole !== "viewer" && !activeScope.periodClosed}
+            initialRunId={requestedSafetyChecklistRunId}
+          />
         </>
       ) : module === "puantaj" ? (
         <TimesheetSurface
@@ -875,6 +1058,36 @@ export default async function ModulePage({
                 ? personnelAssetSiteRowsResult.data.rows
                 : []
             }
+          />
+          <HrDashboardSurface />
+          <EmployeeLeaveSurface
+            canApprove={activeScope.userRole === "admin" && !activeScope.periodClosed}
+            canCreate={
+              activeScope.userRole !== "viewer" && !activeScope.periodClosed
+            }
+            initialLeaveId={requestedEmployeeLeaveId}
+            isAdmin={activeScope.userRole === "admin"}
+          />
+          <EmployeeAdvanceSurface
+            canCreate={
+              activeScope.userRole !== "viewer" && !activeScope.periodClosed
+            }
+            initialAdvanceId={requestedEmployeeAdvanceId}
+            isAccounting={
+              activeScope.userRole === "accounting" && !activeScope.periodClosed
+            }
+            isAdmin={
+              activeScope.userRole === "admin" && !activeScope.periodClosed
+            }
+          />
+          <EmployeeTransferSurface
+            canApprove={
+              activeScope.userRole === "admin" && !activeScope.periodClosed
+            }
+            canCreate={
+              activeScope.userRole !== "viewer" && !activeScope.periodClosed
+            }
+            initialTransferId={requestedEmployeeTransferId}
           />
           <EntityListSurface
             definition={entityDefinition}
@@ -991,6 +1204,17 @@ export default async function ModulePage({
               : undefined
           }
         />
+      ) : module === "destek-merkezi" ? (
+        <SupportTicketSurface
+          canTransition={activeScope.userRole === "admin"}
+          initialTicketId={requestedSupportTicketId}
+        />
+      ) : module === "bilgi-merkezi" ? (
+        <AnnouncementCenterSurface
+          canManage={activeScope.userRole === "admin" && !activeScope.periodClosed}
+          initialAnnouncementId={requestedAnnouncementId}
+          isAdmin={activeScope.userRole === "admin"}
+        />
       ) : module === "e-fatura-yonetimi" ? (
         <EFaturaSurface
           content={content!}
@@ -1001,6 +1225,11 @@ export default async function ModulePage({
         />
       ) : module === "ayarlar" ? (
         <SettingsSurface
+          accessProfileOverview={
+            accessProfilesResult?.ok
+              ? accessProfilesResult.data.overview
+              : undefined
+          }
           ledgerEntries={ledgerEntriesResult ?? []}
           ledgerAuditEntries={ledgerAuditEntriesResult ?? []}
           ledgerPeriodClosed={ledgerPeriodStatusResult?.isClosed ?? false}
@@ -1046,7 +1275,15 @@ export default async function ModulePage({
               : undefined
           }
           context={activeScope}
+          companyLocations={companyLocations}
+          companyBrandAsset={companyBrandAsset}
+          companyProfile={companyProfile}
+          customerTypes={customerTypes}
+          financeSettings={financeSettings}
+          supplierCategories={supplierCategories}
           persistence={{
+            assignAccessProfile: assignAccessProfileAction,
+            changeAccessProfileStatus: changeAccessProfileStatusAction,
             postLedgerJournal: postLedgerJournalAction,
             closeLedgerPeriod: closeLedgerPeriodAction,
             reopenLedgerPeriod: reopenLedgerPeriodAction,
@@ -1062,11 +1299,21 @@ export default async function ModulePage({
             ignoreBankTransaction: ignoreBankTransactionAction,
             reopenBankMatch: reopenBankTransactionMatchAction,
             reopenIgnoredBankTransaction: reopenIgnoredBankTransactionAction,
+            removeCompanyBrandAsset: removeCompanyBrandAssetAction,
+            changeCustomerTypeStatus: changeCustomerTypeStatusAction,
+            changeSupplierCategoryStatus: changeSupplierCategoryStatusAction,
+            saveCompanyProfile: saveCompanyProfileAction,
+            saveCompanyLocation: saveCompanyLocationAction,
+            saveCustomerType: saveCustomerTypeAction,
+            saveAccessProfile: saveAccessProfileAction,
+            saveSupplierCategory: saveSupplierCategoryAction,
+            saveFinanceSettings: saveFinanceSettingsAction,
             resendInvitation: resendUserInvitationAction,
             revokeInvitation: revokeUserInvitationAction,
             syncBankTransactions: syncBankSandboxTransactionsAction,
             testArventoConnection: testArventoSandboxConnectionAction,
             testBankConnection: testBankSandboxConnectionAction,
+            uploadCompanyBrandAsset: uploadCompanyBrandAssetAction,
           }}
           userManagementOverview={
             userManagementOverviewResult?.ok
@@ -1075,6 +1322,7 @@ export default async function ModulePage({
           }
         />
       ) : module === "araclar" ? (
+        <>
         <VehicleFleetSurface
           auditEntries={
             vehicleFleetOverviewResult?.ok
@@ -1098,6 +1346,19 @@ export default async function ModulePage({
               : []
           }
         />
+        <VehicleFleetOperationsSurface
+          auditRows={vehicleFleetAuditResult?.ok ? vehicleFleetAuditResult.data.rows : []}
+          canMutate={activeScope.userRole !== "viewer" && !activeScope.periodClosed}
+          lookups={vehicleFleetLookupsResult?.ok ? vehicleFleetLookupsResult.data : null}
+          overview={vehicleFleetOperationsResult?.ok ? vehicleFleetOperationsResult.data : null}
+        />
+        <VehicleTireOperationsSurface
+          auditRows={vehicleTireAuditResult?.ok ? vehicleTireAuditResult.data.rows : []}
+          canMutate={activeScope.userRole !== "viewer" && !activeScope.periodClosed}
+          records={vehicleTireRecordsResult?.ok ? vehicleTireRecordsResult.data : null}
+          vehicles={vehicleFleetLookupsResult?.ok ? vehicleFleetLookupsResult.data.vehicles : []}
+        />
+        </>
       ) : module === "santiyeler" && entityDefinition ? (
         <SiteManagementSurface
           definition={entityDefinition}
@@ -1129,7 +1390,9 @@ export default async function ModulePage({
             updateRow: updateEntityRowAction,
           }}
           cashBankAccountOptions={toCashBankAccountOptions(counterpartyAccountRowsResult)}
+          customerTypes={customerTypes}
           statementRows={counterpartyStatementRows}
+          supplierCategories={supplierCategories}
         />
       ) : entityDefinition ? (
         <EntityListSurface
@@ -1146,7 +1409,9 @@ export default async function ModulePage({
             updateRow: updateEntityRowAction,
           }}
           cashBankAccountOptions={toCashBankAccountOptions(counterpartyAccountRowsResult)}
+          customerTypes={customerTypes}
           statementRows={counterpartyStatementRows}
+          supplierCategories={supplierCategories}
         />
       ) : (
         <ModuleSurface content={content!} />

@@ -22,6 +22,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
     <LoginSurface
       loginAction={signInWithCredentialsAction}
       loginError={params?.error === "credentials"}
+      rateLimitError={params?.error === "rate-limit"}
       sessionOptions={sessionOptions}
     />
   );

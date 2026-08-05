@@ -5,6 +5,7 @@ import type { TenantScope } from "./tenant-scope";
 import {
   createSeededUserManagementMemoryRepository,
   createUserManagementService,
+  type UserManagementAccessProfileAssignmentRecord,
   type UserManagementEmailOutboxRecord,
   type UserManagementInvitationRecord,
   type UserManagementUserAccessRecord,
@@ -316,6 +317,7 @@ describe("user management service", () => {
           userId: "isg-user",
           userName: "İSG Kullanıcısı",
         },
+        removedAccessProfileId: null,
       },
     });
     expect(auditLogs).toEqual([
@@ -369,6 +371,96 @@ describe("user management service", () => {
       errors: ["Aktif kullanıcı kendi erişimini devre dışı bırakamaz."],
     });
   });
+
+  test("removes a viewer profile assignment on role change and records redacted audit metadata", async () => {
+    const auditLogs: AuditLogEntryInput[] = [];
+    const service = createUserManagementService({
+      auditLogRepository: createMemoryAuditRepository(auditLogs),
+      repository: createSeededUserManagementMemoryRepository({
+        accessProfileAssignments: [createAccessProfileAssignment()],
+        userAccesses: [createUserAccess()],
+      }),
+    });
+
+    await expect(
+      service.updateUserAccessRole({
+        accessId: "access-1",
+        role: "accounting",
+        scope,
+      }),
+    ).resolves.toMatchObject({
+      data: {
+        removedAccessProfileId: "profile-1",
+        updatedAccess: { role: "accounting", userId: "isg-user" },
+      },
+      ok: true,
+    });
+    expect(auditLogs).toHaveLength(1);
+    expect(auditLogs[0]?.metadata).toEqual({
+      accessProfileRemovalReason: "role-change",
+      email: "isg@example.com",
+      removedAccessProfileId: "profile-1",
+      role: "accounting",
+      statusFrom: "viewer",
+      statusTo: "accounting",
+      userId: "isg-user",
+    });
+    expect(JSON.stringify(auditLogs)).not.toContain("permission");
+  });
+
+  test("preserves an assignment when changing to viewer and removes it on a later viewer exit", async () => {
+    const repository = createSeededUserManagementMemoryRepository({
+      accessProfileAssignments: [createAccessProfileAssignment()],
+      userAccesses: [createUserAccess({ role: "accounting" })],
+    });
+    const service = createUserManagementService({ repository });
+
+    const toViewer = await service.updateUserAccessRole({
+      accessId: "access-1",
+      role: "viewer",
+      scope,
+    });
+    expect(toViewer).toMatchObject({
+      data: { removedAccessProfileId: null },
+      ok: true,
+    });
+
+    await expect(
+      service.updateUserAccessRole({
+        accessId: "access-1",
+        role: "admin",
+        scope,
+      }),
+    ).resolves.toMatchObject({
+      data: { removedAccessProfileId: "profile-1" },
+      ok: true,
+    });
+  });
+
+  test("removes the assignment when user access is deactivated", async () => {
+    const auditLogs: AuditLogEntryInput[] = [];
+    const service = createUserManagementService({
+      auditLogRepository: createMemoryAuditRepository(auditLogs),
+      repository: createSeededUserManagementMemoryRepository({
+        accessProfileAssignments: [createAccessProfileAssignment()],
+        userAccesses: [createUserAccess()],
+      }),
+    });
+
+    await expect(
+      service.deactivateUserAccess({ accessId: "access-1", scope }),
+    ).resolves.toMatchObject({
+      data: {
+        deactivatedAccess: { isActive: false, userId: "isg-user" },
+        removedAccessProfileId: "profile-1",
+      },
+      ok: true,
+    });
+    expect(auditLogs[0]?.metadata).toMatchObject({
+      accessProfileRemovalReason: "access-deactivation",
+      removedAccessProfileId: "profile-1",
+    });
+  });
 });
 
 function createUserAccess(
@@ -385,6 +477,20 @@ function createUserAccess(
     tenantId: scope.tenantId,
     userId: "isg-user",
     userName: "İSG Kullanıcısı",
+    ...overrides,
+  };
+}
+
+function createAccessProfileAssignment(
+  overrides: Partial<UserManagementAccessProfileAssignmentRecord> = {},
+): UserManagementAccessProfileAssignmentRecord {
+  return {
+    companyId: scope.companyId,
+    id: "assignment-1",
+    periodId: scope.periodId,
+    profileId: "profile-1",
+    tenantId: scope.tenantId,
+    userId: "isg-user",
     ...overrides,
   };
 }

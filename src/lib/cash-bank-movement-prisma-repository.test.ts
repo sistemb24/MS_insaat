@@ -126,6 +126,38 @@ describe("cash bank movement prisma repository", () => {
     ]);
   });
 
+  test("preserves employee advance payment movement type", async () => {
+    const repository = createCashBankMovementPrismaRepository({
+      cashBankMovement: {
+        async findMany() {
+          return [{
+            ...row,
+            amount: "3000",
+            createdAt: new Date(row.createdAt),
+            direction: "Çıkış",
+            movementDate: new Date("2026-08-02T00:00:00.000Z"),
+            movementType: "Avans Ödemesi",
+            sourceId: "advance-1",
+            sourceType: "employee-advance",
+            updatedAt: new Date(row.updatedAt),
+          }];
+        },
+        async create() {
+          throw new Error("not used");
+        },
+      },
+    });
+
+    await expect(repository.list({ scope: defaultTenantScope })).resolves.toEqual([
+      expect.objectContaining({
+        amount: 3000,
+        direction: "Çıkış",
+        movementType: "Avans Ödemesi",
+        sourceType: "employee-advance",
+      }),
+    ]);
+  });
+
   test("normalizes listed movement currency to the P0 base transaction currency", async () => {
     const repository = createCashBankMovementPrismaRepository({
       cashBankMovement: {

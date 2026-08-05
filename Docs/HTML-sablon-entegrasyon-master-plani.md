@@ -1,9 +1,9 @@
 # NOA İnşaat HTML Şablon Entegrasyonu — Master Prompt ve Uygulama Planı
 
-> Durum: **ONAYLANDI — Faz 0–9 tamamlandı**
-> Tarih: 22.07.2026
+> Durum: **Faz 0–12 tamamlandı — F2-04 kalıcı import staging/geçmişi kapandı; Faz 13 ertelendi, Faz 14 İSG planlaması hazır**
+> Tarih: 28.07.2026
 > Onay kaydı: Kullanıcı, önerilen 11 varsayımın tamamını onaylayarak Faz 0'ın başlatılmasını istedi.
-> Aktif uygulama sınırı: Faz 0–9 uygulama, gerçek veri/görsel kabul, nihai 22 route matrisi ve kullanıcı dokümantasyonu tamamlandı. Bekleyen global arama, kalıcı simülasyon, kalıcı import staging/geçmişi ve gerçek dış entegrasyonlar ayrı mini-RFC/onay kapısını korur.
+> Aktif uygulama sınırı: Faz 0–12 uygulama ve kabulü tamamlandı. F2-04 / RFC-F12-01, izole gerçek CSV kabulüyle birlikte Dilim 1–5 kapandı. F2-05 / Faz 13, kullanıcı kararıyla dış sağlayıcı hazır olana kadar ertelendi; `RFC-F13-01` güvenlik sınırı korunur. Sağlayıcı gerektirmeyen sıradaki aday, `Docs/RFC-F14-01-isg-operasyon-cekirdegi.md` ile planlanan İSG operasyon çekirdeğidir; varsayımlar onaylanmadan kod veya şema değişikliği başlatılmaz.
 
 ## 1. Yeniden Düzenlenmiş Ana Prompt
 
@@ -1315,3 +1315,216 @@ Sonraki kapsam değişiklikleri bu onayı otomatik olarak genişletmez; F2 veri 
 **Uygulama durumu — 22.07.2026 Faz 9 route matrisi kontrast ve çıktı kabulü:** 22 korumalı route standart shell, tek ana başlık, taşma ve ana içerik semantiği açısından tarandı. Light/dark semantic renk çiftleri WCAG AA eşiğine otomatik testle bağlandı; minimum oranlar light 4.52:1 ve dark 7.11:1 oldu. Yevmiye, mizan, puantaj, hakediş ve fatura tabloları erişilebilir adlara; manuel yevmiye alanları açık form adlarına kavuştu. Fatura PDF modalı ilk odak, odak döngüsü, Escape ve odak dönüşüyle; Dashboard grafikleri koyu temada gerçek veriyle kabul edildi. Print görünümü açık semantic palete dönüyor, global shell/interaktif aksiyonları gizliyor ve tablo sayfa kırılmalarını koruyor. Domain, DB ve iş akışları değişmedi. Hedefli paket 8 dosya/97 test; tam paket 222 dosya/1.232 test, type-check, Prisma validate, lint, diff denetimi ve 74 sayfalık production build ile geçti. Ayrıntılı kabul raporu `Docs/UI-baseline/Faz9-route-matrix-kabul-20260722.md` içindedir. Sıradaki Faz 9 dilimi nihai sayfa matrisi ve kullanıcı dokümantasyonudur.
 
 **Uygulama durumu — 22.07.2026 Faz 9 nihai sayfa matrisi ve kullanıcı dokümantasyonu:** Faz 1 kaynak eşleştirmesi canlı 22 route ile uzlaştırıldı; 76/76 HTML şablonun hedefi ve 22/22 uygulama routeunun nihai surface, işlev, tema, responsive, erişilebilirlik ve çıktı durumu `Docs/HTML-template-page-matrix.md` içinde kapatıldı. Rol ve abonelik sınırları gerçek navigation/subscription guard kaynaklarıyla doğrulandı. `Docs/NOA-kullanici-rehberi.md` giriş, bağlam seçimi, 22 sayfanın amacı, temel finans/ihale/hakediş/personel/stok akışları, ayarlar, print/mobil/erişilebilirlik, sandbox sınırları ve sorun gidermeyi tek kullanıcı belgesinde toplar. F2-02 RFC-F8-01 sınırında tamamlandı; global arama, kalıcı simülasyon, kalıcı import geçmişi ve gerçek dış entegrasyonlar ayrı onay kapısında kalır. Kod, DB ve gerçek veri değiştirilmedi. Route/matris/rehber eşleştirmesi 22/22 doğrulandı; tam paket 222 dosya/1.232 test, type-check, Prisma validate, lint, diff denetimi ve 74 sayfalık production build ile geçti. Bu kayıtla Faz 9 ve HTML şablon entegrasyonu master planı kapanmıştır.
+
+### Faz 10 — Global Scoped Arama (F2-01)
+
+**Planlama durumu — 22.07.2026:** `Docs/RFC-F10-01-global-scoped-arama.md`
+taslağı hazırlandı. İlk sürüm aktif tenant/firma/dönem kapsamındaki yetkili
+kayıtları mevcut domain tablolarından federatif ve salt-okunur aramayı; hassas
+kaynakları dışarıda bırakmayı ve gerçek ölçüm eşiği aşılmadan yeni arama tablosu
+veya indeks migration'ı oluşturmamayı önerir. Faz 10 uygulaması, RFC'deki on
+varsayım için ayrı kullanıcı onayı alınmadan başlamaz. Bu planlama adımında kod,
+veritabanı ve gerçek veri değiştirilmemiştir.
+
+**Uygulama durumu — 22.07.2026 Faz 10 Dilim 1 Domain Çekirdeği:** RFC-F10-01'in
+on varsayımı kullanıcı tarafından onaylandı. Global arama result/candidate ve
+response tipleri, 2–80 karakter sorgu kapısı, Türkçe/NFKC normalizasyonu, düz
+metin güvenliği, deterministik ranking ile 4/24 limitleri saf domain katmanında
+uygulandı. Navigasyon adayları mevcut `navigationItems` kaynağından üretilir;
+DB, repository, action, UI, route, migration ve gerçek veri değiştirilmedi.
+Hedefli 14 testin ardından tam pakette 223 dosya/1.246 test, type-check, Prisma
+validate, lint, diff denetimi ve 74 sayfalık production build geçti. Sıradaki
+bağımsız dilim Federatif Repository'dir.
+
+**Uygulama durumu — 22.07.2026 Faz 10 Dilim 2 Federatif Repository:** Yedi
+onaylı EntityRecord grubu ile alış/satış faturası, çek, ihale, finansal hakediş,
+Hakediş Pro proje ve araç kaynaklarını birleştiren Prisma repository eklendi.
+Her alt sorgu tenant/firma/dönem scope'u, güvenli alan seçimi ve 24 aday limiti
+taşır. Viewer dahil mevcut üç rol salt-okunur arama yapabilir; korumalı kaynak
+ve navigasyon sonuçları abonelik route guard haritasından fail-closed süzülür.
+Entity JSON yalnız slug bazlı beyaz listedeki iş alanlarını kullanır; hassas ve
+finansal alanlar dışarıda kalır. Tek kaynak hatası kısmi sonuç üretmez. Prisma
+şeması, migration, action, UI ve gerçek veri değişmedi. Repository hedefli 6,
+global arama birleşik 20 test; tam pakette 224 dosya/1.252 test, type-check,
+Prisma validate, lint, diff denetimi ve 74 sayfalık production build geçti.
+Sıradaki bağımsız dilim Server Action ve AppShell UI'dır.
+
+**Uygulama durumu — 22.07.2026 Faz 10 Dilim 3 Server Action ve AppShell UI:**
+Global arama action'ı yalnız sorgu metni alır; aktif session scope'u ve abonelik
+özetini sunucuda kurarak federatif repository'yi çağırır, doğrulama/repository
+hatalarında hassas ayrıntı sızdırmaz. AppShell masaüstü ve mobil tetikleyicileri
+tek erişilebilir command dialog'unu paylaşır. Ctrl/Cmd+K, Escape, focus trap ve
+odak dönüşü; 250 ms debounce, stale-response koruması, klavye seçimi, güvenli
+iç route navigasyonu ile loading/minimum/empty/error durumları eklendi. Mobil
+arama drawer'ı kapatır ve dialog print'te gizlenir. Şema, migration, gerçek veri
+ve mevcut mutation iş akışları değişmedi. Hedefli paket 6 dosya/57 test; tam
+paket 226 dosya/1.262 test, type-check, Prisma validate, lint, diff denetimi ve
+74 sayfalık production build ile geçti. Sıradaki Faz 10 dilimi Deep-link ve
+gerçek veri kabulüdür.
+
+**Uygulama durumu — 23.07.2026 Faz 10 Dilim 4 Deep-link ve gerçek veri
+kabulü:** Fatura, çek ve ihale sonuçlarına doğrulanmış `ara/kayit` deep-link
+sözleşmesi eklendi; hedef yüzey arama değerini yükler ve tam record id satırını
+vurgular. Parametre tüketmeyen kaynaklar sahte detay yerine route-only kalır.
+DEMO İNŞAAT verisindeki `212121321` çeki Muhasebe ve Salt Okur, `FAT-0006`
+faturası Yönetici rolüyle kabul edildi; viewer mutation sınırı değişmedi.
+Masaüstü ve 390 × 844 mobil, açık/koyu tema, tek başlık, taşma ve konsol kabulü
+başarılıdır. Hedefli 8 dosya/84 test; tam paket 226 dosya/1.268 test, type-check,
+Prisma validate, lint, diff denetimi ve 74 sayfalık build ile geçti. Şema,
+migration ve gerçek domain verisi değişmedi. Sıradaki dilim Performans kararı ve
+kapanıştır.
+
+**Kapanış durumu — 23.07.2026 Faz 10 Performans kararı:** Üç aktif
+firma/dönem scope'u üç bağımsız benchmark turunda ve toplam 720 repository
+zaman örneğiyle ölçüldü. En yüksek aranabilir hacim 55 kayıt, en kötü p95 18,47
+ms, maksimum 32,84 ms oldu. RFC'nin 10.000 kayıt ve p95 300 ms eşikleri geniş
+marjla geçtiği için FTS/GIN, ayrı projection veya migration açılmadı.
+`search:benchmark` komutu ve eşik karar testleri kalıcı doğrulama olarak eklendi.
+Performans paketi 3 dosya/27 test; tam paket 227 dosya/1.273 test, type-check,
+Prisma validate, lint, diff denetimi ve 74 sayfalık build ile geçti. Bu kayıtla
+RFC-F10-01, F2-01 ve Faz 10 tamamlandı; Faz 0–10 master planı kapandı.
+
+### Faz 11 — Kalıcı Metraj Simülasyon Senaryoları (F2-03)
+
+**Dilim 1 tamamlanma durumu — 23.07.2026:**
+`Docs/RFC-F11-01-kalici-metraj-simulasyon-senaryolari.md` onaylandı.
+İlk sürüm yalnız Hakediş Pro poz bazlı simülasyonunu; proje/hakediş kaynak
+snapshot'ı, normalize scenario/revision/line modeli, append-only geçmiş, iç
+karşılaştırma, admin onayı ve arşiv ile ele alır. Gerçek metraj/hakediş/ledger
+aktarımı, ihale BOQ, public paylaşım ve import staging kapsam dışıdır. Bu
+ilk dilimde saf hesap ve snapshot DTO'ları, durum/RBAC/kapalı dönem, 500 satır
+limiti, kaynak sürümlü idempotency hash'i ve stale kaynak kuralları 20 hedefli
+testle uygulandı. Tam paket 228 dosya/1.293 test ve 74 sayfalık build dahil tüm
+kalite kapılarından geçti. Prisma, repository, action, UI ve gerçek veri
+değiştirilmedi. Sıradaki bağımsız dilim **Şema ve Repository**'dir.
+
+**Dilim 2 tamamlanma durumu — 23.07.2026:**
+Scenario/revision/line için üç normalize tablo additive ve backfill'siz
+migration ile eklendi, geliştirme veritabanına başarıyla uygulandı. Scope/proje
+filtreli repository; scenario + R1 transaction'ı, append-only revizyon,
+`currentRevisionNo` optimistic concurrency, input hash idempotency ve aktif
+proje/hakediş/poz doğrulamasını uygular. Liste sorgusu yalnız güncel özeti,
+detay sorgusu tüm sıralı snapshot satırlarını yükler. 13 yeni repository testi;
+Domain ile hedefli paket 2 dosya/33 testtir. Read-only veritabanı kabulünde üç
+yeni tablo boş ve sahte scope sonucu sıfırdır; gerçek simülasyon kaydı
+oluşturulmadı. Tam paket 229 dosya/1.306 test ve 74 sayfalık build dahil tüm
+kalite kapılarından geçti. Sıradaki bağımsız dilim **Server Action ve
+Audit**'tir.
+
+**Dilim 3 tamamlanma durumu — 23.07.2026:**
+List/detail/create/revise/clone/approve/archive/compare action katmanı eklendi.
+Tüm action'lar abonelik ve session scope'u fail-closed çözer; viewer yalnız
+approved read/compare, accounting taslak/revizyon/klon, admin approve/archive
+yetkisine sahiptir. Create/revise istemci toplamlarını kabul etmez; hakediş
+snapshot'ı ve aktif pozları scope/proje altında yeniden okuyup Domain
+Çekirdeği'nde hesaplar. Para birimi ve kapalı dönem sunucuda doğrulanır.
+Mutation auditleri aynı transaction'da tekil, idempotent retry auditsizdir;
+salt-okunur compare audit üretmez. Hedefli paket 3 dosya/51 testtir. UI,
+deep-link ve gerçek simülasyon verisi değişmedi. Tam paket 230 dosya/1.324 test
+ve 74 sayfalık build dahil tüm kalite kapılarından geçti; simülasyon tabloları
+`0/0/0` kaldı. Sıradaki bağımsız dilim **Hakediş Pro UI**'dır.
+
+**Dilim 4 tamamlanma durumu — 23.07.2026:**
+Mevcut `Aktarım / Simülasyon` sekmesinin yazmasız CSV ve poz bazlı etki hesabı
+korunarak aynı rapor yüzeyine kalıcı `Simülasyon Senaryo Merkezi` eklendi.
+Yetkili kullanıcı hesaplanan miktarı scenario + R1 olarak kaydedebilir; taslak
+senaryoyu append-only revize veya klonlayabilir, iki senaryo/revizyonun poz
+bazlı miktar, kalan ve tutar farkını karşılaştırabilir. Admin onay/arşiv
+işlemleri erişilebilir confirm dialog'u, ilk odak ve odak dönüşü taşır; viewer
+yazma kontrolleri DOM'a eklenmez. Güncel satırlar, revizyon geçmişi, stale
+kaynak uyarısı, optimistic concurrency hatası ve iç
+`/hakedis?senaryo=<id>` deep-link'i gerçek scoped action'lara bağlandı. Rapor
+read-model'i yalnız kaynak `projectId`, `progressPaymentId` ve
+`contractItemId` referanslarıyla genişletildi; mevcut hakediş/metraj/ledger
+iş akışı değişmedi. Muhasebe demo hesabıyla gerçek `E2E-HAK-002` raporunda
+hesap → kayıt formu köprüsü, masaüstü, 390 × 844 mobil, light/dark, taşma ve
+konsol kabulü yazma yapılmadan geçti. UI hedefli paket 2 dosya/6 test; tam
+paket 231 dosya/1.326 test, type-check, Prisma validate, lint, diff denetimi ve
+74 sayfalık production build ile geçti. Sıradaki bağımsız dilim
+**Gerçek Veri ve Kapanış**'tır.
+
+**Dilim 5 kapanış durumu — 23.07.2026:**
+`F8-KABUL-20260722 / F8-HAK-001` gerçek snapshot'ında iki izole senaryo
+oluşturuldu. Accounting A'yı R1 12 m²/R2 18 m² yaptı; A/R2'den klonlanan B,
+R2'de 25 m² oldu. Compare `+7 m² / +70.000 TL` fark verdi. Admin A'yı
+onayladı, B'yi arşivledi; viewer yalnız onaylı A deep-link'ini gördü ve beş
+mutation kontrolü DOM'a girmedi. Read-only kabul komutu dört revision/line,
+altı mutation auditi, sıfır compare auditi ve cross-company/period/project
+sıfırlarını doğrular. Kaynak hakediş, snapshot, metraj, kesinti, muhasebe
+bağlantısı, dönem ve abonelik değişmedi. 1440 × 900 dark, 390 × 844 light,
+print, taşma, konsol ve odak kabulü geçti; pending sonrası odak dönüşü
+sertleştirildi. Ayrıntı `Docs/UI-baseline/Faz11-gercek-veri-kapanis-20260723.md`
+içindedir. Bu kayıtla RFC-F11-01, F2-03 ve Faz 11 kapandı. Sıradaki planlama
+kapısı **Faz 12 — F2-04 Kalıcı Import Staging/Geçmişi**'dir.
+
+### Faz 12 — Kalıcı Import Staging ve Geçmişi (F2-04)
+
+**Planlama kapısı — 23.07.2026:**
+`Docs/RFC-F12-01-kalici-import-staging-gecmisi.md` oluşturuldu. Mevcut yerel
+Hakediş Pro CSV önizlemesini bozmadan; kalıcı normalize staging, sunucu
+doğrulaması, açık kullanıcı onayı, idempotent/all-or-nothing metraj uygulaması,
+audit ve iç deep-link için beş bağımsız dilim önerildi. Genel import motoru,
+XLSX, dosya saklama, worker, dış entegrasyon ve destructive rollback kapsam
+dışında tutuldu. RFC'nin 10 varsayımı kullanıcı onayı bekler; Faz 12
+uygulamasına başlanmadı.
+
+**Dilim 1 tamamlanma durumu — 23.07.2026:**
+RFC-F12-01'in 10 varsayımı onaylandı. Kalıcı import için henüz DB yazmadan;
+strict UTF-8 CSV parser'ı, 2 MiB/500 satır limitleri, sürümlü header mapping,
+normalize satır ve kontrollü hata sözleşmesi, formula nötrleştirme, tam
+SHA-256, scope kapsamlı opaque idempotency anahtarı, lifecycle ve RBAC/kapalı
+dönem kararları saf Domain Çekirdeği olarak eklendi. Parser, limit, güvenlik,
+durum ve idempotency matrisi 25 hedefli testle doğrulandı. Prisma, migration,
+repository, action, UI ve gerçek veri değişmedi. Tam paket 232 dosya/1.351
+test, type-check, Prisma validate, lint, diff denetimi ve 74 sayfalık
+production build ile geçti. Sıradaki bağımsız dilim **Şema ve Repository**'dir.
+
+**Dilim 2 tamamlanma durumu — 23.07.2026:**
+Kalıcı import batch/row/event tabloları additive migration ile eklendi ve
+geliştirme veritabanına uygulandı. Full-scope repository; liste/detay, normalize
+staging create, hash+mapping idempotency, kaynak sürüm ve aktif poz kontrolü,
+optimistic validate/cancel ve all-or-nothing apply akışını tamamladı. Apply
+mevcut metraj föyü/satırı modellerini ve ortaklaştırılan snapshot yeniden hesap
+yolunu aynı transaction'da kullanır; terminal retry geçmişi çoğaltmaz.
+Migration sonrası tablolar `0/0/0`, yanlış scope `0`; gerçek import batch'i
+oluşturulmadı. 13 repository testi, Domain/action regresyonuyla 3 dosya/39
+hedefli test; tam paket 233 dosya/1.364 test ve 74 sayfalık build dahil tüm
+kapılar geçti. Sıradaki bağımsız dilim **Server Action ve Audit**'tir.
+
+**Dilim 3 tamamlanma durumu — 23.07.2026:**
+Scoped list/detail ile upload/validate/apply/cancel Server Action'ları eklendi.
+Sunucu CSV byte'ını yeniden parse eder; abonelik, oturum, tam tenant + firma +
+dönem + proje + kaynak hakediş scope'u, accounting/admin rolü ve açık dönem
+guard'ları fail-closed çalışır. Dosya hataları batch yazmaz, kontrollü satır
+hataları `DRAFT` staging olarak saklanabilir; ham byte veya hassas hata ayrıntısı
+taşınmaz. Lifecycle eventleri ve dört merkezi
+`CONSTRUCTION_MEASUREMENT_IMPORT_*` auditi aynı transaction'da yazılır.
+Terminal idempotent retry event/audit/metraj/revalidation üretmez. 11 yeni
+action testiyle hedefli paket 4 dosya/50 test; tam paket 234 dosya/1.375 test
+ve 74 sayfalık build dahil tüm kapılar geçti. Güncel 45 migration ve gerçek
+veri değişmezliği korundu; batch/row/event `0/0/0`, yanlış scope `0`.
+Sıradaki bağımsız dilim **UI ve Deep-link**'tir.
+
+**Dilim 4 tamamlanma durumu — 23.07.2026:**
+Hakediş Pro'nun mevcut yazmasız CSV önizlemesine dokunulmadan accounting/admin
+için kalıcı `Metraj Import Merkezi` eklendi. Server upload, batch özeti,
+satır/hata ve event görünümü, validate/cancel, açık apply onayı, geçmiş ve
+oluşan föy bağlantısı ortak tasarım sisteminde çalışır.
+`/hakedis?import=<id>` tam scope ile ilgili proje/hakediş ve aktarım sekmesini
+açar; viewer kalıcı paneli ve mutation kontrollerini DOM'a almaz. Hedefli paket
+4 dosya/33 test, tam paket 235 dosya/1.380 test ve 74 sayfalık build dahil tüm
+kapılar geçti. 1440 × 900 light, 390 × 844 light/dark, overflow, konsol, odak
+ve print sözleşmesi kabul edildi. Dosya gönderilmedi; batch/row/event `0/0/0`,
+yanlış scope `0`. Kanıt
+`Docs/UI-baseline/Faz12-ui-deep-link-kabul-20260723.md` içindedir. Sıradaki
+bağımsız dilim **Gerçek Veri ve Kapanış**'tır.
+
+**Dilim 5 tamamlanma durumu — 28.07.2026:**
+Faz 12 gerçek kabulü, önceki F8/F11 kaynakları değiştirmeden ayrı
+`F12-KABUL-20260728 / F12-HAK-001` taslak kaynağında tamamlandı. Geçerli CSV
+`2.5 m3` ekleyip `3.5 m3 / 3.500 TL` snapshot sonucunu, tek import föyünü ve
+tek metraj satırını üretti. Aynı dosya create/apply retry'larında idempotent
+kaldı; hatalı CSV `ITEM_NOT_FOUND` ile taslakta kalıp metraj yazmadı. Audit ve
+scope mutabakatı, gerçek deep-link yüzeyi, responsive tema/print/erişilebilirlik
+ve `npm run hakedis:import:scenario:verify` read-only kabulü geçti. Faz 12 /
+RFC-F12-01 kapandı.
