@@ -15,11 +15,11 @@ export type StagingBackupVerificationConfig = {
   backupStorage: R2DocumentStorageConfig;
 };
 
-export function readStagingBackupConfig(
+export function readStagingDatabaseUrl(
   env: Readonly<Record<string, string | undefined>>,
-): StagingBackupConfig {
+) {
   if (env.NOA_RUNTIME_ENV !== "staging") {
-    throw new Error("Backup komutu yalnız NOA_RUNTIME_ENV=staging ile çalışır.");
+    throw new Error("Staging veritabanı yalnız NOA_RUNTIME_ENV=staging ile kullanılabilir.");
   }
 
   const databaseUrl = env.DATABASE_URL?.trim() ?? "";
@@ -36,8 +36,16 @@ export function readStagingBackupConfig(
       parsedDatabaseUrl.hostname.toLowerCase(),
     )
   ) {
-    throw new Error("Staging backup uzak PostgreSQL veritabanı gerektirir.");
+    throw new Error("Staging işlemi uzak PostgreSQL veritabanı gerektirir.");
   }
+
+  return databaseUrl;
+}
+
+export function readStagingBackupConfig(
+  env: Readonly<Record<string, string | undefined>>,
+): StagingBackupConfig {
+  const databaseUrl = readStagingDatabaseUrl(env);
 
   const documentStorage = readR2DocumentStorageConfig(env);
   const backupStorage = readR2DocumentStorageConfig({

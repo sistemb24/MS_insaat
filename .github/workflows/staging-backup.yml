@@ -1,6 +1,9 @@
 name: Staging Backup
 
 on:
+  push:
+    branches:
+      - agent/faz36-staging-recovery
   schedule:
     - cron: "15 1 * * *"
   workflow_dispatch:
@@ -67,6 +70,8 @@ jobs:
           test "$client_major" -ge "$server_major"
           echo "PostgreSQL backup client major ${client_major}; server major ${server_major}."
       - run: pnpm install --frozen-lockfile
+      - name: Verify staging recovery source
+        run: pnpm staging:recovery:preflight
       - name: Create backup
         if: ${{ github.event_name == 'schedule' || !inputs.verify_only }}
         run: pnpm staging:backup:create

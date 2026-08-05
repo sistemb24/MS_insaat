@@ -2,6 +2,7 @@ import { describe, expect, test } from "vitest";
 
 import {
   createStagingBackupId,
+  readStagingDatabaseUrl,
   readStagingBackupConfig,
   readStagingBackupVerificationConfig,
 } from "./staging-backup";
@@ -45,6 +46,10 @@ describe("staging backup contract", () => {
         DATABASE_URL: "postgresql://user:secret@localhost/noa",
       }),
     ).toThrow("uzak PostgreSQL");
+  });
+
+  test("exposes only a validated remote staging database URL", () => {
+    expect(readStagingDatabaseUrl(validEnv)).toBe(validEnv.DATABASE_URL);
   });
 
   test("creates a deterministic, secret-free backup identifier", () => {
