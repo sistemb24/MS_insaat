@@ -62,7 +62,20 @@ Kod kapıları:
 
 ## Açık kapı
 
-Bu kayıt yalnız redacted error aktarımını kapatır. Sentry alarm kuralı,
-bildirim hedefi, action-time onaylı alarm testi, escalation teslim kanıtı ve
-incident masa başı provası tamamlanmadan Faz 36 Dilim 4 kapanmaz. Production
-deployment, migration, merge veya trafik yetkisi verilmez.
+Sentry'deki mevcut `Send a notification for high priority issues` kuralı
+`javascript-nextjs` projesinde yalnız `staging` environment'ına daraltıldı.
+Kural yeni veya yeniden yüksek öncelikli işaretlenen issue'larda Suggested
+Assignees, bulunamazsa Recently Active Members hedefine her trigger'da bildirim
+üretir.
+
+Gerçek redacted smoke issue'su kural geçmişinde `1` trigger ve `1` alert
+oluşturdu. Organizasyonda tek Owner üye bulunduğu; bu hesabın Issue Alerts
+tercihinin `On` ve teslim yönteminin `Email` olduğu provider ekranında
+doğrulandı. Kullanıcının bu turdaki açık devam onayıyla `Send Test
+Notification` aksiyonu da çalıştırıldı; provider arayüzü hata vermedi.
+
+Bu kanıt Sentry kuralı, staging filtresi, provider-side trigger ve e-posta
+dispatch zincirini kapatır. Kişisel gelen kutusu okunmadığından nihai insan
+teslim/alındı onayı açık kalır. Bu onay ve incident masa başı kabulü olmadan
+Faz 36 Dilim 4 kapanmaz. Production deployment, migration, merge veya trafik
+yetkisi verilmez.

@@ -2,7 +2,7 @@
 
 Tarih: 04.08.2026
 Faz: 36 / Dilim 1
-Durum: Staging recovery ve redacted error aktarımı kanıtlandı; alarm provası bekleniyor
+Durum: Staging recovery, redacted error ve provider alarmı kanıtlandı; insan kabulü bekleniyor
 
 Sağlayıcı seçimini kolaylaştıran güncel ve resmî kaynaklı karşılaştırma
 `Docs/operasyon/production-provider-aday-mimarileri.md` içindedir. Karşılaştırma
@@ -43,7 +43,7 @@ sokmaz.
 | PostgreSQL | Yerel geliştirme bağlantısı | Neon `noa-insaat-staging`; AWS Frankfurt `eu-central-1` | KARAR BEKLİYOR; ayrı DB zorunlu |
 | Secret injection | Yerel environment | Vercel Preview secret seti ayrıldı; değerler yalnız provider yüzeyinde | KARAR BEKLİYOR; ayrı secret seti |
 | Doküman storage | Local adapter, tek instance | R2 `noa-insaat-staging-eu`; EU jurisdiction; private | KARAR BEKLİYOR; local yasak |
-| Monitoring | Provider yok | Sentry `javascript-nextjs`; DE; redacted error aktarımı doğrulandı, test alarmı bekliyor | KARAR BEKLİYOR |
+| Monitoring | Provider yok | Sentry `javascript-nextjs`; DE; redacted error ve staging email dispatch doğrulandı, insan kabulü bekliyor | KARAR BEKLİYOR |
 | Trafik/TLS | Uygulanmaz | Vercel TLS adayı; domain/DNS sahibi bekliyor | KARAR BEKLİYOR |
 | Release artifact | Yerel build | Vercel build artifact adayı; deployment/rehearsal yapılmadı | KARAR BEKLİYOR; staging ile aynı |
 
@@ -58,7 +58,7 @@ içindeki localhost değeri yalnız örnektir ve production domain kararı sayı
 | F36-PRV-02 | PostgreSQL | Neon AWS Europe | Frankfurt `eu-central-1` | Murat Saygı | Murat Saygı — 04.08.2026 | KAYNAK HAZIR / MIGRATION BEKLİYOR |
 | F36-PRV-03 | Secret injection | Vercel Preview environment | Frankfurt runtime; ayrı secret seti | Murat Saygı | Murat Saygı — 04.08.2026 | PREVIEW SECRET SETİ HAZIR |
 | F36-PRV-04 | Object storage | Cloudflare R2 | `eu` jurisdiction | Murat Saygı | Murat Saygı — 04.08.2026 | RUNTIME VE BACKUP BUCKET HAZIR |
-| F36-PRV-05 | Monitoring/error tracking | Sentry | DE region | Murat Saygı | Murat Saygı — 04.08.2026 | REDACTED ERROR AKTARIMI HAZIR / ALARM BEKLİYOR |
+| F36-PRV-05 | Monitoring/error tracking | Sentry | DE region | Murat Saygı | Murat Saygı — 04.08.2026 | REDACTED ERROR + PROVIDER ALARMI HAZIR / İNSAN KABULÜ BEKLİYOR |
 | F36-PRV-06 | DNS/TLS/CDN/WAF | Geçici Vercel hostname; özel DNS ertelendi | Frankfurt runtime | Murat Saygı | Murat Saygı — 04.08.2026 | ONAYLI / HOSTNAME KANITI DİLİM 2 |
 | F36-PRV-07 | DB+binary backup hedefi | Neon PITR + bağımsız DB export + R2 binary recovery | EU | Murat Saygı | Murat Saygı — 04.08.2026 | ONAYLI / RESTORE KANITI DİLİM 3 |
 

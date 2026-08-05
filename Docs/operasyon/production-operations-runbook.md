@@ -109,5 +109,10 @@ Bu satırlar atanıp staging kanıtı oluşmadan “production-ready”, “yede
 - Yeni bir olayda önce `environment=staging`, release ve `noa.*` etiketleri
   doğrulanır; PII veya request verisi görülürse aktarım kapatılır ve olay veri
   ihlali şüphesiyle Murat Saygı'ya escalate edilir.
-- Alarm/escalation provası henüz tamamlanmadığından staging “izleniyor” kabulü
-  yalnız error aktarımıyla sınırlıdır; Dilim 4 kapanışına esas değildir.
+- Yüksek öncelikli issue alarmı yalnız `staging` environment'ına bağlıdır;
+  Suggested Assignees, bulunamazsa Recently Active Members hedefi her trigger'da
+  e-posta dispatch üretir.
+- Provider-side provada redacted issue `1` trigger/`1` alert üretmiş, tek Owner
+  üyede Issue Alerts `On` ve teslim yöntemi `Email` doğrulanmış, test bildirimi
+  çalıştırılmıştır. Kişisel mailbox okunmadığı için insan teslim/alındı onayı
+  ile incident masa başı kabulü açık kalır ve Dilim 4 kapanmaz.

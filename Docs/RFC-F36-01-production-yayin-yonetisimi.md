@@ -277,3 +277,14 @@ IP saklama ayrıca kapatıldı. Tek seferlik smoke environment anahtarı kanıt
 sonrası silindi ve yeni deployment'ta endpoint `404` ile kapalıdır. Bu kayıt
 yalnız redacted error aktarımını kanıtlar; test alarmı, escalation ve incident
 masa başı provası tamamlanmadan Dilim 4 kapanmaz.
+
+**Dilim 4 provider-side alarm/escalation provası — 05.08.2026:** Sentry'nin
+mevcut yüksek öncelikli issue alarmı `javascript-nextjs` projesinde yalnız
+`staging` environment'ına daraltıldı. Redacted smoke issue'su kural geçmişinde
+`1` trigger/`1` alert üretmiştir. Organizasyonun tek Owner üyesinde Issue
+Alerts `On`, delivery method `Email`; kural aksiyonu Suggested Assignees ve
+fallthrough olarak Recently Active Members şeklindedir. Kullanıcının devam
+onayıyla `Send Test Notification` çalıştırıldı ve provider arayüzü hata
+vermedi. Bu, provider-side dispatch zincirini kanıtlar; kişisel mailbox
+okunmadığı için insan teslim/alındı onayı ve incident masa başı kabulü açık
+kalmaya devam eder.

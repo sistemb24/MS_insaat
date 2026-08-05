@@ -3515,3 +3515,12 @@ header, query veya body alanı bulunmadı ve provider düzeyinde IP saklama da
 kapatıldı. Geçici smoke anahtarı kaldırıldı; kapanış deployment'ında health
 `ok`, DB readiness `ready` ve smoke endpoint'i yetkili başlıkla dahi `404`
 verdi. Alarm/escalation provası açık olduğundan Dilim 4 henüz kapanmadı.
+
+**Dilim 4 provider-side alarm/escalation provası — 05.08.2026:** Mevcut
+Sentry yüksek öncelikli issue alarmı `javascript-nextjs` için yalnız `staging`
+ortamına daraltıldı. Redacted smoke issue'su alarm geçmişinde `1` trigger ve
+`1` alert üretti. Tek Owner üyeli organizasyonda Issue Alerts `On`, teslim
+yöntemi `Email` ve fallthrough hedefi Recently Active Members olarak
+doğrulandı; kullanıcı onayıyla provider test bildirimi de gönderildi. Kişisel
+gelen kutusu okunmadığından insan teslim/alındı onayı ve incident masa başı
+kabulü açık; Dilim 4 henüz kapanmadı.
