@@ -45,6 +45,7 @@
     "staging:backup:create": "tsx scripts/create-staging-backup.ts",
     "staging:backup:verify": "tsx scripts/verify-staging-backup.ts",
     "staging:recovery:preflight": "tsx scripts/verify-staging-recovery-source.ts",
+    "staging:recovery:restore": "tsx scripts/restore-staging-backup.ts",
     "fleet:acceptance:verify": "tsx scripts/verify-vehicle-fleet-acceptance.ts",
     "tire:acceptance:verify": "tsx scripts/verify-vehicle-tire-acceptance.ts",
     "search:benchmark": "tsx scripts/benchmark-global-search.ts",

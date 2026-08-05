@@ -16,6 +16,31 @@ export type StagingRecoverySourceInventory = {
   publicTableNames: readonly string[];
 };
 
+export function createNodePostgresConnectionString(databaseUrl: string) {
+  const url = new URL(databaseUrl);
+  const sslMode = url.searchParams.get("sslmode");
+  if (["prefer", "require", "verify-ca"].includes(sslMode ?? "")) {
+    url.searchParams.set("sslmode", "verify-full");
+  }
+  return url.toString();
+}
+
+export function createStagingRestoreDatabaseName(now: Date) {
+  const timestamp = now
+    .toISOString()
+    .replace(/[-:]/g, "")
+    .replace(/\.\d{3}Z$/, "z")
+    .toLowerCase();
+  return `noa_restore_${timestamp}`;
+}
+
+export function assertStagingRestoreDatabaseName(databaseName: string) {
+  if (!/^noa_restore_[a-z0-9_]{10,48}$/.test(databaseName)) {
+    throw new Error("Geçici restore veritabanı adı güvenli değil.");
+  }
+  return databaseName;
+}
+
 export function evaluateStagingRecoverySource(
   inventory: StagingRecoverySourceInventory,
 ) {
