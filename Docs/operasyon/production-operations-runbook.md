@@ -114,5 +114,8 @@ Bu satırlar atanıp staging kanıtı oluşmadan “production-ready”, “yede
   e-posta dispatch üretir.
 - Provider-side provada redacted issue `1` trigger/`1` alert üretmiş, tek Owner
   üyede Issue Alerts `On` ve teslim yöntemi `Email` doğrulanmış, test bildirimi
-  çalıştırılmıştır. Kişisel mailbox okunmadığı için insan teslim/alındı onayı
-  ile incident masa başı kabulü açık kalır ve Dilim 4 kapanmaz.
+  çalıştırılmış ve Murat Saygı e-postayı aldığını onaylamıştır.
+- Masa başında olay `SEV-3` sayıldı: production/gerçek kullanıcı etkisi yok,
+  health/readiness yeşil ve payload redacted olduğundan rollback, forward-fix
+  veya restore gerekmedi. Smoke anahtarı kapalı tutuldu; issue kanıt olarak
+  bırakıldı. Tek-sorumlu insan riski production öncesi giderilmelidir.

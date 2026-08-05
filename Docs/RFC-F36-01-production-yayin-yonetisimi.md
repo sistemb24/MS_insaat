@@ -288,3 +288,14 @@ onayıyla `Send Test Notification` çalıştırıldı ve provider arayüzü hata
 vermedi. Bu, provider-side dispatch zincirini kanıtlar; kişisel mailbox
 okunmadığı için insan teslim/alındı onayı ve incident masa başı kabulü açık
 kalmaya devam eder.
+
+**Dilim 4 gözlemlenebilirlik ve incident kapanışı — 05.08.2026:** Murat Saygı
+provider test e-postasının ulaştığını açıkça onayladı. Incident masa başında
+sentetik staging error'u `SEV-3` sayıldı: production/gerçek kullanıcı etkisi
+yok; Sentry issue, staging-only alarm, tek Owner e-postası ve insan teslim
+onayı zinciri geçti. Triage doğru staging/release, redacted event, users `0`,
+health/readiness yeşil ve smoke endpoint'i kapalı sonucunu verdi; rollback,
+forward-fix veya restore gerekmedi. Server error aktarımı merkezi/redacted;
+log, trace, replay ve client telemetry veri minimizasyonu gereği kapalıdır.
+Runbook sahibi Murat Saygı ve production öncesi giderilecek tek-sorumlu riski
+açıktır. Bu sınırlarla Dilim 4 kabulü tamamlandı; production yetkisi verilmez.

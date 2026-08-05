@@ -60,7 +60,7 @@ Kod kapıları:
 - Tanılama sertleştirmesi GitHub Actions `31011311596`: `validate` geçti.
 - Vercel deployment check geçti.
 
-## Açık kapı
+## Alarm/escalation kapanışı
 
 Sentry'deki mevcut `Send a notification for high priority issues` kuralı
 `javascript-nextjs` projesinde yalnız `staging` environment'ına daraltıldı.
@@ -75,7 +75,23 @@ doğrulandı. Kullanıcının bu turdaki açık devam onayıyla `Send Test
 Notification` aksiyonu da çalıştırıldı; provider arayüzü hata vermedi.
 
 Bu kanıt Sentry kuralı, staging filtresi, provider-side trigger ve e-posta
-dispatch zincirini kapatır. Kişisel gelen kutusu okunmadığından nihai insan
-teslim/alındı onayı açık kalır. Bu onay ve incident masa başı kabulü olmadan
-Faz 36 Dilim 4 kapanmaz. Production deployment, migration, merge veya trafik
-yetkisi verilmez.
+dispatch zincirini kapatır. Murat Saygı, test e-postasını aldığını 05.08.2026
+tarihinde açıkça onayladı.
+
+Incident masa başı sonucu:
+
+- Senaryo: staging'de sentetik yüksek öncelikli redacted server error.
+- Severity: `SEV-3`; production, gerçek kullanıcı veya veri etkisi yok.
+- Detection/escalation: Sentry issue → staging alarmı → Owner e-postası → insan
+  teslim onayı zinciri geçti.
+- Triage: `environment=staging`, doğru release, yalnız `noa.*` etiketleri,
+  users `0`, ham olayda PII/request alanı yok; health ve DB readiness yeşil.
+- Karar: sentetik prova ve sağlıklı runtime nedeniyle rollback, forward-fix veya
+  restore gerekmedi; issue kanıt olarak tutuldu.
+- Kapanış: geçici smoke anahtarı silinmiş ve endpoint `404`; tek-sorumlu insan
+  riski production öncesi açık kalır.
+
+Staging kabulünde error olayları merkezi ve redacted tutulur; log, trace,
+replay ve client telemetry veri minimizasyonu gereği kapalı kalır. Health ve
+readiness operasyon sinyalidir. Bu sınırlarla Faz 36 Dilim 4 tamamlandı.
+Production deployment, migration, merge veya trafik yetkisi verilmez.

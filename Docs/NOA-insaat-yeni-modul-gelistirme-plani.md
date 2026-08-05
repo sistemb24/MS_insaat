@@ -3524,3 +3524,14 @@ yöntemi `Email` ve fallthrough hedefi Recently Active Members olarak
 doğrulandı; kullanıcı onayıyla provider test bildirimi de gönderildi. Kişisel
 gelen kutusu okunmadığından insan teslim/alındı onayı ve incident masa başı
 kabulü açık; Dilim 4 henüz kapanmadı.
+
+**Dilim 4 gözlemlenebilirlik ve incident kapanışı — 05.08.2026:** Murat Saygı
+Sentry test e-postasını aldığını açıkça onayladı. Sentetik staging olayı
+`SEV-3` olarak masa başında sınıflandırıldı; Sentry issue → staging-only alarm
+→ tek Owner e-postası → insan teslim onayı zinciri geçti. Doğru environment ve
+release, redacted event, users `0`, health `ok`, DB readiness `ready` ve kapalı
+smoke endpoint'i doğrulandığından rollback/forward-fix/restore gerekmedi.
+Server error aktarımı merkezi ve redacted; log, trace, replay ve client
+telemetry veri minimizasyonu gereği kapalıdır. Tek-sorumlu insan riski
+production öncesi açık kalmak üzere Dilim 4 tamamlandı. Sıradaki bağımsız
+çalışma **Faz 36 Dilim 5 — Domain, TLS ve Yayın İçeriği**dir.
