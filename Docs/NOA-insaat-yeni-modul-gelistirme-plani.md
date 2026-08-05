@@ -3579,3 +3579,18 @@ aynı smoke'lar yeniden geçti. Son landing CSP/HSTS/X-Robots başlıklarını,
 kapalı smoke POST'u `404` sonucunu korur. Dilim 6 tamamlandı; production
 migration/deployment/domain/DNS/trafik yetkisi verilmez. Sıradaki bağımsız
 çalışma **Faz 36 Dilim 7 — Production Go/No-Go**dur.
+
+**Dilim 7 production Go/No-Go değerlendirmesi — 05.08.2026:** Release
+adayının CI, Vercel Preview, migration, tenant+binary recovery, redacted
+monitoring, security/indexing ve rollback/forward kanıtları staging için
+yeşildir. Salt-okunur production denetiminde Vercel Production environment
+değişkeni bulunmadı; tek production deployment `Error` durumundadır. Hesaptaki
+`insaatyonet.com` production domaini olarak onaylanmamış, DNS yapılandırması
+eksik ve hostname çözülmez durumdadır. Ayrı production DB/storage/secret/
+monitoring kaynakları, production RPO/RTO/retention/SLA, resmi yayın girdileri,
+sorumlu/onaylayan/yedek rolleri ve ayrı canlı işlem yetkisi eksik olduğundan
+karar **NO-GO** olarak kaydedildi. Production migration, deployment, DNS/TLS,
+indexing, PR merge veya trafik değişikliği yapılmadı. Kanıt paketi
+`Docs/UI-baseline/Faz36-dilim7-production-go-no-go-20260805.md` içindedir;
+sıradaki adım P-B01–P-B11 karar girdilerinin kullanıcı tarafından
+tamamlanmasıdır.

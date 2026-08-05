@@ -1,7 +1,7 @@
 # RFC-F36-01 — Production Yayın Yönetişimi
 
 > Tarih: 04.08.2026
-> Durum: Onaylandı — Dilim 1 başladı; dış girdiler bekleniyor
+> Durum: Dilim 7 değerlendirildi — Production NO-GO; dış girdiler bekleniyor
 
 ## 1. Amaç ve faz sınırı
 
@@ -299,3 +299,16 @@ forward-fix veya restore gerekmedi. Server error aktarımı merkezi/redacted;
 log, trace, replay ve client telemetry veri minimizasyonu gereği kapalıdır.
 Runbook sahibi Murat Saygı ve production öncesi giderilecek tek-sorumlu riski
 açıktır. Bu sınırlarla Dilim 4 kabulü tamamlandı; production yetkisi verilmez.
+
+**Dilim 7 production Go/No-Go değerlendirmesi — 05.08.2026:** Kod, CI,
+staging deployment, 67/67 migration, tenant+binary recovery, redacted
+monitoring ve 35,8 saniyelik rollback/forward provası yeşildir. Salt-okunur
+provider denetiminde Vercel Production environment değişkeni bulunmadı; tek
+production deployment `Error` durumundadır. Hesaptaki `insaatyonet.com`
+production domaini olarak onaylanmamış, DNS yapılandırması eksik ve hostname
+çözülmez durumdadır. Ayrı production DB/storage/secret/monitoring kaynakları,
+production RPO/RTO/retention/SLA, resmi yayın girdileri, roller ve yedek insan
+sorumlu onaylanmadığından karar **NO-GO**dur. Production migration,
+deployment, DNS/TLS, indexing, PR merge veya trafik işlemi yapılmadı. Kanıt ve
+ayrı canlı yayın talebi sınırı
+`Docs/UI-baseline/Faz36-dilim7-production-go-no-go-20260805.md` içindedir.
