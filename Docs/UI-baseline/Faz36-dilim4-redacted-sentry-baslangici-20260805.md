@@ -1,7 +1,7 @@
 # Faz 36 Dilim 4 — Redacted Sentry Başlangıç Kanıtı
 
-Tarih: 05.08.2026  
-Kapsam: Yalnız staging Preview error monitoring başlangıcı  
+Tarih: 05.08.2026
+Kapsam: Yalnız staging Preview error monitoring başlangıcı
 Durum: Redacted error aktarımı kanıtlandı; alarm/escalation provası açık
 
 ## Uygulanan sınır
