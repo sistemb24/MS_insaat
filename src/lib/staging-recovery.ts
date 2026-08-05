@@ -41,6 +41,13 @@ export function assertStagingRestoreDatabaseName(databaseName: string) {
   return databaseName;
 }
 
+export function normalizeStagingTableNames(value: unknown) {
+  if (!Array.isArray(value) || !value.every((entry) => typeof entry === "string")) {
+    throw new Error("Staging tablo envanteri string dizisi değil.");
+  }
+  return value;
+}
+
 export function evaluateStagingRecoverySource(
   inventory: StagingRecoverySourceInventory,
 ) {

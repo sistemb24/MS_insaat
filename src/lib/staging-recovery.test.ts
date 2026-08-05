@@ -5,6 +5,7 @@ import {
   createNodePostgresConnectionString,
   createStagingRestoreDatabaseName,
   evaluateStagingRecoverySource,
+  normalizeStagingTableNames,
   STAGING_RECOVERY_CRITICAL_TABLES,
 } from "./staging-recovery";
 
@@ -26,6 +27,16 @@ describe("staging recovery source", () => {
         "postgresql://user:secret@db.example.com/noa?sslmode=require",
       ),
     ).toContain("sslmode=verify-full");
+  });
+
+  test("rejects an unparsed PostgreSQL name array", () => {
+    expect(normalizeStagingTableNames(["Tenant", "Company"])).toEqual([
+      "Tenant",
+      "Company",
+    ]);
+    expect(() => normalizeStagingTableNames("{Tenant,Company}")).toThrow(
+      "string dizisi değil",
+    );
   });
 
   test("accepts a remote source with the complete migration and table contract", () => {

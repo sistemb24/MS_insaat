@@ -1,6 +1,9 @@
 import type { Client } from "pg";
 
-import type { StagingRecoverySourceInventory } from "./staging-recovery";
+import {
+  normalizeStagingTableNames,
+  type StagingRecoverySourceInventory,
+} from "./staging-recovery";
 
 export async function readStagingRecoveryInventory(
   client: Client,
@@ -8,16 +11,18 @@ export async function readStagingRecoveryInventory(
 ): Promise<StagingRecoverySourceInventory> {
   const databaseResult = await client.query<{
     database_bytes: string;
-    table_names: string[] | null;
+    table_names: unknown;
   }>(`
     SELECT
       pg_database_size(current_database())::text AS database_bytes,
-      array_agg(tablename ORDER BY tablename)
+      array_agg(tablename::text ORDER BY tablename)
         FILTER (WHERE tablename IS NOT NULL) AS table_names
     FROM pg_catalog.pg_tables
     WHERE schemaname = 'public'
   `);
-  const publicTableNames = databaseResult.rows[0]?.table_names ?? [];
+  const publicTableNames = normalizeStagingTableNames(
+    databaseResult.rows[0]?.table_names ?? [],
+  );
   const appliedMigrationCount = publicTableNames.includes("_prisma_migrations")
     ? await readAppliedMigrationCount(client)
     : 0;
