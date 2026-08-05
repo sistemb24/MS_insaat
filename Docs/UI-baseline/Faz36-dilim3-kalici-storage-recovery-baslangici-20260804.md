@@ -93,3 +93,28 @@ restore tatbikatı değildir. Workflow varsayılan dala alınmadan günlük sche
 çalışmaz. Zamanlı backup, yeni izole DB/bucket namespace'e restore, migration
 status, kritik tablo sayımı, tenant izolasyonu ve doküman read smoke'u açık
 kaldığından RPO/RTO henüz ölçülmüş sonuç değildir.
+
+## Staging migration ve izole restore provası — 05.08.2026
+
+İlk recovery-source preflight'i GitHub secret hedefinde `0/67` migration,
+`0` public tablo ve eksik sekiz kritik tablo saptayıp backup/restore öncesinde
+durdu. Kullanıcı onayıyla boş staging DB'ye yalnız `prisma migrate deploy`
+uygulandı; `db push` ve seed çalıştırılmadı.
+
+Başarılı [GitHub Actions koşusu
+`31003284183`](https://github.com/sistemb24/MS_insaat/actions/runs/31003284183)
+şu kanıtları üretti:
+
+- kaynak DB: `67/67` migration, `114` public tablo, eksik kritik tablo yok;
+- backup: `499.671` byte custom-format arşiv, checksum ve
+  `pg_restore --list` doğrulaması;
+- izole restore: sıkı `noa_restore_*` geçici DB, `67/67` migration ve `114`
+  public tablo;
+- R2: yalnız `restore-rehearsal/` geçici namespace marker yazma/okuma;
+- ölçüm: backup yaşı `113` saniye, restore süresi `109` saniye;
+- cleanup: geçici DB ve oluşturulan R2 anahtarları silindi.
+
+Kaynak staging DB'de tenant, company, `DocumentFile` ve binary nesne sayıları
+sıfırdır. Bu nedenle ölçüm onaylı 24 saat RPO/8 saat RTO hedeflerinin içinde
+olsa da gerçek tenant izolasyonu ve binary doküman read smoke'u henüz kanıt
+değildir; üretim recovery iddiasına dönüştürülmez.

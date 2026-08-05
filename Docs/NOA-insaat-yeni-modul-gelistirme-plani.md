@@ -3478,3 +3478,13 @@ export, R2 manifest yazımı ve bütünlük okuması geçti. Boş staging içeri
 `900` byte DB exportu ve `0` binary nesne doğrulandı. Varsayılan daldaki zamanlı
 çalışma ile izole DB/bucket restore tatbikatı açık olduğundan 24 saat RPO/8
 saat RTO hâlâ onaylı hedef, ölçülmüş sonuç değildir.
+
+**Dilim 3 staging migration ve izole restore provası — 05.08.2026:** Boş
+staging DB'ye yalnız `prisma migrate deploy` ile 67/67 migration uygulandı;
+114 public tablo ve sekiz kritik tablo doğrulandı. `499.671` byte custom-format
+backup R2'ye yazılıp checksum ve `pg_restore --list` ile okundu. Backup,
+`noa_restore_*` geçici DB'ye ve `restore-rehearsal/` geçici R2 namespace'ine
+restore edildi; 67/67 migration ve 114 tablo yeniden doğrulandı, DB/namespace
+cleanup tamamlandı. Boş veri setinde backup yaşı 113 saniye, restore süresi
+109 saniyedir ve staging hedeflerinin içindedir. Tenant/doküman sayısı sıfır
+olduğundan gerçek tenant izolasyonu ve binary doküman read smoke'u açık kalır.

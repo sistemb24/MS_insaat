@@ -227,3 +227,21 @@ backup yazma/okuma kanıtıdır; varsayılan daldaki zamanlı çalışma ve izol
 DB/bucket restore tatbikatı tamamlanmadığından 24 saat RPO/8 saat RTO henüz
 ölçülmüş sonuç değildir. Koşu kanıtı:
 https://github.com/sistemb24/MS_insaat/actions/runs/30999968809
+
+**Dilim 3 staging migration ve izole restore provası — 05.08.2026:** İlk
+fail-closed kaynak preflight'i GitHub `STAGING_DATABASE_URL` hedefinde 0/67
+migration ve sıfır public tablo saptadı. Kullanıcı onayıyla boş staging DB'ye
+yalnız `prisma migrate deploy` uygulandı; `db push` ve seed çalıştırılmadı.
+Sonuç 67/67 migration, 114 public tablo ve eksiksiz kritik tablo setidir.
+
+`499.671` byte post-migration custom-format backup R2'ye yazıldı ve bütünlüğü
+doğrulandı. Backup, sıkı `noa_restore_*` adlı geçici DB ile yalnız
+`restore-rehearsal/` namespace'ine restore edildi; 67/67 migration, 114 tablo
+ve R2 marker okuması geçti. Backup yaşı 113 saniye, restore süresi 109 saniye
+ölçüldü; geçici DB ve namespace cleanup'ı tamamlandı. Kanıt:
+https://github.com/sistemb24/MS_insaat/actions/runs/31003284183
+
+Bu boş staging şema provası 24 saat RPO/8 saat RTO hedeflerinin içinde kalır;
+ancak tenant, company, doküman ve binary nesne sayıları sıfır olduğundan gerçek
+tenant izolasyonu ve doküman read smoke'u tamamlanmış sayılmaz. Production
+migration, production restore veya trafik yetkisi verilmez.
