@@ -6,6 +6,7 @@ import {
 
 export const PRODUCTION_BACKUP_CONFIRMATION = "production-backup-execute";
 export const PRODUCTION_MIGRATION_CONFIRMATION = "production-migration-execute";
+export const PRODUCTION_RESTORE_CONFIRMATION = "production-restore-rehearsal";
 export type ProductionBackupConfig = ProductionRecoveryPreflightConfig;
 
 export function readProductionBackupConfig(
@@ -24,6 +25,20 @@ export function readProductionMigrationConfig(
     throw new Error("Production migration açık onayı eksik.");
   }
   return readProductionBackupConfig(env);
+}
+
+export function readProductionRestoreConfig(
+  env: Readonly<Record<string, string | undefined>>,
+) {
+  if (env.NOA_PRODUCTION_RESTORE_CONFIRMATION !== PRODUCTION_RESTORE_CONFIRMATION) {
+    throw new Error("Production restore açık onayı eksik.");
+  }
+  const config = readProductionBackupConfig(env);
+  const backupId = env.NOA_BACKUP_ID?.trim() ?? "";
+  if (!/^\d{8}T\d{6}Z-[a-z0-9._-]{7,80}$/.test(backupId)) {
+    throw new Error("Production restore için güvenli backup kimliği zorunludur.");
+  }
+  return { ...config, backupId };
 }
 
 export function createProductionBackupId(now: Date, releaseId: string) {
