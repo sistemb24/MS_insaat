@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import {
   isStagingObservabilitySmokeAuthorized,
+  readServerObservabilityConfig,
   readStagingObservabilityConfig,
   sanitizeStagingSentryEvent,
 } from "./staging-observability";
@@ -106,5 +107,57 @@ describe("staging observability boundary", () => {
         "staging-observability",
       ),
     ).toBe(false);
+  });
+});
+
+describe("server observability boundary", () => {
+  it("enables production only when the expected non-staging project matches", () => {
+    const production = {
+      NOA_RUNTIME_ENV: "production",
+      SENTRY_DSN: "https://public@example.ingest.sentry.io/987654321",
+      SENTRY_EXPECTED_PROJECT_ID: "987654321",
+      VERCEL_GIT_COMMIT_SHA: "PRODUCTION_SHA",
+    };
+
+    expect(readServerObservabilityConfig(production)).toEqual({
+      dsn: production.SENTRY_DSN,
+      enabled: true,
+      environment: "production",
+      reason: "enabled",
+      release: "production_sha",
+    });
+    expect(
+      readServerObservabilityConfig({
+        ...production,
+        SENTRY_EXPECTED_PROJECT_ID: "wrong-project",
+      }).reason,
+    ).toBe("unexpected-project");
+    expect(
+      readServerObservabilityConfig({
+        ...production,
+        SENTRY_EXPECTED_PROJECT_ID: undefined,
+      }).reason,
+    ).toBe("missing-expected-project");
+  });
+
+  it("refuses to reuse the staging project in production", () => {
+    expect(
+      readServerObservabilityConfig({
+        NOA_RUNTIME_ENV: "production",
+        SENTRY_DSN:
+          "https://public@example.ingest.sentry.io/4511394440151120",
+        SENTRY_EXPECTED_PROJECT_ID: "4511394440151120",
+      }).reason,
+    ).toBe("unexpected-project");
+  });
+
+  it("keeps local and unknown environments disabled", () => {
+    expect(
+      readServerObservabilityConfig({ NOA_RUNTIME_ENV: "development" }),
+    ).toEqual({
+      enabled: false,
+      environment: "staging",
+      reason: "not-supported-environment",
+    });
   });
 });

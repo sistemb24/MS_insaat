@@ -3626,3 +3626,19 @@ preflight çalıştırılmadı ve production verisi okunmadı. Kanıt
 `Docs/UI-baseline/Faz36-production-backup-migration-preflight-sozlesmesi-20260805.md`
 içindedir. Sıradaki ayrı onay kapısı ilk read-only production preflight
 çalıştırmasıdır.
+
+**Production-safe gözlemlenebilirlik sözleşmesi — 08.08.2026:** Sunucu Sentry
+başlangıcı artık yalnız staging ile sınırlı değildir; `NOA_RUNTIME_ENV=production`
+ancak HTTPS DSN içindeki proje kimliği encrypted
+`SENTRY_EXPECTED_PROJECT_ID` değeriyle eşleştiğinde ve staging proje kimliği
+olmadığında etkinleşir. Eksik/geçersiz DSN, eksik/beklenmeyen proje kimliği ile
+staging/production dışı runtime fail-closed kalır. Event sanitization, PII ve
+request/identity/serbest metin filtreleri ile `tracesSampleRate=0` korunur;
+sentetik `/api/observability-smoke` endpoint'i staging-only ve tam onaylıdır.
+Gerçek production DSN kimliği provider secret yüzeyinde henüz yapılandırılmadı,
+Sentry olayı/alarmı, deployment ve trafik tetiklenmedi. Hedefli 9 test, tam 361
+test dosyası/1.917 test, type-check, Prisma validate, lint ve 102 route'lu
+production build geçti. Kanıt
+`Docs/UI-baseline/Faz36-production-observability-sozlesmesi-20260808.md`
+içindedir; sıradaki ayrı onay kapısı production expected-project secret'ının
+sağlayıcıda yapılandırılması ve kapalı telemetry kabul provasıdır.

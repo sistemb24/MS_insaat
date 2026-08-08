@@ -13,6 +13,70 @@ type StagingObservabilityConfig = {
   release?: string;
 };
 
+type ServerObservabilityConfig = {
+  dsn?: string;
+  enabled: boolean;
+  environment: "production" | "staging";
+  reason:
+    | "enabled"
+    | "invalid-dsn"
+    | "missing-dsn"
+    | "missing-expected-project"
+    | "not-supported-environment"
+    | "unexpected-project";
+  release?: string;
+};
+
+export function readServerObservabilityConfig(
+  env: Readonly<Record<string, string | undefined>>,
+): ServerObservabilityConfig {
+  const environment = env.NOA_RUNTIME_ENV;
+  if (environment !== "staging" && environment !== "production") {
+    return {
+      enabled: false,
+      environment: "staging",
+      reason: "not-supported-environment",
+    };
+  }
+
+  const dsn = env.SENTRY_DSN?.trim();
+  if (!dsn) {
+    return { enabled: false, environment, reason: "missing-dsn" };
+  }
+
+  const projectId = readSentryProjectId(dsn);
+  if (!projectId) {
+    return { enabled: false, environment, reason: "invalid-dsn" };
+  }
+
+  if (environment === "production") {
+    const expectedProjectId = env.SENTRY_EXPECTED_PROJECT_ID?.trim();
+    if (!expectedProjectId) {
+      return {
+        enabled: false,
+        environment,
+        reason: "missing-expected-project",
+      };
+    }
+    if (
+      projectId !== expectedProjectId ||
+      projectId === STAGING_SENTRY_PROJECT_ID
+    ) {
+      return { enabled: false, environment, reason: "unexpected-project" };
+    }
+  }
+
+  return {
+    dsn,
+    enabled: true,
+    environment,
+    reason: "enabled",
+    release: normalizeRelease(
+      env.VERCEL_GIT_COMMIT_SHA ?? env.NOA_RELEASE_ID ?? "",
+    ),
+  };
+}
+
 export function readStagingObservabilityConfig(
   env: Readonly<Record<string, string | undefined>>,
 ): StagingObservabilityConfig {
@@ -87,18 +151,22 @@ export function isStagingObservabilitySmokeAuthorized(
   );
 }
 
-function isValidSentryDsn(value: string) {
+function readSentryProjectId(value: string) {
   try {
     const url = new URL(value);
-    return (
+    const valid =
       url.protocol === "https:" &&
       Boolean(url.username) &&
       !url.password &&
-      /^\/\d+\/?$/.test(url.pathname)
-    );
+      /^\/\d+\/?$/.test(url.pathname);
+    return valid ? url.pathname.replaceAll("/", "") : null;
   } catch {
-    return false;
+    return null;
   }
+}
+
+function isValidSentryDsn(value: string) {
+  return readSentryProjectId(value) !== null;
 }
 
 function normalizeRelease(value: string) {
