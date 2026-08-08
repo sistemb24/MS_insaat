@@ -145,8 +145,8 @@ describe("server observability boundary", () => {
       readServerObservabilityConfig({
         NOA_RUNTIME_ENV: "production",
         SENTRY_DSN:
-          "https://public@example.ingest.sentry.io/4511394440151120",
-        SENTRY_EXPECTED_PROJECT_ID: "4511394440151120",
+          "https://public@example.ingest.sentry.io/4511854028456016",
+        SENTRY_EXPECTED_PROJECT_ID: "4511854028456016",
       }).reason,
     ).toBe("unexpected-project");
   });

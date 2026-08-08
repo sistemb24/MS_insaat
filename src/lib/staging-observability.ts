@@ -3,7 +3,7 @@ import type { ErrorEvent } from "@sentry/nextjs";
 export const STAGING_OBSERVABILITY_SMOKE_CONFIRMATION =
   "staging-observability";
 
-export const STAGING_SENTRY_PROJECT_ID = "4511394440151120";
+export const STAGING_SENTRY_PROJECT_ID = "4511854028456016";
 
 type StagingObservabilityConfig = {
   dsn?: string;

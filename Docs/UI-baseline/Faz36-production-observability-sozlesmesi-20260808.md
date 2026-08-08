@@ -15,7 +15,7 @@ kullanıcı trafiği başlatmaz.
 - `NOA_RUNTIME_ENV=production` için `SENTRY_DSN` HTTPS olmalıdır.
 - DSN içindeki sayısal proje kimliği encrypted `SENTRY_EXPECTED_PROJECT_ID` ile
   birebir eşleşmelidir.
-- Production, staging proje kimliği `4511394440151120` ile çalışmayı reddeder.
+- Production, staging proje kimliği `4511854028456016` ile çalışmayı reddeder.
 - Eksik DSN, eksik expected-project, geçersiz DSN, beklenmeyen proje veya
   staging/production dışı runtime telemetry'yi kapalı tutar.
 - Mevcut sanitizer request, user, cookies, extra, serbest hata mesajları ve
