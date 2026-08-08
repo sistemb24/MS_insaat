@@ -75,7 +75,11 @@ async function main() {
         localMigrationNames: await readLocalMigrationNames(),
         ...inventory,
       });
-      if (!migration.ready || migration.pendingMigrationCount !== 0) {
+      // The selected backup was intentionally captured before the first
+      // production migration. Pending migrations therefore describe its
+      // recovery point; unknown, unfinished, rolled-back or unmanaged state
+      // remains fail-closed through `migration.ready`.
+      if (!migration.ready) {
         throw new Error("İzole restore migration envanteri doğrulanamadı.");
       }
       console.log(JSON.stringify({
