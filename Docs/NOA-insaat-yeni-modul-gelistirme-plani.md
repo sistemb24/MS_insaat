@@ -3642,3 +3642,18 @@ production build geçti. Kanıt
 `Docs/UI-baseline/Faz36-production-observability-sozlesmesi-20260808.md`
 içindedir; sıradaki ayrı onay kapısı production expected-project secret'ının
 sağlayıcıda yapılandırılması ve kapalı telemetry kabul provasıdır.
+
+**Production telemetry kabul sözleşmesi — 08.08.2026:** Production
+`/api/observability-smoke` yolu yalnız geçici
+`NOA_OBSERVABILITY_SMOKE_ENABLED=true`, `NOA_RUNTIME_ENV=production`, geçerli
+HTTPS DSN, DSN ile eşleşen non-staging `SENTRY_EXPECTED_PROJECT_ID` ve tam
+`production-observability` confirmation birlikte sağlanırsa tek sabit ve
+redacted sentetik error üretir; diğer bütün durumlar `404` ile fail-closed
+kalır. Staging confirmation productionda yetki vermez ve mevcut staging kabul
+yolu korunur. Hedefli 12 test, tam 361 test dosyası/1.920 test, type-check,
+Prisma validate, lint ve 102 route'lu production build geçti. Provider switch
+açılmadı, Sentry olayı, deployment, DNS/TLS, indexing veya trafik değişikliği
+yapılmadı. Kanıt
+`Docs/UI-baseline/Faz36-production-telemetry-kabul-sozlesmesi-20260808.md`
+içindedir; sıradaki ayrı onay kapısı sözleşmenin merge edilmesi, ardından geçici
+switch/redeploy/tek olay doğrulama/switch kapatma çevrimidir.

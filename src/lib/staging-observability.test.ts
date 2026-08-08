@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import {
+  isProductionObservabilitySmokeAuthorized,
   isStagingObservabilitySmokeAuthorized,
   readServerObservabilityConfig,
   readStagingObservabilityConfig,
@@ -159,5 +160,41 @@ describe("server observability boundary", () => {
       environment: "staging",
       reason: "not-supported-environment",
     });
+  });
+
+  it("requires the complete production smoke gate", () => {
+    const enabled = {
+      NOA_OBSERVABILITY_SMOKE_ENABLED: "true",
+      NOA_RUNTIME_ENV: "production",
+      SENTRY_DSN: "https://public@example.ingest.sentry.io/4511859248791632",
+      SENTRY_EXPECTED_PROJECT_ID: "4511859248791632",
+    };
+
+    expect(
+      isProductionObservabilitySmokeAuthorized(
+        enabled,
+        "production-observability",
+      ),
+    ).toBe(true);
+    expect(
+      isProductionObservabilitySmokeAuthorized(enabled, "wrong"),
+    ).toBe(false);
+    expect(
+      isProductionObservabilitySmokeAuthorized(
+        { ...enabled, NOA_OBSERVABILITY_SMOKE_ENABLED: "false" },
+        "production-observability",
+      ),
+    ).toBe(false);
+    expect(
+      isProductionObservabilitySmokeAuthorized(
+        {
+          ...enabled,
+          SENTRY_DSN:
+            "https://public@example.ingest.sentry.io/4511854028456016",
+          SENTRY_EXPECTED_PROJECT_ID: "4511854028456016",
+        },
+        "production-observability",
+      ),
+    ).toBe(false);
   });
 });

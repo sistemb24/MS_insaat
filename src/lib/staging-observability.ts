@@ -2,6 +2,8 @@ import type { ErrorEvent } from "@sentry/nextjs";
 
 export const STAGING_OBSERVABILITY_SMOKE_CONFIRMATION =
   "staging-observability";
+export const PRODUCTION_OBSERVABILITY_SMOKE_CONFIRMATION =
+  "production-observability";
 
 export const STAGING_SENTRY_PROJECT_ID = "4511854028456016";
 
@@ -148,6 +150,18 @@ export function isStagingObservabilitySmokeAuthorized(
     env.NOA_RUNTIME_ENV === "staging" &&
     env.NOA_OBSERVABILITY_SMOKE_ENABLED === "true" &&
     confirmation === STAGING_OBSERVABILITY_SMOKE_CONFIRMATION
+  );
+}
+
+export function isProductionObservabilitySmokeAuthorized(
+  env: Readonly<Record<string, string | undefined>>,
+  confirmation: string | null,
+) {
+  return (
+    env.NOA_RUNTIME_ENV === "production" &&
+    env.NOA_OBSERVABILITY_SMOKE_ENABLED === "true" &&
+    confirmation === PRODUCTION_OBSERVABILITY_SMOKE_CONFIRMATION &&
+    readServerObservabilityConfig(env).enabled
   );
 }
 
