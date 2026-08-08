@@ -1,7 +1,7 @@
 # Faz 36 — Production telemetry kabul sözleşmesi
 
 Tarih: 08.08.2026
-Durum: Kod ve kalite kapıları tamam; gerçek telemetry olayı kapalı
+Durum: Tamamlandı; tek canlı event doğrulandı ve geçici switch kaldırıldı
 
 ## Amaç
 
@@ -37,15 +37,35 @@ tutmaya devam eder.
 | `pnpm lint` | geçti |
 | `pnpm build` | geçti; 102 route |
 
-## Bilinçli olarak yapılmayanlar
+## Canlı kabul kanıtı
 
-- Production geçici switch'i eklenmedi.
-- Sentry olayı veya alarmı üretilmedi.
-- Production redeploy, custom domain, DNS/TLS, indexing ve trafik değiştirilmedi.
+| Kanıt | Sonuç |
+| --- | --- |
+| Merge | PR #7; `40df977805da662b692cbc133a2be1403a9a8b89` |
+| Production bölgesi | `fra1` |
+| Yetkili smoke isteği | `202 Accepted`; yalnız bir kez gönderildi |
+| Sentry organizasyon / proje | `ms-insaat` / `noa-insaat-production` (`4511859248791632`) |
+| Sentry issue | `NOA-INSAAT-PRODUCTION-1`; issue kimliği `139567519` |
+| Event sayısı / kullanıcı | `1` / `0` |
+| Ortam / release | `production` / `40df977805da` |
+| Kabul etiketi | `noa.smoke=phase36-production-acceptance` |
+| Gizlilik etiketleri | `noa.runtime=production`; `noa.telemetry=redacted-errors-only` |
+| Switch kapatma | `NOA_OBSERVABILITY_SMOKE_ENABLED` Production secret listesinden kaldırıldı |
+| Kapatma doğrulaması | Production health `200`; tam confirmation ile smoke route `404` |
+
+Sanitizer serbest hata mesajını bilerek saklamadığı için issue başlığı `Error`
+olarak oluşur. Bu nedenle `NoaProductionObservabilitySmoke` metniyle yapılan ilk
+sorgu yanlış negatif üretmiştir. Kabul kanıtı tam
+`noa.smoke=phase36-production-acceptance` etiketiyle doğrulanmıştır.
+
+## Kapsam dışında kalanlar
+
+- Ayrı bir alarm bildiriminin teslimi bu kabulde kanıtlanmadı.
+- Custom domain, DNS/TLS, indexing ve trafik değiştirilmedi.
 
 ## Ayrı canlı kabul çevrimi
 
-Kod merge edildikten sonra ayrıca açık onayla sırasıyla geçici switch açılır,
-Production redeploy yapılır, tam confirmation ile yalnız bir olay gönderilir,
-Sentry production projesinde redaction/proje/alarm kanıtı alınır, switch kapatılır
-ve kapalı artifact yeniden deploy edilerek route'un tekrar `404` olduğu doğrulanır.
+Çevrim ayrı açık onayla tamamlandı: geçici switch açıldı, Production redeploy
+yapıldı, tam confirmation ile yalnız bir olay gönderildi, Sentry Production
+projesinde redaction/proje/event kanıtı alındı, switch kaldırıldı ve kapalı
+artifact yeniden deploy edilerek route'un tekrar `404` olduğu doğrulandı.
