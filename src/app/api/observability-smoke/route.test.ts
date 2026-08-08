@@ -4,7 +4,7 @@ const sentryMock = vi.hoisted(() => ({
   captureException: vi.fn(() => "event-id"),
   flush: vi.fn(async () => true),
   getClient: vi.fn(() => ({
-    getDsn: () => ({ projectId: "4511394440151120" }),
+    getDsn: () => ({ projectId: "4511854028456016" }),
   })),
   isEnabled: vi.fn(() => true),
   isInitialized: vi.fn(() => true),
