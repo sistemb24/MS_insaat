@@ -3657,3 +3657,21 @@ yapılmadı. Kanıt
 `Docs/UI-baseline/Faz36-production-telemetry-kabul-sozlesmesi-20260808.md`
 içindedir; sıradaki ayrı onay kapısı sözleşmenin merge edilmesi, ardından geçici
 switch/redeploy/tek olay doğrulama/switch kapatma çevrimidir.
+
+**Production telemetry canlı kabul kanıtı — 08.08.2026:** Sözleşme PR #7 ile
+`40df977805da662b692cbc133a2be1403a9a8b89` merge commit'inde `main` dalına
+alındı; ana dal CI'ı ve `fra1` Production deployment'ı geçti. Ayrı canlı işlem
+onayıyla encrypted `NOA_OBSERVABILITY_SMOKE_ENABLED=true` geçici olarak açıldı,
+tam confirmation ile yalnız bir sentetik istek `202` döndü ve Sentry
+`noa-insaat-production` projesinde `NOA-INSAAT-PRODUCTION-1` issue'u altında tek
+event olarak doğrulandı. Event `environment=production`,
+`noa.smoke=phase36-production-acceptance`, `noa.runtime=production`,
+`noa.telemetry=redacted-errors-only` ve `release=40df977805da` kanıtlarını taşır;
+kullanıcı sayısı `0`dır. İlk olay-adı sorgusu sanitizer'ın serbest hata mesajını
+`Error` olarak redakte etmesi nedeniyle yanlış negatif üretmiş, tam kabul etiketi
+sorgusu olayı bulmuştur. Geçici switch provider secret yüzeyinden kaldırıldı,
+kapatma artifact'ı Production aliasına alındı, health `200` ve tam confirmation
+ile smoke route'u yeniden `404` doğrulandı. Ayrı alarm bildirimi, custom domain,
+DNS/TLS, indexing veya trafik değişikliği yapılmadı. Production telemetry olay
+iletimi ve fail-closed geri dönüş kabulü **TAMAMLANDI**; ayrıntılı kanıt aynı
+kabul belgesinde güncellendi.
