@@ -3691,3 +3691,23 @@ alert ve provider test → Owner e-postası → insan teslim teyidi zinciri
 kanıtlandı; ilk canlı alert e-postasının teslim edilmemesi operasyon notu olarak
 korundu. Production alarm/escalation kabulü **TAMAMLANDI**. Custom domain,
 DNS/TLS, indexing veya trafik değişikliği yapılmadı.
+
+**Production domain/TLS/yayın preflight sözleşmesi — 08.08.2026:** Salt-okunur
+denetimde üçüncü taraf `insaatyonet.com` domaininin Vercel hesabında bulunduğu,
+ancak `insaat-yonetim` projesinin Production aliasları arasında yer almadığı
+doğrulandı. Apex ve `www` için A/AAAA/CNAME/NS çözümü yoktur; HTTPS bağlantısı
+kurulamaz ve TLS henüz kanıtlanamaz. Vercel apex için önerilen
+`A @ 76.76.21.21` kaydını veya alternatif olarak `ns1.vercel-dns.com` /
+`ns2.vercel-dns.com` delegasyonunu bekler. Mevcut Ready `fra1` artifact'ında
+landing canonicalı `https://insaatyonet.com/landing` değerini üretir; buna
+rağmen `X-Robots-Tag: noindex, nofollow, noarchive`, robots `Disallow: /` ve boş
+sitemap fail-closed kalır. KVKK, gizlilik ve kullanım koşulları sayfaları `200`
+dönse de açıkça “Yayına hazır değil” taslağıdır ve `noindex` kalır. Canlı
+değişiklik sözleşmesi; önce ayrı Vercel project-domain bağı onayı, sonra provider
+tarafından doğrulanmış apex/`www` DNS hedefleri, DNS/TLS yayılım kabulü, indexing
+kapalı HTTP/header smoke'u, ardından ayrı yasal metin ve ayrı indexing/trafik
+onayı sırasını zorunlu tutar. Bu preflight'ta domain, DNS, TLS, provider secret,
+deployment, yasal içerik, indexing veya trafik değiştirilmedi. Kanıt
+`Docs/UI-baseline/Faz36-production-domain-tls-yayin-preflight-20260808.md`
+içindedir; sıradaki ayrı onay kapısı Vercel project-domain bağının oluşturulması
+ve Vercel'in kesin DNS hedeflerinin alınmasıdır.
