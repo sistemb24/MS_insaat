@@ -3675,3 +3675,19 @@ ile smoke route'u yeniden `404` doğrulandı. Ayrı alarm bildirimi, custom doma
 DNS/TLS, indexing veya trafik değişikliği yapılmadı. Production telemetry olay
 iletimi ve fail-closed geri dönüş kabulü **TAMAMLANDI**; ayrıntılı kanıt aynı
 kabul belgesinde güncellendi.
+
+**Production alarm/escalation kabul kanıtı — 08.08.2026:** Sentry Production
+projesindeki `Send a notification for high priority issues` kuralı canlı
+`NOA-INSAAT-PRODUCTION-1` issue'u için 12:42 UTC'de `1 trigger / 1 alert`
+kaydetti. Kural `noa-insaat-production` projesine bağlı, yeni veya yeniden
+yüksek öncelikli issue'larda her trigger için Suggested Assignees, bulunamazsa
+Recently Active Members hedefini kullanır. Owner hesabında Issue Alerts `On`,
+teslim yöntemi `Email`; organizasyonda tek Owner vardır. İlk canlı event
+e-postası insan tarafından alınmadı. Kullanıcının ayrı tekrar-gönder onayıyla
+kuralın `Send Test Notification` aksiyonu çalıştırıldı; provider arayüzü hata
+vermedi, kural kaydedilmedi/değiştirilmedi ve Murat Saygı test e-postasını
+aldığını açıkça teyit etti. Böylece event → production alert rule → provider
+alert ve provider test → Owner e-postası → insan teslim teyidi zinciri
+kanıtlandı; ilk canlı alert e-postasının teslim edilmemesi operasyon notu olarak
+korundu. Production alarm/escalation kabulü **TAMAMLANDI**. Custom domain,
+DNS/TLS, indexing veya trafik değişikliği yapılmadı.

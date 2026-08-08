@@ -1,7 +1,7 @@
 # Faz 36 — Production telemetry kabul sözleşmesi
 
 Tarih: 08.08.2026
-Durum: Tamamlandı; tek canlı event doğrulandı ve geçici switch kaldırıldı
+Durum: Tamamlandı; tek canlı event, alarm ve e-posta escalation doğrulandı
 
 ## Amaç
 
@@ -58,9 +58,31 @@ olarak oluşur. Bu nedenle `NoaProductionObservabilitySmoke` metniyle yapılan i
 sorgu yanlış negatif üretmiştir. Kabul kanıtı tam
 `noa.smoke=phase36-production-acceptance` etiketiyle doğrulanmıştır.
 
+## Alarm/escalation kabul kanıtı
+
+| Kanıt | Sonuç |
+| --- | --- |
+| Alert kuralı | `Send a notification for high priority issues`; kural kimliği `742702` |
+| Bağlı proje | `noa-insaat-production` |
+| Canlı event kural geçmişi | 08.08.2026 12:42 UTC; `1 trigger / 1 alert` |
+| Trigger | Yeni veya yeniden yüksek öncelikli issue |
+| Throttle | Her trigger'da bildir |
+| Hedef | Suggested Assignees; bulunamazsa Recently Active Members |
+| Kişisel tercih | Issue Alerts `On`; teslim yöntemi `Email` |
+| Organizasyon alıcısı | Tek Owner hesabı |
+| İlk canlı alert e-postası | İnsan teslim teyidi alınamadı |
+| Tekrar gönderim | `Send Test Notification`; provider arayüzünde hata yok |
+| İnsan kabulü | Murat Saygı test e-postasını 08.08.2026 tarihinde aldığını teyit etti |
+
+İlk canlı alert e-postasının alınmaması gizlenmez: provider kural geçmişi alert
+oluşumunu kanıtlar fakat ilk dispatch'in insan posta kutusuna teslimini
+kanıtlamaz. Ayrı kullanıcı onayıyla gönderilen test bildiriminin teslim alınması;
+aynı etkin Production kuralı, açık e-posta tercihi, tek Owner hedefi ve provider
+e-posta yolunun çalıştığını kanıtlar. Kural veya environment ayarı bu test
+sırasında değiştirilmemiştir.
+
 ## Kapsam dışında kalanlar
 
-- Ayrı bir alarm bildiriminin teslimi bu kabulde kanıtlanmadı.
 - Custom domain, DNS/TLS, indexing ve trafik değiştirilmedi.
 
 ## Ayrı canlı kabul çevrimi
