@@ -2,8 +2,8 @@
  * @vitest-environment jsdom
  */
 
-import { render, screen, waitFor } from "@testing-library/react";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { cleanup, render, screen } from "@testing-library/react";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import type { HrDashboardSnapshot } from "@/lib/hr-dashboard";
 
@@ -70,6 +70,8 @@ const snapshot: HrDashboardSnapshot = {
 };
 
 describe("HrDashboardSurface", () => {
+  afterEach(cleanup);
+
   beforeEach(() => {
     vi.clearAllMocks();
     mocks.getDashboard.mockResolvedValue({ data: snapshot, ok: true });
@@ -139,9 +141,7 @@ describe("HrDashboardSurface", () => {
 
   it("keeps responsive, theme-token and print contracts explicit", async () => {
     render(<HrDashboardSurface />);
-    await waitFor(() => {
-      expect(document.querySelector("[data-hr-dashboard]")).toBeTruthy();
-    });
+    await screen.findByText("Şantiye bazlı personel dağılımı");
     const html = document.querySelector("[data-hr-dashboard]")?.innerHTML ?? "";
     expect(html).toContain("sm:grid-cols-2");
     expect(html).toContain("xl:grid-cols-4");

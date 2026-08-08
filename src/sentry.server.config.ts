@@ -1,11 +1,11 @@
 import * as Sentry from "@sentry/nextjs";
 
 import {
-  readStagingObservabilityConfig,
+  readServerObservabilityConfig,
   sanitizeStagingSentryEvent,
 } from "@/lib/staging-observability";
 
-const config = readStagingObservabilityConfig(process.env);
+const config = readServerObservabilityConfig(process.env);
 
 Sentry.init({
   beforeSend: sanitizeStagingSentryEvent,
@@ -28,7 +28,7 @@ Sentry.init({
   environment: config.environment,
   initialScope: {
     tags: {
-      "noa.runtime": "staging",
+      "noa.runtime": config.environment,
       "noa.telemetry": "redacted-errors-only",
     },
   },
