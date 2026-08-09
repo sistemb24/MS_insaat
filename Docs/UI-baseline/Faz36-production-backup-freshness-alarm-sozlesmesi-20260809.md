@@ -1,7 +1,7 @@
 # Faz 36 — Production Backup Freshness ve Alarm Sözleşmesi
 
 Tarih: 09.08.2026
-Durum: **KOD HAZIR / READ-ONLY CREDENTIAL VE MANUEL KABUL BEKLİYOR**
+Durum: **READ-ONLY CREDENTIAL HAZIR / INSTALL HOTFIX KODU HAZIR / MANUEL KABUL BEKLİYOR**
 
 ## Amaç ve sınır
 
@@ -37,6 +37,14 @@ provider ayarı ve trafik kapsam dışıdır.
 - Credential yalnız `noa-insaat-production-backups-eu` bucket'ında object
   list/read yetkisiyle oluşturulmalıdır; secret değeri belgeye veya loga
   yazılmaz.
+- `NOA Production Backup Freshness Read` credential'ı 09.08.2026 tarihinde
+  yalnız bu bucket için `Object Read only` yetkisiyle oluşturuldu ve iki değer
+  yalnız GitHub Actions secret yüzeyine kaydedildi.
+- İlk manuel kabul run'ı `31308719879`, R2 adımına ulaşmadan Prisma
+  `postinstall` işleminin `DATABASE_URL` istemesi nedeniyle paket kurulumunda
+  durdu. Production DB secret'ı freshness job'una eklenmedi. Workflow kurulumu
+  `pnpm install --frozen-lockfile --ignore-scripts` olarak düzeltildi; freshness
+  scripti Prisma generate veya lifecycle scriptlerine ihtiyaç duymaz.
 
 ## Alarm gerçeği
 
@@ -59,7 +67,9 @@ tek başına insan alarm/escalation kabulü sayılmaz.
 
 ## Bu dilimde yapılmayanlar
 
-- Provider kaynağı veya secret oluşturulmadı/değiştirilmedi.
-- Production DB/R2 kaynağı okunmadı veya değiştirilmedi.
-- Workflow çalıştırılmadı, backup/migration/restore/silme yapılmadı.
+- Provider'da yalnız onaylı read-only credential oluşturuldu; başka kaynak veya
+  secret değiştirilmedi.
+- İlk kabul denemesi production DB/R2 kaynağına ulaşmadan kurulumda durdu;
+  production veri kaynağı okunmadı veya değiştirilmedi.
+- Backup/migration/restore/silme yapılmadı.
 - İnsan alarm teslimi veya sürekli 24 saat RPO iddiası kurulmadı.
