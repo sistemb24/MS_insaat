@@ -96,9 +96,11 @@ silme-tekrar kapıları da ayrıca geçmelidir.
 1. Veri kategorisi/saklama süresi karar kataloğu tamamlandı.
 2. Hesap dondurma ve legal-hold veri modeli hazırlandı; additive production
    migration'ı ayrı backup/migration onayıyla uygulandı.
-3. Dilim 3A'da salt-okunur tenant export/envanter katalog, manifest ve port
-   sözleşmesi hazırlandı; gerçek Prisma/R2 adapter'ı Dilim 3B'de hazırlanır.
-4. Canlı preflight yalnız exact tenant kimliği ve ayrı açık onayla çalıştırılır.
+3. Dilim 3A katalog/manifest sözleşmesi ve Dilim 3B gerçek Prisma/R2 salt-okunur
+   adapter ile main-pinned manuel workflow hazırlandı.
+4. Dedicated read-only Neon credential oluşturulup yalnız GitHub Actions
+   secret'ına kaydedildikten sonra canlı preflight exact tenant kimliği ve ayrı
+   açık onayla çalıştırılır.
 5. DB/R2 silme manifesti ve idempotent yürütücü ayrı dilimde hazırlanır.
 6. Kişisel/production veri içermeyen sentetik tenant ile prova yapılır.
 7. Production scheduler ve her gerçek tenant kapatma işlemi için ayrıca açık
@@ -109,9 +111,10 @@ silme-tekrar kapıları da ayrıca geçmelidir.
 - Production DB veya R2 okunmadı.
 - Export, backup, restore veya silme manifesti oluşturulmadı.
 - Oturum iptali, hesap dondurma, legal hold, purge veya tenant delete yapılmadı.
-- Workflow/schedule eklenmedi.
+- Yalnız manuel ve main-pinned workflow sözleşmesi eklendi; schedule veya canlı
+  dispatch çalıştırılmadı.
 - Domain, DNS, TLS, yasal sayfa, indexing, deployment veya trafik değiştirilmedi.
 
-Production Go/No-Go kararı `NO-GO` kalır. Sıradaki ayrı uygulama dilimi P-B08
-Dilim 3B gerçek Prisma/R2 salt-okunur adapter'ı ve canlı preflight
-entegrasyonudur.
+Production Go/No-Go kararı `NO-GO` kalır. Sıradaki ayrı operasyon kapısı
+dedicated Neon read-only rolü/credential, GitHub Actions secret kaydı ve exact
+tenant kimliğiyle ilk canlı salt-okunur preflight koşusudur.

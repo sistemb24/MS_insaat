@@ -52,6 +52,7 @@
     "production:backup:execute": "tsx scripts/execute-production-backup.ts",
     "production:backup:freshness": "tsx scripts/verify-production-backup-freshness.ts",
     "production:restore:rehearsal": "tsx scripts/rehearse-production-restore.ts",
+    "production:tenant-inventory:preflight": "tsx scripts/verify-production-tenant-inventory-preflight.ts",
     "fleet:acceptance:verify": "tsx scripts/verify-vehicle-fleet-acceptance.ts",
     "tire:acceptance:verify": "tsx scripts/verify-vehicle-tire-acceptance.ts",
     "search:benchmark": "tsx scripts/benchmark-global-search.ts",

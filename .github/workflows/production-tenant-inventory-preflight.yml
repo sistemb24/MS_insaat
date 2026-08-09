@@ -1,0 +1,53 @@
+name: Production Tenant Inventory Preflight (Read-only)
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirmation:
+        description: Type production-tenant-inventory-preflight
+        required: true
+        type: string
+      tenant_id:
+        description: Exact production tenant identifier
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: noa-production-recovery
+  cancel-in-progress: false
+
+jobs:
+  inventory:
+    if: >-
+      github.ref == 'refs/heads/main' &&
+      inputs.confirmation == 'production-tenant-inventory-preflight'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      DATABASE_URL: ${{ secrets.PRODUCTION_TENANT_INVENTORY_DATABASE_URL }}
+      NOA_RELEASE_ID: ${{ github.sha }}
+      NOA_RUNTIME_ENV: production
+      NOA_SOURCE_REF: ${{ github.ref }}
+      NOA_TENANT_INVENTORY_CONFIRMATION: ${{ inputs.confirmation }}
+      NOA_TENANT_INVENTORY_TENANT_ID: ${{ inputs.tenant_id }}
+      R2_ACCESS_KEY_ID: ${{ secrets.PRODUCTION_R2_READ_ACCESS_KEY_ID }}
+      R2_BUCKET: ${{ vars.PRODUCTION_R2_BUCKET }}
+      R2_ENDPOINT: ${{ vars.PRODUCTION_R2_ENDPOINT }}
+      R2_SECRET_ACCESS_KEY: ${{ secrets.PRODUCTION_R2_READ_SECRET_ACCESS_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile --ignore-scripts
+      - name: Generate Prisma client without database mutation
+        run: pnpm db:generate
+      - name: Read production tenant DB and R2 inventory
+        run: pnpm production:tenant-inventory:preflight

@@ -3815,3 +3815,20 @@ workflow, route, export paketi, hesap dondurma, legal hold mutasyonu, purge veya
 silme çalıştırılmadı. Dilim **3A KOD HAZIR / CANLI PRISMA-R2 ADAPTERI
 BEKLİYOR** durumundadır; sıradaki ayrı onay kapısı P-B08 Dilim 3B gerçek
 salt-okunur adapter ve canlı preflight entegrasyonudur.
+
+**P-B08 Dilim 3B gerçek salt-okunur adapter ve canlı preflight entegrasyonu —
+09.08.2026:** Onaylı 10 varsayımla existing write-capable production DB
+secret'ından ayrılan `PRODUCTION_TENANT_INVENTORY_DATABASE_URL` kapısı,
+`transaction_read_only=on` doğrulamalı tek `REPEATABLE READ` Prisma snapshot'ı,
+90 exact tenant model sayımı, yaşam döngüsü/aktif oturum/legal-hold özeti ve
+silinmiş metadata dâhil `DocumentFile` envanteri hazırlandı. R2 doğrulaması
+yalnız DB'den türetilen exact anahtarlara `HeadObject` uygular; list/get/body,
+yazma ve silme içermez. Tekrar/eksik anahtar ve DB/R2 byte drift'i fail-closed
+durur. Main-pinned manuel workflow exact SHA, tenant ve confirmation ister;
+aggregate güvenli sonuç dışında artifact üretmez. Manifest hesap kapatma
+çekirdeğine bağlandı, backup silme-tekrar blocker'ı ve tüm destructive izinler
+kapalı tutuldu. Production DB/R2 okunmadı, Neon rolü/GitHub secret'ı
+oluşturulmadı ve workflow dispatch edilmedi. Hedefli 5 dosya/22 test, tam 371
+dosya/1.961 test, type-check, Prisma validate, sıfır uyarılı lint, 102 sayfalık
+production build, 1.422 dosyalık secret scan ve diff-check geçti. Dilim **3B KOD
+HAZIR / READ-ONLY DB CREDENTIAL VE CANLI RUN BEKLİYOR** durumundadır.
