@@ -77,6 +77,22 @@ preflight 68/68 migration, 0 pending ve 117 tablo bildirdi. Bu koşu migration,
 restore veya silme çalıştırmadı. İlk gerçek schedule ve freshness/alarm kanıtı
 ayrı operasyon kapısıdır.
 
+### Production backup freshness
+
+`.github/workflows/production-backup-freshness.yml`, günlük backup'tan iki saat
+sonra `04:15 UTC` (`07:15 Europe/Istanbul`) çalışır. En yeni manifesti yalnız
+backup bucket `List/Get` yetkisiyle okur ve azami `24 saat` yaş sınırını uygular.
+Manifest yok/bozuk, kimlik-anahtar-release tutarsız, DB dump bütünlük alanı
+geçersiz, zaman gelecekte veya yaş eşik üstündeyse job fail-closed kırmızı olur.
+
+Workflow mevcut backup-write secret'ını kullanmaz. Ayrı
+`PRODUCTION_R2_BACKUP_READ_ACCESS_KEY_ID` ve
+`PRODUCTION_R2_BACKUP_READ_SECRET_ACCESS_KEY` tanımlanmadan çalıştırılmaz.
+Kırmızı job makine alarm kaynağıdır; bildirim kuralı ve insan teslim teyidi ayrı
+kabul edilmeden operasyon alarmı tamamlandı sayılmaz. Sözleşme
+`Docs/UI-baseline/Faz36-production-backup-freshness-alarm-sozlesmesi-20260809.md`
+içindedir.
+
 Staging veya izole restore DB'sinde:
 
 ```powershell
