@@ -3783,5 +3783,10 @@ oluşturma, migration, restore ve silme yoktur. Mevcut backup-write credential
 job'a verilmez; ayrı backup-read R2 tokenı ve iki GitHub Actions secret'ı henüz
 oluşturulmadığından canlı workflow fail-closed bekler. Kırmızı job yalnız makine
 alarm kaynağıdır; notification kuralı ve insan teslim teyidi ayrıca kanıtlanmadan
-alarm kabulü veya sürekli 24 saat RPO iddiası kurulmaz. Dilim **KOD HAZIR /
-READ-ONLY CREDENTIAL VE MANUEL KABUL BEKLİYOR** durumundadır.
+alarm kabulü veya sürekli 24 saat RPO iddiası kurulmaz. Sonrasında yalnız hedef
+backup bucket için `Object Read only` credential oluşturulup iki GitHub Actions
+secret'ına kaydedildi. İlk manuel kabul run'ı `31308719879`, R2'ye ulaşmadan
+Prisma `postinstall` adımının `DATABASE_URL` istemesiyle durdu; production DB
+secret'ı eklenmedi ve workflow kurulumu `--ignore-scripts` ile DB'siz çalışacak
+şekilde düzeltildi. Dilim **READ-ONLY CREDENTIAL HAZIR / INSTALL HOTFIX KODU
+HAZIR / MANUEL KABUL BEKLİYOR** durumundadır.

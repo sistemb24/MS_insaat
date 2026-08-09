@@ -113,6 +113,9 @@ describe("production backup freshness contract", () => {
     expect(workflow).toContain('cron: "15 4 * * *"');
     expect(workflow).toContain("production-backup-freshness-scheduled");
     expect(workflow).toContain("production-backup-freshness-check");
+    expect(workflow).toContain(
+      "pnpm install --frozen-lockfile --ignore-scripts",
+    );
     expect(workflow).toContain("pnpm production:backup:freshness");
     expect(workflow).toContain("PRODUCTION_R2_BACKUP_READ_ACCESS_KEY_ID");
     expect(workflow).toContain("PRODUCTION_R2_BACKUP_READ_SECRET_ACCESS_KEY");

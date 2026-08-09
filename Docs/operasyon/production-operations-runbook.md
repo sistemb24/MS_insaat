@@ -93,6 +93,11 @@ kabul edilmeden operasyon alarmı tamamlandı sayılmaz. Sözleşme
 `Docs/UI-baseline/Faz36-production-backup-freshness-alarm-sozlesmesi-20260809.md`
 içindedir.
 
+İlk manuel kabul run'ı `31308719879`, R2 kontrolüne ulaşmadan Prisma
+`postinstall` adımında `DATABASE_URL` eksikliğiyle durdu. Freshness job'una DB
+secret'ı eklenmez; bağımlılıklar `pnpm install --frozen-lockfile
+--ignore-scripts` ile kurulur ve ardından yalnız R2 freshness scripti çalışır.
+
 Staging veya izole restore DB'sinde:
 
 ```powershell
