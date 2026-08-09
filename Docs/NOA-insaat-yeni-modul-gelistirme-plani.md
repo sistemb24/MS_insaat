@@ -3832,3 +3832,18 @@ oluşturulmadı ve workflow dispatch edilmedi. Hedefli 5 dosya/22 test, tam 371
 dosya/1.961 test, type-check, Prisma validate, sıfır uyarılı lint, 102 sayfalık
 production build, 1.422 dosyalık secret scan ve diff-check geçti. Dilim **3B KOD
 HAZIR / READ-ONLY DB CREDENTIAL VE CANLI RUN BEKLİYOR** durumundadır.
+
+**P-B08 Dilim 4A imha manifesti ve restore-sonrası replay çekirdeği —
+09.08.2026:** Onaylı 10 varsayımla exact kayıt/R2 hedeflerini yalnız hassas
+manifestte tutan, güvenli kanıtta ise kategori/model/kayıt/nesne sayıları ve
+SHA-256 dışında hedef bilgisi taşımayan iki katmanlı sözleşme hazırlandı.
+`CLOSURE_PENDING`, sıfır aktif oturum/legal hold, exact retention karar/kuralı,
+uygunluk zamanı, model/kategori ve `DocumentFile`/R2 birebirlik kapıları
+fail-closed çalışır. `PREPARED → R2_APPLIED → DB_APPLIED → VERIFIED` geçişleri
+tek kalıcı adım ilerler; already-absent hedef yalnız aynı manifest checksum'ına
+bağlı idempotency kanıtıyla kabul edilir. Yalnız eşleşen `VERIFIED` checkpoint
+`backupDeletionReplayReady=true` güvenli kanıtı üretir. Tenant kök silme,
+Prisma/R2 adapter'ı, journal, workflow, credential ve canlı kaynak erişimi
+eklenmedi; `purgeAllowed` ile `destructiveDeleteAllowed` kapalı kaldı. Dilim
+**4A YEREL ÇEKİRDEK HAZIR / SENTETİK PROVA VE JOURNAL ADAPTERI BEKLİYOR**
+durumundadır.
