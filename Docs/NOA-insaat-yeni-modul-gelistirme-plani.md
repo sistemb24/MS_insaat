@@ -3884,3 +3884,21 @@ lock, credential, workflow veya canlı işlem eklenmedi;
 `productionBackupDeletionReplayReady=false` kaldı. Dilim **4C YEREL
 KRİPTO/JOURNAL SÖZLEŞMESİ HAZIR / GERÇEK R2 ADAPTER VE PROVIDER PREFLIGHT
 BEKLİYOR** durumundadır.
+
+**P-B08 Dilim 4D gerçek R2 journal adapter ve provider preflight sözleşmesi —
+09.08.2026:** Onaylı 10 varsayımla ayrı EU journal bucket'ına yönelik gerçek
+S3 adapter hazırlandı. Conditional `PutObject` yalnız `If-None-Match: *`
+kullanır; yalnız 412 sonucu already-exists sayılır. Exact scope altında tam
+`ListObjectsV2` pagination ve `GetObject`; key/pagination tekrarı, prefix,
+content-type, metadata/body byte ve 1 MiB/10.000 nesne sınırlarını fail-closed
+doğrular. Delete/copy/multipart ve bucket-config komutu yoktur. Provider
+preflight exact bucket, EU jurisdiction, `journal/` için en az 1.095 günlük
+Bucket Lock, lifecycle delete yokluğu ve görev ayrımını güvenli metadata ile
+ölçer. Cloudflare kalıcı Object Read & Write yetkisinin delete de içermesi
+nedeniyle append profili local-signing temporary credential ile yalnız
+`GetObject`/`ListObjectsV2`/`PutObject`, exact prefix ve en çok 604.800 saniye
+TTL olarak sabitlendi; read profili ayrı object-read-only kaldı. Production veya
+staging kaynağı okunmadı/değiştirilmedi; bucket, lock, credential, secret,
+workflow ya da tek-writer kilidi oluşturulmadı ve
+`productionBackupDeletionReplayReady=false` kaldı. Dilim **4D KOD HAZIR /
+PROVIDER KAYNAĞI VE SENTETİK CANLI PREFLIGHT BEKLİYOR** durumundadır.
