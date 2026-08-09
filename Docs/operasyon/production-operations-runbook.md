@@ -1,8 +1,8 @@
 # NOA Production Operasyon Runbook'u
 
 Tarih: 09.08.2026
-Durum: Production temeli, backup/migration, izole restore ve günlük backup ilk
-manuel kabul kanıtı hazır; ilk schedule ve freshness/alarm kanıtı bekleniyor
+Durum: Production temeli, backup/migration, izole restore, günlük backup ve
+freshness manuel kabul kanıtları hazır; ilk schedule ve alarm teslimi bekleniyor
 
 Faz 36 sağlayıcı, ortam ve sorumluluk kararlarının tek güncel kaydı
 `Docs/operasyon/production-topoloji-ve-sahiplik-karar-kaydi.md` dosyasıdır.
@@ -97,6 +97,14 @@ içindedir.
 `postinstall` adımında `DATABASE_URL` eksikliğiyle durdu. Freshness job'una DB
 secret'ı eklenmez; bağımlılıklar `pnpm install --frozen-lockfile
 --ignore-scripts` ile kurulur ve ardından yalnız R2 freshness scripti çalışır.
+
+PR `#17` merge commit `dd578d3d` sonrasındaki ayrı onaylı tekrar kabul run'ı
+`31310479037` başarıyla tamamlandı. En yeni
+`20260809T094027Z-e83a0f8c50d95147c936a4a0e9397213ea3342d9` backup'ı
+`fresh=true`, `1,64 saat` yaş, `24 saat` azami yaş, `514.690` byte DB ve `0`
+binary nesne olarak doğrulandı. Koşu yalnız backup bucket list/read erişimi
+kullandı; production DB bağlantısı, backup/migration/restore veya silme
+çalıştırmadı. İlk gerçek schedule ve insan alarm teslimi ayrı kabul kapısıdır.
 
 Staging veya izole restore DB'sinde:
 

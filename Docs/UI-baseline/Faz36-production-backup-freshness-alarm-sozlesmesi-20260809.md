@@ -1,7 +1,7 @@
 # Faz 36 — Production Backup Freshness ve Alarm Sözleşmesi
 
 Tarih: 09.08.2026
-Durum: **READ-ONLY CREDENTIAL HAZIR / INSTALL HOTFIX KODU HAZIR / MANUEL KABUL BEKLİYOR**
+Durum: **MANUEL KABUL TAMAMLANDI / İLK SCHEDULE VE ALARM TESLİMİ BEKLİYOR**
 
 ## Amaç ve sınır
 
@@ -32,8 +32,8 @@ provider ayarı ve trafik kapsam dışıdır.
 - Workflow yalnız ayrı
   `PRODUCTION_R2_BACKUP_READ_ACCESS_KEY_ID` ve
   `PRODUCTION_R2_BACKUP_READ_SECRET_ACCESS_KEY` secret adlarını kabul eder.
-- Bu read-only credential henüz provider'da oluşturulup GitHub Actions'a
-  tanımlanmadı. Mevcut backup-write credential freshness job'una verilmez.
+- Read-only credential provider'da oluşturulup GitHub Actions'a tanımlandı.
+  Mevcut backup-write credential freshness job'una verilmez.
 - Credential yalnız `noa-insaat-production-backups-eu` bucket'ında object
   list/read yetkisiyle oluşturulmalıdır; secret değeri belgeye veya loga
   yazılmaz.
@@ -45,6 +45,14 @@ provider ayarı ve trafik kapsam dışıdır.
   durdu. Production DB secret'ı freshness job'una eklenmedi. Workflow kurulumu
   `pnpm install --frozen-lockfile --ignore-scripts` olarak düzeltildi; freshness
   scripti Prisma generate veya lifecycle scriptlerine ihtiyaç duymaz.
+- PR `#17` merge commit `dd578d3d` ile `main` dalına alındı. Ayrı onaylı tekrar
+  kabul run'ı `31310479037`, aynı commit üzerinde DB'siz kurulumu ve salt-okunur
+  R2 denetimini geçti. En yeni
+  `20260809T094027Z-e83a0f8c50d95147c936a4a0e9397213ea3342d9` backup'ı
+  `fresh=true`, `status=fresh`, `1,64 saat` yaş, `24 saat` azami yaş,
+  `514.690` byte DB ve `0` binary nesne olarak doğrulandı. Credential değerleri
+  loglarda maskeli kaldı; production DB bağlantısı, nesne yazma veya silme
+  yapılmadı.
 
 ## Alarm gerçeği
 
@@ -71,5 +79,7 @@ tek başına insan alarm/escalation kabulü sayılmaz.
   secret değiştirilmedi.
 - İlk kabul denemesi production DB/R2 kaynağına ulaşmadan kurulumda durdu;
   production veri kaynağı okunmadı veya değiştirilmedi.
+- Tekrar kabul koşusu yalnız backup bucket manifestini list/read ile okudu ve
+  mevcut backup'ı `fresh` doğruladı.
 - Backup/migration/restore/silme yapılmadı.
 - İnsan alarm teslimi veya sürekli 24 saat RPO iddiası kurulmadı.

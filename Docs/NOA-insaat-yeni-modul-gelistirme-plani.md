@@ -3771,7 +3771,8 @@ CI run `31306234553` geçti. Ayrı onaylı ilk manual-once kabul run'ı `3130644
 `20260809T094027Z-e83a0f8c50d95147c936a4a0e9397213ea3342d9` backup'ını
 `514.690` byte, binary `0`, 68/68 migration, 0 pending ve 117 tablo olarak
 doğruladı; migration, restore veya silme çalıştırmadı. Dilim **MERGE VE İLK
-MANUEL KABUL TAMAMLANDI / İLK SCHEDULE VE FRESHNESS BEKLİYOR** durumundadır.
+MANUEL KABUL TAMAMLANDI / İLK SCHEDULE BEKLİYOR / FRESHNESS MANUEL KABUL
+TAMAMLANDI** durumundadır.
 
 **Production backup freshness/alarm sözleşmesi — 09.08.2026:** Günlük
 backup'tan iki saat sonra `04:15 UTC` çalışan, en yeni backup manifestini yalnız
@@ -3780,13 +3781,16 @@ manifest yok/bozuk, kimlik-anahtar-release tutarsız, DB dump bütünlük alanı
 geçersiz, zaman gelecekte veya yaş eşik üstündeyse job başarısız olur. Schedule
 ve manual tokenlar event'e bağlıdır; production DB, document bucket, backup
 oluşturma, migration, restore ve silme yoktur. Mevcut backup-write credential
-job'a verilmez; ayrı backup-read R2 tokenı ve iki GitHub Actions secret'ı henüz
-oluşturulmadığından canlı workflow fail-closed bekler. Kırmızı job yalnız makine
-alarm kaynağıdır; notification kuralı ve insan teslim teyidi ayrıca kanıtlanmadan
-alarm kabulü veya sürekli 24 saat RPO iddiası kurulmaz. Sonrasında yalnız hedef
-backup bucket için `Object Read only` credential oluşturulup iki GitHub Actions
-secret'ına kaydedildi. İlk manuel kabul run'ı `31308719879`, R2'ye ulaşmadan
-Prisma `postinstall` adımının `DATABASE_URL` istemesiyle durdu; production DB
-secret'ı eklenmedi ve workflow kurulumu `--ignore-scripts` ile DB'siz çalışacak
-şekilde düzeltildi. Dilim **READ-ONLY CREDENTIAL HAZIR / INSTALL HOTFIX KODU
-HAZIR / MANUEL KABUL BEKLİYOR** durumundadır.
+job'a verilmez. Kırmızı job yalnız makine alarm kaynağıdır; notification kuralı
+ve insan teslim teyidi ayrıca kanıtlanmadan alarm kabulü veya sürekli 24 saat
+RPO iddiası kurulmaz. Yalnız hedef backup bucket için `Object Read only`
+credential oluşturulup iki GitHub Actions secret'ına kaydedildi. İlk manuel
+kabul run'ı `31308719879`, R2'ye ulaşmadan Prisma `postinstall` adımının
+`DATABASE_URL` istemesiyle durdu; production DB secret'ı eklenmedi ve workflow
+kurulumu `--ignore-scripts` ile DB'siz çalışacak şekilde düzeltildi. PR `#17`
+merge commit `dd578d3d` sonrasındaki tekrar kabul run'ı `31310479037`, en yeni
+`20260809T094027Z-e83a0f8c50d95147c936a4a0e9397213ea3342d9` backup'ını
+`fresh=true`, `1,64 saat` yaş, `24 saat` eşik, `514.690` byte DB ve `0` binary
+nesne olarak salt-okunur doğruladı; credential değerleri maskeli kaldı ve
+production DB bağlantısı, yazma veya silme yapılmadı. Dilim **MANUEL KABUL
+TAMAMLANDI / İLK SCHEDULE VE ALARM TESLİMİ BEKLİYOR** durumundadır.
