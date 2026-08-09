@@ -1,0 +1,57 @@
+name: Production Deletion Journal Provider Rehearsal
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirmation:
+        description: Type production-deletion-journal-provider-rehearsal
+        required: true
+        type: string
+      expected_sha:
+        description: Exact main commit SHA approved for the rehearsal
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: noa-production-deletion-journal-provider-rehearsal
+  cancel-in-progress: false
+
+jobs:
+  rehearse:
+    if: >-
+      github.ref == 'refs/heads/main' &&
+      inputs.confirmation == 'production-deletion-journal-provider-rehearsal' &&
+      inputs.expected_sha == github.sha
+    environment: production
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+      NOA_EXPECTED_RELEASE_SHA: ${{ inputs.expected_sha }}
+      NOA_PRODUCTION_DELETION_JOURNAL_REHEARSAL_CONFIRMATION: ${{ inputs.confirmation }}
+      NOA_RELEASE_ID: ${{ github.sha }}
+      NOA_RUN_ATTEMPT: ${{ github.run_attempt }}
+      NOA_RUN_ID: ${{ github.run_id }}
+      NOA_RUNTIME_ENV: production
+      NOA_SOURCE_REF: ${{ github.ref }}
+      PRODUCTION_DELETION_JOURNAL_PREFLIGHT_KEK: ${{ secrets.PRODUCTION_DELETION_JOURNAL_PREFLIGHT_KEK }}
+      PRODUCTION_DELETION_JOURNAL_PREFLIGHT_KEY_VERSION: ${{ vars.PRODUCTION_DELETION_JOURNAL_PREFLIGHT_KEY_VERSION }}
+      PRODUCTION_DELETION_JOURNAL_R2_BUCKET: ${{ vars.PRODUCTION_DELETION_JOURNAL_R2_BUCKET }}
+      PRODUCTION_DELETION_JOURNAL_R2_ENDPOINT: ${{ vars.PRODUCTION_DELETION_JOURNAL_R2_ENDPOINT }}
+      PRODUCTION_DELETION_JOURNAL_R2_PARENT_ACCESS_KEY_ID: ${{ secrets.PRODUCTION_DELETION_JOURNAL_R2_PARENT_ACCESS_KEY_ID }}
+      PRODUCTION_DELETION_JOURNAL_R2_PARENT_SECRET_ACCESS_KEY: ${{ secrets.PRODUCTION_DELETION_JOURNAL_R2_PARENT_SECRET_ACCESS_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile --ignore-scripts
+      - name: Mint scoped credential and rehearse encrypted append/read
+        run: pnpm exec tsx scripts/rehearse-production-deletion-journal-provider.ts
