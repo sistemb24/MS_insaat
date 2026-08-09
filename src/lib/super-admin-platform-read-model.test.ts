@@ -11,10 +11,13 @@ describe("super admin platform read model", () => {
     const findMany = vi.fn(async (input: unknown) => {
       void input;
       return [{
-        _count: { companies: 1, sessions: 2, tenantSubscriptions: 1, users: 3 },
+        _count: { companies: 1, legalHolds: 1, sessions: 2, tenantSubscriptions: 1, users: 3 },
         companies: [{ name: "NOA İnşaat" }],
         createdAt: new Date("2026-08-04T00:00:00.000Z"),
+        frozenAt: new Date("2026-08-09T12:00:00.000Z"),
         id: "tenant-1",
+        lifecycleStatus: "FROZEN",
+        lifecycleVersion: 2,
         name: "NOA",
       }];
     });
@@ -29,6 +32,11 @@ describe("super admin platform read model", () => {
     });
 
     expect(result).toMatchObject({ page: 2, pageSize: 25, total: 26, totalPages: 2 });
+    expect(result.rows[0]).toMatchObject({
+      activeLegalHoldCount: 1,
+      lifecycleStatus: "FROZEN",
+      lifecycleVersion: 2,
+    });
     expect(findMany).toHaveBeenCalledWith(
       expect.objectContaining({ skip: 25, take: 25, select: expect.any(Object) }),
     );

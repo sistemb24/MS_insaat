@@ -44,6 +44,7 @@ describe("webhook endpoint prisma repository", () => {
       where: {
         companyId: defaultTenantScope.companyId,
         periodId: defaultTenantScope.periodId,
+        tenant: { lifecycleStatus: "ACTIVE" },
         tenantId: defaultTenantScope.tenantId,
       },
     });
@@ -67,6 +68,7 @@ describe("webhook endpoint prisma repository", () => {
         companyId: defaultTenantScope.companyId,
         isActive: true,
         periodId: defaultTenantScope.periodId,
+        tenant: { lifecycleStatus: "ACTIVE" },
         tenantId: defaultTenantScope.tenantId,
       },
     });
@@ -129,6 +131,7 @@ describe("webhook endpoint prisma repository", () => {
         id: "webhook-endpoint-1",
         isActive: true,
         periodId: defaultTenantScope.periodId,
+        tenant: { lifecycleStatus: "ACTIVE" },
         tenantId: defaultTenantScope.tenantId,
       },
     });
@@ -172,6 +175,7 @@ describe("webhook endpoint prisma repository", () => {
         id: "webhook-endpoint-1",
         isActive: false,
         periodId: defaultTenantScope.periodId,
+        tenant: { lifecycleStatus: "ACTIVE" },
         tenantId: defaultTenantScope.tenantId,
       },
     });
@@ -218,6 +222,7 @@ describe("webhook endpoint prisma repository", () => {
         companyId: defaultTenantScope.companyId,
         id: "webhook-endpoint-1",
         periodId: defaultTenantScope.periodId,
+        tenant: { lifecycleStatus: "ACTIVE" },
         tenantId: defaultTenantScope.tenantId,
       },
     });
@@ -265,6 +270,7 @@ describe("webhook endpoint prisma repository", () => {
         companyId: defaultTenantScope.companyId,
         id: "webhook-endpoint-1",
         periodId: defaultTenantScope.periodId,
+        tenant: { lifecycleStatus: "ACTIVE" },
         tenantId: defaultTenantScope.tenantId,
       },
     });

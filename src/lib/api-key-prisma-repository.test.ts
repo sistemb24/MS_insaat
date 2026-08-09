@@ -91,6 +91,7 @@ describe("api key prisma repository", () => {
     expect(prisma.apiKey.findFirst).toHaveBeenCalledWith({
       where: {
         keyHash: "hash",
+        tenant: { lifecycleStatus: "ACTIVE" },
       },
     });
     expect(row).toMatchObject({
@@ -171,6 +172,7 @@ describe("api key prisma repository", () => {
         rateLimitWindowCount: 1,
         rateLimitWindowStartedAt: new Date("2026-07-11T11:00:00.000Z"),
         revokedAt: null,
+        tenant: { lifecycleStatus: "ACTIVE" },
       },
     });
     expect(row).toMatchObject({

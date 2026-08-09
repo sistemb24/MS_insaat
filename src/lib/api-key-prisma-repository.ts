@@ -41,6 +41,7 @@ type ApiKeyClient = {
       companyId?: string;
       periodId?: string;
       revokedAt?: null;
+      tenant?: { lifecycleStatus: "ACTIVE" };
     };
   }): Promise<ApiKeyPrismaRecord | null>;
   update(input: {
@@ -62,6 +63,7 @@ type ApiKeyClient = {
       revokedAt?: null;
       tenantId?: string;
       companyId?: string;
+      tenant?: { lifecycleStatus: "ACTIVE" };
     };
   }): Promise<{ count: number }>;
 };
@@ -125,6 +127,7 @@ export function createApiKeyPrismaRepository(
       const record = await prisma.apiKey.findFirst({
         where: {
           keyHash,
+          tenant: { lifecycleStatus: "ACTIVE" },
         },
       });
 
@@ -135,6 +138,7 @@ export function createApiKeyPrismaRepository(
       const record = await prisma.apiKey.findFirst({
         where: {
           id,
+          tenant: { lifecycleStatus: "ACTIVE" },
         },
       });
 
@@ -178,6 +182,7 @@ export function createApiKeyPrismaRepository(
               rateLimitWindowCount: recordWindowCount,
               rateLimitWindowStartedAt: new Date(currentWindowStart),
               revokedAt: null,
+              tenant: { lifecycleStatus: "ACTIVE" },
             },
           });
 
@@ -204,6 +209,7 @@ export function createApiKeyPrismaRepository(
                 ? new Date(record.rateLimitWindowStartedAt)
                 : null,
               revokedAt: null,
+              tenant: { lifecycleStatus: "ACTIVE" },
             },
           });
 

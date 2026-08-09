@@ -68,7 +68,7 @@ export default async function TenantsPage({ searchParams }: TenantsPageProps) {
           <table className="w-full text-sm" style={{ borderCollapse: "collapse" }}>
             <thead>
               <tr style={{ borderBottom: "1px solid var(--ds-outline-variant)" }}>
-                {["Tenant Adı", "Firmalar", "Kullanıcılar", "Oturumlar", "Abonelikler", "Oluşturulma"].map((h) => (
+                {["Tenant Adı", "Durum", "Legal Hold", "Firmalar", "Kullanıcılar", "Oturumlar", "Abonelikler", "Oluşturulma"].map((h) => (
                   <th
                     key={h}
                     className="px-5 py-3 text-left text-xs font-bold uppercase tracking-wider"
@@ -95,6 +95,31 @@ export default async function TenantsPage({ searchParams }: TenantsPageProps) {
                         {tenant.companyCount} firma
                       </p>
                     </div>
+                  </td>
+                  <td className="px-5 py-3.5">
+                    <span
+                      className="inline-flex rounded-full px-2 py-1 text-xs font-semibold"
+                      style={{
+                        background:
+                          tenant.lifecycleStatus === "ACTIVE"
+                            ? "var(--ds-primary-fixed)"
+                            : "var(--ds-error-container)",
+                        color:
+                          tenant.lifecycleStatus === "ACTIVE"
+                            ? "var(--ds-on-primary-fixed)"
+                            : "var(--ds-on-error-container)",
+                      }}
+                    >
+                      {tenant.lifecycleStatus}
+                    </span>
+                    <p className="mt-1 text-xs" style={{ color: "var(--ds-text-muted)" }}>
+                      Sürüm {tenant.lifecycleVersion}
+                    </p>
+                  </td>
+                  <td className="px-5 py-3.5 tabular-nums" style={{ color: "var(--ds-on-surface)" }}>
+                    {tenant.activeLegalHoldCount > 0
+                      ? `${tenant.activeLegalHoldCount} aktif`
+                      : "Yok"}
                   </td>
                   <td className="px-5 py-3.5">
                     <div className="space-y-0.5">
@@ -128,7 +153,7 @@ export default async function TenantsPage({ searchParams }: TenantsPageProps) {
               ))}
               {tenants.rows.length === 0 && (
                 <tr>
-                  <td colSpan={6} className="px-5 py-12 text-center text-sm" style={{ color: "var(--ds-text-muted)" }}>
+                  <td colSpan={8} className="px-5 py-12 text-center text-sm" style={{ color: "var(--ds-text-muted)" }}>
                     Henüz tenant kaydı bulunmuyor.
                   </td>
                 </tr>

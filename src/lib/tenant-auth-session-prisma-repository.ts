@@ -14,7 +14,7 @@ type ScopeSessionRow = {
   role: string;
   licenseLabel: string;
   expiresAt: Date | null;
-  tenant: { id: string; name: string };
+  tenant: { id: string; lifecycleStatus: string; name: string };
   company: { id: string; name: string };
   period: { id: string; label: string };
   user: { id: string; name: string };
@@ -45,6 +45,7 @@ export type TenantAuthSessionPrismaClientLike = {
         id: string;
         revokedAt: null;
         expiresAt: { gt: Date };
+        scopeSession: { tenant: { lifecycleStatus: "ACTIVE" } };
       };
       include: {
         scopeSession: {
@@ -68,6 +69,7 @@ export type TenantAuthSessionPrismaClientLike = {
         id: string;
         userId: string;
         OR: [{ expiresAt: null }, { expiresAt: { gt: Date } }];
+        tenant: { lifecycleStatus: "ACTIVE" };
       };
       select: { id: true };
     }): Promise<{ id: string } | null>;
@@ -92,7 +94,12 @@ export function createTenantAuthSessionPrismaRepository(
 
     async findActiveById({ id, now }) {
       const session = await prisma.appAuthSession.findFirst({
-        where: { id, revokedAt: null, expiresAt: { gt: now } },
+        where: {
+          id,
+          revokedAt: null,
+          expiresAt: { gt: now },
+          scopeSession: { tenant: { lifecycleStatus: "ACTIVE" } },
+        },
         include: {
           scopeSession: {
             include: { company: true, period: true, tenant: true, user: true },
@@ -126,6 +133,7 @@ export function createTenantAuthSessionPrismaRepository(
           id: scopeSessionId,
           userId,
           OR: [{ expiresAt: null }, { expiresAt: { gt: now } }],
+          tenant: { lifecycleStatus: "ACTIVE" },
         },
         select: { id: true },
       });

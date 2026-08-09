@@ -17,6 +17,7 @@ describe("session scope prisma repository", () => {
             expiresAt: new Date("2030-01-01T00:00:00.000Z"),
             tenant: {
               id: "tenant-noa-demo",
+              lifecycleStatus: "ACTIVE",
               name: "NOA Demo Tenant",
             },
             company: {
@@ -99,6 +100,7 @@ describe("session scope prisma repository", () => {
               expiresAt: null,
               tenant: {
                 id: "tenant-noa-demo",
+                lifecycleStatus: "ACTIVE",
                 name: "NOA Demo Tenant",
               },
               company: {
@@ -142,6 +144,7 @@ describe("session scope prisma repository", () => {
             { expiresAt: null },
             { expiresAt: { gt: new Date("2026-06-25T00:00:00.000Z") } },
           ],
+          tenant: { lifecycleStatus: "ACTIVE" },
         },
         include: {
           company: true,
@@ -172,6 +175,7 @@ describe("session scope prisma repository", () => {
               expiresAt: null,
               tenant: {
                 id: "tenant-noa-demo",
+                lifecycleStatus: "ACTIVE",
                 name: "NOA Demo Tenant",
               },
               company: {
@@ -215,6 +219,7 @@ describe("session scope prisma repository", () => {
             { expiresAt: null },
             { expiresAt: { gt: new Date("2026-06-25T00:00:00.000Z") } },
           ],
+          tenant: { lifecycleStatus: "ACTIVE" },
           userId: "user-viewer",
         },
         include: {

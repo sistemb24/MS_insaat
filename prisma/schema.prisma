@@ -9,8 +9,16 @@ datasource db {
 model Tenant {
   id                                    String                                  @id
   name                                  String
+  lifecycleStatus                       String                                  @default("ACTIVE")
+  lifecycleVersion                      Int                                     @default(1)
+  frozenAt                              DateTime?
+  frozenByCredentialId                  String?
   createdAt                             DateTime                                @default(now())
   updatedAt                             DateTime                                @updatedAt
+  frozenByCredential                    SuperAdminCredential?                   @relation("TenantFrozenByCredential", fields: [frozenByCredentialId], references: [id], onDelete: SetNull)
+  lifecycleEvents                       TenantLifecycleEvent[]
+  legalHolds                            TenantLegalHold[]
+  legalHoldEvents                       TenantLegalHoldEvent[]
   companies                             Company[]
   sessions                              AppSession[]
   userScopeAccesses                     AppUserScopeAccess[]
@@ -96,6 +104,73 @@ model Tenant {
   auditLogs                             AuditLog[]
   accessProfiles                        AccessProfile[]
   accessProfileAssignments              UserAccessProfileAssignment[]
+
+  @@index([lifecycleStatus])
+  @@index([frozenByCredentialId])
+}
+
+model TenantLifecycleEvent {
+  id                String               @id @default(cuid())
+  tenantId          String
+  actorCredentialId String
+  operationId       String               @unique
+  action            String
+  fromStatus        String
+  toStatus          String
+  lifecycleVersion  Int
+  occurredAt        DateTime
+  createdAt         DateTime             @default(now())
+  tenant            Tenant               @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  actorCredential   SuperAdminCredential @relation(fields: [actorCredentialId], references: [id], onDelete: Restrict)
+
+  @@unique([tenantId, lifecycleVersion])
+  @@index([tenantId, occurredAt])
+  @@index([actorCredentialId, occurredAt])
+}
+
+model TenantLegalHold {
+  id                     String                @id @default(cuid())
+  tenantId               String
+  referenceId            String
+  status                 String                @default("ACTIVE")
+  reasonCode             String
+  startsAt               DateTime
+  reviewAt               DateTime
+  releasedAt             DateTime?
+  version                Int                   @default(1)
+  createdByCredentialId  String
+  releasedByCredentialId String?
+  createdAt              DateTime              @default(now())
+  updatedAt              DateTime              @updatedAt
+  tenant                 Tenant                @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  createdByCredential    SuperAdminCredential  @relation("TenantLegalHoldCreatedBy", fields: [createdByCredentialId], references: [id], onDelete: Restrict)
+  releasedByCredential   SuperAdminCredential? @relation("TenantLegalHoldReleasedBy", fields: [releasedByCredentialId], references: [id], onDelete: Restrict)
+  events                 TenantLegalHoldEvent[]
+
+  @@unique([tenantId, referenceId])
+  @@index([tenantId, status, reviewAt])
+  @@index([createdByCredentialId, createdAt])
+  @@index([releasedByCredentialId, releasedAt])
+}
+
+model TenantLegalHoldEvent {
+  id                String               @id @default(cuid())
+  tenantId          String
+  legalHoldId       String
+  actorCredentialId String
+  operationId       String               @unique
+  action            String
+  status            String
+  legalHoldVersion  Int
+  occurredAt        DateTime
+  createdAt         DateTime             @default(now())
+  tenant            Tenant               @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  legalHold         TenantLegalHold       @relation(fields: [legalHoldId], references: [id], onDelete: Cascade)
+  actorCredential   SuperAdminCredential @relation(fields: [actorCredentialId], references: [id], onDelete: Restrict)
+
+  @@unique([legalHoldId, legalHoldVersion])
+  @@index([tenantId, occurredAt])
+  @@index([actorCredentialId, occurredAt])
 }
 
 model Company {
@@ -3048,6 +3123,11 @@ model SuperAdminCredential {
   accountLock         SuperAdminAccountLock?
   passwordResetTokens SuperAdminPasswordResetToken[]
   authChallenges      SuperAdminAuthChallenge[]
+  frozenTenants       Tenant[]                  @relation("TenantFrozenByCredential")
+  tenantLifecycleEvents TenantLifecycleEvent[]
+  tenantLegalHoldEvents TenantLegalHoldEvent[]
+  legalHoldsCreated   TenantLegalHold[]         @relation("TenantLegalHoldCreatedBy")
+  legalHoldsReleased  TenantLegalHold[]         @relation("TenantLegalHoldReleasedBy")
 }
 
 model SuperAdminSession {

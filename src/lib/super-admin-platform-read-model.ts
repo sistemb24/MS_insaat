@@ -38,6 +38,9 @@ export function createSuperAdminPlatformReadModel(
             id: true,
             name: true,
             createdAt: true,
+            frozenAt: true,
+            lifecycleStatus: true,
+            lifecycleVersion: true,
             companies: {
               orderBy: { name: "asc" },
               select: { name: true },
@@ -46,6 +49,7 @@ export function createSuperAdminPlatformReadModel(
             _count: {
               select: {
                 companies: true,
+                legalHolds: { where: { status: "ACTIVE" } },
                 sessions: true,
                 tenantSubscriptions: true,
                 users: true,
@@ -63,7 +67,11 @@ export function createSuperAdminPlatformReadModel(
           companyCount: row._count.companies,
           companyNames: row.companies.map((company) => company.name),
           createdAt: row.createdAt,
+          frozenAt: row.frozenAt,
           id: row.id,
+          activeLegalHoldCount: row._count.legalHolds,
+          lifecycleStatus: row.lifecycleStatus,
+          lifecycleVersion: row.lifecycleVersion,
           name: row.name,
           sessionCount: row._count.sessions,
           subscriptionCount: row._count.tenantSubscriptions,

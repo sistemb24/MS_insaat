@@ -3739,3 +3739,15 @@ production verisi/provider kaynağı okunmadı veya değiştirilmedi; scheduler,
 oturum iptali, hesap dondurma, legal hold, export, purge ve tenant silme
 çalıştırılmadı. P-B08 karar kataloğu **TAMAM / UYGULAMA BLOCKER** durumundadır;
 sıradaki ayrı dilim hesap dondurma ve legal-hold veri modeli sözleşmesidir.
+
+**Production tenant dondurma ve legal hold veri modeli — 09.08.2026:** Onaylı
+10 varsayımla `ACTIVE` / `FROZEN` / `CLOSURE_PENDING` yaşam döngüsü, optimistic
+sürüm kontrolü, transaction içi auth-session iptali ve append-only yaşam döngüsü
+olayları additive Prisma migration olarak hazırlandı. Legal hold erişim
+dondurmadan ayrıldı; güvenli neden/referans kodu, 90 günlük inceleme tarihi,
+optimistic release ve ayrı append-only olay geçmişi eklendi. Tenant oturumu,
+kapsam değiştirme, API anahtarı ve webhook sorguları yalnız `ACTIVE` durumda
+fail-closed çalışır; Super Admin listesi durum/sürüm/aktif hold sayısını gösterir.
+Hiçbir ortama migration uygulanmadı, canlı kayıt veya provider kaynağı
+değiştirilmedi. Dilim **KOD HAZIR / MIGRATION BLOCKER** durumundadır; sıradaki
+ayrı onay kapısı değişikliklerin commit/push/PR sürecidir.
