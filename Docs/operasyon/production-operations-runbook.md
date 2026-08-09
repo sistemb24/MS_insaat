@@ -208,8 +208,9 @@ acceptance koşusu geçmeden sürdürülebilir 24 saat RPO iddiası kurulmaz.
 
 - Doküman çöpü uygulama sözleşmesinde 30 gündür; production scheduler henüz
   yoktur ve manuel purge otomatik retention kanıtı sayılmaz.
-- Audit, auth session, rate-limit, backup, log ve hesap kapanışı süreleri hukuki
-  ve operasyonel sahiplerce onaylanana kadar toplu silme yapılmaz.
+- Audit, auth session, rate-limit, backup, log ve hesap kapanışı süreleri onaylı
+  `2026-08-09.a` kataloğuna göre değerlendirilir; bu katalog tek başına toplu
+  silme yetkisi vermez.
 - Tenant kapanışı export, legal hold, finansal kayıt, doküman binary ve DB scope
   doğrulaması olmadan destructive delete başlatmaz.
 - Onaylı preflight sözleşmesi
@@ -227,7 +228,14 @@ acceptance koşusu geçmeden sürdürülebilir 24 saat RPO iddiası kurulmaz.
   atanır; drift testi eksik, tekrar veya bilinmeyen modeli fail-closed durdurur.
   Yerel manifest yalnız sayım, yaşam döngüsü özeti, karar kimlikleri ve canonical
   SHA-256 taşır; satır içeriği, kişisel veri veya R2 anahtarı taşımaz. Gerçek
-  Prisma/R2 adapter'ı, canlı okuma ve tüm yazma/silme aşamaları ayrı onay ister.
+  Prisma/R2 adapter'ı Dilim 3B'de kodlandı. Main-pinned manuel workflow mevcut
+  `PRODUCTION_DATABASE_URL` yerine ayrı
+  `PRODUCTION_TENANT_INVENTORY_DATABASE_URL` bekler, DB'de
+  `transaction_read_only=on` doğrular ve R2'de yalnız exact-key `HeadObject`
+  çalıştırır. Credential oluşturma, canlı koşu ve tüm yazma/silme aşamaları ayrı
+  onay ister; sözleşme
+  `Docs/operasyon/production-tenant-envanter-canli-preflight-sozlesmesi-v1.md`
+  içindedir.
 
 ## Sorumluluk matrisi ve yayın kapısı
 

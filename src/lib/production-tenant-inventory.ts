@@ -189,17 +189,23 @@ export type ProductionTenantDocumentInventory = {
   totalSizeBytes: number;
 };
 
+export type ProductionTenantDocumentMetadata = {
+  sizeBytes: number;
+  storageKey: string;
+};
+
+export type ProductionTenantInventoryDatabaseRead = {
+  documents: readonly ProductionTenantDocumentMetadata[];
+  modelCounts: readonly ProductionTenantModelCount[];
+  tenant: ProductionTenantInventorySnapshot | null;
+};
+
 export type ProductionTenantInventoryRepositoryPort = {
-  countTenantModels(input: {
+  readTenantInventory(input: {
+    activeAt: Date;
     models: readonly ProductionTenantModel[];
     tenantId: string;
-  }): Promise<readonly ProductionTenantModelCount[]>;
-  listDocumentStorageMetadata(input: {
-    tenantId: string;
-  }): Promise<readonly { sizeBytes: number; storageKey: string }[]>;
-  readTenantSnapshot(input: {
-    tenantId: string;
-  }): Promise<ProductionTenantInventorySnapshot | null>;
+  }): Promise<ProductionTenantInventoryDatabaseRead>;
 };
 
 export type ProductionTenantObjectHeadPort = {

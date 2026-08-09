@@ -4,7 +4,7 @@ Tarih: 09.08.2026
 
 Karar sahibi: Murat Saygı
 
-Durum: DİLİM 3A SÖZLEŞME HAZIR / CANLI ADAPTER BEKLİYOR
+Durum: DİLİM 3A TAMAMLANDI / DİLİM 3B ADAPTER KODU HAZIR
 
 ## Amaç ve sınır
 
@@ -62,8 +62,8 @@ metadata/storage/head uyuşmazlığı manifest üretimini durdurur.
 ## DB ve R2 okuma kuralı
 
 Bu dilimde `ProductionTenantInventoryRepositoryPort` ve
-`ProductionTenantObjectHeadPort` yalnız interface olarak tanımlıdır; gerçek
-Prisma veya R2 adapter'ı yoktur. İlerideki salt-okunur adapter:
+`ProductionTenantObjectHeadPort` interface olarak tanımlanmıştır. Dilim 3B'de
+hazırlanan gerçek salt-okunur adapter:
 
 1. tüm DB sayımlarını exact `tenantId` kapsamıyla yapar;
 2. doküman nesne anahtarlarını tenant kapsamlı `DocumentFile` metadata'sından
@@ -80,5 +80,6 @@ Prisma veya R2 adapter'ı yoktur. İlerideki salt-okunur adapter:
 - Tenant durumu, oturum, legal hold, backup veya provider kaynağı değiştirilmedi.
 - Preflight, purge ve destructive delete yetkisi üretilmedi.
 
-Sıradaki ayrı onay kapısı **P-B08 Dilim 3B — gerçek Prisma/R2 salt-okunur
-adapter'ı ve canlı çalıştırma öncesi fail-closed preflight entegrasyonu**dur.
+Dilim 3B uygulama ve canlı çalıştırma kapıları
+`Docs/operasyon/production-tenant-envanter-canli-preflight-sozlesmesi-v1.md`
+içindedir. Dedicated read-only DB credential ve ilk canlı koşu ayrı onay bekler.
