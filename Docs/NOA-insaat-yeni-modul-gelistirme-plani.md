@@ -3902,3 +3902,20 @@ staging kaynağı okunmadı/değiştirilmedi; bucket, lock, credential, secret,
 workflow ya da tek-writer kilidi oluşturulmadı ve
 `productionBackupDeletionReplayReady=false` kaldı. Dilim **4D KOD HAZIR /
 PROVIDER KAYNAĞI VE SENTETİK CANLI PREFLIGHT BEKLİYOR** durumundadır.
+
+**P-B08 Dilim 4E-A ephemeral credential mint ve sentetik provider rehearsal
+otomasyonu — 09.08.2026:** Onaylı 10 varsayımla Cloudflare'ın resmî local
+signing biçiminde HS256 JWT, signed-JWT SHA-256 temporary secret ve session
+token üreten saf çekirdek hazırlandı. Credential tam 900 saniye, exact EU
+journal bucket, yalnız `journal/` prefix'i ve `GetObject`/`ListObjectsV2`/
+`PutObject` action'larıyla sınırlandı. Manual workflow yalnız main, exact SHA,
+exact confirmation, production environment ve dedicated concurrency kapısında
+çalışır; schedule, otomatik tekrar, DB, backup, delete ve artifact içermez.
+Sentetik yürütücü gerçek tenant/veri/storage key taşımayan sıfır hedefli şifreli
+manifesti append eder, aynı-key overwrite reddini ve kalıcı hash-chain'i
+doğrular; yalnız güvenli aggregate kanıt üretir. Başarılı canlı koşunun lock
+altındaki küçük sentetik nesnesinin en az 1.095 gün kalacağı açıkça kaydedildi.
+Bu dilimde Cloudflare/GitHub kaynağı veya secret oluşturulmadı, workflow
+çalıştırılmadı, gerçek KEK/purge/delete eklenmedi ve
+`productionBackupDeletionReplayReady=false` kaldı. Dilim **4E-A KOD HAZIR /
+PR VE 4E-B CANLI PROVIDER KURULUM ONAYI BEKLİYOR** durumundadır.
