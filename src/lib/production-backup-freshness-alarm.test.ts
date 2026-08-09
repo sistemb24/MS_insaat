@@ -4,7 +4,10 @@ import { resolve } from "node:path";
 import { describe, expect, test } from "vitest";
 
 const readWorkflow = (name: string) =>
-  readFileSync(resolve(process.cwd(), ".github/workflows", name), "utf8");
+  readFileSync(resolve(process.cwd(), ".github/workflows", name), "utf8").replaceAll(
+    "\r\n",
+    "\n",
+  );
 
 describe("production backup freshness alarm contract", () => {
   test("keeps the rehearsal credential-free and explicitly gated", () => {

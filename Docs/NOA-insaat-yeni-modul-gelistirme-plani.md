@@ -3919,3 +3919,19 @@ Bu dilimde Cloudflare/GitHub kaynağı veya secret oluşturulmadı, workflow
 çalıştırılmadı, gerçek KEK/purge/delete eklenmedi ve
 `productionBackupDeletionReplayReady=false` kaldı. Dilim **4E-A KOD HAZIR /
 PR VE 4E-B CANLI PROVIDER KURULUM ONAYI BEKLİYOR** durumundadır.
+
+**P-B08 Dilim 4E-B canlı provider sonucu ve 4E-B-R uyumluluk düzeltmesi —
+09.08.2026:** Ayrı EU journal bucket oluşturuldu ve herhangi bir nesne yazılmadan
+önce `journal/` için `journal-lock-1095d` adlı 1.095 günlük Bucket Lock
+etkinleştirildi; public erişim kapalı ve lifecycle delete çakışması yoktur.
+`main@512927e` üzerinde yalnız run `31328146354`, attempt `1` çalıştı;
+Cloudflare temporary credential'ı `InvalidArgument: X-Amz-Security-Token`, HTTP
+`400` ile reddetti. Tekrar yapılmadı, bucket `0 B` kaldı ve parent credential ile
+iki GitHub parent secret'ı temizlendi. 4E-B-R düzeltmesinde signer resmî
+`jose.SignJWT` zincirine taşındı; append öncesine yalnız `journal/` üzerinde
+`ListObjectsV2(MaxKeys=1)` salt-okunur credential probe ve secret-sız güvenli
+provider hata sınıflandırması eklendi. Probe geçmeden body okuma veya `PutObject`
+başlamaz. Yeni credential/secret oluşturulmadı ve workflow çalıştırılmadı;
+`productionBackupDeletionReplayReady=false` kaldı. Dilim **4E-B PROVIDER KAYNAĞI
+HAZIR / İLK RUN BAŞARISIZ / 4E-B-R KOD HAZIR / PR VE AYRI CANLI TEKRAR ONAYI
+BEKLİYOR** durumundadır.

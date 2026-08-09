@@ -4,7 +4,7 @@ Tarih: 09.08.2026
 
 Karar sahibi: Murat Saygı
 
-Durum: P-B08 DİLİM 4E-A KOD HAZIR / PROVIDER KAYNAKLARI KAPALI
+Durum: P-B08 DİLİM 4E-B BAŞARISIZ / 4E-B-R UYUMLULUK DÜZELTMESİ KOD HAZIR
 
 ## Amaç ve sınır
 
@@ -18,7 +18,7 @@ belge, storage key, purge veya delete işlemi yoktur.
 
 ## Temporary credential mint
 
-Cloudflare'ın resmî local-signing biçimi Node.js crypto ile uygulanır:
+Cloudflare'ın resmî local-signing biçimi doğrudan `jose.SignJWT` ile uygulanır:
 
 - JWT `HS256` ile parent R2 secret access key kullanılarak imzalanır;
 - `sub` exact Cloudflare account ID'dir;
@@ -31,6 +31,10 @@ Cloudflare'ın resmî local-signing biçimi Node.js crypto ile uygulanır:
 - TTL tam 900 saniyedir;
 - temporary secret signed JWT'nin SHA-256 hex özetidir;
 - session token `base64("jwt/" + signed-jwt)` biçimindedir.
+
+Signer; Cloudflare'ın yayımladığı örnekteki `setSubject`, `setIssuer`,
+`setAudience`, `setIssuedAt` ve `setExpirationTime` zincirini kullanır. Böylece
+JWT serializasyonu ve HS256 imzası el yazımı bir uygulamaya bırakılmaz.
 
 Parent credential'ın yetkisi child credential'dan dar olamaz. Parent Object
 Read & Write tokenı delete yetkisi de taşıdığı için yalnız bir defalık 4E-B
@@ -101,15 +105,45 @@ event tekrar kullanılamaz. Akış:
 nesnesi en az 1.095 gün tutulur ve koşu sonunda temizlenemez. Bu kalıcılık 4E-B
 provider onayının açık parçasıdır. Rehearsal herhangi bir delete çağrısı yapmaz.
 
+## 4E-B canlı sonuç ve 4E-B-R düzeltmesi
+
+09.08.2026 tarihinde EU jurisdiction bucket
+`noa-insaat-production-deletion-journal-eu` oluşturuldu. `journal/` prefix'i
+için `journal-lock-1095d` adlı 1.095 günlük Bucket Lock, herhangi bir nesne
+yazılmadan önce etkinleştirildi. Public access, custom domain ve event
+notification kapalı; çakışan lifecycle delete kuralı yoktur.
+
+Onaylanan `main@512927e9272feff7e7a5e1326d36559a81fe93f1` üzerinde yalnız
+GitHub Actions run `31328146354`, attempt `1` çalıştırıldı. Cloudflare ilk R2
+erişimini `InvalidArgument: X-Amz-Security-Token`, HTTP `400` ile reddetti.
+Otomatik veya manuel tekrar yapılmadı. Bucket `0 B` kaldı ve sentetik nesne
+oluşmadı. Geçici parent credential provider'dan iptal edildi; iki parent GitHub
+environment secret'ı silindi. Ayrı object-read-only credential, preflight KEK
+ve provider variable'ları korundu.
+
+4E-B-R düzeltmesi üç fail-closed katman ekler:
+
+1. Local signing, Cloudflare'ın resmî `jose.SignJWT` örneğiyle birebir kurulur.
+2. Append veya encrypted body okumasından önce yalnız `journal/` prefix'ine
+   `ListObjectsV2` ve `MaxKeys=1` credential probe uygulanır.
+3. Provider hataları ham mesaj veya credential taşımadan yalnız `phase`, güvenli
+   provider code ve HTTP status olarak sınıflandırılır.
+
+Probe başarısızsa `PutObject`, `GetObject` veya encrypted append başlamaz.
+Workflow manual, exact-main, exact-SHA, dedicated production environment ve
+no-retry sözleşmesini korur. Bu kod diliminde yeni provider credential/secret
+oluşturulmaz ve workflow çalıştırılmaz.
+
 ## Açık blocker'lar ve sonraki kapı
 
-- EU journal bucket ve 1.095 günlük lock henüz oluşturulmadı.
-- Provider parent/read credential'ları ve GitHub değerleri oluşturulmadı.
-- Workflow henüz default dalda değildir ve çalıştırılmadı.
+- EU journal bucket ve 1.095 günlük lock oluşturuldu; bucket boştur.
+- Read-only credential ile preflight KEK/GitHub variable'ları hazırdır.
+- Geçici parent credential ve parent GitHub secret'ları temizlenmiştir.
+- İlk workflow run'ı başarısızdır; tekrar çalıştırılmamıştır.
 - Gerçek production journal KEK'i oluşturulmadı.
 - Tenant purge, delete veya backup restore-replay yapılmadı.
 - `productionBackupDeletionReplayReady=false` kalır.
 
-Sıradaki kapılar önce bu değişikliklerin commit/push/PR ve merge süreci, ardından
-4E-B provider resource/credential kurulumu ile exact-main tek canlı sentetik
-rehearsal koşusudur.
+Sıradaki kapılar önce 4E-B-R değişikliklerinin commit/push/PR ve merge süreci,
+ardından yeni exact-bucket parent credential ile ayrıca onaylanmış tek canlı
+credential probe + sentetik rehearsal koşusudur.

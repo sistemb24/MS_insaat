@@ -21,6 +21,10 @@ export const PRODUCTION_DELETION_JOURNAL_REHEARSAL_CONFIRMATION =
 export const PRODUCTION_DELETION_JOURNAL_REHEARSAL_TENANT_ID =
   "tenant-synthetic-journal-provider-rehearsal";
 
+export type ProductionDeletionJournalProviderPhase =
+  | "credential-probe"
+  | "encrypted-append-read";
+
 export type ProductionDeletionJournalProviderRehearsalConfig = {
   accountId: string;
   bucket: typeof PRODUCTION_DELETION_JOURNAL_BUCKET;
@@ -189,6 +193,27 @@ export async function runProductionDeletionJournalProviderRehearsal(input: {
   };
 }
 
+export function createSafeProductionDeletionJournalProviderError(
+  phase: ProductionDeletionJournalProviderPhase,
+  error: unknown,
+) {
+  const candidate =
+    typeof error === "object" && error !== null
+      ? (error as {
+          $metadata?: { httpStatusCode?: number };
+          Code?: string;
+          name?: string;
+        })
+      : undefined;
+  const providerCode = normalizeSafeProviderCode(
+    candidate?.Code ?? candidate?.name ?? "unknown",
+  );
+  const httpStatus = normalizeSafeHttpStatus(candidate?.$metadata?.httpStatusCode);
+  return new Error(
+    `Journal provider rehearsal başarısız: phase=${phase} providerCode=${providerCode} httpStatus=${httpStatus}.`,
+  );
+}
+
 function normalizeSha(value: string, label: string) {
   const normalized = value.trim().toLowerCase();
   if (!/^[a-f0-9]{40}$/.test(normalized)) {
@@ -257,4 +282,14 @@ function normalizeDate(value: Date) {
     throw new Error("Journal provider rehearsal zamanı geçerli değil.");
   }
   return value;
+}
+
+function normalizeSafeProviderCode(value: string) {
+  return /^[A-Za-z0-9._-]{1,80}$/.test(value) ? value : "unknown";
+}
+
+function normalizeSafeHttpStatus(value: number | undefined) {
+  return Number.isSafeInteger(value) && (value ?? 0) >= 100 && (value ?? 0) <= 599
+    ? String(value)
+    : "unknown";
 }

@@ -1,4 +1,6 @@
-import { createHash, createHmac } from "node:crypto";
+import { createHash } from "node:crypto";
+
+import { SignJWT } from "jose";
 
 import {
   PRODUCTION_DELETION_JOURNAL_BUCKET,
@@ -16,13 +18,13 @@ export type ProductionR2TemporaryCredentials = {
   sessionToken: string;
 };
 
-export function createProductionDeletionJournalTemporaryCredentials(input: {
+export async function createProductionDeletionJournalTemporaryCredentials(input: {
   accountId: string;
   endpoint: string;
   issuedAt: Date;
   parentAccessKeyId: string;
   parentSecretAccessKey: string;
-}): ProductionR2TemporaryCredentials {
+}): Promise<ProductionR2TemporaryCredentials> {
   const accountId = normalizeAccountId(input.accountId);
   const endpointHost = normalizeEndpointHost(input.endpoint, accountId);
   const parentAccessKeyId = normalizeCredentialPart(
@@ -31,36 +33,30 @@ export function createProductionDeletionJournalTemporaryCredentials(input: {
   );
   const parentSecretAccessKey = normalizeSecret(input.parentSecretAccessKey);
   const issuedAt = normalizeIssuedAt(input.issuedAt);
-  const header = encodeJson({ alg: "HS256", typ: "JWT" });
-  const payload = encodeJson({
+  const jwt = await new SignJWT({
     actions: PRODUCTION_DELETION_JOURNAL_APPEND_ACTIONS,
-    aud: endpointHost,
     bucket: PRODUCTION_DELETION_JOURNAL_BUCKET,
-    exp: issuedAt + PRODUCTION_R2_TEMPORARY_CREDENTIAL_TTL_SECONDS,
-    iat: issuedAt,
-    iss: parentAccessKeyId,
     paths: {
       objectPaths: [],
       prefixPaths: [PRODUCTION_DELETION_JOURNAL_LOCK_PREFIX],
     },
     scope: "object-read-write",
-    sub: accountId,
-  });
-  const unsignedJwt = `${header}.${payload}`;
-  const signature = createHmac("sha256", parentSecretAccessKey)
-    .update(unsignedJwt)
-    .digest("base64url");
-  const jwt = `${unsignedJwt}.${signature}`;
+  })
+    .setProtectedHeader({ alg: "HS256", typ: "JWT" })
+    .setSubject(accountId)
+    .setIssuer(parentAccessKeyId)
+    .setAudience(endpointHost)
+    .setIssuedAt(issuedAt)
+    .setExpirationTime(
+      issuedAt + PRODUCTION_R2_TEMPORARY_CREDENTIAL_TTL_SECONDS,
+    )
+    .sign(new TextEncoder().encode(parentSecretAccessKey));
 
   return {
     accessKeyId: parentAccessKeyId,
     secretAccessKey: createHash("sha256").update(jwt).digest("hex"),
     sessionToken: Buffer.from(`jwt/${jwt}`, "utf8").toString("base64"),
   };
-}
-
-function encodeJson(value: object) {
-  return Buffer.from(JSON.stringify(value), "utf8").toString("base64url");
 }
 
 function normalizeAccountId(value: string) {
