@@ -8,11 +8,12 @@ import {
   readProductionAccountClosurePreflightConfig,
   REQUIRED_RETENTION_CATEGORIES,
 } from "./production-account-closure-preflight";
+import { approvedRetentionDecisionId } from "./production-retention-policy";
 
 const approvedRetentionDecisions = REQUIRED_RETENTION_CATEGORIES.map(
-  (category, index) => ({
+  (category) => ({
     category,
-    decisionId: `retention-${index + 1}`,
+    decisionId: approvedRetentionDecisionId(category),
     status: "approved" as const,
   }),
 );
@@ -159,6 +160,20 @@ describe("production account closure preflight contract", () => {
         documentMetadataCount: -1,
       }),
     ).toThrow(/metadata sayısı geçerli değil/);
+  });
+
+  it("rejects safe-looking decision IDs that are not in the approved catalog", () => {
+    const result = evaluateProductionAccountClosurePreflight({
+      ...completeInventory,
+      retentionDecisions: approvedRetentionDecisions.map((decision) =>
+        decision.category === "audit-and-security"
+          ? { ...decision, decisionId: "retention-20990101-audit-security-v9" }
+          : decision,
+      ),
+    });
+
+    expect(result.preflightReady).toBe(false);
+    expect(result.retention.invalidDecisionIds).toEqual(["audit-and-security"]);
   });
 
   it("keeps the preflight source free of persistence and object mutation calls", () => {

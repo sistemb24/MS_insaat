@@ -1,20 +1,14 @@
+import {
+  approvedRetentionDecisionId,
+  REQUIRED_RETENTION_CATEGORIES,
+} from "./production-retention-policy";
+import type { RetentionCategory } from "./production-retention-policy";
+
+export { REQUIRED_RETENTION_CATEGORIES } from "./production-retention-policy";
+export type { RetentionCategory } from "./production-retention-policy";
+
 export const PRODUCTION_ACCOUNT_CLOSURE_PREFLIGHT_CONFIRMATION =
   "production-account-closure-preflight";
-
-export const REQUIRED_RETENTION_CATEGORIES = [
-  "identity-and-contact",
-  "authentication-and-access",
-  "audit-and-security",
-  "finance-and-accounting",
-  "personnel",
-  "documents",
-  "integrations-and-webhooks",
-  "support-and-communications",
-  "backups",
-] as const;
-
-export type RetentionCategory =
-  (typeof REQUIRED_RETENTION_CATEGORIES)[number];
 
 export type RetentionDecision = {
   category: RetentionCategory;
@@ -128,7 +122,10 @@ function evaluateRetentionDecisions(
 
   for (const decision of decisions) {
     counts.set(decision.category, (counts.get(decision.category) ?? 0) + 1);
-    if (!isSafeIdentifier(decision.decisionId)) {
+    if (
+      !isSafeIdentifier(decision.decisionId) ||
+      decision.decisionId !== approvedRetentionDecisionId(decision.category)
+    ) {
       invalidDecisionIds.push(decision.category);
     }
     if (decision.status === "approved") approved.add(decision.category);

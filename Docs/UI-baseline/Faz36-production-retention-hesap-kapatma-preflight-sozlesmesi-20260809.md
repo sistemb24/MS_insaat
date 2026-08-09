@@ -77,25 +77,21 @@ Değerlendirme yeşil olsa bile çıktı sabit olarak `readOnly=true`,
 `destructiveDeleteAllowed=false` döner. Bu, preflight sonucunun canlı işlem
 onayı gibi yorumlanmasını engeller.
 
-## Zorunlu saklama karar kategorileri
+## Onaylı saklama karar kategorileri
 
-| Kategori | Karar durumu |
-|---|---|
-| Kimlik ve iletişim | Hukuk/veri sahibi kararı beklenir |
-| Kimlik doğrulama ve erişim | Hukuk/veri sahibi kararı beklenir |
-| Audit ve güvenlik | Hukuk/veri sahibi kararı beklenir |
-| Finans ve muhasebe | İlgili mevzuat ve hukuk kararı beklenir |
-| Personel | İlgili mevzuat ve hukuk kararı beklenir |
-| Dokümanlar | İçerik türü bazında karar beklenir |
-| Entegrasyon ve webhook kayıtları | Sağlayıcı/veri amacı kararı beklenir |
-| Destek ve iletişim kayıtları | Hukuk/veri sahibi kararı beklenir |
-| Backuplar | 30 günlük lifecycle onaylı; silme-tekrar prosedürü beklenir |
+Dokuz kategori ve genel kurallar 09.08.2026 tarihinde Murat Saygı tarafından
+onaylandı. Sürümlü kararların tek kaydı
+`Docs/operasyon/production-retention-ve-imha-karar-katalogu-v1.md` içindedir;
+TypeScript karşılığı `2026-08-09.a` sürümüdür. Preflight artık yalnız bu
+katalogdaki exact kategori/karar kimliği çiftlerini geçerli sayar.
 
-Bu tablo tamamlanmadan `preflightReady` sonucu yeşil olamaz.
+Karar kataloğunun tamamlanması tek başına `preflightReady` sonucu veya canlı
+işlem yetkisi üretmez; diğer envanter, legal hold, export, DB/R2 ve backup
+silme-tekrar kapıları da ayrıca geçmelidir.
 
 ## Yürütme sırası ve ayrı onay kapıları
 
-1. Veri kategorisi/saklama süresi karar tablosu tamamlanır.
+1. Veri kategorisi/saklama süresi karar kataloğu tamamlandı.
 2. Hesap dondurma ve legal-hold veri modeli ayrı kod/PR diliminde hazırlanır.
 3. Salt-okunur tenant export/envanter adapter'ı hazırlanır.
 4. Canlı preflight yalnız exact tenant kimliği ve ayrı açık onayla çalıştırılır.
@@ -112,5 +108,5 @@ Bu tablo tamamlanmadan `preflightReady` sonucu yeşil olamaz.
 - Workflow/schedule eklenmedi.
 - Domain, DNS, TLS, yasal sayfa, indexing, deployment veya trafik değiştirilmedi.
 
-Production Go/No-Go kararı `NO-GO` kalır. Sıradaki ayrı karar kapısı dokuz veri
-kategorisinin saklama/imha karar tablosudur.
+Production Go/No-Go kararı `NO-GO` kalır. Sıradaki ayrı uygulama dilimi hesap
+dondurma ve legal-hold veri modeli sözleşmesidir.

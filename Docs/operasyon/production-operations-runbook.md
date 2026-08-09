@@ -136,6 +136,10 @@ kaydında tutulur ve production taahhüdü sayılmaz.
   içindedir. Yerel değerlendirme çekirdeği yalnız envanter kapılarını raporlar;
   sonuç yeşil olsa bile hesap dondurma, purge veya destructive delete yetkisi
   üretmez. Canlı preflight ve sonraki her yazma aşaması ayrı açık onay ister.
+- Dokuz kategori ve genel kurallar
+  `Docs/operasyon/production-retention-ve-imha-karar-katalogu-v1.md` içinde
+  `2026-08-09.a` sürümüyle onaylıdır. Preflight yalnız katalogdaki exact karar
+  kimliklerini kabul eder; bu karar scheduler veya silme yetkisi değildir.
 
 ## Sorumluluk matrisi ve yayın kapısı
 
