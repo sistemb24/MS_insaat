@@ -1,0 +1,32 @@
+name: Production Backup Freshness Alarm Rehearsal
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirmation:
+        description: Type production-backup-freshness-alarm-rehearsal for one credential-free alarm rehearsal
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: noa-production-backup-freshness-alarm-rehearsal
+  cancel-in-progress: false
+
+jobs:
+  rehearsal:
+    if: ${{ inputs.confirmation == 'production-backup-freshness-alarm-rehearsal' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Emit credential-free freshness alarm rehearsal
+        shell: bash
+        env:
+          NOA_ALARM_REHEARSAL_CONFIRMATION: ${{ inputs.confirmation }}
+        run: |
+          set -euo pipefail
+          test "$NOA_ALARM_REHEARSAL_CONFIRMATION" = "production-backup-freshness-alarm-rehearsal"
+          echo "::error title=Production backup freshness alarm rehearsal::Intentional credential-free failure for the approved alarm delivery rehearsal."
+          exit 1

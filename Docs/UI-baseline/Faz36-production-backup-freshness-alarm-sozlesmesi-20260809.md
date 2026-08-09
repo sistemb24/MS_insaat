@@ -1,7 +1,7 @@
 # Faz 36 — Production Backup Freshness ve Alarm Sözleşmesi
 
 Tarih: 09.08.2026
-Durum: **MANUEL KABUL TAMAMLANDI / İLK SCHEDULE VE ALARM TESLİMİ BEKLİYOR**
+Durum: **MANUEL KABUL TAMAMLANDI / ALARM SÖZLEŞMESİ KOD HAZIR / İLK SCHEDULE VE CANLI ALARM TESLİMİ BEKLİYOR**
 
 ## Amaç ve sınır
 
@@ -57,9 +57,26 @@ provider ayarı ve trafik kapsam dışıdır.
 ## Alarm gerçeği
 
 Stale veya geçersiz sonuç GitHub Actions job'unu kırmızıya düşürür ve makine
-tarafında alarm kaynağı oluşturur. Ancak GitHub/Sentry kuralı, e-posta hedefi ve
-insan teslim teyidi bu dilimde yapılandırılmadı. Bu nedenle workflow failure
-tek başına insan alarm/escalation kabulü sayılmaz.
+tarafında alarm kaynağı oluşturur. Ayrı
+`.github/workflows/production-backup-freshness-alarm.yml` workflow'u yalnız
+varsayılan daldaki gerçek freshness `schedule` hatasını veya onaylı rehearsal
+hatasını dinler. Kaynak hata dışındaki conclusion/event/branch birleşimlerinde
+job çalışmaz.
+
+Notifier'ın tek genişletilmiş yetkisi `issues:write`dır; freshness reader
+workflow'u `contents: read` sınırında kalır. Notifier sabit
+`[PRODUCTION] Backup freshness alarmı` başlığı ve
+`ops:backup-freshness` etiketiyle açık issue'yu oluşturur veya günceller. Issue
+yalnız workflow adı, event, conclusion, kısa commit, run kimliği/URL'si ve UTC
+gözlem zamanını taşır; log, manifest, credential veya serbest production veri
+taşımaz.
+
+`.github/workflows/production-backup-freshness-alarm-rehearsal.yml` yalnız tam
+`production-backup-freshness-alarm-rehearsal` confirmation ile kasıtlı kırmızı
+sonuç üretir. Checkout, secret, DB ve R2 erişimi yoktur; production manifesti
+değiştirilmez. Kodun hazır olması insan teslim kabulü değildir. İlk gerçek
+schedule, rehearsal issue'su ve Murat Saygı'nın e-posta teslim teyidi ayrıca
+kanıtlanmadan operasyon alarmı veya sürekli 24 saat RPO iddiası kurulmaz.
 
 ## Kabul sırası
 
@@ -69,9 +86,12 @@ tek başına insan alarm/escalation kabulü sayılmaz.
    oluşturulur; değerler yalnız GitHub Actions secret yüzeyine girilir.
 4. `production-backup-freshness-check` ile manuel salt-okunur kabul koşusu
    çalıştırılır ve mevcut backup `fresh` olarak doğrulanır.
-5. İlk gerçek `schedule` koşusu doğrulanır.
-6. Stale sentetik/dry-run alarmı, bildirim kuralı ve insan teslim teyidi ayrı
-   açık onayla kanıtlanır; production manifesti değiştirilmez.
+5. Alarm notifier/rehearsal sözleşmesi ayrı PR ile `main`e alınır.
+6. İlk gerçek `schedule` koşusu doğrulanır.
+7. Tam confirmation ile credential-free rehearsal ayrı canlı onayla
+   çalıştırılır; production manifesti değiştirilmez.
+8. Dedupe edilmiş GitHub issue'su ve Murat Saygı'nın e-posta teslim teyidi
+   kanıtlanır.
 
 ## Bu dilimde yapılmayanlar
 
@@ -81,5 +101,7 @@ tek başına insan alarm/escalation kabulü sayılmaz.
   production veri kaynağı okunmadı veya değiştirilmedi.
 - Tekrar kabul koşusu yalnız backup bucket manifestini list/read ile okudu ve
   mevcut backup'ı `fresh` doğruladı.
+- Alarm notifier/rehearsal kodu hazırlandı; canlı rehearsal, issue oluşturma ve
+  e-posta teslimi çalıştırılmadı.
 - Backup/migration/restore/silme yapılmadı.
 - İnsan alarm teslimi veya sürekli 24 saat RPO iddiası kurulmadı.

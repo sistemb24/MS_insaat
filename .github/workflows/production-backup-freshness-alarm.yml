@@ -1,0 +1,89 @@
+name: Production Backup Freshness Alarm
+
+on:
+  workflow_run:
+    workflows:
+      - Production Backup Freshness
+      - Production Backup Freshness Alarm Rehearsal
+    types:
+      - completed
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: noa-production-backup-freshness-alarm
+  cancel-in-progress: false
+
+jobs:
+  notify:
+    if: >-
+      github.event.workflow_run.conclusion == 'failure' &&
+      github.event.workflow_run.head_branch == github.event.repository.default_branch &&
+      (
+        (
+          github.event.workflow_run.name == 'Production Backup Freshness' &&
+          github.event.workflow_run.event == 'schedule'
+        ) ||
+        (
+          github.event.workflow_run.name == 'Production Backup Freshness Alarm Rehearsal' &&
+          github.event.workflow_run.event == 'workflow_dispatch'
+        )
+      )
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      SOURCE_CONCLUSION: ${{ github.event.workflow_run.conclusion }}
+      SOURCE_EVENT: ${{ github.event.workflow_run.event }}
+      SOURCE_HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
+      SOURCE_RUN_ID: ${{ github.event.workflow_run.id }}
+      SOURCE_RUN_URL: ${{ github.event.workflow_run.html_url }}
+      SOURCE_WORKFLOW: ${{ github.event.workflow_run.name }}
+    steps:
+      - name: Create or update the production freshness alarm issue
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          alarm_title='[PRODUCTION] Backup freshness alarmı'
+          alarm_label='ops:backup-freshness'
+          observed_at="$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+          short_sha="${SOURCE_HEAD_SHA:0:12}"
+          alarm_body="$(printf '%s\n' \
+            'Production backup freshness alarm kaynağı başarısız oldu.' \
+            '' \
+            "- Workflow: \`${SOURCE_WORKFLOW}\`" \
+            "- Event: \`${SOURCE_EVENT}\`" \
+            "- Sonuç: \`${SOURCE_CONCLUSION}\`" \
+            "- Commit: \`${short_sha}\`" \
+            "- Run ID: \`${SOURCE_RUN_ID}\`" \
+            "- Run: ${SOURCE_RUN_URL}" \
+            "- Gözlem zamanı: \`${observed_at}\`" \
+            '' \
+            'Bu issue güvenli metadata taşır; log, manifest veya credential içermez.')"
+
+          gh label create "$alarm_label" \
+            --color B60205 \
+            --description 'Production backup freshness alarmı' \
+            --force
+
+          issue_number="$(gh issue list \
+            --state open \
+            --label "$alarm_label" \
+            --limit 100 \
+            --json number,title \
+            --jq 'map(select(.title == "[PRODUCTION] Backup freshness alarmı")) | first | .number // empty')"
+
+          if [ -n "$issue_number" ]; then
+            gh issue comment "$issue_number" --body "$alarm_body"
+            echo "Updated existing production freshness alarm issue #${issue_number}."
+          else
+            issue_url="$(gh issue create \
+              --title "$alarm_title" \
+              --label "$alarm_label" \
+              --body "$alarm_body")"
+            echo "Created production freshness alarm issue: ${issue_url}"
+          fi

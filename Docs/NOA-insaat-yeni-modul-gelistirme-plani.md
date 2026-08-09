@@ -3792,5 +3792,12 @@ merge commit `dd578d3d` sonrasındaki tekrar kabul run'ı `31310479037`, en yeni
 `20260809T094027Z-e83a0f8c50d95147c936a4a0e9397213ea3342d9` backup'ını
 `fresh=true`, `1,64 saat` yaş, `24 saat` eşik, `514.690` byte DB ve `0` binary
 nesne olarak salt-okunur doğruladı; credential değerleri maskeli kaldı ve
-production DB bağlantısı, yazma veya silme yapılmadı. Dilim **MANUEL KABUL
-TAMAMLANDI / İLK SCHEDULE VE ALARM TESLİMİ BEKLİYOR** durumundadır.
+production DB bağlantısı, yazma veya silme yapılmadı. Onaylı alarm tasarımıyla
+ayrı credential-free rehearsal ve `workflow_run` notifier sözleşmesi hazırlandı:
+yalnız varsayılan daldaki gerçek freshness schedule hatası veya tam confirmation
+ile oluşan rehearsal hatası, `issues:write` yetkisi yalnız notifier'da tutularak
+sabit başlık/etiketli açık GitHub Issue üzerinde dedupe edilir. Rehearsal
+checkout, secret, DB veya R2 erişimi almaz; issue yalnız güvenli run metadata'sı
+taşır. Canlı rehearsal/issue/e-posta tetiklenmedi ve production manifesti
+değiştirilmedi. Dilim **MANUEL KABUL TAMAMLANDI / ALARM SÖZLEŞMESİ KOD HAZIR /
+İLK SCHEDULE VE CANLI ALARM TESLİMİ BEKLİYOR** durumundadır.
