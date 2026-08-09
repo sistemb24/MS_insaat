@@ -3,7 +3,12 @@ import { resolve } from "node:path";
 
 import { describe, expect, test } from "vitest";
 
-import { createProductionBackupId, readProductionBackupConfig, readProductionMigrationConfig, readProductionRestoreConfig } from "./production-backup";
+import {
+  createProductionBackupId,
+  readProductionBackupConfig,
+  readProductionMigrationConfig,
+  readProductionRestoreConfig,
+} from "./production-backup";
 
 const validEnv = {
   DATABASE_URL: "postgresql://noa:secret@production.example.com/noa?sslmode=require",
@@ -36,6 +41,51 @@ describe("production backup execution contract", () => {
     expect(() => readProductionBackupConfig({ ...validEnv, NOA_PRODUCTION_BACKUP_CONFIRMATION: "yes" })).toThrow(/backup açık onayı eksik/);
     expect(() => readProductionMigrationConfig({ ...validEnv, NOA_PRODUCTION_MIGRATION_CONFIRMATION: "yes" })).toThrow(/migration açık onayı eksik/);
     expect(() => readProductionRestoreConfig({ ...validEnv, NOA_PRODUCTION_RESTORE_CONFIRMATION: "yes" })).toThrow(/restore açık onayı eksik/);
+  });
+
+  test("accepts scheduled backup confirmations only for their exact GitHub events", () => {
+    expect(
+      readProductionBackupConfig({
+        ...validEnv,
+        GITHUB_EVENT_NAME: "schedule",
+        NOA_PRODUCTION_BACKUP_CONFIRMATION: "production-backup-scheduled",
+      }),
+    ).toMatchObject({
+      backupStorage: { bucket: "noa-insaat-production-backups-eu" },
+    });
+    expect(
+      readProductionBackupConfig({
+        ...validEnv,
+        GITHUB_EVENT_NAME: "workflow_dispatch",
+        NOA_PRODUCTION_BACKUP_CONFIRMATION:
+          "production-backup-scheduled-once",
+      }),
+    ).toMatchObject({
+      backupStorage: { bucket: "noa-insaat-production-backups-eu" },
+    });
+
+    expect(() =>
+      readProductionBackupConfig({
+        ...validEnv,
+        GITHUB_EVENT_NAME: "workflow_dispatch",
+        NOA_PRODUCTION_BACKUP_CONFIRMATION: "production-backup-scheduled",
+      }),
+    ).toThrow(/backup açık onayı eksik/);
+    expect(() =>
+      readProductionBackupConfig({
+        ...validEnv,
+        GITHUB_EVENT_NAME: "schedule",
+        NOA_PRODUCTION_BACKUP_CONFIRMATION:
+          "production-backup-scheduled-once",
+      }),
+    ).toThrow(/backup açık onayı eksik/);
+    expect(() =>
+      readProductionBackupConfig({
+        ...validEnv,
+        GITHUB_EVENT_NAME: "schedule",
+        NOA_PRODUCTION_BACKUP_CONFIRMATION: "production-backup-execute",
+      }),
+    ).toThrow(/backup açık onayı eksik/);
   });
 
   test("requires an exact backup identity for an isolated restore", () => {
@@ -74,5 +124,29 @@ describe("production backup execution contract", () => {
     expect(workflow).toContain("pnpm production:restore:rehearsal");
     expect(workflow).not.toContain("pnpm db:migrate");
     expect(workflow).not.toContain("vercel");
+  });
+
+  test("keeps the daily backup scheduled, migration-free and manual-once gated", () => {
+    const workflow = readFileSync(
+      resolve(process.cwd(), ".github/workflows/production-backup.yml"),
+      "utf8",
+    );
+    const preflight = workflow.indexOf("pnpm production:recovery:preflight");
+    const backup = workflow.indexOf("pnpm production:backup:execute");
+
+    expect(workflow).toContain('cron: "15 2 * * *"');
+    expect(workflow).toContain("production-backup-scheduled");
+    expect(workflow).toContain("production-backup-scheduled-once");
+    expect(workflow).toContain(
+      "github.event_name == 'schedule' && 'production-backup-scheduled' || inputs.confirmation",
+    );
+    expect(workflow).toContain(
+      "inputs.confirmation == 'production-backup-scheduled-once'",
+    );
+    expect(workflow).toContain("group: noa-production-recovery");
+    expect(preflight).toBeGreaterThan(-1);
+    expect(backup).toBeGreaterThan(preflight);
+    expect(workflow).not.toMatch(/db:migrate|prisma migrate deploy/);
+    expect(workflow).not.toMatch(/DeleteObject|delete-object|r2 object delete/);
   });
 });

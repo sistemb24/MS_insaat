@@ -1,8 +1,8 @@
 # NOA Production Operasyon Runbook'u
 
-Tarih: 05.08.2026
-Durum: Production temeli ve read-only backup/migration preflight sözleşmesi
-hazır; canlı işlem NO-GO
+Tarih: 09.08.2026
+Durum: Production temeli, backup/migration ve izole restore kanıtı hazır;
+günlük backup sözleşmesi merge ve ilk kabul koşusunu bekliyor
 
 Faz 36 sağlayıcı, ortam ve sorumluluk kararlarının tek güncel kaydı
 `Docs/operasyon/production-topoloji-ve-sahiplik-karar-kaydi.md` dosyasıdır.
@@ -45,6 +45,31 @@ onayı ister. Sözleşme kanıtı
 `Docs/UI-baseline/Faz36-production-backup-migration-preflight-sozlesmesi-20260805.md`
 içindedir.
 
+### Production günlük backup
+
+`.github/workflows/production-backup.yml` yalnız varsayılan dalda günlük
+`02:15 UTC` (`05:15 Europe/Istanbul`) schedule veya tam
+`production-backup-scheduled-once` onaylı manuel kabul koşusuyla çalışır.
+Schedule yalnız `production-backup-scheduled` tokenını kabul eder; schedule ve
+manual-once tokenları çapraz kullanılamaz. Workflow:
+
+- migration/restore ile ortak `noa-production-recovery` concurrency kilidini
+  kullanır ve çalışan recovery işini iptal etmez;
+- production DB/R2 preflight'ını backup öncesinde fail-closed çalıştırır;
+- PostgreSQL client/server major uyumunu doğrular;
+- custom-format DB dumpı ile aynı recovery point'teki document binary'lerini
+  ayrı private backup bucket'ına kopyalar;
+- manifest, boyut, SHA-256 ve `pg_restore --list` bütünlüğünü doğrular;
+- `db:migrate`, restore veya R2 delete komutu çalıştırmaz.
+
+Retention uygulama koduyla silme yapmaz. Provider'da etkin 30 günlük R2 object
+lifecycle tek expiry uygulayıcısıdır; fiziksel kaldırma expiry sonrasında
+sağlayıcı gecikmesine tabi olabilir. GitHub schedule gecikebildiği veya
+düşebildiği için günlük cron tek başına katı 24 saat RPO garantisi değildir;
+freshness/alarm bağımsız operasyon kapısıdır. Sözleşme kanıtı
+`Docs/UI-baseline/Faz36-production-gunluk-backup-retention-sozlesmesi-20260809.md`
+içindedir.
+
 Staging veya izole restore DB'sinde:
 
 ```powershell
@@ -71,9 +96,10 @@ edilir; komut satırı, terminal kaydı veya belgeye credential yazılmaz.
 5. Migration status, tablo sayımı ve kritik tenant-scope smoke testlerini çalıştır.
 6. Restore DB'yi production uygulamasına bağlama; kanıt sonrası kontrollü sil.
 
-Object storage provider'ı yoktur. Mevcut `local` adapter tek-instance sınırıdır;
-production backup kapsamı DB ile aynı recovery point'e bağlı doküman dizinini de
-içermeden RPO/RTO veya kurtarılabilirlik iddia edilemez.
+Production document ve backup storage, ayrı least-privilege kimliklerle private
+Cloudflare R2 EU bucket'larında çalışır. Production backup kapsamı DB ile aynı
+recovery point'e bağlı document binary'lerini de içerir; binary sayısı sıfırsa
+manifestte açıkça `0` olarak doğrulanır.
 
 ## Rollback kararı
 
@@ -119,9 +145,11 @@ vermez. Her hedef deployment ve alias tam hostname ile önceden doğrulanır.
 4. Incident sorumlusu rollback/forward-fix/restore kararını ve gerekçesini kaydeder.
 5. Kapanışta timeline, etki, kök neden, veri bütünlüğü sonucu ve takip işi yazılır.
 
-Production SLA, destek saati, RPO ve RTO henüz onaylı değildir; belge bunları
-varmış gibi göstermez. Staging için onaylanan hedefler ve sahiplik ayrı karar
-kaydında tutulur ve production taahhüdü sayılmaz.
+Production hedefleri 24 saat RPO, 8 saat RTO, günlük backup/30 gün retention ve
+hafta içi 09:00–18:00 iç destek penceresi olarak onaylıdır; dış SLA yoktur.
+09.08.2026 tarihli izole DB restore adımı 188 saniyede tamamlanmıştır. Bu kanıt
+binary sayısı `0` olan recovery point içindir; günlük cron merge edilip ilk
+acceptance koşusu geçmeden sürdürülebilir 24 saat RPO iddiası kurulmaz.
 
 ## Retention ve hesap kapanışı
 
@@ -146,10 +174,10 @@ kaydında tutulur ve production taahhüdü sayılmaz.
 | Alan | Sorumlu | Onaylayan | Mevcut durum |
 |---|---|---|---|
 | Uygulama release/rollback | Murat Saygı | Murat Saygı | Tek-sorumlu riski kabul edildi; deployment onayı yok |
-| PostgreSQL backup/restore/migration | Murat Saygı | Murat Saygı | Read-only preflight sözleşmesi hazır; çalıştırılmadı |
+| PostgreSQL backup/restore/migration | Murat Saygı | Murat Saygı | 68/68 migration; aynı-release backup ve 188 saniyelik izole restore doğrulandı |
 | Hosting, TLS ve secret store | Murat Saygı | Murat Saygı | Temel hazır; DNS/TLS/deployment onayı yok |
 | Monitoring ve incident koordinasyonu | Murat Saygı | Murat Saygı | Sentry temeli hazır; production adaptör/alarm kanıtı yok |
-| Object storage ve binary backup | Murat Saygı | Murat Saygı | Ayrı bucket/token hazır; ilk backup yok |
+| Object storage ve binary backup | Murat Saygı | Murat Saygı | İlk backup doğrulandı; günlük workflow merge/acceptance bekliyor |
 | Retention, KVKK ve hesap kapanışı | Murat Saygı | Murat Saygı | Backup 30 gün onaylı; hesap kapanışı/legal hold açık |
 
 Bu satırlar atanıp staging kanıtı oluşmadan “production-ready”, “yedekli”,
