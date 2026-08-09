@@ -4,7 +4,8 @@ Tarih: 09.08.2026
 
 Karar sahibi: Murat Saygı
 
-Durum: Uygulama sözleşmesi hazır; migration henüz hiçbir ortama uygulanmadı
+Durum: Uygulama sözleşmesi hazır; production additive migration doğrulandı,
+canlı mutation yüzeyi kapalı
 
 ## Amaç
 
@@ -71,11 +72,17 @@ Migration additive'dir. Mevcut tenantlar varsayılan `ACTIVE` ve sürüm `1` ile
 uyumlu kalır. Uygulama kodu geri alınırsa ek kolon ve tablolar eski kodu
 engellemez; şema geri alma sırasında veri kaybı yaratacak `DROP` uygulanmaz.
 Staging migration provası ve production migration birbirinden ayrı açık onay
-kapılarıdır.
+kapılarıdır. Ayrı onaylı production backup/migration yürütmesinde
+`20260809180000_add_tenant_lifecycle_and_legal_holds` migration'ı aynı-release
+backup doğrulamasından sonra uygulandı; production envanteri 68/68 migration ve
+117 tabloya ulaştı. Migration öncesi backup izole geçici DB'ye 67 migration/114
+tablo olarak geri yüklendi ve geçici kaynak temizlendi. Bu kanıt staging
+migration'ı veya herhangi bir tenant yaşam döngüsü/legal hold mutasyonunu kapsamaz.
 
 ## Bu dilimde yapılmayanlar
 
-- Staging veya production migration çalıştırılmadı.
+- Staging migration çalıştırılmadı; production'da yukarıdaki tek additive
+  migration dışında şema işlemi yapılmadı.
 - Tenant durumu ya da legal hold kaydı oluşturulmadı/değiştirilmedi.
 - Oturum, API anahtarı veya webhook canlı ortamda iptal edilmedi.
 - Purge, tenant silme, export, R2, backup, DNS/TLS veya provider işlemi yapılmadı.

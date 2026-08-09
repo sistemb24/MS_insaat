@@ -56,8 +56,10 @@ Her karar `decisionId` ile hukuk/veri sahibi tarafından ayrıca onaylanır.
   akışı yoktur.
 - Doküman Merkezi metadata çöpü ve 30 günlük scoped purge çekirdeği vardır;
   production scheduler yoktur.
-- DB metadata, production R2 binary nesneleri ve backup lifecycle arasında
-  tenant kapatma manifesti yoktur.
+- DB metadata, production R2 binary nesneleri ve backup lifecycle arasında canlı
+  tenant kapatma manifesti yoktur. Dilim 3A'da 90 doğrudan tenant modelini dokuz
+  kategoriye bağlayan yerel, salt-okunur manifest sözleşmesi hazırlanmıştır;
+  gerçek Prisma/R2 adapter'ı henüz yoktur.
 
 ## Yerel değerlendirme çekirdeği
 
@@ -92,8 +94,10 @@ silme-tekrar kapıları da ayrıca geçmelidir.
 ## Yürütme sırası ve ayrı onay kapıları
 
 1. Veri kategorisi/saklama süresi karar kataloğu tamamlandı.
-2. Hesap dondurma ve legal-hold veri modeli ayrı kod/PR diliminde hazırlanır.
-3. Salt-okunur tenant export/envanter adapter'ı hazırlanır.
+2. Hesap dondurma ve legal-hold veri modeli hazırlandı; additive production
+   migration'ı ayrı backup/migration onayıyla uygulandı.
+3. Dilim 3A'da salt-okunur tenant export/envanter katalog, manifest ve port
+   sözleşmesi hazırlandı; gerçek Prisma/R2 adapter'ı Dilim 3B'de hazırlanır.
 4. Canlı preflight yalnız exact tenant kimliği ve ayrı açık onayla çalıştırılır.
 5. DB/R2 silme manifesti ve idempotent yürütücü ayrı dilimde hazırlanır.
 6. Kişisel/production veri içermeyen sentetik tenant ile prova yapılır.
@@ -108,5 +112,6 @@ silme-tekrar kapıları da ayrıca geçmelidir.
 - Workflow/schedule eklenmedi.
 - Domain, DNS, TLS, yasal sayfa, indexing, deployment veya trafik değiştirilmedi.
 
-Production Go/No-Go kararı `NO-GO` kalır. Sıradaki ayrı uygulama dilimi hesap
-dondurma ve legal-hold veri modeli sözleşmesidir.
+Production Go/No-Go kararı `NO-GO` kalır. Sıradaki ayrı uygulama dilimi P-B08
+Dilim 3B gerçek Prisma/R2 salt-okunur adapter'ı ve canlı preflight
+entegrasyonudur.
