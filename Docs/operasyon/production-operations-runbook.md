@@ -1,8 +1,8 @@
 # NOA Production Operasyon Runbook'u
 
 Tarih: 09.08.2026
-Durum: Production temeli, backup/migration ve izole restore kanıtı hazır;
-günlük backup sözleşmesi merge ve ilk kabul koşusunu bekliyor
+Durum: Production temeli, backup/migration, izole restore ve günlük backup ilk
+manuel kabul kanıtı hazır; ilk schedule ve freshness/alarm kanıtı bekleniyor
 
 Faz 36 sağlayıcı, ortam ve sorumluluk kararlarının tek güncel kaydı
 `Docs/operasyon/production-topoloji-ve-sahiplik-karar-kaydi.md` dosyasıdır.
@@ -69,6 +69,13 @@ düşebildiği için günlük cron tek başına katı 24 saat RPO garantisi değ
 freshness/alarm bağımsız operasyon kapısıdır. Sözleşme kanıtı
 `Docs/UI-baseline/Faz36-production-gunluk-backup-retention-sozlesmesi-20260809.md`
 içindedir.
+
+İlk manual-once kabulü `main@e83a0f8c` üzerinde run `31306444810` ile geçti.
+Backup `20260809T094027Z-e83a0f8c50d95147c936a4a0e9397213ea3342d9`,
+`514.690` byte ve binary `0` olarak manifest/DB bütünlük kontrolünden geçti;
+preflight 68/68 migration, 0 pending ve 117 tablo bildirdi. Bu koşu migration,
+restore veya silme çalıştırmadı. İlk gerçek schedule ve freshness/alarm kanıtı
+ayrı operasyon kapısıdır.
 
 Staging veya izole restore DB'sinde:
 

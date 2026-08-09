@@ -3766,4 +3766,9 @@ günlük R2 lifecycle'a bırakılır. GitHub schedule gecikmesi nedeniyle cron t
 başına katı 24 saat RPO garantisi sayılmaz; freshness/alarm sonraki bağımsız
 görevdir. Hedefli 17 test, tam 365 dosya/1.939 test, type-check, Prisma validate,
 lint, 102 sayfalık production build, 1.402 dosyalık secret scan ve diff-check
-geçti. Dilim **KOD HAZIR / MERGE VE İLK MANUEL KABUL BEKLİYOR** durumundadır.
+geçti. PR `#14` merge commit `e83a0f8c` ile `main` dalına alındı; merge sonrası
+CI run `31306234553` geçti. Ayrı onaylı ilk manual-once kabul run'ı `31306444810`,
+`20260809T094027Z-e83a0f8c50d95147c936a4a0e9397213ea3342d9` backup'ını
+`514.690` byte, binary `0`, 68/68 migration, 0 pending ve 117 tablo olarak
+doğruladı; migration, restore veya silme çalıştırmadı. Dilim **MERGE VE İLK
+MANUEL KABUL TAMAMLANDI / İLK SCHEDULE VE FRESHNESS BEKLİYOR** durumundadır.

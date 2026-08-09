@@ -1,7 +1,7 @@
 # Faz 36 — Production Günlük Backup ve Retention Sözleşmesi
 
 Tarih: 09.08.2026
-Durum: **KOD HAZIR / MERGE VE İLK MANUEL KABUL BEKLİYOR**
+Durum: **MERGE VE İLK MANUEL KABUL TAMAMLANDI / İLK SCHEDULE VE FRESHNESS BEKLİYOR**
 
 ## Karar ve kapsam
 
@@ -50,7 +50,7 @@ saat RPO garantisi değildir; backup freshness/alarm ayrı görevdir:
 
 ## Mevcut recovery kanıtı
 
-`main@cbc5a360` için 09.08.2026 tarihinde:
+`main@cbc5a360` ve `main@e83a0f8c` için 09.08.2026 tarihinde:
 
 - read-only preflight: run `31304920054`, 67 applied / 1 pending migration,
   114 tablo;
@@ -59,10 +59,17 @@ saat RPO garantisi değildir; backup freshness/alarm ayrı görevdir:
   byte, binary `0`, backup verified; sonrasında 68/68 migration ve 117 tablo;
 - isolated restore: run `31305149716`, recovery point 67 migration/114 tablo,
   restore adımı 188 saniye, geçici DB cleanup başarılı.
+- günlük workflow merge: PR `#14`, merge commit
+  `e83a0f8c50d95147c936a4a0e9397213ea3342d9`;
+- ilk manual-once kabul backup'ı: run `31306444810`, backup
+  `20260809T094027Z-e83a0f8c50d95147c936a4a0e9397213ea3342d9`,
+  `514.690` byte, binary `0`, manifest ve DB bütünlüğü verified; preflight
+  68/68 migration, 0 pending ve 117 tablo.
 
 Bu kanıt DB-only ve binary sayısı `0` olan recovery point içindir. Günlük
-workflow `main` dalına merge edilip ayrı onaylı ilk manual-once koşusu geçmeden
-otomasyon aktif veya sürdürülebilir RPO kanıtı sayılmaz.
+workflow varsayılan dalda aktiftir ve ilk manual-once kabul koşusu geçmiştir.
+Henüz gerçek schedule olayı ile freshness/alarm kanıtı bulunmadığından bu tek
+başarılı koşu sürdürülebilir 24 saat RPO garantisi sayılmaz.
 
 ## Yerel doğrulama
 
@@ -78,10 +85,10 @@ değiştirmedi ve workflow'u etkinleştirmedi.
 
 ## Kabul sırası
 
-1. Hedefli ve tam kalite kapıları geçer.
-2. Yalnız sözleşme dosyaları ayrı onayla commit/push edilip PR açılır.
-3. PR ayrıca onaylanarak `main` dalına merge edilir.
-4. `production-backup-scheduled-once` ile ilk manual acceptance backup'ı ayrıca
-   onaylanır.
-5. Backup kimliği, checksum/boyut, binary sayısı ve workflow sonucu doğrulanır.
-6. İlk schedule koşusu ve sonraki freshness/alarm görevi ayrı kanıtlanır.
+1. Hedefli ve tam kalite kapıları geçti.
+2. Sözleşme dosyaları ayrı onayla commit/push edilip PR `#14` olarak açıldı.
+3. PR ayrıca onaylanarak `main` dalına merge edildi.
+4. `production-backup-scheduled-once` ile ilk manual acceptance backup'ı ayrı
+   onayla çalıştırıldı.
+5. Backup kimliği, checksum/boyut, binary sayısı ve workflow sonucu doğrulandı.
+6. İlk schedule koşusu ve sonraki freshness/alarm görevi ayrı kanıtlanacak.
