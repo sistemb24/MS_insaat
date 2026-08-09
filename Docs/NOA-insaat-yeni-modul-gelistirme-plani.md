@@ -3847,3 +3847,20 @@ Prisma/R2 adapter'ı, journal, workflow, credential ve canlı kaynak erişimi
 eklenmedi; `purgeAllowed` ile `destructiveDeleteAllowed` kapalı kaldı. Dilim
 **4A YEREL ÇEKİRDEK HAZIR / SENTETİK PROVA VE JOURNAL ADAPTERI BEKLİYOR**
 durumundadır.
+
+**P-B08 Dilim 4B yerel sentetik restore-replay provası — 09.08.2026:** Onaylı
+10 varsayımla iki kayıt ve bir doküman nesnesinden oluşan, gerçek tenant veya
+storage key taşımayan bellek içi fixture hazırlandı. İlk imha çevrimi
+`PREPARED → R2_APPLIED → DB_APPLIED → VERIFIED` tamamlandı; DB/R2 durumu
+sentetik backup snapshot'ından geri getirildikten sonra restore dışında korunan
+append-only journal ile aynı manifest ikinci kez `VERIFIED` oldu. İlk R2 veya
+DB hedefinden sonra enjekte edilen kısmi hatalar checkpoint ilerletilmeden aynı
+manifest kanıtıyla güvenli tekrarlandı. Yerel CLI yalnız checksum, durum ve
+aggregate sayımları loglar; hedef kimliği/storage key taşımaz,
+`syntheticVerificationReady=true` üretirken production
+`backupDeletionReplayReady=false` kalır. Hedefli 2 dosya/12 test, tam 373
+dosya/1.973 test, type-check, Prisma validate, sıfır uyarılı lint, 102 sayfalık
+production build, 1.429 dosyalık secret scan ve whitespace kontrolü geçti.
+Production/staging kaynağı, provider adapter'ı, credential, workflow, purge
+veya silme işlemi eklenmedi. Dilim **4B YEREL SENTETİK PROVA HAZIR / ŞİFRELİ
+APPEND-ONLY JOURNAL TASARIMI BEKLİYOR** durumundadır.
