@@ -105,7 +105,7 @@ event tekrar kullanılamaz. Akış:
 nesnesi en az 1.095 gün tutulur ve koşu sonunda temizlenemez. Bu kalıcılık 4E-B
 provider onayının açık parçasıdır. Rehearsal herhangi bir delete çağrısı yapmaz.
 
-## 4E-B canlı sonuç ve 4E-B-R düzeltmesi
+## 4E-B canlı sonuçlar ve 4E-B-R3 tanılama kapısı
 
 09.08.2026 tarihinde EU jurisdiction bucket
 `noa-insaat-production-deletion-journal-eu` oluşturuldu. `journal/` prefix'i
@@ -134,16 +134,40 @@ Workflow manual, exact-main, exact-SHA, dedicated production environment ve
 no-retry sözleşmesini korur. Bu kod diliminde yeni provider credential/secret
 oluşturulmaz ve workflow çalıştırılmaz.
 
+4E-B-R merge edildikten sonra onaylanan
+`main@45bda9f05439433ac1e09eb12df290ca6f8f80a1` üzerinde yalnız GitHub Actions
+run `31331024346`, attempt `1` çalıştırıldı. Resmî `jose.SignJWT` signer aktif
+olmasına rağmen Cloudflare ilk temporary credential probe'unu yine
+`InvalidArgument`, HTTP `400` ile reddetti. Tekrar yapılmadı; bucket `0 B`
+kaldı ve hiçbir nesne oluşmadı. Geçici parent credential provider'dan silindi,
+iki parent GitHub environment secret'ı kaldırıldı; read-only credential,
+preflight KEK ve provider variable'ları korundu.
+
+4E-B-R3, sorunun parent credential aktarımında mı yoksa temporary credential
+üretim/kullanımında mı olduğunu yazma yapmadan ayırır:
+
+1. Parent Access Key ID ve Secret Access Key, session token olmadan yalnız
+   `journal/` üzerinde `ListObjectsV2(MaxKeys=1)` ile sınanır.
+2. Parent probe geçerse mevcut 900 saniyelik exact-action local-signing
+   temporary credential üretilir ve aynı salt-okunur probe uygulanır.
+3. İki probe da geçmeden encrypted chain okuması veya `PutObject` başlamaz.
+
+Güvenli hata fazları yalnız `parent-credential-probe`,
+`temporary-credential-probe` ve `encrypted-append-read` değerlerinden biridir.
+Provider mesajı, credential, JWT veya session token loglanmaz. R3 kod dilimi
+provider credential/secret oluşturmaz ve canlı workflow çalıştırmaz.
+
 ## Açık blocker'lar ve sonraki kapı
 
 - EU journal bucket ve 1.095 günlük lock oluşturuldu; bucket boştur.
 - Read-only credential ile preflight KEK/GitHub variable'ları hazırdır.
 - Geçici parent credential ve parent GitHub secret'ları temizlenmiştir.
-- İlk workflow run'ı başarısızdır; tekrar çalıştırılmamıştır.
+- İki workflow run'ı da credential probe aşamasında başarısızdır; hiçbir koşu
+  tekrarlanmamıştır.
 - Gerçek production journal KEK'i oluşturulmadı.
 - Tenant purge, delete veya backup restore-replay yapılmadı.
 - `productionBackupDeletionReplayReady=false` kalır.
 
-Sıradaki kapılar önce 4E-B-R değişikliklerinin commit/push/PR ve merge süreci,
+Sıradaki kapılar önce 4E-B-R3 değişikliklerinin commit/push/PR ve merge süreci,
 ardından yeni exact-bucket parent credential ile ayrıca onaylanmış tek canlı
-credential probe + sentetik rehearsal koşusudur.
+iki aşamalı credential probe + sentetik rehearsal koşusudur.

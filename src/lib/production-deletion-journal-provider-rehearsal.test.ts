@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
 import {
   createInMemoryProductionDeletionJournalStore,
@@ -11,6 +11,7 @@ import {
   createSafeProductionDeletionJournalProviderError,
   PRODUCTION_DELETION_JOURNAL_REHEARSAL_CONFIRMATION,
   readProductionDeletionJournalProviderRehearsalConfig,
+  runProductionDeletionJournalCredentialGates,
   runProductionDeletionJournalProviderRehearsal,
 } from "./production-deletion-journal-provider-rehearsal";
 
@@ -79,11 +80,19 @@ describe("production deletion journal provider rehearsal", () => {
 
     expect(
       createSafeProductionDeletionJournalProviderError(
-        "credential-probe",
+        "parent-credential-probe",
         error,
       ).message,
     ).toBe(
-      "Journal provider rehearsal başarısız: phase=credential-probe providerCode=InvalidArgument httpStatus=400.",
+      "Journal provider rehearsal başarısız: phase=parent-credential-probe providerCode=InvalidArgument httpStatus=400.",
+    );
+    expect(
+      createSafeProductionDeletionJournalProviderError(
+        "temporary-credential-probe",
+        error,
+      ).message,
+    ).toBe(
+      "Journal provider rehearsal başarısız: phase=temporary-credential-probe providerCode=InvalidArgument httpStatus=400.",
     );
     expect(
       createSafeProductionDeletionJournalProviderError(
@@ -93,6 +102,85 @@ describe("production deletion journal provider rehearsal", () => {
     ).toBe(
       "Journal provider rehearsal başarısız: phase=encrypted-append-read providerCode=unknown httpStatus=unknown.",
     );
+  });
+
+  it("stops before temporary mint when the parent probe fails", async () => {
+    const createTemporaryClient = vi.fn<() => Promise<string>>();
+    const probeTemporaryCredential = vi.fn<(client: string) => Promise<void>>();
+    const providerError = Object.assign(new Error("must-not-leak"), {
+      $metadata: { httpStatusCode: 403 },
+      Code: "AccessDenied",
+    });
+
+    await expect(
+      runProductionDeletionJournalCredentialGates({
+        createTemporaryClient,
+        probeParentCredential: vi.fn().mockRejectedValue(providerError),
+        probeTemporaryCredential,
+      }),
+    ).rejects.toThrow(
+      "phase=parent-credential-probe providerCode=AccessDenied httpStatus=403",
+    );
+    expect(createTemporaryClient).not.toHaveBeenCalled();
+    expect(probeTemporaryCredential).not.toHaveBeenCalled();
+  });
+
+  it("separates temporary probe failure after a successful parent probe", async () => {
+    const order: string[] = [];
+    const client = { kind: "temporary" };
+
+    await expect(
+      runProductionDeletionJournalCredentialGates({
+        async createTemporaryClient() {
+          order.push("mint-temporary");
+          return client;
+        },
+        async probeParentCredential() {
+          order.push("probe-parent");
+        },
+        async probeTemporaryCredential(receivedClient) {
+          order.push("probe-temporary");
+          expect(receivedClient).toBe(client);
+          throw Object.assign(new Error("must-not-leak"), {
+            $metadata: { httpStatusCode: 400 },
+            Code: "InvalidArgument",
+          });
+        },
+      }),
+    ).rejects.toThrow(
+      "phase=temporary-credential-probe providerCode=InvalidArgument httpStatus=400",
+    );
+    expect(order).toEqual([
+      "probe-parent",
+      "mint-temporary",
+      "probe-temporary",
+    ]);
+  });
+
+  it("returns the temporary client only after both probes pass", async () => {
+    const order: string[] = [];
+    const client = { kind: "temporary" };
+
+    await expect(
+      runProductionDeletionJournalCredentialGates({
+        async createTemporaryClient() {
+          order.push("mint-temporary");
+          return client;
+        },
+        async probeParentCredential() {
+          order.push("probe-parent");
+        },
+        async probeTemporaryCredential(receivedClient) {
+          order.push("probe-temporary");
+          expect(receivedClient).toBe(client);
+        },
+      }),
+    ).resolves.toBe(client);
+    expect(order).toEqual([
+      "probe-parent",
+      "mint-temporary",
+      "probe-temporary",
+    ]);
   });
 
   it("requires production main, exact SHA, exact bucket and isolated secrets", () => {
@@ -154,9 +242,17 @@ describe("production deletion journal provider rehearsal", () => {
     expect(workflow).toContain("PRODUCTION_DELETION_JOURNAL_R2_PARENT_ACCESS_KEY_ID");
     expect(workflow).toContain("PRODUCTION_DELETION_JOURNAL_PREFLIGHT_KEK");
     expect(workflow).toContain(
-      "Probe scoped credential and rehearse encrypted append/read",
+      "Probe parent and scoped credentials before encrypted append/read",
     );
-    expect(script.indexOf("await probeProductionDeletionJournalR2Credential")).toBeLessThan(
+    expect(
+      script.match(/probeProductionDeletionJournalR2Credential\(\{/g),
+    ).toHaveLength(2);
+    expect(script.indexOf("client: parentClient")).toBeLessThan(
+      script.indexOf("await createProductionDeletionJournalTemporaryCredentials"),
+    );
+    expect(
+      script.indexOf("const client = await runProductionDeletionJournalCredentialGates"),
+    ).toBeLessThan(
       script.indexOf("evidence = await runProductionDeletionJournalProviderRehearsal"),
     );
     expect(workflow).not.toMatch(/schedule:|DATABASE_URL|R2_BACKUP|DeleteObject|artifact/);

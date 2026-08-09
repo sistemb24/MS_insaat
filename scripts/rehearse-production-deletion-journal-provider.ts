@@ -1,6 +1,7 @@
 import {
   createSafeProductionDeletionJournalProviderError,
   readProductionDeletionJournalProviderRehearsalConfig,
+  runProductionDeletionJournalCredentialGates,
   runProductionDeletionJournalProviderRehearsal,
 } from "../src/lib/production-deletion-journal-provider-rehearsal";
 import {
@@ -12,30 +13,41 @@ import { createProductionDeletionJournalTemporaryCredentials } from "../src/lib/
 
 async function main() {
   const config = readProductionDeletionJournalProviderRehearsalConfig(process.env);
-  const temporaryCredentials =
-    await createProductionDeletionJournalTemporaryCredentials({
-      accountId: config.accountId,
-      endpoint: config.endpoint,
-      issuedAt: new Date(),
-      parentAccessKeyId: config.parentAccessKeyId,
-      parentSecretAccessKey: config.parentSecretAccessKey,
-    });
-  const client = createProductionDeletionJournalR2Client({
-    ...temporaryCredentials,
+  const parentClient = createProductionDeletionJournalR2Client({
+    accessKeyId: config.parentAccessKeyId,
     bucket: config.bucket,
     endpoint: config.endpoint,
+    secretAccessKey: config.parentSecretAccessKey,
   });
-  try {
-    await probeProductionDeletionJournalR2Credential({
-      bucket: config.bucket,
-      client,
-    });
-  } catch (error) {
-    throw createSafeProductionDeletionJournalProviderError(
-      "credential-probe",
-      error,
-    );
-  }
+  const client = await runProductionDeletionJournalCredentialGates<
+    ReturnType<typeof createProductionDeletionJournalR2Client>
+  >({
+    probeParentCredential: () =>
+      probeProductionDeletionJournalR2Credential({
+        bucket: config.bucket,
+        client: parentClient,
+      }),
+    async createTemporaryClient() {
+      const temporaryCredentials =
+        await createProductionDeletionJournalTemporaryCredentials({
+          accountId: config.accountId,
+          endpoint: config.endpoint,
+          issuedAt: new Date(),
+          parentAccessKeyId: config.parentAccessKeyId,
+          parentSecretAccessKey: config.parentSecretAccessKey,
+        });
+      return createProductionDeletionJournalR2Client({
+        ...temporaryCredentials,
+        bucket: config.bucket,
+        endpoint: config.endpoint,
+      });
+    },
+    probeTemporaryCredential: (temporaryClient) =>
+      probeProductionDeletionJournalR2Credential({
+        bucket: config.bucket,
+        client: temporaryClient,
+      }),
+  });
   let evidence;
   try {
     evidence = await runProductionDeletionJournalProviderRehearsal({
