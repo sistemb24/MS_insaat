@@ -21,7 +21,7 @@ type WebhookEndpointPrismaRecord = {
 
 type WebhookEndpointClient = {
   count(input: {
-    where: { companyId: string; isActive?: boolean; periodId: string; tenantId: string };
+    where: { companyId: string; isActive?: boolean; periodId: string; tenantId: string; tenant?: { lifecycleStatus: "ACTIVE" } };
   }): Promise<number>;
   create(input: { data: Record<string, unknown> }): Promise<WebhookEndpointPrismaRecord>;
   findFirst(input: {
@@ -31,6 +31,7 @@ type WebhookEndpointClient = {
       isActive?: boolean;
       periodId?: string;
       tenantId?: string;
+      tenant?: { lifecycleStatus: "ACTIVE" };
     };
   }): Promise<WebhookEndpointPrismaRecord | null>;
   update(input: {
@@ -39,7 +40,7 @@ type WebhookEndpointClient = {
   }): Promise<WebhookEndpointPrismaRecord>;
   findMany(input: {
     orderBy: Array<{ createdAt: "asc" | "desc" }>;
-    where: { companyId: string; periodId: string; tenantId: string };
+    where: { companyId: string; periodId: string; tenantId: string; tenant?: { lifecycleStatus: "ACTIVE" } };
   }): Promise<WebhookEndpointPrismaRecord[]>;
 };
 
@@ -58,6 +59,7 @@ export function createWebhookEndpointPrismaRepository(
           isActive: true,
           periodId: scope.periodId,
           tenantId: scope.tenantId,
+          tenant: { lifecycleStatus: "ACTIVE" },
         },
       });
     },
@@ -78,6 +80,7 @@ export function createWebhookEndpointPrismaRepository(
           isActive: true,
           periodId: scope.periodId,
           tenantId: scope.tenantId,
+          tenant: { lifecycleStatus: "ACTIVE" },
         },
       });
 
@@ -109,6 +112,7 @@ export function createWebhookEndpointPrismaRepository(
           isActive: false,
           periodId: scope.periodId,
           tenantId: scope.tenantId,
+          tenant: { lifecycleStatus: "ACTIVE" },
         },
       });
 
@@ -139,6 +143,7 @@ export function createWebhookEndpointPrismaRepository(
           id,
           periodId: scope.periodId,
           tenantId: scope.tenantId,
+          tenant: { lifecycleStatus: "ACTIVE" },
         },
       });
 
@@ -170,6 +175,7 @@ export function createWebhookEndpointPrismaRepository(
           id,
           periodId: scope.periodId,
           tenantId: scope.tenantId,
+          tenant: { lifecycleStatus: "ACTIVE" },
         },
       });
 
@@ -202,6 +208,7 @@ export function createWebhookEndpointPrismaRepository(
           companyId: scope.companyId,
           periodId: scope.periodId,
           tenantId: scope.tenantId,
+          tenant: { lifecycleStatus: "ACTIVE" },
         },
       });
 

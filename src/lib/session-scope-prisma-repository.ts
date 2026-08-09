@@ -11,6 +11,7 @@ type AppSessionRecord = {
   expiresAt: Date | null;
   tenant: {
     id: string;
+    lifecycleStatus: string;
     name: string;
   };
   company: {
@@ -40,6 +41,7 @@ type AppSessionClient = {
   findMany(input: {
     where: {
       OR: [{ expiresAt: null }, { expiresAt: { gt: Date } }];
+      tenant: { lifecycleStatus: "ACTIVE" };
       userId?: string;
     };
     include: {
@@ -73,7 +75,9 @@ export function createSessionScopePrismaRepository(
         },
       });
 
-      return session ? sessionRecordToScopeRecord(session) : null;
+      return session?.tenant.lifecycleStatus === "ACTIVE"
+        ? sessionRecordToScopeRecord(session)
+        : null;
     },
     async listActive({ now }: { now: Date }) {
       const sessions = await prisma.appSession.findMany({
@@ -115,8 +119,10 @@ const sessionInclude = {
 function activeSessionWhere(now: Date) {
   return {
     OR: [{ expiresAt: null }, { expiresAt: { gt: now } }],
+    tenant: { lifecycleStatus: "ACTIVE" as const },
   } satisfies {
     OR: [{ expiresAt: null }, { expiresAt: { gt: Date } }];
+    tenant: { lifecycleStatus: "ACTIVE" };
   };
 }
 

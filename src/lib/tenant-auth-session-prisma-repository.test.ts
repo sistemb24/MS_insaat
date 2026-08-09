@@ -59,6 +59,13 @@ describe("tenant auth session prisma repository", () => {
         }),
       }),
     );
+    expect(findFirst).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: expect.objectContaining({
+          scopeSession: { tenant: { lifecycleStatus: "ACTIVE" } },
+        }),
+      }),
+    );
   });
 
   it("fails closed when the auth user and scope owner differ", async () => {
