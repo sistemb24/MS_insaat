@@ -3864,3 +3864,23 @@ production build, 1.429 dosyalık secret scan ve whitespace kontrolü geçti.
 Production/staging kaynağı, provider adapter'ı, credential, workflow, purge
 veya silme işlemi eklenmedi. Dilim **4B YEREL SENTETİK PROVA HAZIR / ŞİFRELİ
 APPEND-ONLY JOURNAL TASARIMI BEKLİYOR** durumundadır.
+
+**P-B08 Dilim 4C şifreli append-only journal sözleşmesi — 09.08.2026:**
+Onaylı 10 varsayımla hassas manifest/checkpoint payload'ını AES-256-GCM ile
+şifreleyen, rastgele salt/IV ve HKDF-SHA256 entry anahtarı kullanan yerel
+journal çekirdeği hazırlandı. Tenant scope'u HMAC-SHA256 ile takma adlandırılır;
+object key plaintext tenant/kayıt/storage bilgisi taşımaz. Her entry envelope
+checksum'ı, GCM tag/AAD, sequence ve önceki encrypted-entry checksum'ıyla
+doğrulanır. `If-None-Match: *` append-only portu ile overwrite reddedilir;
+yanlış anahtar, ciphertext/AAD drift'i, sequence boşluğu, fork ve kırık hash
+chain fail-closed durur. Production config yalnız canonical base64 32-byte KEK
+ve sürüm adını kabul eder; değer loglanmaz. Ayrı EU journal bucket, `journal/`
+prefix'inde en az 1.095 günlük Bucket Lock, append/read/config görev ayrımı ve
+eski key sürümlerinin üç yıllık korunması provider sözleşmesine kaydedildi.
+Hedefli 3 dosya/19 test, tam 374 dosya/1.980 test, type-check, Prisma validate,
+sıfır uyarılı lint, 102 sayfalık production build, 1.432 dosyalık secret scan ve
+whitespace kontrolü geçti. Production/staging kaynağı, R2 adapter'ı, bucket,
+lock, credential, workflow veya canlı işlem eklenmedi;
+`productionBackupDeletionReplayReady=false` kaldı. Dilim **4C YEREL
+KRİPTO/JOURNAL SÖZLEŞMESİ HAZIR / GERÇEK R2 ADAPTER VE PROVIDER PREFLIGHT
+BEKLİYOR** durumundadır.
