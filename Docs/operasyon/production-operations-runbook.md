@@ -131,6 +131,11 @@ kaydında tutulur ve production taahhüdü sayılmaz.
   ve operasyonel sahiplerce onaylanana kadar toplu silme yapılmaz.
 - Tenant kapanışı export, legal hold, finansal kayıt, doküman binary ve DB scope
   doğrulaması olmadan destructive delete başlatmaz.
+- Onaylı preflight sözleşmesi
+  `Docs/UI-baseline/Faz36-production-retention-hesap-kapatma-preflight-sozlesmesi-20260809.md`
+  içindedir. Yerel değerlendirme çekirdeği yalnız envanter kapılarını raporlar;
+  sonuç yeşil olsa bile hesap dondurma, purge veya destructive delete yetkisi
+  üretmez. Canlı preflight ve sonraki her yazma aşaması ayrı açık onay ister.
 
 ## Sorumluluk matrisi ve yayın kapısı
 

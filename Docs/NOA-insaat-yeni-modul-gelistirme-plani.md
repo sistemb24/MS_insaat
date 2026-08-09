@@ -3711,3 +3711,18 @@ deployment, yasal içerik, indexing veya trafik değiştirilmedi. Kanıt
 `Docs/UI-baseline/Faz36-production-domain-tls-yayin-preflight-20260808.md`
 içindedir; sıradaki ayrı onay kapısı Vercel project-domain bağının oluşturulması
 ve Vercel'in kesin DNS hedeflerinin alınmasıdır.
+
+**Production retention, hesap kapatma ve legal hold preflight sözleşmesi —
+09.08.2026:** Domain registrar `clientHold` engeli nedeniyle domain/TLS dilimi
+beklemeye alınırken bağımsız P-B08 kapısı ele alındı. Tenant silmenin geniş
+`Cascade` etkisi, eksik bütüncül hesap kapatma akışı, yalnız doküman çöpünde
+bulunan 30 günlük purge çekirdeği ve DB/R2/backup koordinasyon eksiği kaydedildi.
+Onaylı 10 varsayımı taşıyan sözleşme ile exact production confirmation, güvenli
+tenant/release kimliği, dokuz saklama karar kategorisi, legal hold, SHA-256
+export manifesti, DB/R2 doküman sayımı ve backup silme-tekrar hazırlığını
+fail-closed değerlendiren yerel çekirdek eklendi. Yeşil sonuç dahi
+`accessFreezeAllowed=false`, `purgeAllowed=false` ve
+`destructiveDeleteAllowed=false` döndürür. Production verisi okunmadı,
+workflow/schedule, export, hesap dondurma veya silme çalıştırılmadı. P-B08
+**SÖZLEŞME HAZIR / BLOCKER** durumundadır; sıradaki ayrı karar kapısı dokuz veri
+kategorisinin saklama/imha karar tablosudur.
