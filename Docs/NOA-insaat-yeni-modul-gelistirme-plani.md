@@ -3772,3 +3772,16 @@ CI run `31306234553` geçti. Ayrı onaylı ilk manual-once kabul run'ı `3130644
 `514.690` byte, binary `0`, 68/68 migration, 0 pending ve 117 tablo olarak
 doğruladı; migration, restore veya silme çalıştırmadı. Dilim **MERGE VE İLK
 MANUEL KABUL TAMAMLANDI / İLK SCHEDULE VE FRESHNESS BEKLİYOR** durumundadır.
+
+**Production backup freshness/alarm sözleşmesi — 09.08.2026:** Günlük
+backup'tan iki saat sonra `04:15 UTC` çalışan, en yeni backup manifestini yalnız
+R2 `List/Get` ile denetleyen fail-closed sözleşme hazırlandı. Azami yaş `24 saat`;
+manifest yok/bozuk, kimlik-anahtar-release tutarsız, DB dump bütünlük alanı
+geçersiz, zaman gelecekte veya yaş eşik üstündeyse job başarısız olur. Schedule
+ve manual tokenlar event'e bağlıdır; production DB, document bucket, backup
+oluşturma, migration, restore ve silme yoktur. Mevcut backup-write credential
+job'a verilmez; ayrı backup-read R2 tokenı ve iki GitHub Actions secret'ı henüz
+oluşturulmadığından canlı workflow fail-closed bekler. Kırmızı job yalnız makine
+alarm kaynağıdır; notification kuralı ve insan teslim teyidi ayrıca kanıtlanmadan
+alarm kabulü veya sürekli 24 saat RPO iddiası kurulmaz. Dilim **KOD HAZIR /
+READ-ONLY CREDENTIAL VE MANUEL KABUL BEKLİYOR** durumundadır.

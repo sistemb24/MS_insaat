@@ -1,0 +1,43 @@
+name: Production Backup Freshness
+
+on:
+  schedule:
+    - cron: "15 4 * * *"
+  workflow_dispatch:
+    inputs:
+      confirmation:
+        description: Type production-backup-freshness-check for one read-only check
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: noa-production-backup-freshness
+  cancel-in-progress: false
+
+jobs:
+  freshness:
+    if: ${{ github.event_name == 'schedule' || inputs.confirmation == 'production-backup-freshness-check' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      NOA_PRODUCTION_BACKUP_FRESHNESS_CONFIRMATION: ${{ github.event_name == 'schedule' && 'production-backup-freshness-scheduled' || inputs.confirmation }}
+      NOA_RUNTIME_ENV: production
+      R2_BACKUP_ACCESS_KEY_ID: ${{ secrets.PRODUCTION_R2_BACKUP_READ_ACCESS_KEY_ID }}
+      R2_BACKUP_SECRET_ACCESS_KEY: ${{ secrets.PRODUCTION_R2_BACKUP_READ_SECRET_ACCESS_KEY }}
+      R2_BACKUP_BUCKET: ${{ vars.PRODUCTION_R2_BACKUP_BUCKET }}
+      R2_BACKUP_ENDPOINT: ${{ vars.PRODUCTION_R2_BACKUP_ENDPOINT }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Verify production backup freshness
+        run: pnpm production:backup:freshness

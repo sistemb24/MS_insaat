@@ -91,4 +91,7 @@ değiştirmedi ve workflow'u etkinleştirmedi.
 4. `production-backup-scheduled-once` ile ilk manual acceptance backup'ı ayrı
    onayla çalıştırıldı.
 5. Backup kimliği, checksum/boyut, binary sayısı ve workflow sonucu doğrulandı.
-6. İlk schedule koşusu ve sonraki freshness/alarm görevi ayrı kanıtlanacak.
+6. Freshness/alarm kod sözleşmesi
+   `Docs/UI-baseline/Faz36-production-backup-freshness-alarm-sozlesmesi-20260809.md`
+   içinde hazırlandı; read-only credential, manuel kabul, ilk schedule ve insan
+   alarm teslimi ayrı kanıtlanacak.

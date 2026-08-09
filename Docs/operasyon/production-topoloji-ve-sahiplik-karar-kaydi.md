@@ -113,7 +113,7 @@ gösterilir; boş veya örtük sahiplik kabul edilmez.
 | Staging hesap kapatma ve legal hold | Sentetik veri; production kararı değildir | Murat Saygı / Murat Saygı | ONAYLANDI / STAGING |
 | Staging destek saatleri ve SLA | Hafta içi 09:00–18:00; dış SLA yok | Murat Saygı / Murat Saygı | ONAYLANDI |
 | Staging incident severity/escalation | SEV-1/2/3; tek sorumlu Murat Saygı | Murat Saygı / Murat Saygı | ONAYLANDI / TEK-SORUMLU RİSKİ |
-| Production hedef RPO | 24 saat | Murat Saygı / Murat Saygı | ONAYLANDI / TEK RECOVERY POINT KANITI VAR; SÜREKLİLİK BEKLİYOR |
+| Production hedef RPO | 24 saat | Murat Saygı / Murat Saygı | ONAYLANDI / 24 SAAT FRESHNESS KODU HAZIR; READ-ONLY CREDENTIAL+KABUL BEKLİYOR |
 | Production hedef RTO | 8 saat | Murat Saygı / Murat Saygı | ONAYLANDI / DB-ONLY İZOLE RESTORE 188 SANİYE |
 | Production backup sıklığı ve retention | Günlük; 30 gün | Murat Saygı / Murat Saygı | ONAYLANDI / WORKFLOW AKTİF; İLK MANUEL KABUL GEÇTİ; SCHEDULE+FRESHNESS BEKLİYOR |
 | Production destek saatleri ve SLA | Hafta içi 09:00–18:00; dış SLA yok | Murat Saygı / Murat Saygı | ONAYLANDI |
@@ -135,6 +135,12 @@ PR `#14` ile `main@e83a0f8c` üzerine merge edildi; ilk manual-once kabul run'ı
 envanteriyle doğruladı. Bu koşular RTO hedefinin içinde DB-only kanıttır; ilk
 gerçek schedule ve freshness alarmı olmadan sürekli 24 saat RPO garantisi
 değildir.
+
+Freshness sözleşmesi `04:15 UTC` schedule ve azami `24 saat` manifest yaşıyla
+hazırlandı. Kontrol yalnız backup bucket `List/Get` yapar; ayrı read-only R2
+credential henüz oluşturulmadı ve GitHub Actions'a tanımlanmadı. Kırmızı job
+sonucu makine alarm kaynağıdır; bildirim kuralı ve insan teslim kabulü ayrıca
+bekler.
 
 ## 7. Dilim 1 kabul kapısı
 
