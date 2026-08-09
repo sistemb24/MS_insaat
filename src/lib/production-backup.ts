@@ -7,12 +7,28 @@ import {
 export const PRODUCTION_BACKUP_CONFIRMATION = "production-backup-execute";
 export const PRODUCTION_MIGRATION_CONFIRMATION = "production-migration-execute";
 export const PRODUCTION_RESTORE_CONFIRMATION = "production-restore-rehearsal";
+export const PRODUCTION_SCHEDULED_BACKUP_CONFIRMATION =
+  "production-backup-scheduled";
+export const PRODUCTION_SCHEDULED_BACKUP_ONCE_CONFIRMATION =
+  "production-backup-scheduled-once";
 export type ProductionBackupConfig = ProductionRecoveryPreflightConfig;
 
 export function readProductionBackupConfig(
   env: Readonly<Record<string, string | undefined>>,
 ): ProductionBackupConfig {
-  if (env.NOA_PRODUCTION_BACKUP_CONFIRMATION !== PRODUCTION_BACKUP_CONFIRMATION) {
+  const confirmation = env.NOA_PRODUCTION_BACKUP_CONFIRMATION;
+  const eventName = env.GITHUB_EVENT_NAME;
+  const manualMigrationBackup =
+    confirmation === PRODUCTION_BACKUP_CONFIRMATION &&
+    (eventName === undefined || eventName === "workflow_dispatch");
+  const scheduledBackup =
+    confirmation === PRODUCTION_SCHEDULED_BACKUP_CONFIRMATION &&
+    eventName === "schedule";
+  const scheduledBackupOnce =
+    confirmation === PRODUCTION_SCHEDULED_BACKUP_ONCE_CONFIRMATION &&
+    eventName === "workflow_dispatch";
+
+  if (!manualMigrationBackup && !scheduledBackup && !scheduledBackupOnce) {
     throw new Error("Production backup açık onayı eksik.");
   }
   return readProductionRecoveryPreflightConfig(env);

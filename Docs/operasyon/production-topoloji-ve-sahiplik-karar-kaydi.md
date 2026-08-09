@@ -113,9 +113,9 @@ gösterilir; boş veya örtük sahiplik kabul edilmez.
 | Staging hesap kapatma ve legal hold | Sentetik veri; production kararı değildir | Murat Saygı / Murat Saygı | ONAYLANDI / STAGING |
 | Staging destek saatleri ve SLA | Hafta içi 09:00–18:00; dış SLA yok | Murat Saygı / Murat Saygı | ONAYLANDI |
 | Staging incident severity/escalation | SEV-1/2/3; tek sorumlu Murat Saygı | Murat Saygı / Murat Saygı | ONAYLANDI / TEK-SORUMLU RİSKİ |
-| Production hedef RPO | 24 saat | Murat Saygı / Murat Saygı | ONAYLANDI / HENÜZ ÖLÇÜLMEDİ |
-| Production hedef RTO | 8 saat | Murat Saygı / Murat Saygı | ONAYLANDI / HENÜZ ÖLÇÜLMEDİ |
-| Production backup sıklığı ve retention | Günlük; 30 gün | Murat Saygı / Murat Saygı | ONAYLANDI / WORKFLOW BEKLİYOR |
+| Production hedef RPO | 24 saat | Murat Saygı / Murat Saygı | ONAYLANDI / TEK RECOVERY POINT KANITI VAR; SÜREKLİLİK BEKLİYOR |
+| Production hedef RTO | 8 saat | Murat Saygı / Murat Saygı | ONAYLANDI / DB-ONLY İZOLE RESTORE 188 SANİYE |
+| Production backup sıklığı ve retention | Günlük; 30 gün | Murat Saygı / Murat Saygı | ONAYLANDI / WORKFLOW KODU HAZIR; MERGE+İLK KABUL BEKLİYOR |
 | Production destek saatleri ve SLA | Hafta içi 09:00–18:00; dış SLA yok | Murat Saygı / Murat Saygı | ONAYLANDI |
 | Production resmi yayın kimliği | MS İNŞAAT; Atakum-Samsun; `info@msinsaat.com`; veri sorumlusu Murat Saygı; hukuk onayı 05.08.2026 | Murat Saygı / Murat Saygı | ONAYLANDI / İÇERİK KABULÜ BEKLİYOR |
 
@@ -123,6 +123,15 @@ Staging RPO 24 saat, RTO 8 saat, günlük backup/14 gün retention, sentetik
 staging veri/log retention üst sınırı 30 gün, dış SLA yok ve hafta içi
 09:00–18:00 Europe/Istanbul iç destek penceresi kullanıcı tarafından
 04.08.2026 tarihinde onaylandı.
+
+09.08.2026 tarihinde `main@cbc5a360` için production preflight 67/68 migration
+ve 114 tabloyu doğruladı. Aynı-release `499.682` byte backup oluşturulup
+bütünlük kontrolünden geçirildi, tek additive migration sonrasında production
+68/68 migration ve 117 tabloya ulaştı. Migration öncesi recovery point'i izole
+DB'ye 188 saniyede 67 migration/114 tablo olarak geri yüklendi ve geçici DB
+silindi. Document bucket boş olduğundan binary sayısı `0`dır. Bu tek koşu RTO
+hedefinin içinde bir DB-only kanıttır; günlük workflow merge/acceptance ve
+freshness alarmı olmadan sürekli 24 saat RPO garantisi değildir.
 
 ## 7. Dilim 1 kabul kapısı
 

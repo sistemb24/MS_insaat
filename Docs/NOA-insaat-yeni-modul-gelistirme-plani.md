@@ -3751,3 +3751,19 @@ fail-closed çalışır; Super Admin listesi durum/sürüm/aktif hold sayısın�
 Hiçbir ortama migration uygulanmadı, canlı kayıt veya provider kaynağı
 değiştirilmedi. Dilim **KOD HAZIR / MIGRATION BLOCKER** durumundadır; sıradaki
 ayrı onay kapısı değişikliklerin commit/push/PR sürecidir.
+
+**Production günlük backup ve 30 gün retention sözleşmesi — 09.08.2026:**
+`main@cbc5a360` production preflight'ı 67/68 migration ve 114 tabloyu doğruladı;
+aynı-release `499.682` byte backup bütünlük kontrolünden sonra tek additive
+migration uygulandı ve production 68/68 migration/117 tabloya ulaştı. Migration
+öncesi recovery point'i izole DB'ye 188 saniyede 67 migration/114 tablo olarak
+geri yüklendi ve geçici DB silindi. Onaylanan günlük otomasyon için ayrı
+`production-backup.yml` sözleşmesi hazırlandı: `02:15 UTC` schedule, event'e
+bağlı scheduled/manual-once tokenlar, ortak recovery concurrency kilidi,
+preflight, PostgreSQL major kontrolü, DB+binary backup ve bütünlük doğrulaması;
+migration, restore veya nesne silme içermez. Retention yalnız provider'daki 30
+günlük R2 lifecycle'a bırakılır. GitHub schedule gecikmesi nedeniyle cron tek
+başına katı 24 saat RPO garantisi sayılmaz; freshness/alarm sonraki bağımsız
+görevdir. Hedefli 17 test, tam 365 dosya/1.939 test, type-check, Prisma validate,
+lint, 102 sayfalık production build, 1.402 dosyalık secret scan ve diff-check
+geçti. Dilim **KOD HAZIR / MERGE VE İLK MANUEL KABUL BEKLİYOR** durumundadır.
