@@ -3726,3 +3726,16 @@ fail-closed değerlendiren yerel çekirdek eklendi. Yeşil sonuç dahi
 workflow/schedule, export, hesap dondurma veya silme çalıştırılmadı. P-B08
 **SÖZLEŞME HAZIR / BLOCKER** durumundadır; sıradaki ayrı karar kapısı dokuz veri
 kategorisinin saklama/imha karar tablosudur.
+
+**Production saklama ve imha karar kataloğu — 09.08.2026:** Murat Saygı dokuz
+veri kategorisi ile genel request, periyodik imha ve legal-hold kurallarını açıkça
+onayladı. `2026-08-09.a` sürümlü katalog; kimlik/iletişim 30 gün, expired auth
+artifact'ları 30 gün, audit/güvenlik 3 yıl, finans/muhasebe 10 yıl, SGK/işyeri
+kayıtları 10 yıl, çalışan sağlık dosyaları en az 15 yıl, genel doküman çöpü 30
+gün ve kategori mirası, ham entegrasyon/webhook 90 gün, genel destek 2 yıl ve
+production backup 30 gün kararlarını taşır. Preflight biçimsel olarak güvenli
+ama katalog dışı karar kimliklerini artık fail-closed reddeder. Bu dilimde
+production verisi/provider kaynağı okunmadı veya değiştirilmedi; scheduler,
+oturum iptali, hesap dondurma, legal hold, export, purge ve tenant silme
+çalıştırılmadı. P-B08 karar kataloğu **TAMAM / UYGULAMA BLOCKER** durumundadır;
+sıradaki ayrı dilim hesap dondurma ve legal-hold veri modeli sözleşmesidir.
