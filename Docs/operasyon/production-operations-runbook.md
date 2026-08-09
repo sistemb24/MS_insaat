@@ -221,6 +221,13 @@ acceptance koşusu geçmeden sürdürülebilir 24 saat RPO iddiası kurulmaz.
   `Docs/operasyon/production-retention-ve-imha-karar-katalogu-v1.md` içinde
   `2026-08-09.a` sürümüyle onaylıdır. Preflight yalnız katalogdaki exact karar
   kimliklerini kabul eder; bu karar scheduler veya silme yetkisi değildir.
+- P-B08 Dilim 3A envanter sözleşmesi
+  `Docs/operasyon/production-tenant-export-envanter-sozlesmesi-v1.md` içindedir.
+  Prisma şemasındaki 90 doğrudan tenant modeli dokuz kategoriye tam bir kez
+  atanır; drift testi eksik, tekrar veya bilinmeyen modeli fail-closed durdurur.
+  Yerel manifest yalnız sayım, yaşam döngüsü özeti, karar kimlikleri ve canonical
+  SHA-256 taşır; satır içeriği, kişisel veri veya R2 anahtarı taşımaz. Gerçek
+  Prisma/R2 adapter'ı, canlı okuma ve tüm yazma/silme aşamaları ayrı onay ister.
 
 ## Sorumluluk matrisi ve yayın kapısı
 

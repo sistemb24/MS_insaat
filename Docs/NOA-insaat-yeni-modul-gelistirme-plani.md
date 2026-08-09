@@ -3801,3 +3801,17 @@ checkout, secret, DB veya R2 erişimi almaz; issue yalnız güvenli run metadata
 taşır. Canlı rehearsal/issue/e-posta tetiklenmedi ve production manifesti
 değiştirilmedi. Dilim **MANUEL KABUL TAMAMLANDI / ALARM SÖZLEŞMESİ KOD HAZIR /
 İLK SCHEDULE VE CANLI ALARM TESLİMİ BEKLİYOR** durumundadır.
+
+**P-B08 Dilim 3A tenant export/envanter sözleşmesi — 09.08.2026:** Onaylı 10
+varsayım ve yürütme sırasıyla Prisma şemasındaki 116 model ölçüldü; doğrudan
+`tenantId` taşıyan 90 model dokuz saklama kategorisine tam bir kez bağlandı,
+kalan 26 model açık gerekçeli allowlist'e alındı.
+Şema drift testi eksik, tekrar veya bilinmeyen modeli fail-closed durdurur.
+Salt-okunur portlar ile yaşam döngüsü/oturum/legal-hold özeti, exact model ve
+kategori sayımları, doküman metadata/storage/head toplamları, `2026-08-09.a`
+kararları ve canonical SHA-256 içeren; satır içeriği, kişisel veri veya storage
+key taşımayan manifest çekirdeği hazırlandı. Production DB/R2 okunmadı;
+workflow, route, export paketi, hesap dondurma, legal hold mutasyonu, purge veya
+silme çalıştırılmadı. Dilim **3A KOD HAZIR / CANLI PRISMA-R2 ADAPTERI
+BEKLİYOR** durumundadır; sıradaki ayrı onay kapısı P-B08 Dilim 3B gerçek
+salt-okunur adapter ve canlı preflight entegrasyonudur.
