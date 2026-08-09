@@ -3935,3 +3935,23 @@ başlamaz. Yeni credential/secret oluşturulmadı ve workflow çalıştırılmad
 `productionBackupDeletionReplayReady=false` kaldı. Dilim **4E-B PROVIDER KAYNAĞI
 HAZIR / İLK RUN BAŞARISIZ / 4E-B-R KOD HAZIR / PR VE AYRI CANLI TEKRAR ONAYI
 BEKLİYOR** durumundadır.
+
+**P-B08 Dilim 4E-B-R2 canlı sonuç ve 4E-B-R3 iki aşamalı credential tanılama
+kapısı — 09.08.2026:** Onaylanan `main@45bda9f` üzerinde yalnız run
+`31331024346`, attempt `1` çalıştı; resmî `jose.SignJWT` signer aktifken
+temporary credential probe yine `InvalidArgument`, HTTP `400` ile reddedildi.
+Tekrar yapılmadı, bucket `0 B` kaldı ve geçici parent credential ile iki GitHub
+parent secret'ı temizlendi. R3 kodu aynı salt-okunur
+`ListObjectsV2(Prefix=journal/, MaxKeys=1)` probe'unu önce session token
+taşımayan parent credential'a, yalnız başarıdan sonra local-signing temporary
+credential'a uygular. Parent hata verirse temporary mint çalışmaz; iki
+probe'dan biri hata verirse encrypted chain okuması ve `PutObject` başlamaz.
+Hatalar yalnız
+`parent-credential-probe`, `temporary-credential-probe` veya
+`encrypted-append-read` fazı, güvenli provider code ve HTTP status taşır.
+Hedefli 3 dosya/19 test, tam 378 dosya/2.004 test, type-check, Prisma validate,
+sıfır uyarılı lint, 102 sayfalık production build, 1.241 dosyalık secret scan
+ve whitespace kontrolü geçti. Bu dilimde provider credential/secret
+oluşturulmadı ve workflow çalıştırılmadı;
+`productionBackupDeletionReplayReady=false` kaldı. Dilim **4E-B-R3 KOD HAZIR /
+COMMIT-PUSH-PR VE AYRI CANLI İKİ AŞAMALI PROBE ONAYI BEKLİYOR** durumundadır.

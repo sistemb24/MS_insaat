@@ -53,5 +53,5 @@ jobs:
           node-version: 22
           cache: pnpm
       - run: pnpm install --frozen-lockfile --ignore-scripts
-      - name: Probe scoped credential and rehearse encrypted append/read
+      - name: Probe parent and scoped credentials before encrypted append/read
         run: pnpm exec tsx scripts/rehearse-production-deletion-journal-provider.ts

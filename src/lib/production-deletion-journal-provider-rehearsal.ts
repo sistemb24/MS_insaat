@@ -22,7 +22,8 @@ export const PRODUCTION_DELETION_JOURNAL_REHEARSAL_TENANT_ID =
   "tenant-synthetic-journal-provider-rehearsal";
 
 export type ProductionDeletionJournalProviderPhase =
-  | "credential-probe"
+  | "parent-credential-probe"
+  | "temporary-credential-probe"
   | "encrypted-append-read";
 
 export type ProductionDeletionJournalProviderRehearsalConfig = {
@@ -104,6 +105,32 @@ export function readProductionDeletionJournalProviderRehearsalConfig(
     runAttempt,
     runId,
   };
+}
+
+export async function runProductionDeletionJournalCredentialGates<T>(input: {
+  createTemporaryClient(): Promise<T>;
+  probeParentCredential(): Promise<unknown>;
+  probeTemporaryCredential(client: T): Promise<unknown>;
+}) {
+  try {
+    await input.probeParentCredential();
+  } catch (error) {
+    throw createSafeProductionDeletionJournalProviderError(
+      "parent-credential-probe",
+      error,
+    );
+  }
+
+  try {
+    const client = await input.createTemporaryClient();
+    await input.probeTemporaryCredential(client);
+    return client;
+  } catch (error) {
+    throw createSafeProductionDeletionJournalProviderError(
+      "temporary-credential-probe",
+      error,
+    );
+  }
 }
 
 export async function runProductionDeletionJournalProviderRehearsal(input: {
