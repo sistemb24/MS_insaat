@@ -9,6 +9,7 @@ import type { ProductionDeletionJournalStorePort } from "./production-deletion-j
 
 export const PRODUCTION_DELETION_JOURNAL_BUCKET =
   "noa-insaat-production-deletion-journal-eu";
+export const PRODUCTION_DELETION_JOURNAL_CREDENTIAL_PROBE_PREFIX = "journal/";
 export const PRODUCTION_DELETION_JOURNAL_MAX_OBJECT_BYTES = 1_048_576;
 export const PRODUCTION_DELETION_JOURNAL_MAX_OBJECT_COUNT = 10_000;
 
@@ -85,6 +86,31 @@ export function createProductionDeletionJournalR2Client(
     endpoint: config.endpoint,
     region: "auto",
   });
+}
+
+export async function probeProductionDeletionJournalR2Credential(input: {
+  bucket: string;
+  client: ProductionDeletionJournalR2ClientLike;
+}) {
+  const bucket = normalizeBucket(input.bucket);
+  const response = (await input.client.send(
+    new ListObjectsV2Command({
+      Bucket: bucket,
+      MaxKeys: 1,
+      Prefix: PRODUCTION_DELETION_JOURNAL_CREDENTIAL_PROBE_PREFIX,
+    }),
+  )) as { Contents?: readonly { Key?: string }[] };
+  const contents = response.Contents ?? [];
+  if (
+    contents.length > 1 ||
+    contents.some(
+      (object) =>
+        !object.Key?.startsWith(PRODUCTION_DELETION_JOURNAL_CREDENTIAL_PROBE_PREFIX),
+    )
+  ) {
+    throw new Error("Journal R2 credential probe güvenli prefix sınırını aştı.");
+  }
+  return { credentialProbeReady: true as const };
 }
 
 export function createProductionDeletionJournalR2Store(input: {

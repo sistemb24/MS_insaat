@@ -15,8 +15,8 @@ const parentAccessKeyId = "parent-access-key-001";
 const parentSecretAccessKey = "parent-secret-access-key-001";
 
 describe("production R2 temporary credential mint", () => {
-  it("signs the exact Cloudflare-compatible 15-minute journal scope", () => {
-    const credentials = createProductionDeletionJournalTemporaryCredentials({
+  it("signs the exact Cloudflare-compatible 15-minute journal scope", async () => {
+    const credentials = await createProductionDeletionJournalTemporaryCredentials({
       accountId,
       endpoint,
       issuedAt: new Date("2026-08-09T18:00:00.000Z"),
@@ -54,7 +54,7 @@ describe("production R2 temporary credential mint", () => {
     expect(PRODUCTION_R2_TEMPORARY_CREDENTIAL_TTL_SECONDS).toBe(900);
   });
 
-  it("rejects account, endpoint, parent credential and time drift", () => {
+  it("rejects account, endpoint, parent credential and time drift", async () => {
     const valid = {
       accountId,
       endpoint,
@@ -62,39 +62,40 @@ describe("production R2 temporary credential mint", () => {
       parentAccessKeyId,
       parentSecretAccessKey,
     };
-    expect(() =>
+    await expect(
       createProductionDeletionJournalTemporaryCredentials({
         ...valid,
         accountId: "wrong",
       }),
-    ).toThrow(/account/);
-    expect(() =>
+    ).rejects.toThrow(/account/);
+    await expect(
       createProductionDeletionJournalTemporaryCredentials({
         ...valid,
         endpoint: "https://bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb.eu.r2.cloudflarestorage.com",
       }),
-    ).toThrow(/eşleşmiyor/);
-    expect(() =>
+    ).rejects.toThrow(/eşleşmiyor/);
+    await expect(
       createProductionDeletionJournalTemporaryCredentials({
         ...valid,
         parentSecretAccessKey: "short",
       }),
-    ).toThrow(/secret/);
-    expect(() =>
+    ).rejects.toThrow(/secret/);
+    await expect(
       createProductionDeletionJournalTemporaryCredentials({
         ...valid,
         issuedAt: new Date("invalid"),
       }),
-    ).toThrow(/zamanı/);
+    ).rejects.toThrow(/zamanı/);
   });
 
-  it("contains no delete action, secret logging or external JWT dependency", () => {
+  it("contains no delete action, secret logging or alternate JWT dependency", () => {
     const source = readFileSync(
       resolve(process.cwd(), "src/lib/production-r2-temporary-credentials.ts"),
       "utf8",
     );
     expect(source).not.toMatch(/DeleteObject|DeleteObjects|CopyObject|console\./);
-    expect(source).not.toMatch(/from ["']jose["']|from ["']aws4fetch["']/);
+    expect(source).toMatch(/import \{ SignJWT \} from ["']jose["']/);
+    expect(source).not.toMatch(/from ["']aws4fetch["']/);
     expect(source).not.toMatch(/parentSecretAccessKey\s*[:=]\s*["'][^"']+["']/);
   });
 });

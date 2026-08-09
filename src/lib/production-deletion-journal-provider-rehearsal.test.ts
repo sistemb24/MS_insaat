@@ -8,6 +8,7 @@ import {
   type ProductionDeletionJournalCryptoConfig,
 } from "./production-deletion-journal";
 import {
+  createSafeProductionDeletionJournalProviderError,
   PRODUCTION_DELETION_JOURNAL_REHEARSAL_CONFIRMATION,
   readProductionDeletionJournalProviderRehearsalConfig,
   runProductionDeletionJournalProviderRehearsal,
@@ -64,6 +65,33 @@ describe("production deletion journal provider rehearsal", () => {
     await runProductionDeletionJournalProviderRehearsal(input);
     await expect(runProductionDeletionJournalProviderRehearsal(input)).rejects.toThrow(
       /daha önce kullanılmış/,
+    );
+  });
+
+  it("classifies provider failures without retaining raw secret-bearing messages", () => {
+    const error = Object.assign(
+      new Error("secret-session-token=must-not-leak"),
+      {
+        $metadata: { httpStatusCode: 400 },
+        Code: "InvalidArgument",
+      },
+    );
+
+    expect(
+      createSafeProductionDeletionJournalProviderError(
+        "credential-probe",
+        error,
+      ).message,
+    ).toBe(
+      "Journal provider rehearsal başarısız: phase=credential-probe providerCode=InvalidArgument httpStatus=400.",
+    );
+    expect(
+      createSafeProductionDeletionJournalProviderError(
+        "encrypted-append-read",
+        { Code: "unsafe value", message: "another-secret" },
+      ).message,
+    ).toBe(
+      "Journal provider rehearsal başarısız: phase=encrypted-append-read providerCode=unknown httpStatus=unknown.",
     );
   });
 
@@ -125,6 +153,12 @@ describe("production deletion journal provider rehearsal", () => {
     expect(workflow).toContain("cancel-in-progress: false");
     expect(workflow).toContain("PRODUCTION_DELETION_JOURNAL_R2_PARENT_ACCESS_KEY_ID");
     expect(workflow).toContain("PRODUCTION_DELETION_JOURNAL_PREFLIGHT_KEK");
+    expect(workflow).toContain(
+      "Probe scoped credential and rehearse encrypted append/read",
+    );
+    expect(script.indexOf("await probeProductionDeletionJournalR2Credential")).toBeLessThan(
+      script.indexOf("evidence = await runProductionDeletionJournalProviderRehearsal"),
+    );
     expect(workflow).not.toMatch(/schedule:|DATABASE_URL|R2_BACKUP|DeleteObject|artifact/);
     expect(script).not.toMatch(/DeleteObject|DATABASE_URL|console\.(error|warn)/);
   });

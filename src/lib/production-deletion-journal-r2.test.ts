@@ -11,6 +11,8 @@ import { describe, expect, it, vi } from "vitest";
 import {
   createProductionDeletionJournalR2Store,
   PRODUCTION_DELETION_JOURNAL_BUCKET,
+  PRODUCTION_DELETION_JOURNAL_CREDENTIAL_PROBE_PREFIX,
+  probeProductionDeletionJournalR2Credential,
   readProductionDeletionJournalR2Config,
 } from "./production-deletion-journal-r2";
 
@@ -89,6 +91,37 @@ describe("production deletion journal R2 adapter", () => {
       IfNoneMatch: "*",
       Key: firstKey,
     });
+  });
+
+  it("probes temporary credentials with one prefix-only list and no object read", async () => {
+    const send = vi.fn().mockResolvedValue({ Contents: [] });
+
+    await expect(
+      probeProductionDeletionJournalR2Credential({
+        bucket: PRODUCTION_DELETION_JOURNAL_BUCKET,
+        client: { send },
+      }),
+    ).resolves.toEqual({ credentialProbeReady: true });
+    expect(send).toHaveBeenCalledTimes(1);
+    expect(send.mock.calls[0][0]).toBeInstanceOf(ListObjectsV2Command);
+    expect((send.mock.calls[0][0] as ListObjectsV2Command).input).toEqual({
+      Bucket: PRODUCTION_DELETION_JOURNAL_BUCKET,
+      MaxKeys: 1,
+      Prefix: PRODUCTION_DELETION_JOURNAL_CREDENTIAL_PROBE_PREFIX,
+    });
+  });
+
+  it("fails closed when the credential probe crosses the journal prefix", async () => {
+    await expect(
+      probeProductionDeletionJournalR2Credential({
+        bucket: PRODUCTION_DELETION_JOURNAL_BUCKET,
+        client: {
+          send: vi.fn().mockResolvedValue({
+            Contents: [{ Key: "outside/unsafe.json.enc" }],
+          }),
+        },
+      }),
+    ).rejects.toThrow(/prefix/);
   });
 
   it("maps only a precondition failure to already-exists", async () => {
