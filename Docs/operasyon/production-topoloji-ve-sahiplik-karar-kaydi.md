@@ -115,7 +115,7 @@ gösterilir; boş veya örtük sahiplik kabul edilmez.
 | Staging incident severity/escalation | SEV-1/2/3; tek sorumlu Murat Saygı | Murat Saygı / Murat Saygı | ONAYLANDI / TEK-SORUMLU RİSKİ |
 | Production hedef RPO | 24 saat | Murat Saygı / Murat Saygı | ONAYLANDI / TEK RECOVERY POINT KANITI VAR; SÜREKLİLİK BEKLİYOR |
 | Production hedef RTO | 8 saat | Murat Saygı / Murat Saygı | ONAYLANDI / DB-ONLY İZOLE RESTORE 188 SANİYE |
-| Production backup sıklığı ve retention | Günlük; 30 gün | Murat Saygı / Murat Saygı | ONAYLANDI / WORKFLOW KODU HAZIR; MERGE+İLK KABUL BEKLİYOR |
+| Production backup sıklığı ve retention | Günlük; 30 gün | Murat Saygı / Murat Saygı | ONAYLANDI / WORKFLOW AKTİF; İLK MANUEL KABUL GEÇTİ; SCHEDULE+FRESHNESS BEKLİYOR |
 | Production destek saatleri ve SLA | Hafta içi 09:00–18:00; dış SLA yok | Murat Saygı / Murat Saygı | ONAYLANDI |
 | Production resmi yayın kimliği | MS İNŞAAT; Atakum-Samsun; `info@msinsaat.com`; veri sorumlusu Murat Saygı; hukuk onayı 05.08.2026 | Murat Saygı / Murat Saygı | ONAYLANDI / İÇERİK KABULÜ BEKLİYOR |
 
@@ -129,9 +129,12 @@ ve 114 tabloyu doğruladı. Aynı-release `499.682` byte backup oluşturulup
 bütünlük kontrolünden geçirildi, tek additive migration sonrasında production
 68/68 migration ve 117 tabloya ulaştı. Migration öncesi recovery point'i izole
 DB'ye 188 saniyede 67 migration/114 tablo olarak geri yüklendi ve geçici DB
-silindi. Document bucket boş olduğundan binary sayısı `0`dır. Bu tek koşu RTO
-hedefinin içinde bir DB-only kanıttır; günlük workflow merge/acceptance ve
-freshness alarmı olmadan sürekli 24 saat RPO garantisi değildir.
+silindi. Document bucket boş olduğundan binary sayısı `0`dır. Günlük workflow
+PR `#14` ile `main@e83a0f8c` üzerine merge edildi; ilk manual-once kabul run'ı
+`31306444810`, `514.690` byte backup'ı 68/68 migration, 0 pending ve 117 tablo
+envanteriyle doğruladı. Bu koşular RTO hedefinin içinde DB-only kanıttır; ilk
+gerçek schedule ve freshness alarmı olmadan sürekli 24 saat RPO garantisi
+değildir.
 
 ## 7. Dilim 1 kabul kapısı
 
