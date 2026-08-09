@@ -2,7 +2,8 @@
 
 Tarih: 09.08.2026
 Durum: Production temeli, backup/migration, izole restore, günlük backup ve
-freshness manuel kabul kanıtları hazır; ilk schedule ve alarm teslimi bekleniyor
+freshness manuel kabul kanıtları hazır; alarm sözleşmesi kod hazır, ilk schedule
+ve canlı alarm teslimi bekleniyor
 
 Faz 36 sağlayıcı, ortam ve sorumluluk kararlarının tek güncel kaydı
 `Docs/operasyon/production-topoloji-ve-sahiplik-karar-kaydi.md` dosyasıdır.
@@ -105,6 +106,22 @@ PR `#17` merge commit `dd578d3d` sonrasındaki ayrı onaylı tekrar kabul run'ı
 binary nesne olarak doğrulandı. Koşu yalnız backup bucket list/read erişimi
 kullandı; production DB bağlantısı, backup/migration/restore veya silme
 çalıştırmadı. İlk gerçek schedule ve insan alarm teslimi ayrı kabul kapısıdır.
+
+### Production backup freshness alarmı
+
+`.github/workflows/production-backup-freshness-alarm.yml` yalnız varsayılan
+daldaki `Production Backup Freshness` schedule hatasını veya onaylı
+`Production Backup Freshness Alarm Rehearsal` workflow-dispatch hatasını
+`workflow_run` ile izler. Freshness reader `contents: read` sınırında kalır;
+yalnız notifier `issues: write` alır. Sabit başlık/etiket açık issue üzerinde
+dedupe edilir ve yalnız güvenli workflow/run metadata'sı yazılır.
+
+Credential-free rehearsal yalnız
+`production-backup-freshness-alarm-rehearsal` confirmation ile kasıtlı kırmızı
+sonuç üretir; checkout, secret, DB veya R2 erişimi yoktur. Rehearsal ancak ilk
+gerçek schedule doğrulandıktan ve ayrı canlı onay verildikten sonra çalıştırılır.
+Operasyon alarmı; GitHub issue'su ile Murat Saygı e-posta teslim teyidi birlikte
+kanıtlanmadan tamamlandı sayılmaz.
 
 Staging veya izole restore DB'sinde:
 

@@ -44,7 +44,7 @@ sokmaz.
 | PostgreSQL | Yerel geliştirme bağlantısı | Neon `noa-insaat-staging`; AWS Frankfurt `eu-central-1` | Neon `noa-insaat-production`; AWS Frankfurt `eu-central-1`; boş/migration bekliyor |
 | Secret injection | Yerel environment | Vercel Preview secret seti ayrıldı; değerler yalnız provider yüzeyinde | Ayrı Vercel Production ve GitHub encrypted secret setleri hazır |
 | Doküman storage | Local adapter, tek instance | R2 `noa-insaat-staging-eu`; EU jurisdiction; private | R2 `noa-insaat-production-eu` ve ayrı backup bucket; private, EU |
-| Monitoring | Provider yok | Sentry `javascript-nextjs`; DE; redacted error, staging email dispatch ve insan kabulü doğrulandı | Sentry `noa-insaat-production`; DSN hazır, production adaptör/alarm testi bekliyor |
+| Monitoring | Provider yok | Sentry `javascript-nextjs`; DE; redacted error, staging email dispatch ve insan kabulü doğrulandı | Sentry production telemetry/e-posta kabulü tamam; GitHub freshness Issue alarm sözleşmesi kod hazır, canlı teslim bekliyor |
 | Trafik/TLS | Uygulanmaz | Vercel TLS adayı; domain/DNS sahibi bekliyor | DNS/TLS/indexing/trafik değiştirilmedi |
 | Release artifact | Yerel build | Vercel build artifact adayı; deployment/rehearsal yapılmadı | Staging ile aynı artifact adayı; production deployment bekliyor |
 
@@ -113,9 +113,9 @@ gösterilir; boş veya örtük sahiplik kabul edilmez.
 | Staging hesap kapatma ve legal hold | Sentetik veri; production kararı değildir | Murat Saygı / Murat Saygı | ONAYLANDI / STAGING |
 | Staging destek saatleri ve SLA | Hafta içi 09:00–18:00; dış SLA yok | Murat Saygı / Murat Saygı | ONAYLANDI |
 | Staging incident severity/escalation | SEV-1/2/3; tek sorumlu Murat Saygı | Murat Saygı / Murat Saygı | ONAYLANDI / TEK-SORUMLU RİSKİ |
-| Production hedef RPO | 24 saat | Murat Saygı / Murat Saygı | ONAYLANDI / 24 SAAT FRESHNESS KODU HAZIR; READ-ONLY CREDENTIAL+KABUL BEKLİYOR |
+| Production hedef RPO | 24 saat | Murat Saygı / Murat Saygı | ONAYLANDI / READ-ONLY FRESHNESS MANUEL KABUL TAMAM; İLK SCHEDULE+ALARM TESLİMİ BEKLİYOR |
 | Production hedef RTO | 8 saat | Murat Saygı / Murat Saygı | ONAYLANDI / DB-ONLY İZOLE RESTORE 188 SANİYE |
-| Production backup sıklığı ve retention | Günlük; 30 gün | Murat Saygı / Murat Saygı | ONAYLANDI / WORKFLOW AKTİF; İLK MANUEL KABUL GEÇTİ; SCHEDULE+FRESHNESS BEKLİYOR |
+| Production backup sıklığı ve retention | Günlük; 30 gün | Murat Saygı / Murat Saygı | ONAYLANDI / WORKFLOW AKTİF; BACKUP+FRESHNESS MANUEL KABUL GEÇTİ; İLK SCHEDULE BEKLİYOR |
 | Production destek saatleri ve SLA | Hafta içi 09:00–18:00; dış SLA yok | Murat Saygı / Murat Saygı | ONAYLANDI |
 | Production resmi yayın kimliği | MS İNŞAAT; Atakum-Samsun; `info@msinsaat.com`; veri sorumlusu Murat Saygı; hukuk onayı 05.08.2026 | Murat Saygı / Murat Saygı | ONAYLANDI / İÇERİK KABULÜ BEKLİYOR |
 
@@ -137,10 +137,12 @@ gerçek schedule ve freshness alarmı olmadan sürekli 24 saat RPO garantisi
 değildir.
 
 Freshness sözleşmesi `04:15 UTC` schedule ve azami `24 saat` manifest yaşıyla
-hazırlandı. Kontrol yalnız backup bucket `List/Get` yapar; ayrı read-only R2
-credential henüz oluşturulmadı ve GitHub Actions'a tanımlanmadı. Kırmızı job
-sonucu makine alarm kaynağıdır; bildirim kuralı ve insan teslim kabulü ayrıca
-bekler.
+hazırlandı. Ayrı read-only R2 credential yalnız backup bucket `List/Get` için
+GitHub Actions'a tanımlandı; `main@dd578d3d` manuel kabul run'ı `31310479037`
+mevcut backup'ı `fresh=true`, `1,64 saat` yaş ve `24 saat` eşikle doğruladı.
+Kırmızı schedule veya credential-free rehearsal sonucunu sabit/dedupe GitHub
+Issue alarmına dönüştüren ayrı notifier sözleşmesi kod hazırdır. İlk gerçek
+schedule, canlı rehearsal issue'su ve insan e-posta teslim kabulü ayrıca bekler.
 
 ## 7. Dilim 1 kabul kapısı
 
