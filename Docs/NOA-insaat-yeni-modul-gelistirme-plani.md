@@ -3980,3 +3980,25 @@ kategorisine gönderildi ve yeni hesap moderasyonunda `Pending (1)` kaldı.
 `productionBackupDeletionReplayReady=false` sürer. Dilim **CANLI TANILAMA
 TAMAMLANDI / PROVIDER YANITI BEKLENİYOR / RETRY VE SENTETİK APPEND-READ
 BLOCKER** durumundadır.
+
+**Production açık kapılar güncel durum denetimi — 10.08.2026:** Cloudflare
+Community konusu moderasyondan çıkarak
+`https://community.cloudflare.com/t/r2-local-temporary-credentials-return-invalidargument-400-on-eu-endpoint/947392/1`
+adresinde yayımlandı; henüz yanıt yoktur ve provider karşılaştırma kapısı açık
+kalır. Daha önce belgede bekliyor görünen salt-okunur production tenant
+inventory preflight run `31320606557`, `main@b923ae81` üzerinde başarıyla
+tamamlanmıştır. İlk gerçek daily backup ve freshness schedule kanıtları yeşil;
+başarılı freshness sonucu notifier run `31359459892` için beklenen biçimde
+`skipped` olmuştur. Ayrı onaylı tek credential-free alarm rehearsal run
+`31421799614`, exact `main@bab056d9` üzerinde planlandığı gibi `failure`
+üretmiş; notifier run `31421812208` başarıyla tamamlanarak güvenli metadata
+taşıyan GitHub Issue `#32`yi açmıştır. Murat Saygı GitHub bildirim/e-postasının
+ulaştığını açıkça teyit etmiş; rehearsal → notifier → issue → e-posta → insan
+teslim zinciri tamamlanmıştır. Bu kanıt tek günlük schedule başarısını sürekli
+24 saat RPO garantisine dönüştürmez. `insaatyonet.com` apex ve `www` DNS çözümü
+hâlâ yoktur; HTTPS kurulamamaktadır ve KVKK/gizlilik/kullanım koşulları
+sayfaları taslak kalır. Yeni credential, retry, append/read, DNS/TLS, indexing,
+production trafik, purge veya delete işlemi yapılmadı;
+`productionBackupDeletionReplayReady=false` sürer. Sıradaki bağımsız canlı
+kapılar provider yanıtı sonrasındaki R2 karar kapısı ile domain/yasal yayın
+blocker'larıdır.

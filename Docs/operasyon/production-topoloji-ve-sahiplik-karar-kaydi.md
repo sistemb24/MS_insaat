@@ -44,7 +44,7 @@ sokmaz.
 | PostgreSQL | Yerel geliştirme bağlantısı | Neon `noa-insaat-staging`; AWS Frankfurt `eu-central-1` | Neon `noa-insaat-production`; AWS Frankfurt `eu-central-1`; boş/migration bekliyor |
 | Secret injection | Yerel environment | Vercel Preview secret seti ayrıldı; değerler yalnız provider yüzeyinde | Ayrı Vercel Production ve GitHub encrypted secret setleri hazır |
 | Doküman storage | Local adapter, tek instance | R2 `noa-insaat-staging-eu`; EU jurisdiction; private | R2 `noa-insaat-production-eu` ve ayrı backup bucket; private, EU |
-| Monitoring | Provider yok | Sentry `javascript-nextjs`; DE; redacted error, staging email dispatch ve insan kabulü doğrulandı | Sentry production telemetry/e-posta kabulü tamam; GitHub freshness Issue alarm sözleşmesi kod hazır, canlı teslim bekliyor |
+| Monitoring | Provider yok | Sentry `javascript-nextjs`; DE; redacted error, staging email dispatch ve insan kabulü doğrulandı | Sentry production telemetry/e-posta kabulü tamam; GitHub freshness rehearsal → Issue `#32` → e-posta → insan teslim zinciri tamamlandı |
 | Trafik/TLS | Uygulanmaz | Vercel TLS adayı; domain/DNS sahibi bekliyor | DNS/TLS/indexing/trafik değiştirilmedi |
 | Release artifact | Yerel build | Vercel build artifact adayı; deployment/rehearsal yapılmadı | Staging ile aynı artifact adayı; production deployment bekliyor |
 
@@ -113,7 +113,7 @@ gösterilir; boş veya örtük sahiplik kabul edilmez.
 | Staging hesap kapatma ve legal hold | Sentetik veri; production kararı değildir | Murat Saygı / Murat Saygı | ONAYLANDI / STAGING |
 | Staging destek saatleri ve SLA | Hafta içi 09:00–18:00; dış SLA yok | Murat Saygı / Murat Saygı | ONAYLANDI |
 | Staging incident severity/escalation | SEV-1/2/3; tek sorumlu Murat Saygı | Murat Saygı / Murat Saygı | ONAYLANDI / TEK-SORUMLU RİSKİ |
-| Production hedef RPO | 24 saat | Murat Saygı / Murat Saygı | ONAYLANDI / İLK DAILY+FRESHNESS SCHEDULE KABULÜ TAMAM; ALARM TESLİMİ BEKLİYOR |
+| Production hedef RPO | 24 saat | Murat Saygı / Murat Saygı | ONAYLANDI / İLK DAILY+FRESHNESS SCHEDULE KABULÜ VE ALARM İNSAN TESLİM ZİNCİRİ TAMAM |
 | Production hedef RTO | 8 saat | Murat Saygı / Murat Saygı | ONAYLANDI / DB-ONLY İZOLE RESTORE 188 SANİYE |
 | Production backup sıklığı ve retention | Günlük; 30 gün | Murat Saygı / Murat Saygı | ONAYLANDI / WORKFLOW AKTİF; İLK DAILY+FRESHNESS SCHEDULE KABULÜ GEÇTİ |
 | Production destek saatleri ve SLA | Hafta içi 09:00–18:00; dış SLA yok | Murat Saygı / Murat Saygı | ONAYLANDI |
@@ -148,9 +148,13 @@ Issue alarmına dönüştüren ayrı notifier sözleşmesi kod hazırdır. İlk 
 freshness schedule run'ı `31359430834`, event=`schedule`, attempt `1` ve aynı
 release üzerinde başarılı oldu; en yeni backup `ageHours=1,6089`,
 `maxAgeHours=24`, `fresh=true`, `status=fresh`, `514.758` byte DB ve `0` binary
-nesne olarak doğrulandı. Canlı rehearsal issue'su ve insan e-posta teslim
-kabulü ayrıca bekler; tek günlük schedule başarısı sürekli 24 saat RPO garantisi
-değildir.
+nesne olarak doğrulandı. Ayrı onaylı credential-free rehearsal run
+`31421799614`, `main@bab056d9` üzerinde planlandığı gibi başarısız oldu;
+workflow_run notifier `31421812208` başarıyla sabit başlıklı ve
+`ops:backup-freshness` etiketli Issue `#32`yi oluşturdu. Teknik issue teslimi
+geçti ve Murat Saygı GitHub bildirim/e-postasının ulaştığını açıkça teyit etti.
+Böylece rehearsal → notifier → issue → e-posta → insan teslim zinciri
+tamamlandı. Tek günlük schedule başarısı sürekli 24 saat RPO garantisi değildir.
 
 ## 7. Dilim 1 kabul kapısı
 
