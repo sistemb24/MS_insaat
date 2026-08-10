@@ -221,8 +221,9 @@ environment secret'ı koşu sonrasında silindi ve yoklukları doğrulandı.
 Free plan teknik support case açmadığı için credential, account ID, bucket adı,
 endpoint, JWT, session token, imzalı header ve ham provider response içermeyen
 İngilizce redacted konu Cloudflare Community `Developers / Storage`
-kategorisine gönderildi. Konu yeni hesap moderasyonunda `Pending (1)`
-durumundadır; henüz herkese açık URL yoktur. Provider/Community yanıtı gelmeden
+kategorisine gönderildi. Konu 10.08.2026 tarihinde moderasyondan çıkarak
+`https://community.cloudflare.com/t/r2-local-temporary-credentials-return-invalidargument-400-on-eu-endpoint/947392/1`
+adresinde yayımlandı; henüz yanıt yoktur. Provider/Community yanıtı gelmeden
 yeni credential, workflow retry, Temporary Credentials API geçişi veya sentetik
 append/read planlanmaz.
 

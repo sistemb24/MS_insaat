@@ -1,7 +1,7 @@
 # Faz 36 — Production Backup Freshness ve Alarm Sözleşmesi
 
 Tarih: 09.08.2026
-Durum: **İLK GERÇEK SCHEDULE KABULÜ TAMAMLANDI / ALARM SÖZLEŞMESİ KOD HAZIR / CANLI ALARM TESLİMİ BEKLİYOR**
+Durum: **İLK GERÇEK SCHEDULE KABULÜ VE CANLI ALARM İNSAN TESLİM ZİNCİRİ TAMAMLANDI**
 
 ## Amaç ve sınır
 
@@ -88,6 +88,16 @@ schedule başarıyla kanıtlandı; rehearsal issue'su ve Murat Saygı'nın e-pos
 teslim teyidi ayrıca kanıtlanmadan operasyon alarmı veya sürekli 24 saat RPO
 iddiası kurulmaz.
 
+10.08.2026 tarihinde ayrı onaylı tek credential-free rehearsal run
+`31421799614`, exact `main@bab056d9` üzerinde planlandığı gibi kasıtlı
+`failure` üretti. `workflow_run` notifier run `31421812208` başarıyla
+tamamlandı ve güvenli metadata taşıyan, sabit başlıklı
+`[PRODUCTION] Backup freshness alarmı` Issue `#32`yi oluşturdu. Murat Saygı
+GitHub bildirim/e-postasının ulaştığını açıkça teyit etti. Böylece rehearsal →
+notifier → issue → e-posta → insan teslim zinciri geçti. Koşular secret, DB,
+R2 veya production manifest erişimi kullanmadı; bu tek kabul sürekli 24 saat
+RPO garantisi değildir.
+
 ## Kabul sırası
 
 1. Kod ve doküman kalite kapıları geçer.
@@ -99,9 +109,9 @@ iddiası kurulmaz.
 5. Alarm notifier/rehearsal sözleşmesi ayrı PR ile `main`e alınır.
 6. İlk gerçek `schedule` koşusu run `31359430834` ile doğrulandı.
 7. Tam confirmation ile credential-free rehearsal ayrı canlı onayla
-   çalıştırılır; production manifesti değiştirilmez.
+   çalıştırıldı; production manifesti değiştirilmedi.
 8. Dedupe edilmiş GitHub issue'su ve Murat Saygı'nın e-posta teslim teyidi
-   kanıtlanır.
+   kanıtlandı.
 
 ## Bu dilimde yapılmayanlar
 
@@ -113,7 +123,8 @@ iddiası kurulmaz.
   mevcut backup'ı `fresh` doğruladı.
 - İlk gerçek schedule yalnız backup bucket manifestini list/read ile okudu;
   production DB bağlantısı, nesne yazma veya silme yapılmadı.
-- Alarm notifier/rehearsal kodu hazırlandı; canlı rehearsal, issue oluşturma ve
-  e-posta teslimi çalıştırılmadı.
+- Alarm rehearsal yalnız bir kez çalıştırıldı; notifier Issue `#32`yi oluşturdu
+  ve e-posta insan tarafından alındı. Rehearsal credential veya provider veri
+  erişimi kullanmadı.
 - Backup/migration/restore/silme yapılmadı.
-- İnsan alarm teslimi veya sürekli 24 saat RPO iddiası kurulmadı.
+- İnsan alarm teslimi kanıtlandı; sürekli 24 saat RPO iddiası kurulmadı.
