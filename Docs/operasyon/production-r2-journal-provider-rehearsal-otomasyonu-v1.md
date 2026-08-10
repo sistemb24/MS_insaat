@@ -157,17 +157,57 @@ Güvenli hata fazları yalnız `parent-credential-probe`,
 Provider mesajı, credential, JWT veya session token loglanmaz. R3 kod dilimi
 provider credential/secret oluşturmaz ve canlı workflow çalıştırmaz.
 
+R3-L merge edildikten sonra onaylanan
+`main@554f6850cd509bc25a6bff7f4480a38ce3d6f443` üzerinde yalnız GitHub Actions
+run `31363865384`, attempt `1` çalıştırıldı. Parent credential aynı EU bucket ve
+`journal/` prefix'i için başarıyla listelendi; aynı parent'tan resmî algoritmayla
+üretilen temporary credential yine `InvalidArgument`, HTTP `400` ile reddedildi.
+Encrypted append/read başlamadı, bucket boş kaldı, otomatik tekrar yapılmadı ve
+geçici parent credential ile iki GitHub environment secret'ı temizlendi.
+
+## 4E-B-R3-M protokol farkı tanısı
+
+10.08.2026 salt-okunur kaynak ve taşıma analizinde local signer'ın Cloudflare
+resmî örneğiyle eşdeğer olduğu, AWS SDK v3'ün base64 session token'ı
+`x-amz-security-token` başlığına byte-for-byte değiştirmeden eklediği
+deterministik testle doğrulandı. Ancak mevcut AWS SDK varsayılan adreslemesi
+bucket'ı hostname'e taşıyıp request path'ini `/` yaparken Cloudflare'ın resmî
+`aws4fetch` örneği account EU hostname'i üzerinde `/<bucket>/` path-style
+adresleme kullanır. Bu fark önceki HTTP `400` sonucunun en güçlü yerel kök neden
+adayıdır; canlı kanıt değildir.
+
+R3-M ayrı manual workflow ile şu fail-closed karşılaştırmayı hazırlar:
+
+1. Parent credential yalnız AWS SDK v3 ile `ListObjectsV2(MaxKeys=1,
+   Prefix=journal/)` işleminden geçirilir.
+2. Parent gate geçerse bellekte tek 900 saniyelik exact-action temporary
+   credential üretilir.
+3. Aynı credential önce resmî `aws4fetch`, sonra `forcePathStyle=true` AWS SDK
+   v3 istemcisiyle aynı salt-okunur path-style istekte sınanır.
+4. İki istemcide de otomatik retry kapalıdır; ikisi de planlanan farklı probe
+   olduğundan ilk temporary probe sonucu ikincisinin güvenli tanı sonucunu
+   bastırmaz.
+5. Yalnız client adı, passed/failed, güvenli provider code ve HTTP status
+   raporlanır; response message, JWT, session token, credential ve imzalı
+   header loglanmaz.
+
+Bu workflow `PutObject`, `GetObject`, delete, database, backup, migration,
+restore veya artifact işlemi içermez. Kod dilimi provider credential/secret
+oluşturmaz ve workflow'u çalıştırmaz. Temporary Credentials API, explicit
+action allowlist'ini desteklemediği için append credential alternatifi değildir.
+
 ## Açık blocker'lar ve sonraki kapı
 
 - EU journal bucket ve 1.095 günlük lock oluşturuldu; bucket boştur.
 - Read-only credential ile preflight KEK/GitHub variable'ları hazırdır.
 - Geçici parent credential ve parent GitHub secret'ları temizlenmiştir.
-- İki workflow run'ı da credential probe aşamasında başarısızdır; hiçbir koşu
+- Üç workflow run'ı da temporary credential kullanımında başarısızdır; hiçbir koşu
   tekrarlanmamıştır.
 - Gerçek production journal KEK'i oluşturulmadı.
 - Tenant purge, delete veya backup restore-replay yapılmadı.
 - `productionBackupDeletionReplayReady=false` kalır.
 
-Sıradaki kapılar önce 4E-B-R3 değişikliklerinin commit/push/PR ve merge süreci,
-ardından yeni exact-bucket parent credential ile ayrıca onaylanmış tek canlı
-iki aşamalı credential probe + sentetik rehearsal koşusudur.
+Sıradaki kapılar önce 4E-B-R3-M değişikliklerinin commit/push/PR ve merge süreci,
+ardından yeni exact-bucket parent credential ile ayrıca onaylanmış tek canlı,
+salt-okunur protocol diagnostic koşusudur. Sentetik append/read rehearsal bu
+tanıdan bağımsız ve daha sonraki ayrı açık onay kapısıdır.
