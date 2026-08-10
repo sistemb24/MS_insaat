@@ -113,9 +113,9 @@ gösterilir; boş veya örtük sahiplik kabul edilmez.
 | Staging hesap kapatma ve legal hold | Sentetik veri; production kararı değildir | Murat Saygı / Murat Saygı | ONAYLANDI / STAGING |
 | Staging destek saatleri ve SLA | Hafta içi 09:00–18:00; dış SLA yok | Murat Saygı / Murat Saygı | ONAYLANDI |
 | Staging incident severity/escalation | SEV-1/2/3; tek sorumlu Murat Saygı | Murat Saygı / Murat Saygı | ONAYLANDI / TEK-SORUMLU RİSKİ |
-| Production hedef RPO | 24 saat | Murat Saygı / Murat Saygı | ONAYLANDI / READ-ONLY FRESHNESS MANUEL KABUL TAMAM; İLK SCHEDULE+ALARM TESLİMİ BEKLİYOR |
+| Production hedef RPO | 24 saat | Murat Saygı / Murat Saygı | ONAYLANDI / İLK DAILY+FRESHNESS SCHEDULE KABULÜ TAMAM; ALARM TESLİMİ BEKLİYOR |
 | Production hedef RTO | 8 saat | Murat Saygı / Murat Saygı | ONAYLANDI / DB-ONLY İZOLE RESTORE 188 SANİYE |
-| Production backup sıklığı ve retention | Günlük; 30 gün | Murat Saygı / Murat Saygı | ONAYLANDI / WORKFLOW AKTİF; BACKUP+FRESHNESS MANUEL KABUL GEÇTİ; İLK SCHEDULE BEKLİYOR |
+| Production backup sıklığı ve retention | Günlük; 30 gün | Murat Saygı / Murat Saygı | ONAYLANDI / WORKFLOW AKTİF; İLK DAILY+FRESHNESS SCHEDULE KABULÜ GEÇTİ |
 | Production destek saatleri ve SLA | Hafta içi 09:00–18:00; dış SLA yok | Murat Saygı / Murat Saygı | ONAYLANDI |
 | Production resmi yayın kimliği | MS İNŞAAT; Atakum-Samsun; `info@msinsaat.com`; veri sorumlusu Murat Saygı; hukuk onayı 05.08.2026 | Murat Saygı / Murat Saygı | ONAYLANDI / İÇERİK KABULÜ BEKLİYOR |
 
@@ -132,9 +132,12 @@ DB'ye 188 saniyede 67 migration/114 tablo olarak geri yüklendi ve geçici DB
 silindi. Document bucket boş olduğundan binary sayısı `0`dır. Günlük workflow
 PR `#14` ile `main@e83a0f8c` üzerine merge edildi; ilk manual-once kabul run'ı
 `31306444810`, `514.690` byte backup'ı 68/68 migration, 0 pending ve 117 tablo
-envanteriyle doğruladı. Bu koşular RTO hedefinin içinde DB-only kanıttır; ilk
-gerçek schedule ve freshness alarmı olmadan sürekli 24 saat RPO garantisi
-değildir.
+envanteriyle doğruladı. Bu koşular RTO hedefinin içinde DB-only kanıttır.
+
+10.08.2026 tarihli ilk gerçek daily schedule run'ı `31354396933`,
+event=`schedule`, attempt `1` ve `main@554f6850` üzerinde başarılı oldu. Backup
+`20260810T040536Z-554f6850cd509bc25a6bff7f4480a38ce3d6f443`, `514.758` byte
+DB, binary `0`, 68/68 migration, 0 pending ve 117 tablo olarak doğrulandı.
 
 Freshness sözleşmesi `04:15 UTC` schedule ve azami `24 saat` manifest yaşıyla
 hazırlandı. Ayrı read-only R2 credential yalnız backup bucket `List/Get` için
@@ -142,7 +145,12 @@ GitHub Actions'a tanımlandı; `main@dd578d3d` manuel kabul run'ı `31310479037`
 mevcut backup'ı `fresh=true`, `1,64 saat` yaş ve `24 saat` eşikle doğruladı.
 Kırmızı schedule veya credential-free rehearsal sonucunu sabit/dedupe GitHub
 Issue alarmına dönüştüren ayrı notifier sözleşmesi kod hazırdır. İlk gerçek
-schedule, canlı rehearsal issue'su ve insan e-posta teslim kabulü ayrıca bekler.
+freshness schedule run'ı `31359430834`, event=`schedule`, attempt `1` ve aynı
+release üzerinde başarılı oldu; en yeni backup `ageHours=1,6089`,
+`maxAgeHours=24`, `fresh=true`, `status=fresh`, `514.758` byte DB ve `0` binary
+nesne olarak doğrulandı. Canlı rehearsal issue'su ve insan e-posta teslim
+kabulü ayrıca bekler; tek günlük schedule başarısı sürekli 24 saat RPO garantisi
+değildir.
 
 ## 7. Dilim 1 kabul kapısı
 

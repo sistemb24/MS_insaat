@@ -2,8 +2,8 @@
 
 Tarih: 09.08.2026
 Durum: Production temeli, backup/migration, izole restore, günlük backup ve
-freshness manuel kabul kanıtları hazır; alarm sözleşmesi kod hazır, ilk schedule
-ve canlı alarm teslimi bekleniyor
+freshness ilk gerçek schedule kabul kanıtları hazır; alarm sözleşmesi kod hazır,
+canlı alarm rehearsal/issue ve insan teslimi bekleniyor
 
 Faz 36 sağlayıcı, ortam ve sorumluluk kararlarının tek güncel kaydı
 `Docs/operasyon/production-topoloji-ve-sahiplik-karar-kaydi.md` dosyasıdır.
@@ -75,8 +75,13 @@ içindedir.
 Backup `20260809T094027Z-e83a0f8c50d95147c936a4a0e9397213ea3342d9`,
 `514.690` byte ve binary `0` olarak manifest/DB bütünlük kontrolünden geçti;
 preflight 68/68 migration, 0 pending ve 117 tablo bildirdi. Bu koşu migration,
-restore veya silme çalıştırmadı. İlk gerçek schedule ve freshness/alarm kanıtı
-ayrı operasyon kapısıdır.
+restore veya silme çalıştırmadı.
+
+İlk gerçek günlük schedule run'ı `31354396933`, 10.08.2026 tarihinde
+event=`schedule`, attempt `1` ve `main@554f6850` üzerinde başarıyla tamamlandı.
+Backup `20260810T040536Z-554f6850cd509bc25a6bff7f4480a38ce3d6f443`,
+`514.758` byte DB, binary `0`, 68/68 migration, 0 pending migration ve 117 tablo
+olarak doğrulandı. Migration, restore veya nesne silme çalıştırılmadı.
 
 ### Production backup freshness
 
@@ -105,7 +110,16 @@ PR `#17` merge commit `dd578d3d` sonrasındaki ayrı onaylı tekrar kabul run'ı
 `fresh=true`, `1,64 saat` yaş, `24 saat` azami yaş, `514.690` byte DB ve `0`
 binary nesne olarak doğrulandı. Koşu yalnız backup bucket list/read erişimi
 kullandı; production DB bağlantısı, backup/migration/restore veya silme
-çalıştırmadı. İlk gerçek schedule ve insan alarm teslimi ayrı kabul kapısıdır.
+çalıştırmadı.
+
+İlk gerçek freshness schedule run'ı `31359430834`, 10.08.2026 tarihinde
+event=`schedule`, attempt `1` ve `main@554f6850` üzerinde başarıyla tamamlandı.
+En yeni `20260810T040536Z-554f6850cd509bc25a6bff7f4480a38ce3d6f443`
+backup'ı `ageHours=1,6089`, `maxAgeHours=24`, `fresh=true`, `status=fresh`,
+`514.758` byte DB ve `0` binary nesne olarak yalnız R2 list/read ile
+doğrulandı. Canlı alarm rehearsal/issue ve insan e-posta teslimi ayrı kabul
+kapısıdır; ilk iki başarılı schedule koşusu tek başına sürekli 24 saat RPO
+garantisi değildir.
 
 ### Production backup freshness alarmı
 

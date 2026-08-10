@@ -1,7 +1,7 @@
 # Faz 36 — Production Günlük Backup ve Retention Sözleşmesi
 
 Tarih: 09.08.2026
-Durum: **MERGE VE İLK MANUEL KABUL TAMAMLANDI / İLK SCHEDULE VE FRESHNESS BEKLİYOR**
+Durum: **İLK GERÇEK SCHEDULE VE FRESHNESS KABULÜ TAMAMLANDI / ALARM TESLİMİ BEKLİYOR**
 
 ## Karar ve kapsam
 
@@ -68,8 +68,22 @@ saat RPO garantisi değildir; backup freshness/alarm ayrı görevdir:
 
 Bu kanıt DB-only ve binary sayısı `0` olan recovery point içindir. Günlük
 workflow varsayılan dalda aktiftir ve ilk manual-once kabul koşusu geçmiştir.
-Henüz gerçek schedule olayı ile freshness/alarm kanıtı bulunmadığından bu tek
-başarılı koşu sürdürülebilir 24 saat RPO garantisi sayılmaz.
+
+10.08.2026 tarihli ilk gerçek schedule kabulünde:
+
+- `Production Daily Backup` run `31354396933`, event=`schedule`, attempt `1`
+  ve `main@554f6850` üzerinde başarıyla tamamlandı;
+- backup `20260810T040536Z-554f6850cd509bc25a6bff7f4480a38ce3d6f443`,
+  `514.758` byte DB, binary `0`, 68/68 migration, 0 pending migration ve 117
+  tablo olarak doğrulandı;
+- `Production Backup Freshness` run `31359430834`, event=`schedule`, attempt
+  `1` ve aynı release üzerinde başarıyla tamamlandı; aynı backup
+  `ageHours=1,6089`, `maxAgeHours=24`, `fresh=true` ve `status=fresh` olarak
+  salt-okunur doğrulandı.
+
+Bu iki gerçek schedule koşusu ilk otomasyon kabulünü tamamlar. Tek günlük
+başarı sürekli 24 saat RPO garantisi değildir; canlı alarm rehearsal/issue ve
+insan e-posta teslim kabulü ayrı kapı olarak bekler.
 
 ## Yerel doğrulama
 
@@ -91,7 +105,9 @@ değiştirmedi ve workflow'u etkinleştirmedi.
 4. `production-backup-scheduled-once` ile ilk manual acceptance backup'ı ayrı
    onayla çalıştırıldı.
 5. Backup kimliği, checksum/boyut, binary sayısı ve workflow sonucu doğrulandı.
-6. Freshness/alarm kod sözleşmesi
+6. İlk gerçek daily-backup ve freshness schedule koşuları aynı release üzerinde
+   başarıyla doğrulandı.
+7. Freshness/alarm kod sözleşmesi
    `Docs/UI-baseline/Faz36-production-backup-freshness-alarm-sozlesmesi-20260809.md`
-   içinde hazırlandı; read-only credential, manuel kabul, ilk schedule ve insan
-   alarm teslimi ayrı kanıtlanacak.
+   içinde hazırlandı; read-only credential, manuel kabul ve ilk schedule
+   kanıtlandı; canlı alarm rehearsal/issue ve insan teslimi ayrıca bekler.

@@ -3770,9 +3770,13 @@ geçti. PR `#14` merge commit `e83a0f8c` ile `main` dalına alındı; merge sonr
 CI run `31306234553` geçti. Ayrı onaylı ilk manual-once kabul run'ı `31306444810`,
 `20260809T094027Z-e83a0f8c50d95147c936a4a0e9397213ea3342d9` backup'ını
 `514.690` byte, binary `0`, 68/68 migration, 0 pending ve 117 tablo olarak
-doğruladı; migration, restore veya silme çalıştırmadı. Dilim **MERGE VE İLK
-MANUEL KABUL TAMAMLANDI / İLK SCHEDULE BEKLİYOR / FRESHNESS MANUEL KABUL
-TAMAMLANDI** durumundadır.
+doğruladı; migration, restore veya silme çalıştırmadı. 10.08.2026 tarihli ilk
+gerçek daily schedule run'ı `31354396933`, event=`schedule`, attempt `1` ve
+`main@554f6850` üzerinde başarıyla tamamlandı. Backup
+`20260810T040536Z-554f6850cd509bc25a6bff7f4480a38ce3d6f443`, `514.758` byte
+DB, binary `0`, 68/68 migration, 0 pending migration ve 117 tablo olarak
+doğrulandı. Dilim **İLK GERÇEK DAILY SCHEDULE KABULÜ TAMAMLANDI / FRESHNESS
+SCHEDULE KABULÜ TAMAMLANDI / ALARM TESLİMİ BEKLİYOR** durumundadır.
 
 **Production backup freshness/alarm sözleşmesi — 09.08.2026:** Günlük
 backup'tan iki saat sonra `04:15 UTC` çalışan, en yeni backup manifestini yalnız
@@ -3798,9 +3802,15 @@ yalnız varsayılan daldaki gerçek freshness schedule hatası veya tam confirma
 ile oluşan rehearsal hatası, `issues:write` yetkisi yalnız notifier'da tutularak
 sabit başlık/etiketli açık GitHub Issue üzerinde dedupe edilir. Rehearsal
 checkout, secret, DB veya R2 erişimi almaz; issue yalnız güvenli run metadata'sı
-taşır. Canlı rehearsal/issue/e-posta tetiklenmedi ve production manifesti
-değiştirilmedi. Dilim **MANUEL KABUL TAMAMLANDI / ALARM SÖZLEŞMESİ KOD HAZIR /
-İLK SCHEDULE VE CANLI ALARM TESLİMİ BEKLİYOR** durumundadır.
+taşır. 10.08.2026 tarihli ilk gerçek freshness schedule run'ı `31359430834`,
+event=`schedule`, attempt `1` ve `main@554f6850` üzerinde başarıyla tamamlandı;
+en yeni `20260810T040536Z-554f6850cd509bc25a6bff7f4480a38ce3d6f443`
+backup'ı `ageHours=1,6089`, `maxAgeHours=24`, `fresh=true`, `status=fresh`,
+`514.758` byte DB ve `0` binary nesne olarak salt-okunur doğrulandı. Canlı
+rehearsal/issue/e-posta tetiklenmedi ve production manifesti değiştirilmedi.
+Tek günlük başarılı schedule kanıtı sürekli 24 saat RPO garantisi sayılmaz.
+Dilim **İLK GERÇEK SCHEDULE KABULÜ TAMAMLANDI / ALARM SÖZLEŞMESİ KOD HAZIR /
+CANLI ALARM TESLİMİ BEKLİYOR** durumundadır.
 
 **P-B08 Dilim 3A tenant export/envanter sözleşmesi — 09.08.2026:** Onaylı 10
 varsayım ve yürütme sırasıyla Prisma şemasındaki 116 model ölçüldü; doğrudan
