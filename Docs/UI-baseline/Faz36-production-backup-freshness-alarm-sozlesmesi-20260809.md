@@ -1,7 +1,7 @@
 # Faz 36 — Production Backup Freshness ve Alarm Sözleşmesi
 
 Tarih: 09.08.2026
-Durum: **MANUEL KABUL TAMAMLANDI / ALARM SÖZLEŞMESİ KOD HAZIR / İLK SCHEDULE VE CANLI ALARM TESLİMİ BEKLİYOR**
+Durum: **İLK GERÇEK SCHEDULE KABULÜ TAMAMLANDI / ALARM SÖZLEŞMESİ KOD HAZIR / CANLI ALARM TESLİMİ BEKLİYOR**
 
 ## Amaç ve sınır
 
@@ -54,6 +54,15 @@ provider ayarı ve trafik kapsam dışıdır.
   loglarda maskeli kaldı; production DB bağlantısı, nesne yazma veya silme
   yapılmadı.
 
+- 10.08.2026 tarihli ilk gerçek schedule run'ı `31359430834`, yalnız
+  event=`schedule`, attempt `1` ve `main@554f6850` üzerinde başarıyla
+  tamamlandı. En yeni
+  `20260810T040536Z-554f6850cd509bc25a6bff7f4480a38ce3d6f443` backup'ı
+  `ageHours=1,6089`, `maxAgeHours=24`, `fresh=true`, `status=fresh`, `514.758`
+  byte DB ve `0` binary nesne olarak salt-okunur doğrulandı. Aynı backup'ın
+  üretildiği daily schedule run'ı `31354396933` de event=`schedule` ve attempt
+  `1` ile başarılıdır.
+
 ## Alarm gerçeği
 
 Stale veya geçersiz sonuç GitHub Actions job'unu kırmızıya düşürür ve makine
@@ -75,8 +84,9 @@ taşımaz.
 `production-backup-freshness-alarm-rehearsal` confirmation ile kasıtlı kırmızı
 sonuç üretir. Checkout, secret, DB ve R2 erişimi yoktur; production manifesti
 değiştirilmez. Kodun hazır olması insan teslim kabulü değildir. İlk gerçek
-schedule, rehearsal issue'su ve Murat Saygı'nın e-posta teslim teyidi ayrıca
-kanıtlanmadan operasyon alarmı veya sürekli 24 saat RPO iddiası kurulmaz.
+schedule başarıyla kanıtlandı; rehearsal issue'su ve Murat Saygı'nın e-posta
+teslim teyidi ayrıca kanıtlanmadan operasyon alarmı veya sürekli 24 saat RPO
+iddiası kurulmaz.
 
 ## Kabul sırası
 
@@ -87,7 +97,7 @@ kanıtlanmadan operasyon alarmı veya sürekli 24 saat RPO iddiası kurulmaz.
 4. `production-backup-freshness-check` ile manuel salt-okunur kabul koşusu
    çalıştırılır ve mevcut backup `fresh` olarak doğrulanır.
 5. Alarm notifier/rehearsal sözleşmesi ayrı PR ile `main`e alınır.
-6. İlk gerçek `schedule` koşusu doğrulanır.
+6. İlk gerçek `schedule` koşusu run `31359430834` ile doğrulandı.
 7. Tam confirmation ile credential-free rehearsal ayrı canlı onayla
    çalıştırılır; production manifesti değiştirilmez.
 8. Dedupe edilmiş GitHub issue'su ve Murat Saygı'nın e-posta teslim teyidi
@@ -101,6 +111,8 @@ kanıtlanmadan operasyon alarmı veya sürekli 24 saat RPO iddiası kurulmaz.
   production veri kaynağı okunmadı veya değiştirilmedi.
 - Tekrar kabul koşusu yalnız backup bucket manifestini list/read ile okudu ve
   mevcut backup'ı `fresh` doğruladı.
+- İlk gerçek schedule yalnız backup bucket manifestini list/read ile okudu;
+  production DB bağlantısı, nesne yazma veya silme yapılmadı.
 - Alarm notifier/rehearsal kodu hazırlandı; canlı rehearsal, issue oluşturma ve
   e-posta teslimi çalıştırılmadı.
 - Backup/migration/restore/silme yapılmadı.
