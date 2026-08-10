@@ -3965,3 +3965,18 @@ ve whitespace kontrolü geçti. Bu dilimde provider credential/secret
 oluşturulmadı ve workflow çalıştırılmadı;
 `productionBackupDeletionReplayReady=false` kaldı. Dilim **4E-B-R3 KOD HAZIR /
 COMMIT-PUSH-PR VE AYRI CANLI İKİ AŞAMALI PROBE ONAYI BEKLİYOR** durumundadır.
+
+**P-B08 Dilim 4E-B-R3-M canlı protocol diagnostic ve provider escalation —
+10.08.2026:** PR `#30` merge commit'i `1e3ddce4` sonrasında post-merge CI run
+`31390743640` geçti. Ayrı onaylı tek canlı run `31392513374`, attempt `1`
+üzerinde parent `ListObjectsV2(Prefix=journal/, MaxKeys=1)` gate'i başarılı
+oldu; aynı 900 saniyelik temporary credential ile hem resmî `aws4fetch` hem
+`forcePathStyle=true` AWS SDK v3 salt-okunur probe'u `InvalidArgument`, HTTP
+`400` ile reddedildi. Tekrar, append/read veya nesne yazma yapılmadı; bucket
+`0 B` kaldı ve geçici parent provider tokenı ile iki GitHub parent secret'ı
+temizlendi. Path-style farkı tek kök neden olmaktan çıktı. Secret ve provider
+kimliği içermeyen redacted konu Cloudflare Community `Developers / Storage`
+kategorisine gönderildi ve yeni hesap moderasyonunda `Pending (1)` kaldı.
+`productionBackupDeletionReplayReady=false` sürer. Dilim **CANLI TANILAMA
+TAMAMLANDI / PROVIDER YANITI BEKLENİYOR / RETRY VE SENTETİK APPEND-READ
+BLOCKER** durumundadır.
