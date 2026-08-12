@@ -1,13 +1,10 @@
 import type { Metadata } from "next";
 
-import LegalDraftNotice from "@/components/marketing/legal-draft-notice";
+import LegalDocumentPage from "@/components/marketing/legal-document-page";
+import { createLegalMetadata, kvkkDocument } from "@/lib/marketing/legal-documents";
 
-export const metadata: Metadata = {
-  title: "KVKK Aydınlatma Metni Taslağı — NOA İnşaat",
-  description: "NOA İnşaat KVKK aydınlatma metni yayın durumu.",
-  robots: { follow: false, index: false },
-};
+export const metadata: Metadata = createLegalMetadata(kvkkDocument);
 
 export default function KvkkPage() {
-  return <LegalDraftNotice documentName="KVKK Aydınlatma Metni Taslağı" />;
+  return <LegalDocumentPage document={kvkkDocument} />;
 }

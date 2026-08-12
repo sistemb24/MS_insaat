@@ -297,7 +297,7 @@ describe("production R2 temporary credential protocol diagnostic", () => {
         ".github/workflows/production-r2-temp-credential-protocol-diagnostic.yml",
       ),
       "utf8",
-    );
+    ).replace(/\r\n/g, "\n");
     const source = readFileSync(
       resolve(
         process.cwd(),
