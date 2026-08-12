@@ -4113,6 +4113,21 @@ workflow testi yalnız satır sonunu normalize edecek biçimde platformdan bağ�
 hale getirildi. Hedefli 12 test, R2 regresyonundaki 9 test, type-check, Prisma
 validate, lint ve 102 route'luk production build geçti. Bağımsız hukuk
 danışmanı görüşü iddia edilmedi; provider yurt dışı aktarım mekanizması/sözleşme
-kanıtı gerçek kullanıcı trafiği öncesi blocker, indexing ise kapalıdır. Dilim
-**KOD VE YEREL KAPILAR HAZIR / STAGE-COMMIT-PUSH-DRAFT PR BEKLİYOR**
-durumundadır.
+kanıtı gerçek kullanıcı trafiği öncesi blocker, indexing ise kapalıdır. PR `#34`
+merge commit `7ec0b0f8` ile birleşti; post-merge CI `31626153037` geçti. Üç
+production route `2026-08-12.a` sürümüyle `200` dönerken
+`X-Robots-Tag: noindex, nofollow, noarchive` korumasını sürdürdü. Dilim
+**MERGE VE INDEXING-KAPALI TEKNİK YAYIN KABULÜ TAMAMLANDI / GERÇEK TRAFİK
+KAPALI** durumundadır.
+
+**Production Vercel Hobby ve kapalı lansman kararı — 12.08.2026:** Kullanıcı
+ücretli Vercel yükseltmesini reddederek Hobby planında kalmayı seçti. Güncel
+Vercel şartlarında Hobby yalnız kişisel/ticari olmayan kullanımla sınırlı ve
+Vercel DPA kapsamı Pro/Enterprise müşterilerine yönelik olduğundan mevcut
+teknik yayın ticari production lansmanı sayılmaz. Indexing, genel kullanıcı
+trafiği, müşteri onboarding'i ve gerçek müşteri verisi kapalı; provider
+yurt dışı aktarım mekanizması/sözleşme kanıtı açık blocker olarak kalır.
+`Docs/operasyon/production-vercel-hobby-kapali-lansman-karari-20260812.md`
+fail-closed sınırı ve yeniden açma koşullarını kaydeder. Provider, deployment,
+secret, DNS/TLS, GitHub veya ödeme durumu değiştirilmedi. Dilim **KARAR KAYITLI /
+TİCARİ PRODUCTION NO-GO** durumundadır.
