@@ -5,6 +5,9 @@ import KayitPage from "@/app/(auth)/kayit/page";
 import SifreSifirlaPage from "@/app/(auth)/sifre-sifirla/page";
 import SifremiUnuttumPage from "@/app/(auth)/sifremi-unuttum/page";
 import PrivacyPage from "@/app/(marketing)/gizlilik/page";
+import TermsPage from "@/app/(marketing)/kullanim-kosullari/page";
+import KvkkPage from "@/app/(marketing)/kvkk/page";
+import { LEGAL_DOCUMENT_VERSION } from "@/lib/marketing/legal-documents";
 
 import ContactForm from "./contact-form";
 import NewsletterForm from "./newsletter-form";
@@ -24,11 +27,18 @@ describe("public truth quarantine", () => {
     expect(html).not.toContain("<input");
   });
 
-  it("quarantines legal copy until official identity and channels exist", () => {
-    const html = renderToStaticMarkup(<PrivacyPage />);
+  it.each([
+    ["privacy", <PrivacyPage key="privacy" />, "Gizlilik Politikası"],
+    ["terms", <TermsPage key="terms" />, "Kullanım Koşulları"],
+    ["kvkk", <KvkkPage key="kvkk" />, "KVKK Aydınlatma Metni"],
+  ])("renders approved %s copy with version and official contact", (_name, node, title) => {
+    const html = renderToStaticMarkup(node);
 
-    expect(html).toContain("Yayına hazır değil");
-    expect(html).toContain("hukuki taahhüt");
-    expect(html).not.toContain("mailto:");
+    expect(html).toContain(title);
+    expect(html).toContain(LEGAL_DOCUMENT_VERSION);
+    expect(html).toContain("12.08.2026");
+    expect(html).toContain("mailto:info@msinsaat.com");
+    expect(html).not.toContain("Yayına hazır değil");
+    expect(html).not.toContain("HUKUK KARARI");
   });
 });

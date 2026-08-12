@@ -1,13 +1,10 @@
 import type { Metadata } from "next";
 
-import LegalDraftNotice from "@/components/marketing/legal-draft-notice";
+import LegalDocumentPage from "@/components/marketing/legal-document-page";
+import { createLegalMetadata, privacyDocument } from "@/lib/marketing/legal-documents";
 
-export const metadata: Metadata = {
-  title: "Gizlilik Politikası Taslağı — NOA İnşaat",
-  description: "NOA İnşaat gizlilik politikası yayın durumu.",
-  robots: { follow: false, index: false },
-};
+export const metadata: Metadata = createLegalMetadata(privacyDocument);
 
 export default function PrivacyPage() {
-  return <LegalDraftNotice documentName="Gizlilik Politikası Taslağı" />;
+  return <LegalDocumentPage document={privacyDocument} />;
 }

@@ -40,7 +40,7 @@ sokmaz.
 | Alan | Development — doğrulanan mevcut durum | Staging | Production |
 |---|---|---|---|
 | Uygulama runtime | Yerel Next.js | Vercel `murat-saygis-projects/insaat-yonetim`; `fra1`; Preview deployment doğrulandı | Aynı Vercel proje, ayrı Production environment; 19 encrypted değişken hazır, deploy yok |
-| Domain | `http://localhost:3000` örnek değeri | Geçici korumalı Vercel Preview hostname doğrulandı | `insaatyonet.com` onaylı; DNS/TLS kabulü bekliyor |
+| Domain | `http://localhost:3000` örnek değeri | Geçici korumalı Vercel Preview hostname doğrulandı | Apex ve `www` Vercel projesine bağlı; Vercel NS, geçerli TLS ve indexing-kapalı HTTP kabulü tamam |
 | PostgreSQL | Yerel geliştirme bağlantısı | Neon `noa-insaat-staging`; AWS Frankfurt `eu-central-1` | Neon `noa-insaat-production`; AWS Frankfurt `eu-central-1`; boş/migration bekliyor |
 | Secret injection | Yerel environment | Vercel Preview secret seti ayrıldı; değerler yalnız provider yüzeyinde | Ayrı Vercel Production ve GitHub encrypted secret setleri hazır |
 | Doküman storage | Local adapter, tek instance | R2 `noa-insaat-staging-eu`; EU jurisdiction; private | R2 `noa-insaat-production-eu` ve ayrı backup bucket; private, EU |
@@ -60,7 +60,7 @@ içindeki localhost değeri yalnız örnektir ve production domain kararı sayı
 | F36-PRV-03 | Secret injection | Vercel Preview environment | Frankfurt runtime; ayrı secret seti | Murat Saygı | Murat Saygı — 04.08.2026 | PREVIEW SECRET SETİ HAZIR |
 | F36-PRV-04 | Object storage | Cloudflare R2 | `eu` jurisdiction | Murat Saygı | Murat Saygı — 04.08.2026 | RUNTIME VE BACKUP BUCKET HAZIR |
 | F36-PRV-05 | Monitoring/error tracking | Sentry | DE region | Murat Saygı | Murat Saygı — 05.08.2026 | STAGING REDACTED ERROR + ALARM + İNSAN KABULÜ TAMAM |
-| F36-PRV-06 | DNS/TLS/CDN/WAF | Geçici Vercel hostname; özel DNS ertelendi | Frankfurt runtime | Murat Saygı | Murat Saygı — 04.08.2026 | ONAYLI / HOSTNAME KANITI DİLİM 2 |
+| F36-PRV-06 | DNS/TLS/CDN/WAF | Vercel project-domain bağı, Vercel NS ve auto-renew TLS | Frankfurt runtime | Murat Saygı | Murat Saygı — 11.08.2026 | DOMAIN/DNS/TLS/HTTP HEADER KABULÜ TAMAM / INDEXING KAPALI |
 | F36-PRV-07 | DB+binary backup hedefi | Neon PITR + bağımsız DB export + R2 binary recovery | EU | Murat Saygı | Murat Saygı — 04.08.2026 | ONAYLI / RESTORE KANITI DİLİM 3 |
 
 Aday A yalnız staging için kullanıcı tarafından onaylandı. Vercel runtime
@@ -117,7 +117,7 @@ gösterilir; boş veya örtük sahiplik kabul edilmez.
 | Production hedef RTO | 8 saat | Murat Saygı / Murat Saygı | ONAYLANDI / DB-ONLY İZOLE RESTORE 188 SANİYE |
 | Production backup sıklığı ve retention | Günlük; 30 gün | Murat Saygı / Murat Saygı | ONAYLANDI / WORKFLOW AKTİF; İLK DAILY+FRESHNESS SCHEDULE KABULÜ GEÇTİ |
 | Production destek saatleri ve SLA | Hafta içi 09:00–18:00; dış SLA yok | Murat Saygı / Murat Saygı | ONAYLANDI |
-| Production resmi yayın kimliği | MS İNŞAAT; Atakum-Samsun; `info@msinsaat.com`; veri sorumlusu Murat Saygı; hukuk onayı 05.08.2026 | Murat Saygı / Murat Saygı | ONAYLANDI / İÇERİK KABULÜ BEKLİYOR |
+| Production resmi yayın kimliği ve yasal içerik | MS İNŞAAT; Atakum-Samsun; `info@msinsaat.com`; veri sorumlusu Murat Saygı; sahip-onaylı sürüm `2026-08-12.a` | Murat Saygı / Murat Saygı | OWNER_APPROVED_FOR_TECHNICAL_PUBLICATION / ROUTE KODU HAZIR / PR BEKLİYOR |
 
 Staging RPO 24 saat, RTO 8 saat, günlük backup/14 gün retention, sentetik
 staging veri/log retention üst sınırı 30 gün, dış SLA yok ve hafta içi

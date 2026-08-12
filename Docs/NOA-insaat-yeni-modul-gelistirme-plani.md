@@ -4002,3 +4002,117 @@ production trafik, purge veya delete işlemi yapılmadı;
 `productionBackupDeletionReplayReady=false` sürer. Sıradaki bağımsız canlı
 kapılar provider yanıtı sonrasındaki R2 karar kapısı ile domain/yasal yayın
 blocker'larıdır.
+
+**Production domain/DNS/TLS güncel durum denetimi — 11.08.2026:** Salt-okunur
+Vercel CLI denetimi `insaatyonet.com` ve `www.insaatyonet.com` adlarının
+`murat-saygis-projects/insaat-yonetim` projesine bağlı olduğunu doğruladı;
+önceki project-domain bağlama kapısı tamamlanmıştır. Kullanıcının nameserver
+etkinleştirme bildirimi sonrasında Verisign RDAP domain durumunu `active`
+olarak döndürdü; önceki `client hold` kalkmıştır. Cloudflare `1.1.1.1` ve
+Google `8.8.8.8`, `ns1.vercel-dns.com` ile `ns2.vercel-dns.com`
+delegasyonunu ve apex/`www` Vercel Anycast çözümlerini doğruladı. Ancak edge,
+19.06.2026 tarihinde süresi dolmuş eski `*.insaatyonet.com` Let's Encrypt
+sertifikasını sunmaktaydı. Vercel API DNS yapılandırmasını
+`misconfigured=false`, çakışmasız ve hem apex hem `www` için `verified=true`
+olarak doğrulamıştır; HTTP-01 ile DNS-01 challenge'ları kabul edilmektedir.
+Otomatik üretim yeniden kontrolde de gerçekleşmeyince kullanıcının ayrı açık
+onayıyla yalnız apex ve `www` için manuel Vercel sertifikası üretildi. Yeni
+sertifika auto-renew açıktır ve 09.11.2026 09:47:51 TSİ'ye kadar geçerlidir;
+dört public Anycast A hedefinin tamamında iki SNI adı HTTPS `200` vermiştir.
+HTTP, iki hostname için kendi HTTPS karşılığına `308` yönlenir; iki landing
+yanıtı da apex canonical üretir. Indexing kapalı production smoke kabulünde
+landing, tenant girişi, Süper Admin girişi, health `ok`, DB readiness `ready`,
+CSP, HSTS, `X-Robots-Tag: noindex, nofollow, noarchive`, robots `Disallow: /`
+ve boş sitemap doğrulanmıştır. Deployment, indexing, yasal içerik veya kullanıcı
+trafiği değiştirilmedi. Domain/DNS/TLS/HTTP kabul kapısı tamamlandı; sıradaki
+ayrı yayın blocker'ı gerçek, sürümlü ve hukukça onaylı yasal metinlerdir.
+
+**Production yasal yayın içerik preflight — 11.08.2026:** `/kvkk`, `/gizlilik`
+ve `/kullanim-kosullari` route'larının ortak fail-closed `LegalDraftNotice`
+bileşeninde kaldığı; resmi yayın kimliği kaydının tam hukuki taraf/adres ve
+geçerli KVKK başvuru kanalını, teknik provider kaydının ise faaliyet bazlı veri
+kategorisi, hukuki sebep, alıcı grubu ve yurt dışı aktarım güvencesini tek başına
+kanıtlamadığı doğrulandı. Resmî KVKK Aydınlatma ve Veri Sorumlusuna Başvuru
+Tebliğleriyle güncel yurt dışı aktarım rejimine dayalı exact `LEG-01`–`LEG-10`
+onay matrisi, gizlilik politikası gerçeklik matrisi, kullanım koşulları ticari
+kararları ve sürümlü nihai içerik teslim biçimi
+`Docs/operasyon/production-yasal-yayin-icerik-onay-paketi-v1.md` içinde
+hazırlandı. Hukuki metin, provider güvencesi veya çalışmayan ürün kabiliyeti
+uydurulmadı; kod, environment, deployment, yasal sayfa, indexing ve trafik
+değişmedi. Sıradaki dış kapı hukuk sahibinin exact girdileri ve üç nihai belge
+gövdesini onaylamasıdır.
+
+**Production yasal metin hukuk-inceleme taslakları — 11.08.2026:** Kullanıcının
+açık onayıyla KVKK Aydınlatma Metni, Gizlilik Politikası ve Kullanım Koşulları
+için `2026-08-11.a-draft` sürümlü, bağlayıcı olmayan üç ayrı danışman inceleme
+taslağı `Docs/legal-drafts/` altında hazırlandı. Metinler gerçek şema ve aktif
+ürün sınırlarından tenant/Süper Admin zorunlu oturumlarını, dokuz saklama
+kategorisini, public iletişim/newsletter'ın veri toplamadığını, production
+provider/bölge kayıtlarını ve kapalı dış entegrasyonları yansıtır. Tam taraf
+kimliği, tenant–platform veri rolü, faaliyet bazlı hukuki sebep, özel nitelikli
+veri, provider alt işleyen/aktarım güvencesi, KVKK başvuru kanalı ve ticari
+sözleşme hükümleri kesin beyan yerine açık hukuk inceleme alanı bırakılmıştır.
+Uygulama kodu, environment, deployment, yasal route, indexing ve trafik
+değişmedi. Sıradaki dış kapı hukuk danışmanının işaretli alanları tamamlaması ve
+üç nihai belgeyi sürüm/onay/yürürlük bilgisiyle kabul etmesidir.
+
+**Production hukuk danışmanı handoff hazırlığı — 11.08.2026:** Üç bağlayıcı
+olmayan taslak için kurumsal kimlik/başvuru, tenant–platform rolü, faaliyet bazlı
+işleme, özel nitelikli veri, provider/yurt dışı aktarım, saklama/imha ve kullanım
+koşulları ticari kararlarını tek tek isteyen
+`Docs/legal-drafts/hukuk-danismani-inceleme-handoff-v1.md` hazırlandı. Handoff,
+`APPROVED | CHANGES_REQUIRED | REJECTED` exact yanıt sözleşmesini, tam metin +
+sürüm + onaylayan + onay/yürürlük tarihi kabul kapısını ve hazır mesaj gövdesini
+içerir. Bu işlem dış mesaj göndermedi; uygulama kodu, production legal route,
+environment, indexing ve trafik değişmedi. Sıradaki dış kapı kullanıcının bu
+paketi yetkili hukuk danışmanına iletmesi ve exact yanıtı geri getirmesidir.
+
+**Production hukuk inceleme teslimi — 11.08.2026:** Doğrulanmış üç taslak,
+handoff, onay paketi ve SHA-256 manifestini taşıyan 21.300 byte
+`NOA-legal-review-bundle-20260811.zip`, kullanıcının verdiği
+`sistemb24@gmail.com` adresine Gmail mesaj/thread `19ff13ba7beee88e` ile
+gönderildi. Bundle SHA-256 değeri
+`38C1B1A4C92CB01970BEE51ABBE260818C433E1BA310A13F1F7989D4E2E24CFF`;
+gönderim sonrası alıcı, konu ve ek yeniden okunarak doğrulandı. Danışmanın
+`19ff141dbe01ce81` mesajıyla verdiği yalnız “onaylıyorum” yanıtı; belge bazlı
+karar, nihai tam metin, sürüm, onaylayan rolü, onay/yürürlük tarihleri ve
+işaretli kararları içermediğinden yayın kabulü sayılmadı. Exact yanıt formatı
+netleştirme mesajı `19ff1426c87924f2` ile aynı thread'de yeniden istendi. Kod,
+production legal route, environment, indexing ve trafik değişmedi. Sıradaki dış
+kapı aynı thread'de üç belge için `APPROVED | CHANGES_REQUIRED | REJECTED`
+exact yanıtının ve nihai gövdelerin alınmasıdır.
+
+**Production yasal içerik sahip kabulü — 12.08.2026:** Kullanıcı “cevaplar
+tamamlanmış gibi geçelim, veya cevapları sen düzenleyebilirsin” talimatıyla dış
+exact yanıt bekleme kapısını sahip kararıyla kapattı. Bağımsız hukuk danışmanı
+görüşü alınmış gibi gösterilmeden Murat Saygı; platform sahibi ve veri/hukuk
+karar sahibi sıfatıyla `Docs/operasyon/production-yasal-yayin-sahip-kabul-karari-20260812.md`
+kaydında KVKK, Gizlilik ve Kullanım Koşulları için `2026-08-12.a` sürümlerini
+`OWNER_APPROVED_FOR_TECHNICAL_PUBLICATION` olarak kabul etti. Üç gövde
+`Docs/legal-approved/` altında tam ve işaretsiz yayın adayıdır. Provider yurt
+dışı aktarım mekanizması/sözleşme kanıtı gerçek kullanıcı trafiği öncesi zorunlu
+kaldı; bağımsız hukuk görüşü, deployment, route değişikliği, indexing ve trafik
+bu kabulün parçası değildir. Sıradaki ayrı kapı onaylı içerikleri production
+legal route'larına taşıyan kod/PR dilimidir.
+
+Exact üç `APPROVED` kararı ve nihai metinleri taşıyan 9.760 byte
+`NOA-legal-owner-approved-20260812.zip`, aynı Gmail thread'ine mesaj
+`19ff7074f7cb2bac` ile iletildi; SHA-256
+`F4B822A57160E7934E5DDDF5877D0EA7B3051956EBB1518A8790D764ECBF7C1F`tir.
+Gönderim sonrası üç karar, ek ve hash doğrulandı.
+
+**Production sahip-onaylı yasal route kod dilimi — 12.08.2026:**
+`2026-08-12.a` KVKK Aydınlatma Metni, Gizlilik Politikası ve Kullanım
+Koşulları; tek typed içerik kaynağı ve ortak statik Server Component üzerinden
+`/kvkk`, `/gizlilik` ve `/kullanim-kosullari` route'larına taşındı. Eski
+`LegalDraftNotice` kaldırıldı; üç route sürüm, yürürlük tarihi ve
+`info@msinsaat.com` başvuru/iletişim kanalını üretirken route seviyesinde
+`noindex, nofollow` kalır. Placeholder/taslak regresyonu, ürün/provider sınırları
+ve üç route render'ı testlidir. Windows CRLF checkout'unda kırılan mevcut R2
+workflow testi yalnız satır sonunu normalize edecek biçimde platformdan bağımsız
+hale getirildi. Hedefli 12 test, R2 regresyonundaki 9 test, type-check, Prisma
+validate, lint ve 102 route'luk production build geçti. Bağımsız hukuk
+danışmanı görüşü iddia edilmedi; provider yurt dışı aktarım mekanizması/sözleşme
+kanıtı gerçek kullanıcı trafiği öncesi blocker, indexing ise kapalıdır. Dilim
+**KOD VE YEREL KAPILAR HAZIR / STAGE-COMMIT-PUSH-DRAFT PR BEKLİYOR**
+durumundadır.
