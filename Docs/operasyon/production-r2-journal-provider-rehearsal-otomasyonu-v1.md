@@ -223,9 +223,24 @@ endpoint, JWT, session token, imzalı header ve ham provider response içermeyen
 İngilizce redacted konu Cloudflare Community `Developers / Storage`
 kategorisine gönderildi. Konu 10.08.2026 tarihinde moderasyondan çıkarak
 `https://community.cloudflare.com/t/r2-local-temporary-credentials-return-invalidargument-400-on-eu-endpoint/947392/1`
-adresinde yayımlandı; henüz yanıt yoktur. Provider/Community yanıtı gelmeden
-yeni credential, workflow retry, Temporary Credentials API geçişi veya sentetik
-append/read planlanmaz.
+adresinde yayımlandı.
+
+12.08.2026 salt-okunur resmî dokümantasyon karşılaştırmasında Cloudflare'ın
+provider tarafından imzalanan `POST /r2/temp-access-credentials` API'si ayrıca
+doğrulandı. API, `object-read-only` veya `object-read-write` profili ve prefix
+kapsamı sunar; append görevi için zorunlu `ListObjectsV2`, `GetObject` ve
+`PutObject` var, `DeleteObject` yok action ayrımı ise resmî belgeye göre yalnız
+local signing ile mümkündür. Mevcut signer; EU endpoint host audience, HS256,
+900 saniye TTL, SHA-256 temporary secret ve `base64("jwt/" + JWT)` session token
+biçimleri bakımından güncel resmî örnekle eşleşir.
+
+Kullanıcının ayrı açık onayıyla credential, provider/account kimliği veya ham
+yanıt içermeyen takip mesajı aynı başlıkta yanıt `#2` olarak yayımlandı:
+`https://community.cloudflare.com/t/r2-local-temporary-credentials-return-invalidargument-400-on-eu-endpoint/947392/2`.
+Mesaj, EU jurisdiction endpoint'lerinde local-signing exact-action desteğini ve
+provider-signed API'nin zorunlu alternatif olup olmadığını sorar. Henüz dış
+yanıt yoktur. Provider/Community yanıtı gelmeden yeni credential, workflow
+retry, Temporary Credentials API geçişi veya sentetik append/read planlanmaz.
 
 ## Açık blocker'lar ve sonraki kapı
 
@@ -239,7 +254,8 @@ append/read planlanmaz.
 - `productionBackupDeletionReplayReady=false` kalır.
 
 Sıradaki kapı Cloudflare provider/Community yanıtının redacted olarak alınması
-ve deterministic yerel kanıtla karşılaştırılmasıdır. Yanıtın önerdiği herhangi
-bir kod, endpoint, credential, workflow veya canlı retry değişikliği ayrı plan
-ve açık kullanıcı onayı gerektirir. Sentetik append/read rehearsal bu tanıdan
-bağımsız ve daha sonraki ayrı açık onay kapısıdır.
+ve deterministic yerel kanıtla karşılaştırılmasıdır. Takip mesajı yayımlanmış ve
+konu `Watching` durumundadır. Yanıtın önerdiği herhangi bir kod, endpoint,
+credential, workflow veya canlı retry değişikliği ayrı plan ve açık kullanıcı
+onayı gerektirir. Sentetik append/read rehearsal bu tanıdan bağımsız ve daha
+sonraki ayrı açık onay kapısıdır.

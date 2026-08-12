@@ -4131,3 +4131,15 @@ yurt dışı aktarım mekanizması/sözleşme kanıtı açık blocker olarak kal
 fail-closed sınırı ve yeniden açma koşullarını kaydeder. Provider, deployment,
 secret, DNS/TLS, GitHub veya ödeme durumu değiştirilmedi. Dilim **KARAR KAYITLI /
 TİCARİ PRODUCTION NO-GO** durumundadır.
+
+**P-B08 R3-M provider takip mesajı — 12.08.2026:** Güncel Cloudflare resmî
+dokümantasyonu local signing'e ek provider-signed Temporary Credentials API'yi
+doğrular; ancak `ListObjectsV2/GetObject/PutObject` var, `DeleteObject` yok
+exact-action profili yalnız local signing'de kalır. Mevcut EU endpoint audience,
+HS256, TTL, secret türetme ve session token biçimi resmî örnekle eşleşir.
+Kullanıcının ayrı açık onayıyla redacted takip mesajı mevcut Community
+başlığında yanıt `#2` olarak yayımlandı; credential, provider/account kimliği
+ve ham yanıt paylaşılmadı. Henüz dış yanıt yoktur; yeni credential, workflow
+retry, API geçişi ve sentetik append/read kapalı,
+`productionBackupDeletionReplayReady=false` durumundadır. Dilim **TAKİP MESAJI
+YAYIMLANDI / PROVIDER YANITI BEKLENİYOR** durumundadır.
