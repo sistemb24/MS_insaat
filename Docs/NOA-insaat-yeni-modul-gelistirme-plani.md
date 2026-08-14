@@ -4390,3 +4390,64 @@ UI/API, dual-read runtime yönlendirmesi, dual-write ve legacy kapatma yapılmad
 Dilim **İZOLE POSTGRESQL MIGRATION, AKTİVASYON, RETRY, ROLLBACK VE AUDIT ROLLBACK
 KABULÜ TAMAMLANDI / YAYINLAMA VE PRODUCTION CUTOVER HAZIRLIĞI AYRI ONAY BEKLİYOR**
 durumundadır.
+
+**Mevcut durum yol haritası Dilim 3B-E2-B2-B1 salt-okunur production Party cutover preflight ve migration gate — 14.08.2026:**
+E2-A'nın 69 migration'a sabit production geçiş sözleşmesi değiştirilmeden ayrı
+Party cutover preflight modeli, Prisma repository, PRE/POST migration gate, iki
+CLI ve manuel read-only GitHub Actions workflow'u hazırlandı. Akış yalnız exact
+main release SHA, production ortamı, birebir `production-party-cutover-preflight`
+onayı ve `PRODUCTION_TENANT_INVENTORY_DATABASE_URL` ile açılır; transaction'ın
+salt-okunur olduğu kanıtlanmadan scope sorguları başlamaz. PRE gate 69 uygulanmış
+migration, yalnız `20260814160000_add_party_cutover_state` bekleyen migration ve
+sıfır cutover tablosu; POST gate 70 uygulanmış migration, sıfır pending migration
+ve iki cutover tablosunu zorunlu tutar. Active tenant/exact şirket-dönem/admin,
+tek VERIFIED sıfır-aday backfill run'ı, tek backfill audit'i, blockersız kanonik
+Party parity'si ve tutarlı cutover state/event/audit zinciri aynı `REPEATABLE READ`
+snapshot'ta okunur. Tam manifest migration/state anlık görüntüsünü, ayrı business
+checksum migration öncesi/sonrası veri değişmezliğini, eligibility checksum ise
+aktivasyon ve exact retry boyunca state'ten bağımsız uygunluğu bağlar; çıktı ham
+scope veya cari verisi taşımaz. Migration gate exact backup/release, PRE manifest
+ve business checksum drift'inde fail-closed durur. Local-only/test-only explicit
+confirmation ile açılan production-tarzı kabul runner'ı da kodlandı. Runner gerçek
+migration dizinlerinden güvenli geçici workspace'te cutover migration hariç 69
+migration'ı hazırlar; geçici kardeş DB'de salt-okunur PRE manifest/gate sonrasında
+root şemadan yalnız kalan cutover migration'ını uygulayıp POST 70/0 gate, business
+checksum değişmezliği, sıfır cutover state/event/audit, yazılabilir credential
+reddi, checksum drift ve erken cutover state reddi ile kaynak/DB/workspace cleanup
+kanıtlarını zorunlu tutar. Hedefli 6 dosya/17 test, tam 410 dosya/2.191 test,
+type-check, Prisma validate, sıfır uyarılı lint, 102 sayfalık production build,
+1.332 dosyalık secret scan, YAML parse ve diff-check geçti. İlk izole çalıştırmada
+Prisma 7'nin `--schema` yanında kök config'teki migration
+yolunu kullanması fail-closed olarak yakalandı; geçici workspace config'i explicit
+verilerek dar düzeltme yapıldı ve 2 dosya/4 hedefli test ile type-check yeniden
+geçti. Kontrollü retry gerçek yerel PostgreSQL'de PRE 69 uygulanmış + yalnız
+`20260814160000_add_party_cutover_state` pending ve POST 70 uygulanmış + sıfır
+pending kanıtlarıyla `ready=true` tamamlandı. PRE/POST preflight ve gate'ler,
+business checksum değişmezliği, sıfır cutover state/event/audit, yazılabilir
+credential reddi, checksum drift reddi ve erken cutover state reddi doğrulandı.
+Runner kaynak envanterini değiştirmedi; bağımsız kontrolde kaynak 68 migration / 117
+public tablo kaldı, geçici DB ve workspace artığı 0/0 bulundu. Production DB
+okunmadı ve workflow dispatch edilmedi. Backup, production migration, aktivasyon,
+rollback, secret/environment değişikliği veya runtime dual-read yapılmadı. Dilim
+**İZOLE POSTGRESQL PRE 69+1 VE POST 70+0 KABULÜ TAMAMLANDI / PRODUCTION MIGRATION
+WORKFLOW'U AYRI TASARIM VE KODLAMA ONAYI BEKLİYOR** durumundadır.
+
+**Mevcut durum yol haritası Dilim 3B-E2-B2-B2 backup/restore kapılı production Party cutover migration workflow — 14.08.2026:**
+Exact main release SHA, `production` environment ve ayrı migration/backup/restore
+onayları olmadan açılmayan manuel workflow hazırlandı. Tek recovery concurrency
+kilidi altında exact-release production backup'ı oluşturulup bütünlüğü doğrulanır,
+aynı backup geçici izole DB'ye restore edilerek prova edilir, ardından yalnız
+`PRODUCTION_TENANT_INVENTORY_DATABASE_URL` ile PRE 69+1 cutover gate çalışır.
+PRE gate yalnız `20260814160000_add_party_cutover_state` migration'ını pending
+gördüğünde yazılabilir `PRODUCTION_DATABASE_URL` üzerinden `db:migrate` açılır;
+POST gate aynı backup kimliği, onaylı PRE manifesti ve değişmeyen business checksum
+ile 70+0 envanteri doğrular. Böylece başka pending/unknown migration, schema drift,
+scope/parity/backfill drift'i veya checksum değişimi fail-closed durur. Workflow
+SHADOW_READ aktivasyonu, cutover state/event/audit yazımı ya da otomatik production
+restore yapmaz; migration sonrası aktivasyon ve gerektiğinde gerçek restore ayrı
+açık onay gerektirir. Hedefli 3 dosya/9 test, tam 410 dosya/2.192 test, type-check,
+Prisma validate, sıfır uyarılı lint, 102 sayfalık production build, 1.333 dosyalık
+secret scan, YAML parse ve tracked/untracked diff-check geçti. Production DB/R2
+okunmadı veya yazılmadı, workflow dispatch edilmedi; branch, stage, commit ve yayın
+yapılmadı. Dilim **WORKFLOW KODU VE YEREL STATİK DOĞRULAMA TAMAMLANDI / YAYINLAMA
+HAZIRLIĞI AYRI ONAY BEKLİYOR** durumundadır.
