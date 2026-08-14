@@ -23,6 +23,7 @@ type PayrollAccrualPersistence = {
     account?: CashBankAccountOption,
   ) => Promise<PayrollPaymentMutationResult>;
   postPayrollAccrual?: (id: string) => Promise<PayrollAccrualMutationResult>;
+  reversePayrollAccrual?: (id: string) => Promise<PayrollAccrualMutationResult>;
 };
 
 type PayrollPaymentMutationResult =
@@ -31,6 +32,7 @@ type PayrollPaymentMutationResult =
 
 type PayrollAccrualSurfaceProps = {
   accountOptions?: CashBankAccountOption[];
+  canReverse?: boolean;
   highlightedDocumentNo?: string;
   paymentMovements?: CashBankMovementRow[];
   persistence?: PayrollAccrualPersistence;
@@ -50,6 +52,7 @@ const payrollFilters: { label: string; value: PayrollFilter }[] = [
 
 export function PayrollAccrualSurface({
   accountOptions = [],
+  canReverse = false,
   highlightedDocumentNo,
   paymentMovements = [],
   persistence = {},
@@ -212,6 +215,46 @@ export function PayrollAccrualSurface({
 
       setLocalPaymentMovements((current) => [result.data, ...current]);
       setMessage("Maaş ödeme hareketi oluşturuldu.");
+    });
+  }
+
+  function handleReverse(id: string) {
+    if (!persistence.reversePayrollAccrual) {
+      setMessage("Maaş tahakkuku ters kayıt bağlantısı hazır değil.");
+      return;
+    }
+
+    if (
+      !window.confirm(
+        "Tahakkuk ve varsa bağlı ödeme için karşı muhasebe kayıtları oluşturulacak. İşleme devam edilsin mi?",
+      )
+    ) {
+      return;
+    }
+
+    startTransition(async () => {
+      const result = await persistence.reversePayrollAccrual?.(id);
+
+      if (!result) return;
+      if (!result.ok) {
+        setMessage(result.errors.join(" "));
+        return;
+      }
+
+      setLocalRows((current) =>
+        current.map((row) => (row.id === id ? result.data : row)),
+      );
+      setLocalPaymentMovements((current) =>
+        current.filter(
+          (movement) =>
+            !(
+              movement.sourceType === "payroll-accrual" &&
+              movement.sourceId === id &&
+              movement.movementType === "Maaş Ödemesi"
+            ),
+        ),
+      );
+      setMessage("Maaş tahakkuku kontrollü ters kayıtla iptal edildi.");
     });
   }
 
@@ -531,9 +574,14 @@ export function PayrollAccrualSurface({
                           </button>
                           <button
                             className="h-9 rounded-ui-control border border-divider px-3 text-xs font-semibold disabled:opacity-50"
-                            disabled={isPending || row.status === "İptal"}
+                            disabled={isPending || row.status !== "Taslak"}
                             onClick={() => mutateStatus(row.id, "cancel")}
                             type="button"
+                            title={
+                              row.status === "Kaydedildi"
+                                ? "Kaydedilmiş tahakkuk için kontrollü ters kayıt gerekir."
+                                : undefined
+                            }
                           >
                             İptal
                           </button>
@@ -546,6 +594,23 @@ export function PayrollAccrualSurface({
                             type="button"
                           >
                             Ödeme Oluştur
+                          </button>
+                          <button
+                            className="h-9 rounded-ui-control border border-danger/40 px-3 text-xs font-semibold text-danger disabled:opacity-50"
+                            disabled={
+                              isPending ||
+                              !canReverse ||
+                              row.status !== "Kaydedildi"
+                            }
+                            onClick={() => handleReverse(row.id)}
+                            title={
+                              canReverse
+                                ? "Tahakkuk ve bağlı ödeme için kontrollü ters kayıt oluşturur."
+                                : "Kontrollü ters kayıt yalnız yönetici tarafından oluşturulabilir."
+                            }
+                            type="button"
+                          >
+                            Ters Kayıt
                           </button>
                         </div>
                       </td>
@@ -606,10 +671,20 @@ function getPayrollPayment(
   paymentMovements: CashBankMovementRow[],
   payrollAccrualId: string,
 ) {
-  return paymentMovements.find(
+  const payment = paymentMovements.find(
     (movement) =>
       movement.sourceType === "payroll-accrual" &&
       movement.sourceId === payrollAccrualId &&
       movement.movementType === "Maaş Ödemesi",
   );
+
+  if (!payment) return undefined;
+
+  const reversal = paymentMovements.find(
+    (movement) =>
+      movement.sourceType === "cash-bank-movement-reversal" &&
+      movement.sourceId === payment.id,
+  );
+
+  return reversal ? undefined : payment;
 }

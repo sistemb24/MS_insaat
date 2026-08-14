@@ -37,6 +37,11 @@ import {
   type TenantScope,
 } from "@/lib/tenant-scope";
 import type { OperationalReportCounterpartyStatementDetailRow } from "@/lib/reports-service";
+import {
+  createPartyKey,
+  isPartySlug,
+  partyKindFromSlug,
+} from "@/lib/party-read-model";
 import type {
   CashBankAccountOption,
   CashBankMovementRow,
@@ -355,7 +360,16 @@ export function EntityListSurface({
     selectedRow && persistence?.createCounterpartyMovement && counterpartySlug,
   );
   const selectedStatementRows = statementRows.filter(
-    (row) => selectedRow && row.counterpartyName === selectedRow.name,
+    (row) => {
+      if (!selectedRow) return false;
+      if (counterpartySlug && row.partyKey) {
+        return (
+          row.partyKey ===
+          createPartyKey(partyKindFromSlug(counterpartySlug), selectedRow.code)
+        );
+      }
+      return row.counterpartyName === selectedRow.name;
+    },
   );
   const selectedStatementCsvHref =
     buildCounterpartyStatementCsvHref(selectedStatementRows);
@@ -2171,18 +2185,26 @@ function applyStatementBalances(
     return rows;
   }
 
-  const balancesByCounterpartyName = statementRows.reduce<Map<string, number>>(
-    (balances, statementRow) =>
-      balances.set(
-        normalizeCounterpartyName(statementRow.counterpartyName),
-        statementRow.balanceAfter,
-      ),
+  const balancesByParty = statementRows.reduce<Map<string, number>>(
+    (balances, statementRow) => {
+      const key =
+        statementRow.partyKey ??
+        `legacy-name:${normalizeCounterpartyName(statementRow.counterpartyName)}`;
+      return balances.set(key, statementRow.balanceAfter);
+    },
     new Map(),
   );
+  const partyKind = isPartySlug(definition.slug)
+    ? partyKindFromSlug(definition.slug)
+    : undefined;
   return rows.map((row) => {
-    const balance = balancesByCounterpartyName.get(
-      normalizeCounterpartyName(row.name),
-    );
+    const canonicalKey = partyKind
+      ? createPartyKey(partyKind, row.code)
+      : undefined;
+    const legacyNameKey = `legacy-name:${normalizeCounterpartyName(row.name)}`;
+    const balance = canonicalKey
+      ? balancesByParty.get(canonicalKey) ?? balancesByParty.get(legacyNameKey)
+      : balancesByParty.get(legacyNameKey);
 
     if (typeof balance !== "number") {
       return row;

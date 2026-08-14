@@ -70,7 +70,7 @@ describe("createPayrollAccrualService", () => {
     );
   });
 
-  test("posts and cancels payroll accruals with audit trail", async () => {
+  test("cancels draft payroll accruals with audit trail", async () => {
     const auditLogs: AuditLogEntryInput[] = [];
     const service = createPayrollAccrualService({
       auditLogRepository: {
@@ -78,6 +78,40 @@ describe("createPayrollAccrualService", () => {
           auditLogs.push(entry);
         },
       },
+      now: () => "2026-06-30T09:00:00.000Z",
+      repository: createSeededPayrollAccrualMemoryRepository(),
+    });
+    const created = await service.createFromTimesheet({
+      scope: defaultTenantScope,
+      timesheet: createTimesheet(),
+    });
+
+    if (!created.ok) {
+      throw new Error(created.errors.join(" "));
+    }
+
+    const cancelled = await service.cancel({
+      id: created.data.id,
+      scope: defaultTenantScope,
+    });
+    const postCancelled = await service.post({
+      id: created.data.id,
+      scope: defaultTenantScope,
+    });
+
+    expect(cancelled.ok ? cancelled.data.status : undefined).toBe("İptal");
+    expect(postCancelled.ok).toBe(false);
+    expect(postCancelled.ok ? [] : postCancelled.errors).toContain(
+      "İptal edilmiş maaş tahakkuku kesinleştirilemez.",
+    );
+    expect(auditLogs.map((entry) => entry.action)).toEqual([
+      "payroll-accrual.create",
+      "payroll-accrual.cancel",
+    ]);
+  });
+
+  test("blocks direct cancellation after payroll accrual posting", async () => {
+    const service = createPayrollAccrualService({
       now: () => "2026-06-30T09:00:00.000Z",
       repository: createSeededPayrollAccrualMemoryRepository(),
     });
@@ -98,22 +132,14 @@ describe("createPayrollAccrualService", () => {
       id: created.data.id,
       scope: defaultTenantScope,
     });
-    const postCancelled = await service.post({
-      id: created.data.id,
-      scope: defaultTenantScope,
-    });
 
     expect(posted.ok ? posted.data.status : undefined).toBe("Kaydedildi");
-    expect(cancelled.ok ? cancelled.data.status : undefined).toBe("İptal");
-    expect(postCancelled.ok).toBe(false);
-    expect(postCancelled.ok ? [] : postCancelled.errors).toContain(
-      "İptal edilmiş maaş tahakkuku kesinleştirilemez.",
-    );
-    expect(auditLogs.map((entry) => entry.action)).toEqual([
-      "payroll-accrual.create",
-      "payroll-accrual.post",
-      "payroll-accrual.cancel",
-    ]);
+    expect(cancelled).toEqual({
+      ok: false,
+      errors: [
+        "Kaydedilmiş maaş tahakkuku doğrudan iptal edilemez; önce kontrollü ters kayıt akışı tamamlanmalıdır.",
+      ],
+    });
   });
 });
 

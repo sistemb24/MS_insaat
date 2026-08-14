@@ -1124,7 +1124,9 @@ function validateTransferDraft(draft: CashBankTransferValues) {
   return errors;
 }
 
-function validatePayrollAccrualPayment(payrollAccrual: PayrollAccrualRow) {
+export function validatePayrollAccrualPayment(
+  payrollAccrual: Pick<PayrollAccrualRow, "netTotal" | "status">,
+) {
   const errors: string[] = [];
 
   if (payrollAccrual.status !== "Kaydedildi") {

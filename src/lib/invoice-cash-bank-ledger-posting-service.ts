@@ -1,5 +1,10 @@
 import type { CashBankMovementRow } from "./cash-bank-movement-service";
-import { createLedgerService, type LedgerRepository, type LedgerJournalRow } from "./ledger-service";
+import {
+  createLedgerService,
+  type LedgerJournalDraft,
+  type LedgerRepository,
+  type LedgerJournalRow,
+} from "./ledger-service";
 import type { AuditLogRepository } from "./audit-log";
 import { type TenantScope, validateTenantScope } from "./tenant-scope";
 
@@ -35,26 +40,18 @@ export function createInvoiceCashBankLedgerPostingService({
         return { ok: false, errors: ["Kasa/banka hareketi aktif tenant, firma ve dönem kapsamına ait değil."] };
       }
 
-      const mapping = getMapping(movement);
-      if (!mapping) {
+      const draft = buildCashBankMovementLedgerDraft(movement);
+      if (!draft) {
         return { ok: false, errors: ["Bu kasa/banka hareket türü için muhasebe eşlemesi tanımlı değil."] };
       }
 
       const ledgerService = createLedgerService({ now, repository, auditLogRepository });
       const result = await ledgerService.post({
         scope,
-        draft: {
-          currency: movement.currency,
-          documentNo: mapping.documentNo,
-          entryDate: movement.movementDate,
-          description: mapping.description,
-          sourceType: "cash-bank-movement",
-          sourceId: movement.id,
-          lines: mapping.lines,
-        },
+        draft,
       });
       if (!result.ok) {
-        const existing = await repository.findByDocumentNo({ documentNo: mapping.documentNo, scope });
+        const existing = await repository.findByDocumentNo({ documentNo: draft.documentNo, scope });
         if (existing?.sourceType === "cash-bank-movement" && existing.sourceId === movement.id) {
           return { ok: true, data: { ledgerEntry: existing, created: false } };
         }
@@ -62,6 +59,26 @@ export function createInvoiceCashBankLedgerPostingService({
       }
       return { ok: true, data: { ledgerEntry: result.data, created: true } };
     },
+  };
+}
+
+export function buildCashBankMovementLedgerDraft(
+  movement: CashBankMovementRow,
+): LedgerJournalDraft | undefined {
+  const mapping = getMapping(movement);
+
+  if (!mapping) {
+    return undefined;
+  }
+
+  return {
+    currency: movement.currency,
+    documentNo: mapping.documentNo,
+    entryDate: movement.movementDate,
+    description: mapping.description,
+    sourceType: "cash-bank-movement",
+    sourceId: movement.id,
+    lines: mapping.lines,
   };
 }
 

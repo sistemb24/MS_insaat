@@ -13,6 +13,56 @@ afterEach(() => {
 });
 
 describe("CounterpartyManagementSurface", () => {
+  it("shows cross-party identity diagnostics without merging conflicting cards", () => {
+    const definition = getEntityDefinition("musteriler");
+
+    expect(definition).toBeDefined();
+
+    render(
+      <CounterpartyManagementSurface
+        definition={definition!}
+        initialRows={[
+          {
+            ...definition!.sampleRows[0],
+            code: "MUS-0001",
+            name: "ORTAK UNVAN",
+            taxNumber: "1234567890",
+          },
+        ]}
+        partyGroups={[
+          {
+            slug: "musteriler",
+            rows: [
+              {
+                ...definition!.sampleRows[0],
+                code: "MUS-0001",
+                name: "ORTAK UNVAN",
+                taxNumber: "1234567890",
+              },
+            ],
+          },
+          {
+            slug: "tedarikciler",
+            rows: [
+              {
+                code: "TED-0001",
+                name: "BAŞKA UNVAN",
+                taxNumber: "1234567890",
+              },
+            ],
+          },
+        ]}
+      />,
+    );
+
+    expect(screen.getByText("Cari kimlik kontrolü: 1 tanı")).toBeDefined();
+    expect(
+      screen.getByText(
+        "Vergi numarası birden fazla cari kimliğine bağlı: 1234567890",
+      ),
+    ).toBeDefined();
+  });
+
   it("composes the customer route with one page heading and real summary metrics", () => {
     const definition = getEntityDefinition("musteriler");
 

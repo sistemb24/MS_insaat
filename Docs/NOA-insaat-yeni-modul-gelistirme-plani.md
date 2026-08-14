@@ -4143,3 +4143,149 @@ ve ham yanıt paylaşılmadı. Henüz dış yanıt yoktur; yeni credential, work
 retry, API geçişi ve sentetik append/read kapalı,
 `productionBackupDeletionReplayReady=false` durumundadır. Dilim **TAKİP MESAJI
 YAYIMLANDI / PROVIDER YANITI BEKLENİYOR** durumundadır.
+**Mevcut durum yol haritası Dilim 1 puantaj-tahakkuk iptal bütünlüğü —
+13.08.2026:** Aktif maaş tahakkuku bulunan puantajın iptali tenant/şirket/dönem
+kapsamlı bağımlılık kontrolüyle engellendi; kontrol bağlantısı eksikse işlem
+fail-closed durur. Maaş tahakkukunda yalnız taslak iptal edilebilir,
+kaydedilmiş/yevmiyeleştirilmiş tahakkuk kontrollü ters kayıt akışı olmadan
+iptal edilemez. Puantaj ve tahakkuk ekranları aynı kurallarla uyumlu hale
+getirildi. Geçici `tmp/**` worktree'leri ürün test, TypeScript ve lint
+kapsamından çıkarıldı; hiçbir geçici dosya silinmedi. Hedefli 15 dosya/83 test,
+tam 378 dosya/2.003 test, type-check, Prisma validate, sıfır uyarılı lint, 102
+sayfalık production build ve 1.444 dosyalık secret scan geçti. Dilim **KOD VE
+YEREL DOĞRULAMA TAMAMLANDI /
+KONTROLLÜ TERS KAYIT DİLİMİ AYRI ONAY BEKLİYOR** durumundadır.
+
+**Mevcut durum yol haritası Dilim 2A atomik maaş ödemesi — 14.08.2026:**
+Maaş tahakkuku ödeme hareketi ve buna bağlı 335/100-102 muhasebe fişi; exact
+tenant/şirket/dönem, açık dönem, güncel tahakkuk durumu/tutarı ve aktif hesap
+kapıları altında tek Prisma transaction'ında kalıcılaştırıldı. Deterministic
+source anahtarlarıyla retry mevcut uyumlu hareket/fiş çiftini yeniden kullanır;
+tek taraflı eski kayıt veya kaynak/hesap/tutar uyuşmazlığı fail-closed durur ve
+transaction hatasında hareket dahil tüm yazımlar rollback olur. Server Action
+eski iki aşamalı yazma yolundan atomik adapter'a geçirildi; migration ve canlı
+veri işlemi yapılmadı. Hedefli 9 dosya/76 test, tam 380 dosya/2.009 test,
+type-check, Prisma validate, sıfır uyarılı lint, 102 sayfalık production build,
+1.448 dosyalık secret scan ve diff-check geçti. Dilim **KOD VE YEREL DOĞRULAMA
+TAMAMLANDI / DİLİM 2B KONTROLLÜ TERS KAYIT TASARIMI ONAY BEKLİYOR**
+durumundadır.
+
+**Mevcut durum yol haritası Dilim 2B kontrollü maaş ters kaydı — 14.08.2026:**
+Kesinleşmiş maaş tahakkuku; yalnız admin, exact tenant/şirket/dönem ve açık
+dönem kapıları altında kontrollü ters kayda alınabilir hale getirildi. Kaynak
+tahakkuk fişi ile varsa maaş ödeme hareketi ve ödeme fişi birlikte doğrulanır;
+730/335/135/136 tahakkuk fişi ve 335/100-102 ödeme fişi ters yönlü append-only
+yevmiye kayıtlarıyla, ödeme de karşı yönlü kasa/banka hareketiyle tek Prisma
+transaction'ında terslenir. Orijinal finansal kayıtlar silinmez veya
+değiştirilmez; tahakkuk yalnız tüm karşı kayıtlar ve audit izleri başarıyla
+yazıldıktan sonra `İptal` durumuna geçer. Retry deterministik kaynaklarla tam
+zinciri yeniden kullanır; eksik/uyumsuz zincir, kapalı dönem, yetkisiz kullanıcı
+ve eşzamanlı değişiklik fail-closed durur. Tenant ekranına açık onaylı admin
+`Ters Kayıt` aksiyonu eklendi ve terslenmiş ödeme aktif `Ödendi` sayımından
+çıkarıldı. Migration ve canlı veri işlemi yapılmadı. Hedefli 11 dosya/81 test,
+tam 382 dosya/2.024 test, type-check, Prisma validate, sıfır uyarılı lint, 102
+sayfalık production build, 1.452 dosyalık secret scan ve diff-check geçti.
+Dilim **KOD VE YEREL DOĞRULAMA TAMAMLANDI / PARTY VERİ MODELİ DÖNÜŞÜMÜ AYRI
+TASARIM, MIGRATION VE VERİ GEÇİŞİ ONAYI BEKLİYOR** durumundadır.
+
+**Mevcut durum yol haritası Dilim 3A kanonik Party read-model — 14.08.2026:**
+Mevcut `EntityRecord` içindeki `musteriler`, `tedarikciler` ve `taseronlar`
+JSON kartları taşınmadan `partyKind + normalize cari kodu` tabanlı kanonik
+Party kimliği üretildi. Exact tenant/şirket/dönem dışı kart, boş kod/ad,
+yinelenen tür+kod, aynı türde çoklu ad, çoklu vergi numarası ve finansal
+hareketlerde çözülemeyen/ambiguous cari bağı tanı modeline alındı. Alış/satış
+faturası, hakediş, bordro ve kasa/banka kaynak zincirlerinden cari kod/türü
+çözülür; doğrudan cari hareketlerde mevcut `sourceLabel` slug/kodu kullanılır.
+Ekstre detayları, üst seviye cari özetleri, kart bakiyeleri ve seçili cari
+hareketleri artık kanonik Party anahtarına göre ayrılır; yalnız kodu bulunmayan
+legacy hareketlerde tekil ad eşleşmesi kontrollü fallback olarak korunur. Üç
+cari kart grubundaki çakışmalar ilgili tenant ekranında salt-okunur tanı olarak
+görünür. Prisma şeması, yazma yolu, migration, backfill ve canlı veri
+değiştirilmedi. Hedefli 12 dosya/132 test, tam 383 dosya/2.030 test, type-check,
+Prisma validate, sıfır uyarılı lint, 102 sayfalık production build, 1.454
+dosyalık secret scan ve diff-check geçti. Dilim **KOD VE YEREL DOĞRULAMA
+TAMAMLANDI / DİLİM 3B PARTY ŞEMASI, DUAL-READ VE BACKFILL İÇİN AYRI MIGRATION
+VE VERİ GEÇİŞİ ONAYI BEKLİYOR** durumundadır.
+
+**Mevcut durum yol haritası Dilim 3B-B Party migration temeli ve dry-run — 14.08.2026:**
+Exact tenant/şirket/dönem kapsamlı `Party`, rol bazlı `PartyRole` ve geri alınabilir
+geçiş izi için `PartyBackfillRun`/`PartyBackfillIssue` modelleri additive migration
+olarak hazırlandı. Tür+normalize kod ve legacy kaynak anahtarları unique, Party
+ilişkisi composite scope foreign key ve geçmişi koruyan `Restrict` silme kuralıyla
+korundu. Salt-okunur dry-run servisi üç legacy `EntityRecord` grubunu deterministik
+checksum/kimlikle analiz eder; normalize kod çakışması, geçersiz alan, scope farkı
+ve mevcut Party uyuşmazlığını fail-closed karantinaya alır, tekrar eden vergi
+numarasını otomatik birleştirmeden uyarır ve exact mevcut kayıtları idempotent
+olarak atlar. Yeni dört tablo üretim tenant envanteri/retention kapsamına eklendi
+ve envanter şema sürümü 2 yapıldı. Migration deploy edilmedi; Party/issue/run
+satırı, dual-write, finansal foreign key veya canlı veri değişikliği yapılmadı.
+Hedefli 7 Party testi ve 18 üretim envanteri testi, tam 386 dosya/2.037 test,
+type-check, Prisma validate, sıfır uyarılı lint, 102 sayfalık production build,
+1.460 dosyalık secret scan ve diff-check geçti. Dilim **KOD VE YEREL DOĞRULAMA
+TAMAMLANDI / MIGRATION UYGULAMA VE GERÇEK BACKFILL AYRI ONAY BEKLİYOR**
+durumundadır.
+
+**Mevcut durum yol haritası Dilim 3B-C fail-closed Party backfill apply — 14.08.2026:**
+Party preview ve apply yürütmesi exact tenant/şirket/dönem kapsamında
+`Serializable` Prisma transaction sınırına alındı. Apply; yalnız doğrulanmış
+development/local/preview/staging/test ortamında, birebir onay ifadesi, aktif
+admin, preview kaynak checksum'ı ve kullanıcı onaylı satır limitiyle çalışır;
+production veya ortamı kanıtlanamayan çağrı mutation portuna ulaşmadan
+reddedilir. Kaynak değişimi ve limit aşımı fail-closed durur. Bloklayıcı tanıda
+yalnız `BLOCKED` run, karantina ve redacted audit aynı transaction'da yazılır;
+Party/PartyRole oluşturulmaz. Temiz planda run, warning issue, Party ve roller
+yazıldıktan sonra aynı snapshot yeniden okunup aday sayısı sıfır ve checksum
+mutabakatı kanıtlanmadan `VERIFIED` olmaz. Kapalı dönem projection backfill'i
+finansal belge/ledger değiştirmeden çalışabilir ve audit'te işaretlenir. Aynı
+checksum'a ait güvenli retry mevcut run'ı kullanır; ikinci Party veya audit
+üretmez. Migration deploy, CLI, gerçek DB erişimi, dual-read ve finansal FK
+açılmadı. Hedefli 5 dosya/19 test, tam 388 dosya/2.049 test, type-check, Prisma
+validate, sıfır uyarılı lint, 102 sayfalık production build, 1.464 dosyalık
+secret scan ve diff-check geçti. Dilim **KOD VE YEREL DOĞRULAMA TAMAMLANDI /
+İZOLE DB MIGRATION VE SENTETİK APPLY AYRI ONAY BEKLİYOR** durumundadır.
+
+**Mevcut durum yol haritası Dilim 3B-D izole Party kabul runner'ı — 14.08.2026:**
+Yalnız `NOA_RUNTIME_ENV=test`, birebir kabul onayı ve local PostgreSQL kaynak
+URL'siyle açılan; hedef adını kesin `noa_party_acceptance_<UTC zaman>` kalıbına
+kilitleyen kabul runner'ı hazırlandı. Runner çalıştırıldığında kaynak `.env`
+veritabanında yalnız migration/tablo envanteri okuyacak; ayrı geçici veritabanı
+oluşturup 69 migration'ı deploy ettikten sonra temiz apply+retry, bloklayıcı
+karantina, kapalı dönem projection, tenant izolasyonu, preview drift reddi ve
+zorlanmış audit hatasında gerçek transaction rollback senaryolarını kanıtlayacak;
+finansal tablo sayımlarını değiştirmeden hedefi `finally` içinde `WITH (FORCE)`
+ile kaldırıp yokluğunu doğrular. Kaynak/temporary URL ve kimlik bilgileri çıktıya
+verilmez. Onaylı izole çalıştırmada 69 migration geçici DB'ye uygulandı; temiz
+apply ve idempotent retry 3 Party/3 rol/1 audit, bloklayıcı kapsam 0 Party/0 rol
+ve `BLOCKED`, kapalı dönem `VERIFIED`, drift reddi, foreign tenant 0 Party ve
+zorlanmış audit hatasında run/issue/Party/rol/audit tamamı 0 olarak kanıtlandı.
+Gerçek Prisma kabulü mock testlerin maskelediği hatalı `Period.periodId` filtresini
+yakaladı; dönem sorgusu exact `id + tenantId + companyId` kapsamına düzeltildi ve
+regresyon testi eklendi. Kaynak envanteri değişmedi; geçici DB kaldırıldı ve kalan
+`noa_party_acceptance_*` veritabanı sayısı ayrıca 0 doğrulandı. Hedefli 2 dosya/28
+test, tam 389 dosya/2.071 test, type-check, Prisma validate, sıfır uyarılı lint,
+102 sayfalık production build, 1.467 dosyalık secret scan ve diff-check geçti.
+Dilim **İZOLE MIGRATION/APPLY/ROLLBACK KABULÜ TAMAMLANDI / PRODUCTION MIGRATION
+VE GERÇEK TENANT BACKFILL AYRI ONAY BEKLİYOR** durumundadır.
+
+**Mevcut durum yol haritası Dilim 3B-E1 salt-okunur production Party preflight — 14.08.2026:**
+Production Party geçişi için mutation portundan bağımsız salt-okunur preflight
+çekirdeği, Prisma repository, CLI ve manuel GitHub Actions workflow'u hazırlandı.
+Akış yalnız `workflow_dispatch`, `refs/heads/main`, exact 40 karakter release SHA,
+production environment, birebir onay ve ayrı
+`PRODUCTION_TENANT_INVENTORY_DATABASE_URL` credential adıyla açılır; transaction
+başında `transaction_read_only=on` kanıtlanmadan scope okuması başlamaz. Exact
+tenant/şirket/dönem ile aktif admin erişimi, tenant yaşam döngüsü, dönem kapalılık
+işareti, beş finansal tablo sayımı, 69 migration envanteri ve dört Party tablosu
+tek `REPEATABLE READ` snapshot'ta okunur. Yalnız Party migration'ının beklediği ve
+dört tablonun bulunmadığı `PRE_MIGRATION` veya tüm migration'ların uygulanıp dört
+tablonun bulunduğu `POST_MIGRATION` durumu kabul edilir; kısmi tablo, beklenmeyen,
+yarım ya da rollback edilmiş migration fail-closed blocker'dır. Legacy kaynak
+checksum'ı, aday/blocker/warning sayıları ve issue kodları deterministik manifestte
+tutulur; exact scope kimlikleri yalnız SHA-256 fingerprint olarak çıkar, kart adı,
+vergi numarası ve DB URL loglanmaz. Production apply servisi kapalı kalmıştır.
+Credential/secret oluşturulmadı, workflow dispatch edilmedi, production verisi
+okunmadı, migration ve backfill yapılmadı. Hedefli 3 dosya/22 test, tam 391
+dosya/2.088 test, type-check, Prisma validate, sıfır uyarılı lint, 102 sayfalık
+production build, 1.473 dosyalık secret scan ve diff-check geçti. Dilim **KOD VE
+YEREL DOĞRULAMA TAMAMLANDI / READ-ONLY CREDENTIAL VE EXACT SCOPE İLE CANLI
+PREFLIGHT AYRI ONAY BEKLİYOR** durumundadır.

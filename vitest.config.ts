@@ -10,6 +10,7 @@ export default defineConfig({
   },
   test: {
     environment: "node",
+    include: ["src/**/*.test.{ts,tsx}", "src/**/*.spec.{ts,tsx}"],
     testTimeout: 15000,
     sequence: {
       concurrent: false,

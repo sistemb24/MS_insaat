@@ -77,6 +77,16 @@ export type TimesheetRepository = {
   update(input: TimesheetRow): Promise<TimesheetRow>;
 };
 
+export type TimesheetPayrollAccrualDependency = {
+  list(input: TimesheetRepositoryListInput): Promise<
+    Array<{
+      documentNo: string;
+      sourceTimesheetId: string;
+      status: string;
+    }>
+  >;
+};
+
 export type TimesheetServiceResult<T> =
   | { ok: true; data: T; errors?: never }
   | { ok: false; errors: string[]; data?: never };
@@ -113,6 +123,7 @@ export type TimesheetStatusInput = TimesheetListInput & {
 export type TimesheetServiceOptions = {
   auditLogRepository?: AuditLogRepository;
   now: () => string;
+  payrollAccrualDependency?: TimesheetPayrollAccrualDependency;
   repository: TimesheetRepository;
 };
 
@@ -235,6 +246,7 @@ export function calculateTimesheetTotals(
 export function createTimesheetService({
   auditLogRepository,
   now,
+  payrollAccrualDependency,
   repository,
 }: TimesheetServiceOptions): TimesheetService {
   async function resolveRows(scope: TenantScope) {
@@ -394,6 +406,31 @@ export function createTimesheetService({
 
       if (existing.status === "İptal") {
         return { ok: true, data: existing };
+      }
+
+      if (!payrollAccrualDependency) {
+        return {
+          ok: false,
+          errors: [
+            "Puantajın bağlı maaş tahakkuku kontrolü hazır olmadığı için iptal işlemi güvenli biçimde tamamlanamadı.",
+          ],
+        };
+      }
+
+      const linkedPayrollAccrual = (
+        await payrollAccrualDependency.list({ scope })
+      ).find(
+        (row) =>
+          row.sourceTimesheetId === existing.id && row.status !== "İptal",
+      );
+
+      if (linkedPayrollAccrual) {
+        return {
+          ok: false,
+          errors: [
+            `Puantaj iptal edilemez; bağlı maaş tahakkuku önce güvenli biçimde sonuçlandırılmalıdır: ${linkedPayrollAccrual.documentNo}`,
+          ],
+        };
       }
 
       const cancelled = await repository.update({

@@ -6,9 +6,48 @@ import {
 } from "@/components/entity-list-surface";
 import { Icon, type IconName } from "@/components/ui";
 import { buildCounterpartyOverview } from "@/lib/counterparty-overview";
+import {
+  buildPartyReadModel,
+  isPartySlug,
+  linkPartyStatementRows,
+  partyKindFromSlug,
+  type PartySlug,
+} from "@/lib/party-read-model";
+import type { EntityRow } from "@/lib/entities";
 
-export function CounterpartyManagementSurface(props: EntityListSurfaceProps) {
-  const overview = buildCounterpartyOverview(props.statementRows ?? []);
+export function CounterpartyManagementSurface(
+  props: EntityListSurfaceProps & {
+    partyGroups?: Array<{ rows: EntityRow[]; slug: PartySlug }>;
+  },
+) {
+  const partySlug = isPartySlug(props.definition.slug)
+    ? props.definition.slug
+    : undefined;
+  const partyModel = partySlug
+    ? buildPartyReadModel({
+        groups:
+          props.partyGroups ??
+          [
+            {
+              rows: props.initialRows ?? props.definition.sampleRows,
+              slug: partySlug,
+            },
+          ],
+        scope: props.scope,
+      })
+    : { diagnostics: [], parties: [] };
+  const linkedStatements = partySlug
+    ? linkPartyStatementRows({
+        model: partyModel,
+        rows: props.statementRows ?? [],
+        targetKind: partyKindFromSlug(partySlug),
+      })
+    : { diagnostics: [], rows: props.statementRows ?? [] };
+  const partyDiagnostics = [
+    ...partyModel.diagnostics,
+    ...linkedStatements.diagnostics,
+  ];
+  const overview = buildCounterpartyOverview(linkedStatements.rows);
 
   if (["musteriler", "tedarikciler", "taseronlar"].includes(props.definition.slug)) {
     const isSupplier = props.definition.slug === "tedarikciler";
@@ -115,8 +154,25 @@ export function CounterpartyManagementSurface(props: EntityListSurfaceProps) {
           />
         </div>
 
+        {partyDiagnostics.length > 0 ? (
+          <aside
+            className="rounded-ui-panel border border-warning/40 bg-warning/10 px-4 py-3 text-sm text-content"
+            role="status"
+          >
+            <p className="font-semibold">
+              Cari kimlik kontrolü: {partyDiagnostics.length} tanı
+            </p>
+            <ul className="mt-2 list-disc space-y-1 pl-5 text-xs text-content-subtle">
+              {partyDiagnostics.slice(0, 3).map((diagnostic, index) => (
+                <li key={`${diagnostic.code}-${index}`}>{diagnostic.message}</li>
+              ))}
+            </ul>
+          </aside>
+        ) : null}
+
         <EntityListSurface
           {...props}
+          statementRows={linkedStatements.rows}
           visualVariant={
             isSubcontractor
               ? "subcontractor"

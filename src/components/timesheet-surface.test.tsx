@@ -137,6 +137,35 @@ describe("TimesheetSurface", () => {
     expect(screen.getByText("Taslak -> Kaydedildi")).toBeTruthy();
   });
 
+  test("disables cancellation when an active payroll accrual is linked", () => {
+    const row = createTimesheetRow({ status: "Kaydedildi" });
+    const cancelTimesheet = vi.fn();
+
+    render(
+      <TimesheetSurface
+        payrollAccruals={[
+          {
+            documentNo: "MAAS-PNT-2026-06-001",
+            sourceTimesheetId: row.id,
+            status: "Taslak",
+          },
+        ]}
+        persistence={{ cancelTimesheet }}
+        rows={[row]}
+      />,
+    );
+
+    const cancelButton = screen.getByTitle(
+      "Bağlı maaş tahakkuku önce sonuçlandırılmalıdır: MAAS-PNT-2026-06-001",
+    );
+    expect(cancelButton.hasAttribute("disabled")).toBe(true);
+    expect(cancelButton.getAttribute("title")).toContain(
+      "MAAS-PNT-2026-06-001",
+    );
+    fireEvent.click(cancelButton);
+    expect(cancelTimesheet).not.toHaveBeenCalled();
+  });
+
   test("prints the visible timesheet movement list scope", () => {
     const print = vi.fn();
     Object.defineProperty(window, "print", {
