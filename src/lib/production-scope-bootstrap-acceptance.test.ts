@@ -42,7 +42,7 @@ describe("evaluateProductionScopeBootstrapAcceptance", () => {
     companyCountAfterRetry: 1,
     conflictRejected: true,
     createStatus: "CREATED",
-    migrationCount: 69,
+    migrationCount: 70,
     partialRejected: true,
     periodCountAfterRetry: 1,
     retryStatus: "UNCHANGED",

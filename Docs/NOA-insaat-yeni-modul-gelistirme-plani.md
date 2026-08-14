@@ -4338,3 +4338,55 @@ uyarılı lint, 102 sayfalık
 production build, 1.306 dosyalık secret scan, YAML parse ve diff-check geçti.
 Dilim **İZOLE POSTGRESQL MIGRATION VE SIFIR-ADAY APPLY KABULÜ TAMAMLANDI /
 YAYINLAMA VE PRODUCTION YÜRÜTME AYRI ONAY BEKLİYOR** durumundadır.
+
+**Mevcut durum yol haritası Dilim 3B-E2-B1 salt-okunur Party/EntityRecord parity read-model — 14.08.2026:**
+Exact tenant/şirket/dönem kapsamındaki üç legacy cari `EntityRecord` grubu ile
+`Party`/`PartyRole` kimlik omurgasını tek `REPEATABLE READ` ve transaction-level
+salt-okunur snapshot'ta karşılaştıran parity çekirdeği ve Prisma repository'si
+hazırlandı. Ortak ad, vergi no, telefon, e-posta, durum, rol türü/kodu ve legacy
+kaynak bağları deterministik checksum'larla karşılaştırılır; rol-detay uzantıları
+ve türetilmiş bakiye parity kapsamına alınmaz. Eksik, fazla, duplicate, orphan,
+scope dışı, geçersiz ve ortak-alan drift kayıtları fail-closed blocker olur;
+çıktı gerçek cari kodu/adı/vergi numarası yerine fingerprint ve alan adları taşır.
+Boş scope, tam eşleşme, uzantı alanı ayrımı, drift, foreign scope, duplicate,
+orphan/unreferenced kayıt ve salt-okunur transaction kanıtını kapsayan 2 dosya/7
+hedefli test geçti. Tam 401 dosya/2.156 test, type-check, Prisma validate, sıfır
+uyarılı lint, 102 sayfalık production build, 1.310 dosyalık secret scan ve
+diff-check geçti. Migration, gerçek DB erişimi, runtime UI/API cutover, dual-write,
+aktivasyon durumu veya production workflow çalıştırması yapılmadı. Dilim **KOD VE
+YEREL DOĞRULAMA TAMAMLANDI / SCOPE BAZLI PARTY CUTOVER STATE MIGRATION'I VE
+AKTİVASYON SERVİSİ AYRI ONAY BEKLİYOR** durumundadır.
+
+**Mevcut durum yol haritası Dilim 3B-E2-B2-A scope bazlı Party cutover state migration ve güvenli aktivasyon servisi — 14.08.2026:**
+Exact tenant/şirket/dönem kapsamı için tekil `PartyCutoverState` ve append-only
+`PartyCutoverEvent` tablolarını ekleyen additive migration hazırlandı. Hem servis
+hem SQL CHECK kapısı yalnız `LEGACY_ONLY` ve `SHADOW_READ` modlarını kabul eder;
+dual-write, Party-preferred veya legacy kapatma modu tanımlanmadı. Aktivasyon
+servisi `Serializable` transaction, scope advisory lock, aktif tenant, exact
+şirket/dönem, aktif scope admin, optimistic revision ve aynı transaction içinde
+yeniden okunan güncel parity kanıtı olmadan `SHADOW_READ` geçişini reddeder.
+Rollback parity bozulmuş olsa da `LEGACY_ONLY` durumuna dönebilir; state, event ve
+redacted audit aynı transaction'da yazılır, audit hatasında tamamı rollback olur.
+Global operation kimliği exact retry'da idempotent `UNCHANGED`, farklı içerik veya
+stale revision'da fail-closed sonuç verir. Ortak parity snapshot okuyucusu E2-B1
+repository'siyle paylaştırıldı; production tenant envanteri schema v3 ile 122 model
+ve 96 doğrudan tenant-scoped model, migration kabul sayısı 70 olarak güncellendi.
+Local-only/test-only explicit confirmation ile açılan izole PostgreSQL kabul runner'ı
+da kodlandı. Runner güvenli adlı geçici kardeş DB oluşturup 70 migration'ı uygular;
+eşleşmiş gerçek parity fixture'ında aktivasyon ve exact retry 1 state/1 event/1 audit,
+parity drift sonrası rollback ve retry 1 state/2 event/2 audit, zorlanmış audit
+hatasında 0/0/0 transaction rollback'i, SQL future-mode reddi, kaynak envanter
+değişmezliği ve geçici DB cleanup kanıtlarını zorunlu tutar. Hedefli 4 dosya/21
+test, tam 405 dosya/2.177 test, type-check, Prisma validate, sıfır uyarılı lint,
+102 sayfalık production build, 1.319 dosyalık secret scan ve diff-check geçti.
+Onaylı izole çalıştırmada güvenli adlı geçici local PostgreSQL hedefe 70 migration
+uygulandı; aktivasyon/retry `ACTIVATED/UNCHANGED` ve 1 state/1 event/1 audit,
+parity drift sonrası rollback/retry `ROLLED_BACK/UNCHANGED` ve 1 state/2 event/2
+audit, zorlanmış audit hatasında 0/0/0 gerçek transaction rollback'i kanıtlandı.
+SQL `DUAL_WRITE` reddi, kaynak envanter değişmezliği ve cleanup geçti; kaynak
+`insaatMuhasebe` 68 migration/117 public tabloda kaldı ve kalan
+`noa_party_cutover_acceptance_*` DB sayısı 0 doğrulandı. Production DB/workflow,
+UI/API, dual-read runtime yönlendirmesi, dual-write ve legacy kapatma yapılmadı.
+Dilim **İZOLE POSTGRESQL MIGRATION, AKTİVASYON, RETRY, ROLLBACK VE AUDIT ROLLBACK
+KABULÜ TAMAMLANDI / YAYINLAMA VE PRODUCTION CUTOVER HAZIRLIĞI AYRI ONAY BEKLİYOR**
+durumundadır.

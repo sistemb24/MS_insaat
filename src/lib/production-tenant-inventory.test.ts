@@ -58,8 +58,8 @@ describe("production tenant inventory contract", () => {
       (category) => PRODUCTION_TENANT_MODEL_GROUPS[category],
     );
 
-    expect(prismaModels).toHaveLength(120);
-    expect(directTenantModels).toHaveLength(94);
+    expect(prismaModels).toHaveLength(122);
+    expect(directTenantModels).toHaveLength(96);
     expect(Object.keys(PRODUCTION_TENANT_NON_DIRECT_MODEL_ALLOWLIST).sort()).toEqual(
       nonDirectModels,
     );
@@ -82,11 +82,11 @@ describe("production tenant inventory contract", () => {
       checksum: expect.stringMatching(/^[a-f0-9]{64}$/),
       readOnly: true,
       retentionPolicyVersion: "2026-08-09.a",
-      schemaVersion: 2,
+      schemaVersion: 3,
       tenantId: "tenant-001",
     });
     expect(first.categories).toHaveLength(9);
-    expect(first.models).toHaveLength(94);
+    expect(first.models).toHaveLength(96);
     const serialized = JSON.stringify(first);
     expect(serialized).not.toContain('"storageKey":');
     expect(serialized).not.toMatch(/person@example|serbest metin/i);

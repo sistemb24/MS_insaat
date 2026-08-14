@@ -1,6 +1,6 @@
 export const PARTY_BACKFILL_ACCEPTANCE_CONFIRMATION =
   "party-backfill-isolated-acceptance";
-export const PARTY_BACKFILL_ACCEPTANCE_MIGRATION_COUNT = 69;
+export const PARTY_BACKFILL_ACCEPTANCE_MIGRATION_COUNT = 70;
 export const PARTY_BACKFILL_ACCEPTANCE_TABLES = [
   "Party",
   "PartyBackfillIssue",

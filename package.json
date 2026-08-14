@@ -62,6 +62,7 @@
     "production:scope:bootstrap": "tsx scripts/bootstrap-production-scope.ts",
     "production:scope:bootstrap:acceptance:verify": "npm run db:generate && tsx scripts/verify-production-scope-bootstrap-acceptance.ts",
     "party-backfill:acceptance:verify": "npm run db:generate && tsx scripts/verify-party-backfill-acceptance.ts",
+    "party-cutover:acceptance:verify": "npm run db:generate && tsx scripts/verify-party-cutover-acceptance.ts",
     "fleet:acceptance:verify": "tsx scripts/verify-vehicle-fleet-acceptance.ts",
     "tire:acceptance:verify": "tsx scripts/verify-vehicle-tire-acceptance.ts",
     "search:benchmark": "tsx scripts/benchmark-global-search.ts",

@@ -8,7 +8,7 @@ import {
 } from "./production-retention-policy";
 import type { TenantLifecycleStatus } from "./tenant-lifecycle";
 
-export const PRODUCTION_TENANT_INVENTORY_SCHEMA_VERSION = 2;
+export const PRODUCTION_TENANT_INVENTORY_SCHEMA_VERSION = 3;
 
 export const PRODUCTION_TENANT_NON_DIRECT_MODEL_ALLOWLIST = {
   AccessProfilePermission: "tenant-scoped-parent",
@@ -68,6 +68,8 @@ export const PRODUCTION_TENANT_MODEL_GROUPS = {
     "AuditLog",
     "PartyBackfillIssue",
     "PartyBackfillRun",
+    "PartyCutoverEvent",
+    "PartyCutoverState",
     "TenantLegalHold",
     "TenantLegalHoldEvent",
     "TenantLifecycleEvent",
