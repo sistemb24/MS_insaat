@@ -64,6 +64,21 @@ export function createProductionBackupId(now: Date, releaseId: string) {
   return `${timestamp}-${safeReleaseId}`;
 }
 
+export function assertProductionBackupManifestRelease(input: {
+  backupId: string;
+  expectedReleaseId: string;
+  manifestReleaseId: string;
+}) {
+  const expectedReleaseId = normalizeExactReleaseSha(input.expectedReleaseId);
+  const manifestReleaseId = normalizeExactReleaseSha(input.manifestReleaseId);
+  if (expectedReleaseId !== manifestReleaseId) {
+    throw new Error("Production backup manifest release kimliği güncel release ile eşleşmiyor.");
+  }
+  if (!input.backupId.toLowerCase().endsWith(`-${expectedReleaseId}`)) {
+    throw new Error("Production backup kimliği güncel release SHA ile eşleşmiyor.");
+  }
+}
+
 export function readProductionBackupStorage(
   env: Readonly<Record<string, string | undefined>>,
 ): R2DocumentStorageConfig {
@@ -72,4 +87,12 @@ export function readProductionBackupStorage(
 
 function normalizeReleaseId(value: string) {
   return value.trim().toLowerCase().replace(/[^a-z0-9._-]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 80);
+}
+
+function normalizeExactReleaseSha(value: string) {
+  const normalized = value.trim().toLowerCase();
+  if (!/^[a-f0-9]{40}$/.test(normalized)) {
+    throw new Error("Production backup exact release SHA geçerli değil.");
+  }
+  return normalized;
 }

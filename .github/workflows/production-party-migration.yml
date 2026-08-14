@@ -1,0 +1,152 @@
+name: Production Party Migration (Backup and Restore Gated)
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirmation:
+        description: Type production-party-migration-execute
+        required: true
+        type: string
+      backup_confirmation:
+        description: Type production-backup-execute
+        required: true
+        type: string
+      restore_confirmation:
+        description: Type production-restore-rehearsal
+        required: true
+        type: string
+      expected_release_sha:
+        description: Exact main release SHA
+        required: true
+        type: string
+      tenant_id:
+        description: Exact production tenant identifier
+        required: true
+        type: string
+      company_id:
+        description: Exact production company identifier
+        required: true
+        type: string
+      period_id:
+        description: Exact production period identifier
+        required: true
+        type: string
+      actor_user_id:
+        description: Exact active admin user identifier
+        required: true
+        type: string
+      expected_preflight_manifest_checksum:
+        description: Exact approved PRE_MIGRATION preflight manifest checksum
+        required: true
+        type: string
+      expected_source_checksum:
+        description: Exact approved zero-source checksum
+        required: true
+        type: string
+      expected_run_id:
+        description: Exact deterministic Party backfill run identifier
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: noa-production-recovery
+  cancel-in-progress: false
+
+jobs:
+  migrate:
+    if: >-
+      github.ref == 'refs/heads/main' &&
+      inputs.confirmation == 'production-party-migration-execute' &&
+      inputs.backup_confirmation == 'production-backup-execute' &&
+      inputs.restore_confirmation == 'production-restore-rehearsal' &&
+      inputs.expected_release_sha == github.sha
+    environment: production
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    env:
+      DATABASE_URL: ${{ secrets.PRODUCTION_DATABASE_URL }}
+      NOA_EXPECTED_RELEASE_SHA: ${{ inputs.expected_release_sha }}
+      NOA_PARTY_EXPECTED_PREFLIGHT_MANIFEST_CHECKSUM: ${{ inputs.expected_preflight_manifest_checksum }}
+      NOA_PARTY_EXPECTED_RUN_ID: ${{ inputs.expected_run_id }}
+      NOA_PARTY_EXPECTED_SOURCE_CHECKSUM: ${{ inputs.expected_source_checksum }}
+      NOA_PARTY_PREFLIGHT_ACTOR_USER_ID: ${{ inputs.actor_user_id }}
+      NOA_PARTY_PREFLIGHT_COMPANY_ID: ${{ inputs.company_id }}
+      NOA_PARTY_PREFLIGHT_PERIOD_ID: ${{ inputs.period_id }}
+      NOA_PARTY_PREFLIGHT_TENANT_ID: ${{ inputs.tenant_id }}
+      NOA_PARTY_TRANSITION_ACTOR_USER_ID: ${{ inputs.actor_user_id }}
+      NOA_PARTY_TRANSITION_COMPANY_ID: ${{ inputs.company_id }}
+      NOA_PARTY_TRANSITION_PERIOD_ID: ${{ inputs.period_id }}
+      NOA_PARTY_TRANSITION_TENANT_ID: ${{ inputs.tenant_id }}
+      NOA_PRODUCTION_BACKUP_CONFIRMATION: ${{ inputs.backup_confirmation }}
+      NOA_PRODUCTION_PARTY_PREFLIGHT_CONFIRMATION: production-party-backfill-preflight
+      NOA_PRODUCTION_PARTY_TRANSITION_CONFIRMATION: ${{ inputs.confirmation }}
+      NOA_PRODUCTION_PREFLIGHT_CONFIRMATION: production-backup-preflight
+      NOA_PRODUCTION_RESTORE_CONFIRMATION: ${{ inputs.restore_confirmation }}
+      NOA_RELEASE_ID: ${{ github.sha }}
+      NOA_RUNTIME_ENV: production
+      NOA_SOURCE_REF: ${{ github.ref }}
+      R2_ACCESS_KEY_ID: ${{ secrets.PRODUCTION_R2_READ_ACCESS_KEY_ID }}
+      R2_SECRET_ACCESS_KEY: ${{ secrets.PRODUCTION_R2_READ_SECRET_ACCESS_KEY }}
+      R2_BUCKET: ${{ vars.PRODUCTION_R2_BUCKET }}
+      R2_ENDPOINT: ${{ vars.PRODUCTION_R2_ENDPOINT }}
+      R2_BACKUP_ACCESS_KEY_ID: ${{ secrets.PRODUCTION_R2_BACKUP_ACCESS_KEY_ID }}
+      R2_BACKUP_SECRET_ACCESS_KEY: ${{ secrets.PRODUCTION_R2_BACKUP_SECRET_ACCESS_KEY }}
+      R2_BACKUP_BUCKET: ${{ vars.PRODUCTION_R2_BACKUP_BUCKET }}
+      R2_BACKUP_ENDPOINT: ${{ vars.PRODUCTION_R2_BACKUP_ENDPOINT }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - name: Install PostgreSQL 18 client
+        shell: bash
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes ca-certificates curl
+          sudo install -d /usr/share/postgresql-common/pgdg
+          sudo curl --fail --silent --show-error \
+            --output /usr/share/postgresql-common/pgdg/apt.postgresql.org.asc \
+            https://www.postgresql.org/media/keys/ACCC4CF8.asc
+          . /etc/os-release
+          echo "deb [signed-by=/usr/share/postgresql-common/pgdg/apt.postgresql.org.asc] https://apt.postgresql.org/pub/repos/apt ${VERSION_CODENAME}-pgdg main" \
+            | sudo tee /etc/apt/sources.list.d/pgdg.list > /dev/null
+          sudo apt-get update
+          sudo apt-get install --yes postgresql-client-18
+          echo "/usr/lib/postgresql/18/bin" >> "$GITHUB_PATH"
+      - run: pnpm install --frozen-lockfile --ignore-scripts
+      - name: Generate Prisma client without schema mutation
+        run: pnpm db:generate
+      - name: Create and verify exact-release production backup
+        id: backup
+        shell: bash
+        run: |
+          set -euo pipefail
+          result="$(pnpm production:backup:execute | tee /dev/stderr | tail -n 1)"
+          backup_id="$(jq -er 'select(.status == "verified") | .backupId' <<<"$result")"
+          [[ "$backup_id" =~ ^[0-9]{8}T[0-9]{6}Z-${GITHUB_SHA}$ ]]
+          echo "backup_id=$backup_id" >> "$GITHUB_OUTPUT"
+      - name: Restore exact backup into isolated temporary database
+        env:
+          NOA_BACKUP_ID: ${{ steps.backup.outputs.backup_id }}
+        run: pnpm production:restore:rehearsal
+      - name: Verify exact PRE_MIGRATION Party inventory
+        env:
+          DATABASE_URL: ${{ secrets.PRODUCTION_TENANT_INVENTORY_DATABASE_URL }}
+          NOA_PARTY_BACKUP_ID: ${{ steps.backup.outputs.backup_id }}
+          NOA_PARTY_TRANSITION_STAGE: PRE_MIGRATION
+        run: pnpm production:party-transition:gate
+      - name: Apply only the allowlisted pending Party migration
+        run: pnpm db:migrate
+      - name: Verify exact POST_MIGRATION Party inventory
+        env:
+          DATABASE_URL: ${{ secrets.PRODUCTION_TENANT_INVENTORY_DATABASE_URL }}
+          NOA_PARTY_BACKUP_ID: ${{ steps.backup.outputs.backup_id }}
+          NOA_PARTY_TRANSITION_STAGE: POST_MIGRATION
+        run: pnpm production:party-transition:gate

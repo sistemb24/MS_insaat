@@ -71,6 +71,7 @@ describe("party backfill acceptance safety contract", () => {
     ["blockedPartyCount", 1],
     ["driftRejected", false],
     ["rollbackRunCount", 1],
+    ["zeroApplyAuditCountAfterRetry", 2],
     ["sourceInventoryUnchanged", false],
     ["temporaryDatabaseRemoved", false],
   ] satisfies Array<[keyof PartyBackfillAcceptanceEvidence, unknown]>)
@@ -121,5 +122,11 @@ function readyEvidence(): PartyBackfillAcceptanceEvidence {
     rollbackRunCount: 0,
     sourceInventoryUnchanged: true,
     temporaryDatabaseRemoved: true,
+    zeroApplyAuditCountAfterRetry: 1,
+    zeroApplyIssueCountAfterRetry: 0,
+    zeroApplyPartyCountAfterRetry: 0,
+    zeroApplyRoleCountAfterRetry: 0,
+    zeroApplyRunCountAfterRetry: 1,
+    zeroApplyRunStatus: "UNCHANGED",
   };
 }

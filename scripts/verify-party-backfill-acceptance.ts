@@ -23,6 +23,10 @@ import {
   PARTY_BACKFILL_APPLY_CONFIRMATION,
   createPartyBackfillApplyService,
 } from "../src/lib/party-backfill-apply-service";
+import {
+  runProductionPartyZeroApply,
+  type ProductionPartyZeroApplyConfig,
+} from "../src/lib/production-party-transition";
 
 type Scope = { companyId: string; periodId: string; tenantId: string };
 type Inventory = { migrationCount: number; publicTableCount: number };
@@ -181,6 +185,34 @@ async function runAcceptanceScenarios(databaseUrl: string) {
     assertSuccessful(cleanRetry, "clean-retry", "VERIFIED", repositoryFailure);
     if (!cleanRetry.data.reused) throw new Error("Temiz retry mevcut run kaydını kullanmadı.");
 
+    const zeroPreview = await repository.previewConsistently({
+      scope: fixtures.zero,
+      version: "party-v1",
+    });
+    const zeroConfig: ProductionPartyZeroApplyConfig = {
+      actorUserId: fixtures.actorUserId,
+      databaseUrl,
+      expectedPostMigrationManifestChecksum: "a".repeat(64),
+      expectedRunId: zeroPreview.run.id,
+      expectedSourceChecksum: zeroPreview.run.sourceChecksum,
+      releaseId: "a".repeat(40),
+      scope: fixtures.zero,
+    };
+    const zeroApply = await runProductionPartyZeroApply({
+      config: zeroConfig,
+      repository,
+    });
+    if (zeroApply.status !== "VERIFIED") {
+      throw new Error("Production zero-candidate ilk apply VERIFIED olmadı.");
+    }
+    const zeroRetry = await runProductionPartyZeroApply({
+      config: zeroConfig,
+      repository,
+    });
+    if (zeroRetry.status !== "UNCHANGED") {
+      throw new Error("Production zero-candidate retry UNCHANGED olmadı.");
+    }
+
     const blockedPreview = await service.preview({ scope: fixtures.blocked });
     const blockedResult = await service.apply(
       applyInput(fixtures.actorUserId, fixtures.blocked, blockedPreview),
@@ -221,11 +253,12 @@ async function runAcceptanceScenarios(databaseUrl: string) {
       throw new Error("Party backfill finansal tablolara beklenmeyen yazım yaptı.");
     }
 
-    const [cleanCounts, blockedCounts, foreignCounts, rollbackCounts] = await Promise.all([
+    const [cleanCounts, blockedCounts, foreignCounts, rollbackCounts, zeroCounts] = await Promise.all([
       readBackfillCounts(prisma, fixtures.clean),
       readBackfillCounts(prisma, fixtures.blocked),
       readBackfillCounts(prisma, fixtures.foreign),
       readBackfillCounts(prisma, fixtures.rollback),
+      readBackfillCounts(prisma, fixtures.zero),
     ]);
 
     return {
@@ -246,6 +279,12 @@ async function runAcceptanceScenarios(databaseUrl: string) {
       rollbackPartyCount: rollbackCounts.partyCount,
       rollbackRoleCount: rollbackCounts.roleCount,
       rollbackRunCount: rollbackCounts.runCount,
+      zeroApplyAuditCountAfterRetry: zeroCounts.auditCount,
+      zeroApplyIssueCountAfterRetry: zeroCounts.issueCount,
+      zeroApplyPartyCountAfterRetry: zeroCounts.partyCount,
+      zeroApplyRoleCountAfterRetry: zeroCounts.roleCount,
+      zeroApplyRunCountAfterRetry: zeroCounts.runCount,
+      zeroApplyRunStatus: zeroRetry.status,
     };
   } finally {
     await prisma.$disconnect();
@@ -270,6 +309,7 @@ async function createFixtures(prisma: PrismaClient) {
   });
   const drift = await createScope(prisma, { actorUserId, key: "drift", tenantId });
   const rollback = await createScope(prisma, { actorUserId, key: "rollback", tenantId });
+  const zero = await createScope(prisma, { actorUserId, key: "zero", tenantId });
 
   await prisma.entityRecord.createMany({
     data: [
@@ -312,6 +352,7 @@ async function createFixtures(prisma: PrismaClient) {
     driftRecordId: driftRecord.id,
     foreign,
     rollback,
+    zero,
   };
 }
 

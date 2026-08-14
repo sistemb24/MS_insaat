@@ -1,0 +1,100 @@
+name: Production Party Zero-Candidate Apply
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirmation:
+        description: Type production-party-zero-candidate-apply
+        required: true
+        type: string
+      expected_release_sha:
+        description: Exact main release SHA
+        required: true
+        type: string
+      tenant_id:
+        description: Exact production tenant identifier
+        required: true
+        type: string
+      company_id:
+        description: Exact production company identifier
+        required: true
+        type: string
+      period_id:
+        description: Exact production period identifier
+        required: true
+        type: string
+      actor_user_id:
+        description: Exact active admin user identifier
+        required: true
+        type: string
+      expected_post_migration_manifest_checksum:
+        description: Exact approved POST_MIGRATION preflight manifest checksum
+        required: true
+        type: string
+      expected_source_checksum:
+        description: Exact approved zero-source checksum
+        required: true
+        type: string
+      expected_run_id:
+        description: Exact deterministic Party backfill run identifier
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: noa-production-recovery
+  cancel-in-progress: false
+
+jobs:
+  apply:
+    if: >-
+      github.ref == 'refs/heads/main' &&
+      inputs.confirmation == 'production-party-zero-candidate-apply' &&
+      inputs.expected_release_sha == github.sha
+    environment: production
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      DATABASE_URL: ${{ secrets.PRODUCTION_DATABASE_URL }}
+      NOA_EXPECTED_RELEASE_SHA: ${{ inputs.expected_release_sha }}
+      NOA_PARTY_EXPECTED_POST_MIGRATION_MANIFEST_CHECKSUM: ${{ inputs.expected_post_migration_manifest_checksum }}
+      NOA_PARTY_EXPECTED_RUN_ID: ${{ inputs.expected_run_id }}
+      NOA_PARTY_EXPECTED_SOURCE_CHECKSUM: ${{ inputs.expected_source_checksum }}
+      NOA_PARTY_PREFLIGHT_ACTOR_USER_ID: ${{ inputs.actor_user_id }}
+      NOA_PARTY_PREFLIGHT_COMPANY_ID: ${{ inputs.company_id }}
+      NOA_PARTY_PREFLIGHT_PERIOD_ID: ${{ inputs.period_id }}
+      NOA_PARTY_PREFLIGHT_TENANT_ID: ${{ inputs.tenant_id }}
+      NOA_PARTY_TRANSITION_ACTOR_USER_ID: ${{ inputs.actor_user_id }}
+      NOA_PARTY_TRANSITION_COMPANY_ID: ${{ inputs.company_id }}
+      NOA_PARTY_TRANSITION_PERIOD_ID: ${{ inputs.period_id }}
+      NOA_PARTY_TRANSITION_TENANT_ID: ${{ inputs.tenant_id }}
+      NOA_PRODUCTION_PARTY_PREFLIGHT_CONFIRMATION: production-party-backfill-preflight
+      NOA_PRODUCTION_PARTY_TRANSITION_CONFIRMATION: ${{ inputs.confirmation }}
+      NOA_RELEASE_ID: ${{ github.sha }}
+      NOA_RUNTIME_ENV: production
+      NOA_SOURCE_REF: ${{ github.ref }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile --ignore-scripts
+      - name: Generate Prisma client without schema mutation
+        run: pnpm db:generate
+      - name: Verify exact zero-candidate POST_MIGRATION manifest
+        env:
+          DATABASE_URL: ${{ secrets.PRODUCTION_TENANT_INVENTORY_DATABASE_URL }}
+          NOA_PARTY_TRANSITION_STAGE: ZERO_APPLY
+        run: pnpm production:party-transition:gate
+      - name: Create only the verified zero-candidate run and audit
+        run: pnpm production:party-zero-candidate:apply
+      - name: Verify exact run, audit and zero business-row state
+        env:
+          DATABASE_URL: ${{ secrets.PRODUCTION_TENANT_INVENTORY_DATABASE_URL }}
+        run: pnpm production:party-zero-candidate:postflight
