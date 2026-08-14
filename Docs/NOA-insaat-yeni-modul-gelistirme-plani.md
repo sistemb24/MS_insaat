@@ -4494,3 +4494,31 @@ kaynak yine 68 migration/117 tablo ve geçici DB artığı 0 bulundu. Production
 okunmadı/yazılmadı; branch, stage, commit, push veya workflow işlemi yapılmadı.
 Dilim **İZOLE POSTGRESQL ACTIVATION/RETRY/ROLLBACK/POSTFLIGHT KABULÜ TAMAMLANDI /
 YAYIN HAZIRLIĞI AYRI ONAY BEKLİYOR** durumundadır.
+
+**Mevcut durum yol haritası Dilim 3B-E2-B2-B3-B production SHADOW_READ transition workflow — 14.08.2026:**
+Tek manuel workflow içinde `ACTIVATE`, `ACTIVATE_RETRY`, `ROLLBACK` ve
+`ROLLBACK_RETRY` türleri exact confirmation, main/release SHA, scope, actor,
+operation ID ve dört onaylı checksum ile kapılandı. Workflow production
+environment ve ortak `noa-production-recovery` concurrency kilidini kullanır;
+yalnız mevcut write/read-only production PostgreSQL secret'larını tüketir ve
+schema migration, backup, restore veya R2 erişimi yapmaz. Transition CLI aynı
+salt-okunur snapshot'ta PRE gate'i geçmeden yazmaz; shell katmanı tür bazında
+`ACTIVATED/UNCHANGED/ROLLED_BACK/UNCHANGED`, replay, mode ve revision sonucunu
+exact doğrular. Hemen ardından bağımsız salt-okunur postflight çalışır; blockersız
+ready sonucu, release, mode, revision ve 1/2 event zinciri zorunludur. Log özeti
+scope/operation/veri içermeyen release, tür, status, mode ve revision alanlarıyla
+sınırlandı. Runtime henüz `PartyCutoverState` tüketmediği için activation ve
+activation retry ayrıca
+`PRODUCTION_PARTY_SHADOW_RUNTIME_READY_RELEASE_SHA == github.sha` production
+variable kapısına bağlandı. Environment-level variable runner hazırlandıktan
+sonra erişilebilir olduğundan kontrol environment approval sonrasındaki ilk,
+secretsiz ve checkout öncesi adımda yapılır; variable yoksa activation DB veya
+repository erişimi başlamadan fail-closed durur. Rollback ve retry bu kapıdan
+bağımsız bırakılarak acil geri dönüşün bloke edilmesi önlendi. DB secret'ları da
+job geneline değil yalnız transition ve postflight adımlarına daraltıldı. Variable
+oluşturulmadı/değiştirilmedi ve workflow dispatch edilmedi. Hedefli 3 dosya/27
+test, tam 414 dosya/2.222 test, type-check, Prisma validate, sıfır uyarılı lint,
+102 sayfalık production build, 1.345 dosyalık secret scan, YAML parse, üç bash
+run bloğu syntax kontrolü ve tracked/untracked diff-check geçti. Dilim **WORKFLOW
+KODU VE YEREL STATİK DOĞRULAMA TAMAMLANDI / YAYINLAMA, RUNTIME CONSUMER VE
+ACTIVATION READINESS VARIABLE'I AYRI ONAY BEKLİYOR** durumundadır.
