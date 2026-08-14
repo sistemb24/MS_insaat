@@ -1,6 +1,6 @@
 export const PRODUCTION_SCOPE_BOOTSTRAP_ACCEPTANCE_CONFIRMATION =
   "production-scope-bootstrap-isolated-acceptance";
-export const PRODUCTION_SCOPE_BOOTSTRAP_ACCEPTANCE_MIGRATION_COUNT = 69;
+export const PRODUCTION_SCOPE_BOOTSTRAP_ACCEPTANCE_MIGRATION_COUNT = 70;
 
 export type ProductionScopeBootstrapAcceptanceConfig = {
   adminDatabaseUrl: string;

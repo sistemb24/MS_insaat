@@ -28,6 +28,8 @@ model Tenant {
   partyRoles                            PartyRole[]
   partyBackfillRuns                     PartyBackfillRun[]
   partyBackfillIssues                   PartyBackfillIssue[]
+  partyCutoverStates                    PartyCutoverState[]
+  partyCutoverEvents                    PartyCutoverEvent[]
   purchaseInvoices                      PurchaseInvoice[]
   salesInvoices                         SalesInvoice[]
   deliveryNotes                         DeliveryNote[]
@@ -192,6 +194,8 @@ model Company {
   partyRoles                            PartyRole[]
   partyBackfillRuns                     PartyBackfillRun[]
   partyBackfillIssues                   PartyBackfillIssue[]
+  partyCutoverStates                    PartyCutoverState[]
+  partyCutoverEvents                    PartyCutoverEvent[]
   purchaseInvoices                      PurchaseInvoice[]
   salesInvoices                         SalesInvoice[]
   deliveryNotes                         DeliveryNote[]
@@ -272,6 +276,7 @@ model Company {
   accessProfiles                        AccessProfile[]
   accessProfileAssignments              UserAccessProfileAssignment[]
 
+  @@unique([id, tenantId])
   @@index([tenantId])
 }
 
@@ -293,6 +298,8 @@ model Period {
   partyRoles                            PartyRole[]
   partyBackfillRuns                     PartyBackfillRun[]
   partyBackfillIssues                   PartyBackfillIssue[]
+  partyCutoverStates                    PartyCutoverState[]
+  partyCutoverEvents                    PartyCutoverEvent[]
   purchaseInvoices                      PurchaseInvoice[]
   salesInvoices                         SalesInvoice[]
   deliveryNotes                         DeliveryNote[]
@@ -367,6 +374,7 @@ model Period {
   auditLogs                             AuditLog[]
   accessProfileAssignments              UserAccessProfileAssignment[]
 
+  @@unique([id, tenantId, companyId])
   @@index([tenantId, companyId])
 }
 
@@ -666,6 +674,71 @@ model PartyBackfillIssue {
   @@unique([runId, issueKey])
   @@index([tenantId, companyId, periodId, status, severity])
   @@index([runId, issueCode])
+}
+
+model PartyCutoverState {
+  id               String              @id
+  tenantId         String
+  companyId        String
+  periodId         String
+  mode             String              @default("LEGACY_ONLY") @db.VarChar(32)
+  revisionNo       Int                 @default(1)
+  legacyChecksum   String              @db.VarChar(64)
+  partyChecksum    String              @db.VarChar(64)
+  issueChecksum    String              @db.VarChar(64)
+  parityChecksum   String              @db.VarChar(64)
+  legacyCount      Int
+  partyCount       Int
+  roleCount        Int
+  matchedCount     Int
+  lastVerifiedAt   DateTime
+  releaseId        String              @db.VarChar(64)
+  createdBy        String
+  updatedBy        String
+  createdAt        DateTime            @default(now())
+  updatedAt        DateTime            @updatedAt
+  tenant           Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company          Company             @relation(fields: [companyId, tenantId], references: [id, tenantId], onDelete: Cascade)
+  period           Period              @relation(fields: [periodId, tenantId, companyId], references: [id, tenantId, companyId], onDelete: Cascade)
+  events           PartyCutoverEvent[]
+
+  @@unique([id, tenantId, companyId, periodId])
+  @@unique([tenantId, companyId, periodId])
+  @@index([tenantId, companyId, periodId, mode, updatedAt])
+}
+
+model PartyCutoverEvent {
+  id                String            @id
+  tenantId          String
+  companyId         String
+  periodId          String
+  stateId           String
+  operationId       String            @unique @db.VarChar(120)
+  action            String            @db.VarChar(32)
+  fromMode          String            @db.VarChar(32)
+  toMode            String            @db.VarChar(32)
+  stateRevisionNo   Int
+  reasonCode        String            @db.VarChar(64)
+  legacyChecksum    String            @db.VarChar(64)
+  partyChecksum     String            @db.VarChar(64)
+  issueChecksum     String            @db.VarChar(64)
+  parityChecksum    String            @db.VarChar(64)
+  legacyCount       Int
+  partyCount        Int
+  roleCount         Int
+  matchedCount      Int
+  releaseId         String            @db.VarChar(64)
+  actorUserId       String
+  occurredAt        DateTime
+  createdAt         DateTime          @default(now())
+  tenant            Tenant            @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company           Company           @relation(fields: [companyId, tenantId], references: [id, tenantId], onDelete: Cascade)
+  period            Period            @relation(fields: [periodId, tenantId, companyId], references: [id, tenantId, companyId], onDelete: Cascade)
+  state             PartyCutoverState @relation(fields: [stateId, tenantId, companyId, periodId], references: [id, tenantId, companyId, periodId], onDelete: Cascade)
+
+  @@unique([stateId, stateRevisionNo])
+  @@index([tenantId, companyId, periodId, occurredAt])
+  @@index([actorUserId, occurredAt])
 }
 
 model AuditLog {
