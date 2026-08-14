@@ -4451,3 +4451,46 @@ secret scan, YAML parse ve tracked/untracked diff-check geçti. Production DB/R2
 okunmadı veya yazılmadı, workflow dispatch edilmedi; branch, stage, commit ve yayın
 yapılmadı. Dilim **WORKFLOW KODU VE YEREL STATİK DOĞRULAMA TAMAMLANDI / YAYINLAMA
 HAZIRLIĞI AYRI ONAY BEKLİYOR** durumundadır.
+
+**Mevcut durum yol haritası Dilim 3B-E2-B2-B3-A production SHADOW_READ aktivasyon/retry/rollback güvenlik kapıları ve salt-okunur postflight — 14.08.2026:**
+Production cutover migration'ı main SHA
+`c82b60fe7a847c886ceddc9dcab73c766eb2b3a3` üzerinde backup/restore provası ve
+PRE/POST kapılarıyla tamamlanmış, kapsam 70 uygulanmış migration ve sıfır pending
+migration tabanına gelmiştir. Bu taban üzerinde `ACTIVATE`, `ACTIVATE_RETRY`,
+`ROLLBACK` ve `ROLLBACK_RETRY` için exact confirmation, main/release SHA, scope,
+actor, operation ID, business/eligibility/preflight/state checksum ve beklenen
+state-revision-count koşullarını zorunlu tutan production transition PRE gate'i
+kodlandı. Yazma servisi yalnız `SHADOW_READ` revision 1 aktivasyonu ve
+`LEGACY_ONLY` revision 2 rollback'ine izin verir; exact operation retry sonucu
+`UNCHANGED` olmak ve state/event/audit sayımlarını sırasıyla 1/1/1 veya 1/2/2'de
+tutmak zorundadır. Ayrı `REPEATABLE READ` salt-okunur postflight repository'si
+transaction'ın read-only olduğunu kapsam sorgularından önce kanıtlar; state,
+append-only event zinciri, audit metadata zinciri ve güncel Party/EntityRecord
+parity'sini tek snapshot'ta okuyup ham scope/operation kimliği taşımayan checksum
+ve fingerprint kanıtı üretir. Retry postflight'i preflight/state manifestlerinin
+değişmemesini ayrıca zorunlu tutar. Yerel CLI girişleri eklendi; workflow,
+production dispatch ve runtime read yönlendirmesi eklenmedi. Mevcut uygulama
+runtime'ı henüz `PartyCutoverState` tüketmediği için gerçek `SHADOW_READ`
+aktivasyonu bu dilimde güvenli kabul edilmemiştir. Ayrıca yalnız explicit test
+onayı ve local PostgreSQL URL'siyle açılan izole kabul runner'ı kodlandı. Runner
+güvenli adlı geçici kardeş DB'ye 70 migration uygular; production-tarzı exact
+scope/backfill fixture'ında activation, exact retry, salt-okunur postflight,
+rollback ve rollback retry zincirini gerçek Prisma transaction'larıyla yürütür.
+Activation sonrası 1/1/1 ve rollback sonrası 1/2/2 state/event/audit sayımlarını,
+`ACTIVATED/UNCHANGED/ROLLED_BACK/UNCHANGED` sonuçlarını, dört postflight gate'ini,
+checksum drift reddini, writable postflight credential reddini, kaynak envanter
+değişmezliğini ve geçici DB cleanup'ını zorunlu tutar. Hedefli 9 dosya/54 test,
+tam 414 dosya/2.221 test, type-check, Prisma validate, sıfır uyarılı lint, 102
+sayfalık production build ve 1.344 dosyalık secret scan geçti. Kabul runner'ı
+ilk çalıştırmada fixture `Period` verisine taşınan geçersiz `periodId` alanını
+fail-closed yakaladı; transition başlamadan geçici DB temizlendi ve kaynak 68
+migration/117 tablo olarak değişmeden kaldı. Dar fixture düzeltmesi type-check ve
+3/3 sözleşme testiyle doğrulandı. Kontrollü retry'da geçici DB'ye 70 migration
+uygulandı; activation/retry `ACTIVATED/UNCHANGED` ve 1/1/1, rollback/retry
+`ROLLED_BACK/UNCHANGED` ve 1/2/2 sonuçlarıyla dört salt-okunur postflight,
+checksum drift reddi ve writable credential reddi geçti. Runner `ready=true`,
+kaynak envanter değişmezliği ve cleanup `true` döndürdü; bağımsız son kontrolde
+kaynak yine 68 migration/117 tablo ve geçici DB artığı 0 bulundu. Production DB
+okunmadı/yazılmadı; branch, stage, commit, push veya workflow işlemi yapılmadı.
+Dilim **İZOLE POSTGRESQL ACTIVATION/RETRY/ROLLBACK/POSTFLIGHT KABULÜ TAMAMLANDI /
+YAYIN HAZIRLIĞI AYRI ONAY BEKLİYOR** durumundadır.
