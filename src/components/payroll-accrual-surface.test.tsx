@@ -109,7 +109,7 @@ describe("PayrollAccrualSurface", () => {
     expect(screen.getByText("MAAS-PNT-2026-06-001")).toBeTruthy();
   });
 
-  test("posts and cancels accrual rows from the list", async () => {
+  test("posts accrual rows and disables unsafe direct cancellation", async () => {
     const postPayrollAccrual = vi.fn(
       async (id: string): Promise<{ ok: true; data: PayrollAccrualRow }> => ({
         ok: true,
@@ -141,14 +141,81 @@ describe("PayrollAccrualSurface", () => {
     await waitFor(() =>
       expect(
         screen.getByRole("button", { name: "İptal" }).hasAttribute("disabled"),
-      ).toBe(false),
+      ).toBe(true),
     );
+    fireEvent.click(screen.getByRole("button", { name: "İptal" }));
+
+    expect(cancelPayrollAccrual).not.toHaveBeenCalled();
+  });
+
+  test("cancels draft accrual rows from the list", async () => {
+    const cancelPayrollAccrual = vi.fn(
+      async (id: string): Promise<{ ok: true; data: PayrollAccrualRow }> => ({
+        ok: true,
+        data: createPayrollAccrualRow({ id, status: "İptal" }),
+      }),
+    );
+
+    render(
+      <PayrollAccrualSurface
+        persistence={{ cancelPayrollAccrual }}
+        rows={[createPayrollAccrualRow()]}
+        sourceTimesheets={[]}
+      />,
+    );
+
     fireEvent.click(screen.getByRole("button", { name: "İptal" }));
 
     await waitFor(() =>
       expect(cancelPayrollAccrual).toHaveBeenCalledWith("payroll-accrual-1"),
     );
     expect(screen.getAllByText("İptal").length).toBeGreaterThan(0);
+  });
+
+  test("creates an admin-confirmed controlled reversal for posted accruals", async () => {
+    const reversePayrollAccrual = vi.fn(
+      async (id: string): Promise<{ ok: true; data: PayrollAccrualRow }> => ({
+        ok: true,
+        data: createPayrollAccrualRow({ id, status: "İptal" }),
+      }),
+    );
+    const confirm = vi.spyOn(window, "confirm").mockReturnValue(true);
+
+    render(
+      <PayrollAccrualSurface
+        canReverse
+        paymentMovements={[createPayrollPaymentMovement()]}
+        persistence={{ reversePayrollAccrual }}
+        rows={[createPayrollAccrualRow({ status: "Kaydedildi" })]}
+        sourceTimesheets={[]}
+      />,
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Ters Kayıt" }));
+
+    await waitFor(() =>
+      expect(reversePayrollAccrual).toHaveBeenCalledWith("payroll-accrual-1"),
+    );
+    expect(confirm).toHaveBeenCalledTimes(1);
+    expect(screen.getAllByText("İptal").length).toBeGreaterThan(0);
+    expect(screen.queryByText("Ödendi")).toBeNull();
+    confirm.mockRestore();
+  });
+
+  test("keeps controlled reversal disabled for non-admin users", () => {
+    const reversePayrollAccrual = vi.fn();
+
+    render(
+      <PayrollAccrualSurface
+        persistence={{ reversePayrollAccrual }}
+        rows={[createPayrollAccrualRow({ status: "Kaydedildi" })]}
+        sourceTimesheets={[]}
+      />,
+    );
+
+    expect(
+      screen.getByRole("button", { name: "Ters Kayıt" }).hasAttribute("disabled"),
+    ).toBe(true);
   });
 
   test("creates payment movement for posted accrual rows", async () => {

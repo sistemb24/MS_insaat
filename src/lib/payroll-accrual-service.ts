@@ -170,6 +170,15 @@ export function createPayrollAccrualService({
         return { ok: true, data: existing };
       }
 
+      if (existing.status === "Kaydedildi") {
+        return {
+          ok: false,
+          errors: [
+            "Kaydedilmiş maaş tahakkuku doğrudan iptal edilemez; önce kontrollü ters kayıt akışı tamamlanmalıdır.",
+          ],
+        };
+      }
+
       const cancelled = await repository.update({
         ...existing,
         status: "İptal",

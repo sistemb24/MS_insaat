@@ -18,4 +18,26 @@ describe("counterparty overview", () => {
       receivableTotal: 750,
     });
   });
+
+  test("keeps same-name counterparties separate by canonical party key", () => {
+    const rows = [
+      { counterpartyName: "Aynı Unvan", partyKey: "customer:MUS-0001", amount: 1000 },
+      { counterpartyName: "Aynı Unvan", partyKey: "customer:MUS-0002", amount: 250 },
+    ] as never;
+
+    expect(buildCounterpartyOverview(rows).counterparties).toEqual([
+      {
+        counterpartyName: "Aynı Unvan",
+        partyKey: "customer:MUS-0001",
+        balance: 1000,
+        movementCount: 1,
+      },
+      {
+        counterpartyName: "Aynı Unvan",
+        partyKey: "customer:MUS-0002",
+        balance: 250,
+        movementCount: 1,
+      },
+    ]);
+  });
 });

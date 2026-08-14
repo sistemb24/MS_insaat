@@ -2,6 +2,7 @@ import type { CashBankMovementRow } from "./cash-bank-movement-service";
 import type { ChequeRow } from "./cheque-service";
 import type { ExpenseRow } from "./expense-service";
 import type { DeliveryNoteRow } from "./delivery-note-service";
+import { createPartyKey, type PartyKind } from "./party-read-model";
 import type { PayrollAccrualRow } from "./payroll-accrual-service";
 import type { ProgressPaymentRow } from "./progress-payment-service";
 import type { PurchaseInvoiceRow } from "./purchase-invoice-service";
@@ -74,11 +75,14 @@ export type OperationalReportCounterpartyStatementRow = {
 export type OperationalReportCounterpartyStatementDetailRow = {
   amount: number;
   balanceAfter: number;
+  counterpartyCode?: string;
+  counterpartyKind?: PartyKind;
   counterpartyName: string;
   date: string;
   documentNo: string;
   effect: "Alacak" | "Borç" | "Ödeme" | "Tahsilat";
   ledgerDocumentNo?: string;
+  partyKey?: string;
   source: "Fatura" | "Gider" | "Hakediş" | "Kasa/Banka" | "Maaş";
   targetHref: string;
 };
@@ -634,11 +638,19 @@ function buildCounterpartyStatementRows({
   | "purchaseInvoices"
   | "salesInvoices"
 >): OperationalReportCounterpartyStatementRow[] {
+  const detailRows = buildCounterpartyStatementDetailRows({
+    cashBankMovements,
+    expenses,
+    payrollAccruals,
+    progressPayments,
+    purchaseInvoices,
+    salesInvoices,
+  });
   const rows = new Map<string, OperationalReportCounterpartyStatementRow>();
 
-  function getRow(counterpartyName: string) {
+  function getRow(counterpartyName: string, partyKey?: string) {
     const normalizedName = counterpartyName.trim();
-    const key = normalizedName || "Cari belirtilmemiş";
+    const key = partyKey ?? `legacy-name:${normalizedName || "Cari belirtilmemiş"}`;
     const existing = rows.get(key);
 
     if (existing) {
@@ -648,7 +660,7 @@ function buildCounterpartyStatementRows({
     const row: OperationalReportCounterpartyStatementRow = {
       cashPaidTotal: 0,
       cashReceivedTotal: 0,
-      counterpartyName: key,
+      counterpartyName: normalizedName || "Cari belirtilmemiş",
       netBalance: 0,
       payableTotal: 0,
       receivableTotal: 0,
@@ -659,41 +671,13 @@ function buildCounterpartyStatementRows({
     return row;
   }
 
-  for (const invoice of purchaseInvoices) {
-    getRow(invoice.counterpartyName).payableTotal += invoice.grandTotal;
-  }
+  for (const detail of detailRows) {
+    const row = getRow(detail.counterpartyName, detail.partyKey);
 
-  for (const invoice of salesInvoices) {
-    getRow(invoice.counterpartyName).receivableTotal += invoice.grandTotal;
-  }
-
-  for (const expense of expenses) {
-    getRow(expense.counterpartyName).payableTotal += expense.grandTotal;
-  }
-
-  for (const progressPayment of progressPayments) {
-    const row = getRow(progressPayment.counterpartyName);
-
-    if (progressPayment.paymentType === "Şantiye Geliri") {
-      row.receivableTotal += progressPayment.grandTotal;
-    } else {
-      row.payableTotal += progressPayment.grandTotal;
-    }
-  }
-
-  for (const payrollAccrual of payrollAccruals) {
-    getRow(payrollAccrual.contractorName).payableTotal +=
-      payrollAccrual.netTotal;
-  }
-
-  for (const movement of cashBankMovements) {
-    const row = getRow(movement.counterpartyName);
-
-    if (movement.direction === "Giriş") {
-      row.cashReceivedTotal += movement.amount;
-    } else {
-      row.cashPaidTotal += movement.amount;
-    }
+    if (detail.effect === "Alacak") row.receivableTotal += Math.abs(detail.amount);
+    if (detail.effect === "Borç") row.payableTotal += Math.abs(detail.amount);
+    if (detail.effect === "Ödeme") row.cashPaidTotal += Math.abs(detail.amount);
+    if (detail.effect === "Tahsilat") row.cashReceivedTotal += Math.abs(detail.amount);
   }
 
   return Array.from(rows.values())
@@ -742,10 +726,27 @@ function buildCounterpartyStatementDetailRows({
   | "purchaseInvoices"
   | "salesInvoices"
 >): OperationalReportCounterpartyStatementDetailRow[] {
+  const purchaseInvoicesById = new Map(
+    purchaseInvoices.map((invoice) => [invoice.id, invoice]),
+  );
+  const salesInvoicesById = new Map(
+    salesInvoices.map((invoice) => [invoice.id, invoice]),
+  );
+  const progressPaymentsById = new Map(
+    progressPayments.map((progressPayment) => [progressPayment.id, progressPayment]),
+  );
+  const payrollAccrualsById = new Map(
+    payrollAccruals.map((payrollAccrual) => [payrollAccrual.id, payrollAccrual]),
+  );
+  const cashBankMovementsById = new Map(
+    cashBankMovements.map((movement) => [movement.id, movement]),
+  );
   const rows: OperationalReportCounterpartyStatementDetailRow[] = [
     ...purchaseInvoices.map((invoice) =>
       createCounterpartyStatementDetailRow({
         amount: -invoice.grandTotal,
+        counterpartyCode: invoice.counterpartyCode,
+        counterpartyKind: "supplier",
         counterpartyName: invoice.counterpartyName,
         date: invoice.invoiceDate,
         documentNo: invoice.documentNo,
@@ -756,6 +757,8 @@ function buildCounterpartyStatementDetailRows({
     ...salesInvoices.map((invoice) =>
       createCounterpartyStatementDetailRow({
         amount: invoice.grandTotal,
+        counterpartyCode: invoice.counterpartyCode,
+        counterpartyKind: "customer",
         counterpartyName: invoice.counterpartyName,
         date: invoice.invoiceDate,
         documentNo: invoice.documentNo,
@@ -779,6 +782,8 @@ function buildCounterpartyStatementDetailRows({
           progressPayment.paymentType === "Şantiye Geliri"
             ? progressPayment.grandTotal
             : -progressPayment.grandTotal,
+        counterpartyCode: progressPayment.counterpartyCode,
+        counterpartyKind: progressPaymentPartyKind(progressPayment.paymentType),
         counterpartyName: progressPayment.counterpartyName,
         date: progressPayment.issueDate,
         documentNo: progressPayment.documentNo,
@@ -792,6 +797,12 @@ function buildCounterpartyStatementDetailRows({
     ...payrollAccruals.map((payrollAccrual) =>
       createCounterpartyStatementDetailRow({
         amount: -payrollAccrual.netTotal,
+        ...(payrollAccrual.contractorCode
+          ? {
+              counterpartyCode: payrollAccrual.contractorCode,
+              counterpartyKind: "subcontractor" as const,
+            }
+          : {}),
         counterpartyName: payrollAccrual.contractorName,
         date: payrollAccrualReportDate(payrollAccrual),
         documentNo: payrollAccrual.documentNo,
@@ -799,27 +810,38 @@ function buildCounterpartyStatementDetailRows({
         source: "Maaş",
       }),
     ),
-    ...cashBankMovements.map((movement) =>
-      createCounterpartyStatementDetailRow({
+    ...cashBankMovements.map((movement) => {
+      const partyReference = resolveCashBankMovementPartyReference({
+        cashBankMovementsById,
+        movement,
+        payrollAccrualsById,
+        progressPaymentsById,
+        purchaseInvoicesById,
+        salesInvoicesById,
+      });
+
+      return createCounterpartyStatementDetailRow({
         amount:
           movement.direction === "Çıkış" ? movement.amount : -movement.amount,
+        ...partyReference,
         counterpartyName: movement.counterpartyName,
         date: movement.movementDate,
         documentNo: movement.documentNo,
         effect: movement.direction === "Çıkış" ? "Ödeme" : "Tahsilat",
         ledgerDocumentNo: movement.ledgerDocumentNo,
         source: "Kasa/Banka",
-      }),
-    ),
+      });
+    }),
   ].sort(compareCounterpartyStatementDetailRows);
 
   const balances = new Map<string, number>();
 
   return rows.map((row) => {
-    const previousBalance = balances.get(row.counterpartyName) ?? 0;
+    const balanceKey = row.partyKey ?? `legacy-name:${row.counterpartyName}`;
+    const previousBalance = balances.get(balanceKey) ?? 0;
     const balanceAfter = roundMoney(previousBalance + row.amount);
 
-    balances.set(row.counterpartyName, balanceAfter);
+    balances.set(balanceKey, balanceAfter);
 
     return {
       ...row,
@@ -839,6 +861,13 @@ function createCounterpartyStatementDetailRow(
     amount: roundMoney(row.amount),
     balanceAfter: 0,
     counterpartyName: normalizeCounterpartyName(row.counterpartyName),
+    ...(row.counterpartyKind && row.counterpartyCode?.trim()
+      ? {
+          counterpartyCode: row.counterpartyCode.trim(),
+          counterpartyKind: row.counterpartyKind,
+          partyKey: createPartyKey(row.counterpartyKind, row.counterpartyCode),
+        }
+      : {}),
     targetHref: buildCounterpartyStatementTargetHref(
       row.source,
       row.documentNo,
@@ -877,6 +906,15 @@ function compareCounterpartyStatementDetailRows(
     return counterpartyComparison;
   }
 
+  const partyComparison = (first.partyKey ?? "").localeCompare(
+    second.partyKey ?? "",
+    "tr",
+  );
+
+  if (partyComparison !== 0) {
+    return partyComparison;
+  }
+
   const dateComparison = first.date.localeCompare(second.date);
 
   if (dateComparison !== 0) {
@@ -884,6 +922,106 @@ function compareCounterpartyStatementDetailRows(
   }
 
   return first.documentNo.localeCompare(second.documentNo, "tr");
+}
+
+function progressPaymentPartyKind(
+  paymentType: ProgressPaymentRow["paymentType"],
+): PartyKind {
+  if (paymentType === "Şantiye Geliri") return "customer";
+  if (paymentType === "Tedarikçi Hakedişi") return "supplier";
+  return "subcontractor";
+}
+
+function resolveCashBankMovementPartyReference({
+  cashBankMovementsById,
+  movement,
+  payrollAccrualsById,
+  progressPaymentsById,
+  purchaseInvoicesById,
+  salesInvoicesById,
+  visited = new Set<string>(),
+}: {
+  cashBankMovementsById: Map<string, CashBankMovementRow>;
+  movement: CashBankMovementRow;
+  payrollAccrualsById: Map<string, PayrollAccrualRow>;
+  progressPaymentsById: Map<string, ProgressPaymentRow>;
+  purchaseInvoicesById: Map<string, PurchaseInvoiceRow>;
+  salesInvoicesById: Map<string, PurchaseInvoiceRow>;
+  visited?: Set<string>;
+}): { counterpartyCode?: string; counterpartyKind?: PartyKind } {
+  if (visited.has(movement.id)) return {};
+  visited.add(movement.id);
+
+  const directKind = partyKindFromCounterpartyMovementSource(movement.sourceType);
+  const directCode = directKind
+    ? readCounterpartyCodeFromSourceLabel(movement.sourceLabel)
+    : undefined;
+  if (directKind && directCode) {
+    return { counterpartyCode: directCode, counterpartyKind: directKind };
+  }
+
+  if (movement.sourceType === "purchase-invoice") {
+    const invoice = purchaseInvoicesById.get(movement.sourceId);
+    return invoice
+      ? { counterpartyCode: invoice.counterpartyCode, counterpartyKind: "supplier" }
+      : {};
+  }
+  if (movement.sourceType === "sales-invoice") {
+    const invoice = salesInvoicesById.get(movement.sourceId);
+    return invoice
+      ? { counterpartyCode: invoice.counterpartyCode, counterpartyKind: "customer" }
+      : {};
+  }
+  if (movement.sourceType === "progress-payment") {
+    const progressPayment = progressPaymentsById.get(movement.sourceId);
+    return progressPayment
+      ? {
+          counterpartyCode: progressPayment.counterpartyCode,
+          counterpartyKind: progressPaymentPartyKind(progressPayment.paymentType),
+        }
+      : {};
+  }
+  if (movement.sourceType === "payroll-accrual") {
+    const payrollAccrual = payrollAccrualsById.get(movement.sourceId);
+    return payrollAccrual?.contractorCode
+      ? {
+          counterpartyCode: payrollAccrual.contractorCode,
+          counterpartyKind: "subcontractor",
+        }
+      : {};
+  }
+  if (movement.sourceType === "cash-bank-movement-reversal") {
+    const original = cashBankMovementsById.get(movement.sourceId);
+    return original
+      ? resolveCashBankMovementPartyReference({
+          cashBankMovementsById,
+          movement: original,
+          payrollAccrualsById,
+          progressPaymentsById,
+          purchaseInvoicesById,
+          salesInvoicesById,
+          visited,
+        })
+      : {};
+  }
+
+  return {};
+}
+
+function partyKindFromCounterpartyMovementSource(
+  sourceType: string,
+): PartyKind | undefined {
+  if (sourceType === "counterparty-musteriler") return "customer";
+  if (sourceType === "counterparty-tedarikciler") return "supplier";
+  if (sourceType === "counterparty-taseronlar") return "subcontractor";
+  return undefined;
+}
+
+function readCounterpartyCodeFromSourceLabel(sourceLabel: string) {
+  const separatorIndex = sourceLabel.indexOf(":");
+  return separatorIndex >= 0
+    ? sourceLabel.slice(separatorIndex + 1).trim()
+    : undefined;
 }
 
 function normalizeCounterpartyName(counterpartyName: string) {

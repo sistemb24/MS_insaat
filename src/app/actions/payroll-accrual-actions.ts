@@ -3,11 +3,7 @@
 import { revalidatePath } from "next/cache";
 
 import { resolveActiveCashBankAccountOption } from "@/lib/cash-bank-account-selection";
-import { createCashBankMovementPrismaRepository } from "@/lib/cash-bank-movement-prisma-repository";
-import {
-  createCashBankMovementService,
-  type CashBankAccountOption,
-} from "@/lib/cash-bank-movement-service";
+import type { CashBankAccountOption } from "@/lib/cash-bank-movement-service";
 import {
   createAuditLogPrismaRepository,
   type AuditLogPrismaClientLike,
@@ -17,7 +13,16 @@ import { createEntityPrismaRepository } from "@/lib/entity-prisma-repository";
 import { createLedgerPrismaRepository, type LedgerPrismaClientLike } from "@/lib/ledger-prisma-repository";
 import { createPayrollAccrualLedgerPostingPrismaRepository, type PayrollAccrualLedgerPostingPrismaClientLike } from "@/lib/payroll-accrual-ledger-posting-prisma-repository";
 import { createPayrollAccrualLedgerPostingService } from "@/lib/payroll-accrual-ledger-posting-service";
-import { createInvoiceCashBankLedgerPostingService } from "@/lib/invoice-cash-bank-ledger-posting-service";
+import {
+  createPayrollPaymentPostingPrismaRepository,
+  type PayrollPaymentPostingPrismaClientLike,
+} from "@/lib/payroll-payment-posting-prisma-repository";
+import { createPayrollPaymentPostingService } from "@/lib/payroll-payment-posting-service";
+import {
+  createPayrollAccrualReversalPrismaRepository,
+  type PayrollAccrualReversalPrismaClientLike,
+} from "@/lib/payroll-accrual-reversal-prisma-repository";
+import { createPayrollAccrualReversalService } from "@/lib/payroll-accrual-reversal-service";
 import {
   createPayrollAccrualPrismaRepository,
   type PayrollAccrualPrismaClientLike,
@@ -47,9 +52,17 @@ const payrollAccrualLedgerPostingService = createPayrollAccrualLedgerPostingServ
   now: () => new Date().toISOString(),
 });
 
-const payrollPaymentLedgerPostingService = createInvoiceCashBankLedgerPostingService({
-  auditLogRepository,
-  repository: ledgerRepository,
+const payrollPaymentPostingService = createPayrollPaymentPostingService({
+  repository: createPayrollPaymentPostingPrismaRepository(
+    prisma as unknown as PayrollPaymentPostingPrismaClientLike,
+  ),
+  now: () => new Date().toISOString(),
+});
+
+const payrollAccrualReversalService = createPayrollAccrualReversalService({
+  repository: createPayrollAccrualReversalPrismaRepository(
+    prisma as unknown as PayrollAccrualReversalPrismaClientLike,
+  ),
   now: () => new Date().toISOString(),
 });
 
@@ -59,11 +72,6 @@ const payrollAccrualService = createPayrollAccrualService({
   ledgerRepository,
   now: () => new Date().toISOString(),
   repository: payrollAccrualRepository,
-});
-
-const cashBankMovementService = createCashBankMovementService({
-  now: () => new Date().toISOString(),
-  repository: createCashBankMovementPrismaRepository(prisma),
 });
 
 const entityCrudService = createEntityCrudService({
@@ -146,6 +154,27 @@ export async function cancelPayrollAccrualAction(id: string) {
   return result;
 }
 
+export async function reversePayrollAccrualAction(id: string) {
+  const scope = await getActiveTenantScope();
+  await ensureTenantScope(prisma, scope);
+
+  const result = await payrollAccrualReversalService.reverse({
+    payrollAccrualId: id,
+    scope,
+  });
+
+  if (result.ok) {
+    revalidatePath("/");
+    revalidatePath("/kasa-banka");
+    revalidatePath("/personel");
+    revalidatePath("/raporlar");
+  }
+
+  return result.ok
+    ? { ok: true as const, data: result.data.payrollAccrual }
+    : { ok: false as const, errors: result.errors };
+}
+
 export async function payPayrollAccrualAction(
   id: string,
   account?: CashBankAccountOption,
@@ -181,29 +210,18 @@ export async function payPayrollAccrualAction(
     return resolvedAccount;
   }
 
-  const period = await prisma.period.findFirst({
-    select: { isClosed: true },
-    where: { id: scope.periodId, tenantId: scope.tenantId, companyId: scope.companyId },
-  });
-  if (!period || period.isClosed) {
-    return { ok: false as const, errors: ["Kapalı veya bulunamayan dönemde maaş ödemesi oluşturulamaz."] };
+  if (!resolvedAccount.data.account) {
+    return {
+      ok: false as const,
+      errors: ["Maaş ödemesi için aktif kasa/banka hesabı bulunamadı."],
+    };
   }
 
-  const result = await cashBankMovementService.createPayrollAccrualPayment({
+  const result = await payrollPaymentPostingService.post({
     account: resolvedAccount.data.account,
     payrollAccrual,
     scope,
   });
-
-  if (result.ok) {
-    const ledgerResult = await payrollPaymentLedgerPostingService.post({
-      movement: result.data,
-      scope: { ...scope, periodClosed: false },
-    });
-    if (!ledgerResult.ok) return ledgerResult;
-    result.data.ledgerEntryId = ledgerResult.data.ledgerEntry.id;
-    result.data.ledgerDocumentNo = ledgerResult.data.ledgerEntry.documentNo;
-  }
 
   if (result.ok) {
     revalidatePath("/");
@@ -212,7 +230,9 @@ export async function payPayrollAccrualAction(
     revalidatePath("/raporlar");
   }
 
-  return result;
+  return result.ok
+    ? { ok: true as const, data: result.data.movement }
+    : { ok: false as const, errors: result.errors };
 }
 
 function normalizeCashBankAccountOption(

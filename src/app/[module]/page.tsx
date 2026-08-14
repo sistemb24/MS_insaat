@@ -202,6 +202,7 @@ import {
   listPayrollAccrualsAction,
   payPayrollAccrualAction,
   postPayrollAccrualAction,
+  reversePayrollAccrualAction,
 } from "@/app/actions/payroll-accrual-actions";
 import {
   createPersonnelAssetAction,
@@ -633,6 +634,17 @@ export default async function ModulePage({
   const entityListResult = entityDefinition
     ? await listEntityRowsAction(module)
     : undefined;
+  const partyEntityResults = shouldLoadCounterpartyStatements
+    ? await Promise.all(
+        counterpartyStatementRouteSlugs.map(async (slug) => ({
+          result:
+            slug === module
+              ? entityListResult
+              : await listEntityRowsAction(slug),
+          slug,
+        })),
+      )
+    : [];
   const counterpartyAccountRowsResult = shouldLoadCounterpartyStatements
     ? await listEntityRowsAction("kasa-banka")
     : undefined;
@@ -1034,6 +1046,9 @@ export default async function ModulePage({
           permissions={{
             canMutateTimesheets: canMutateTimesheets(activeScope),
           }}
+          payrollAccruals={
+            payrollAccrualResult?.ok ? payrollAccrualResult.data.rows : []
+          }
           persistence={{
             cancelTimesheet: cancelTimesheetAction,
             createTimesheet: createTimesheetAction,
@@ -1124,6 +1139,7 @@ export default async function ModulePage({
             accountOptions={toCashBankAccountOptions(
               payrollPaymentAccountRowsResult,
             )}
+            canReverse={activeScope.userRole === "admin" && !activeScope.periodClosed}
             highlightedDocumentNo={requestedDocumentNo}
             paymentMovements={
               cashBankMovementResult?.ok
@@ -1136,6 +1152,7 @@ export default async function ModulePage({
                 createPayrollAccrualFromTimesheetAction,
               payPayrollAccrual: payPayrollAccrualAction,
               postPayrollAccrual: postPayrollAccrualAction,
+              reversePayrollAccrual: reversePayrollAccrualAction,
             }}
             rows={
               payrollAccrualResult?.ok
@@ -1381,6 +1398,11 @@ export default async function ModulePage({
         <CounterpartyManagementSurface
           definition={entityDefinition}
           initialRows={entityListResult?.ok ? entityListResult.data.rows : []}
+          partyGroups={partyEntityResults.map(({ result, slug }) => ({
+            rows: result?.ok ? result.data.rows : [],
+            slug,
+          }))}
+          scope={activeScope}
           persistence={{
             createRow: createEntityRowAction,
             createRows: importEntityRowsAction,

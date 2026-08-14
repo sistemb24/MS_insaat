@@ -819,43 +819,98 @@ describe("summarizeOperationalReports", () => {
       {
         amount: -12000,
         balanceAfter: -12000,
+        counterpartyCode: "TED-0001",
+        counterpartyKind: "supplier",
         counterpartyName: "ABC Beton",
         date: "2026-06-20",
         documentNo: "FAT-0001",
         effect: "Borç",
+        partyKey: "supplier:TED-0001",
         source: "Fatura",
         targetHref: "/faturalar?evrak=FAT-0001",
       },
       {
         amount: 5000,
         balanceAfter: -7000,
+        counterpartyCode: "TED-0001",
+        counterpartyKind: "supplier",
         counterpartyName: "ABC Beton",
         date: "2026-06-30",
         documentNo: "ODM-FAT-0001",
         effect: "Ödeme",
+        ledgerDocumentNo: undefined,
+        partyKey: "supplier:TED-0001",
         source: "Kasa/Banka",
         targetHref: "/kasa-banka?evrak=ODM-FAT-0001",
       },
       {
         amount: 15000,
         balanceAfter: 15000,
+        counterpartyCode: "TAS-0001",
+        counterpartyKind: "customer",
         counterpartyName: "ŞİRKET MERKEZ ŞANTİYESİ",
         date: "2026-06-27",
         documentNo: "HAK-GELIR-0001",
         effect: "Alacak",
+        partyKey: "customer:TAS-0001",
         source: "Hakediş",
         targetHref: "/hakedis?evrak=HAK-GELIR-0001",
       },
       {
         amount: -4000,
         balanceAfter: 11000,
+        counterpartyCode: "TAS-0001",
+        counterpartyKind: "customer",
         counterpartyName: "ŞİRKET MERKEZ ŞANTİYESİ",
         date: "2026-06-30",
         documentNo: "THS-HAK-GELIR-0001",
         effect: "Tahsilat",
+        ledgerDocumentNo: undefined,
+        partyKey: "customer:TAS-0001",
         source: "Kasa/Banka",
         targetHref: "/kasa-banka?evrak=THS-HAK-GELIR-0001",
       },
+    ]);
+  });
+
+  test("keeps same-name supplier balances separate by counterparty code", () => {
+    const report = summarizeOperationalReports({
+      cashBankMovements: [],
+      cheques: [],
+      payrollAccruals: [],
+      progressPayments: [],
+      purchaseInvoices: [
+        createPurchaseInvoice({
+          counterpartyCode: "TED-0001",
+          counterpartyName: "AYNI UNVAN",
+          documentNo: "FAT-0001",
+          grandTotal: 1000,
+          id: "invoice-1",
+          invoiceDate: "2026-06-20",
+          status: "Kaydedildi",
+        }),
+        createPurchaseInvoice({
+          counterpartyCode: "TED-0002",
+          counterpartyName: "AYNI UNVAN",
+          documentNo: "FAT-0002",
+          grandTotal: 250,
+          id: "invoice-2",
+          invoiceDate: "2026-06-21",
+          status: "Kaydedildi",
+        }),
+      ],
+      timesheets: [],
+      today: "2026-06-27",
+    });
+
+    expect(
+      report.counterpartyStatementDetailRows.map((row) => ({
+        balanceAfter: row.balanceAfter,
+        partyKey: row.partyKey,
+      })),
+    ).toEqual([
+      { balanceAfter: -1000, partyKey: "supplier:TED-0001" },
+      { balanceAfter: -250, partyKey: "supplier:TED-0002" },
     ]);
   });
 

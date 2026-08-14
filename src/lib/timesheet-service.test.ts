@@ -100,6 +100,11 @@ describe("createTimesheetService", () => {
         },
       },
       now: () => "2026-06-27T09:00:00.000Z",
+      payrollAccrualDependency: {
+        async list() {
+          return [];
+        },
+      },
       repository: createSeededTimesheetMemoryRepository(),
     });
     const created = await service.create({
@@ -134,6 +139,93 @@ describe("createTimesheetService", () => {
       "timesheet.post",
       "timesheet.cancel",
     ]);
+  });
+
+  test("blocks cancellation while an active payroll accrual is linked", async () => {
+    const repository = createSeededTimesheetMemoryRepository();
+    let linkedPayrollStatus = "Taslak";
+    const service = createTimesheetService({
+      now: () => "2026-06-27T09:00:00.000Z",
+      payrollAccrualDependency: {
+        async list() {
+          return [
+            {
+              documentNo: "MAAS-PNT-2026-06-001",
+              sourceTimesheetId:
+                "tenant-noa-demo::company-demo-insaat::period-2026::timesheet::pnt-2026-06-001",
+              status: linkedPayrollStatus,
+            },
+          ];
+        },
+      },
+      repository,
+    });
+    const created = await service.create({
+      scope: defaultTenantScope,
+      values: {
+        documentNo: "PNT-2026-06-001",
+        lines: [createLine()],
+        month: 6,
+        siteCode: "SANT-0001",
+        siteName: "ŞİRKET MERKEZ ŞANTİYESİ",
+        year: 2026,
+      },
+    });
+
+    if (!created.ok) {
+      throw new Error(created.errors.join(" "));
+    }
+
+    const blocked = await service.cancel({
+      id: created.data.id,
+      scope: defaultTenantScope,
+    });
+
+    expect(blocked).toEqual({
+      ok: false,
+      errors: [
+        "Puantaj iptal edilemez; bağlı maaş tahakkuku önce güvenli biçimde sonuçlandırılmalıdır: MAAS-PNT-2026-06-001",
+      ],
+    });
+
+    linkedPayrollStatus = "İptal";
+    const cancelled = await service.cancel({
+      id: created.data.id,
+      scope: defaultTenantScope,
+    });
+
+    expect(cancelled.ok ? cancelled.data.status : undefined).toBe("İptal");
+  });
+
+  test("fails closed when the payroll dependency check is not configured", async () => {
+    const service = createTimesheetService({
+      now: () => "2026-06-27T09:00:00.000Z",
+      repository: createSeededTimesheetMemoryRepository(),
+    });
+    const created = await service.create({
+      scope: defaultTenantScope,
+      values: {
+        documentNo: "PNT-2026-06-002",
+        lines: [createLine()],
+        month: 6,
+        siteCode: "SANT-0001",
+        siteName: "ŞİRKET MERKEZ ŞANTİYESİ",
+        year: 2026,
+      },
+    });
+
+    if (!created.ok) {
+      throw new Error(created.errors.join(" "));
+    }
+
+    await expect(
+      service.cancel({ id: created.data.id, scope: defaultTenantScope }),
+    ).resolves.toEqual({
+      ok: false,
+      errors: [
+        "Puantajın bağlı maaş tahakkuku kontrolü hazır olmadığı için iptal işlemi güvenli biçimde tamamlanamadı.",
+      ],
+    });
   });
 });
 

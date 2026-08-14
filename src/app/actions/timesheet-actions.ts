@@ -9,6 +9,10 @@ import {
 import { prisma } from "@/lib/prisma";
 import { ensureTenantScope } from "@/lib/prisma-scope-bootstrap";
 import { getActiveTenantScope } from "@/lib/server-active-scope";
+import {
+  createPayrollAccrualPrismaRepository,
+  type PayrollAccrualPrismaClientLike,
+} from "@/lib/payroll-accrual-prisma-repository";
 import { createTimesheetPrismaRepository } from "@/lib/timesheet-prisma-repository";
 import {
   createTimesheetService,
@@ -21,6 +25,9 @@ const auditLogRepository = createAuditLogPrismaRepository(
 
 const timesheetService = createTimesheetService({
   auditLogRepository,
+  payrollAccrualDependency: createPayrollAccrualPrismaRepository(
+    prisma as unknown as PayrollAccrualPrismaClientLike,
+  ),
   repository: createTimesheetPrismaRepository(prisma),
   now: () => new Date().toISOString(),
 });

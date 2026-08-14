@@ -24,6 +24,10 @@ model Tenant {
   userScopeAccesses                     AppUserScopeAccess[]
   users                                 AppUser[]
   records                               EntityRecord[]
+  parties                               Party[]
+  partyRoles                            PartyRole[]
+  partyBackfillRuns                     PartyBackfillRun[]
+  partyBackfillIssues                   PartyBackfillIssue[]
   purchaseInvoices                      PurchaseInvoice[]
   salesInvoices                         SalesInvoice[]
   deliveryNotes                         DeliveryNote[]
@@ -184,6 +188,10 @@ model Company {
   sessions                              AppSession[]
   userScopeAccesses                     AppUserScopeAccess[]
   records                               EntityRecord[]
+  parties                               Party[]
+  partyRoles                            PartyRole[]
+  partyBackfillRuns                     PartyBackfillRun[]
+  partyBackfillIssues                   PartyBackfillIssue[]
   purchaseInvoices                      PurchaseInvoice[]
   salesInvoices                         SalesInvoice[]
   deliveryNotes                         DeliveryNote[]
@@ -281,6 +289,10 @@ model Period {
   sessions                              AppSession[]
   userScopeAccesses                     AppUserScopeAccess[]
   records                               EntityRecord[]
+  parties                               Party[]
+  partyRoles                            PartyRole[]
+  partyBackfillRuns                     PartyBackfillRun[]
+  partyBackfillIssues                   PartyBackfillIssue[]
   purchaseInvoices                      PurchaseInvoice[]
   salesInvoices                         SalesInvoice[]
   deliveryNotes                         DeliveryNote[]
@@ -541,6 +553,119 @@ model EntityRecord {
 
   @@unique([tenantId, companyId, periodId, slug, code])
   @@index([tenantId, companyId, periodId, slug])
+}
+
+model Party {
+  id                  String      @id
+  tenantId            String
+  companyId           String
+  periodId            String
+  displayName         String
+  normalizedName      String
+  taxNumber           String?
+  normalizedTaxNumber String?
+  phone               String?
+  email               String?
+  status              String      @default("ACTIVE")
+  sourceType          String      @default("MANUAL")
+  backfillRunId       String?
+  revisionNo          Int         @default(1)
+  createdBy           String
+  updatedBy           String
+  createdAt           DateTime    @default(now())
+  updatedAt           DateTime    @updatedAt
+  tenant              Tenant      @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company             Company     @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  period              Period      @relation(fields: [periodId], references: [id], onDelete: Cascade)
+  backfillRun         PartyBackfillRun? @relation(fields: [backfillRunId, tenantId, companyId, periodId], references: [id, tenantId, companyId, periodId], onDelete: Restrict)
+  roles               PartyRole[]
+
+  @@unique([id, tenantId, companyId, periodId])
+  @@index([tenantId, companyId, periodId, normalizedName])
+  @@index([tenantId, companyId, periodId, normalizedTaxNumber])
+  @@index([tenantId, companyId, periodId, status])
+  @@index([backfillRunId])
+}
+
+model PartyRole {
+  id             String   @id
+  tenantId       String
+  companyId      String
+  periodId       String
+  partyId        String
+  kind           String
+  code           String
+  normalizedCode String
+  status         String   @default("ACTIVE")
+  legacySlug     String
+  legacyCode     String
+  revisionNo     Int      @default(1)
+  createdBy      String
+  updatedBy      String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  tenant         Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company        Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  period         Period   @relation(fields: [periodId], references: [id], onDelete: Cascade)
+  party          Party    @relation(fields: [partyId, tenantId, companyId, periodId], references: [id, tenantId, companyId, periodId], onDelete: Restrict)
+
+  @@unique([tenantId, companyId, periodId, kind, normalizedCode])
+  @@unique([tenantId, companyId, periodId, legacySlug, legacyCode])
+  @@index([partyId, tenantId, companyId, periodId])
+  @@index([tenantId, companyId, periodId, status, kind])
+}
+
+model PartyBackfillRun {
+  id             String               @id
+  tenantId       String
+  companyId      String
+  periodId       String
+  version        String
+  status         String               @default("PLANNED")
+  sourceChecksum String
+  sourceCount    Int
+  candidateCount Int
+  issueCount     Int
+  startedAt      DateTime
+  completedAt    DateTime?
+  createdBy      String
+  createdAt      DateTime             @default(now())
+  tenant         Tenant               @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company        Company              @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  period         Period               @relation(fields: [periodId], references: [id], onDelete: Cascade)
+  parties        Party[]
+  issues         PartyBackfillIssue[]
+
+  @@unique([id, tenantId, companyId, periodId])
+  @@unique([tenantId, companyId, periodId, version, sourceChecksum])
+  @@index([tenantId, companyId, periodId, status, startedAt])
+}
+
+model PartyBackfillIssue {
+  id         String           @id
+  tenantId   String
+  companyId  String
+  periodId   String
+  runId      String
+  issueKey   String
+  issueCode  String
+  severity   String
+  status     String           @default("OPEN")
+  sourceRefs Json
+  details    Json
+  checksum   String
+  resolvedBy String?
+  resolvedAt DateTime?
+  createdAt  DateTime         @default(now())
+  updatedAt  DateTime         @updatedAt
+  tenant     Tenant           @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  company    Company          @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  period     Period           @relation(fields: [periodId], references: [id], onDelete: Cascade)
+  run        PartyBackfillRun @relation(fields: [runId, tenantId, companyId, periodId], references: [id, tenantId, companyId, periodId], onDelete: Restrict)
+
+  @@unique([runId, issueKey])
+  @@index([tenantId, companyId, periodId, status, severity])
+  @@index([runId, issueCode])
 }
 
 model AuditLog {

@@ -55,6 +55,8 @@
     "production:r2:temp-credential:protocol-diagnostic": "tsx scripts/diagnose-production-r2-temporary-credential-protocol.ts",
     "production:deletion-replay:rehearsal:synthetic": "tsx scripts/rehearse-production-deletion-replay-synthetic.ts",
     "production:tenant-inventory:preflight": "tsx scripts/verify-production-tenant-inventory-preflight.ts",
+    "production:party-backfill:preflight": "tsx scripts/verify-production-party-backfill-preflight.ts",
+    "party-backfill:acceptance:verify": "npm run db:generate && tsx scripts/verify-party-backfill-acceptance.ts",
     "fleet:acceptance:verify": "tsx scripts/verify-vehicle-fleet-acceptance.ts",
     "tire:acceptance:verify": "tsx scripts/verify-vehicle-tire-acceptance.ts",
     "search:benchmark": "tsx scripts/benchmark-global-search.ts",

@@ -19,7 +19,7 @@ describe("production tenant inventory Prisma repository", () => {
       tenantId: "tenant-001",
     });
 
-    expect(result.modelCounts).toHaveLength(90);
+    expect(result.modelCounts).toHaveLength(94);
     expect(result.tenant).toEqual({
       activeLegalHoldCount: 2,
       activeSessionCount: 3,

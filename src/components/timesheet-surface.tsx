@@ -37,6 +37,11 @@ type TimesheetSurfaceProps = {
   permissions?: {
     canMutateTimesheets?: boolean;
   };
+  payrollAccruals?: Array<{
+    documentNo: string;
+    sourceTimesheetId: string;
+    status: string;
+  }>;
   persistence?: TimesheetPersistence;
   rows: TimesheetRow[];
   today?: string;
@@ -68,6 +73,7 @@ export function TimesheetSurface({
   auditLogsByEntityId = {},
   lookups,
   permissions = { canMutateTimesheets: true },
+  payrollAccruals = [],
   persistence = {},
   rows,
   today = new Date().toISOString().slice(0, 10),
@@ -482,53 +488,67 @@ export function TimesheetSurface({
                   </td>
                 </tr>
               ) : (
-                visibleRows.map((row) => (
-                  <tr className="hover:bg-brand-primary-subtle" key={row.id}>
-                    <td className="px-4 py-3 font-mono text-xs">
-                      {row.documentNo}
-                    </td>
-                    <td className="px-4 py-3">
-                      {row.year}/{String(row.month).padStart(2, "0")}
-                    </td>
-                    <td className="px-4 py-3">{row.siteName}</td>
-                    <td className="px-4 py-3">{row.contractorName || "-"}</td>
-                    <td className="px-4 py-3 text-right font-mono">
-                      {formatNumber(row.totalWorkedDays)}
-                    </td>
-                    <td className="px-4 py-3 text-right font-mono font-semibold">
-                      {formatMoney(row.netTotal)}
-                    </td>
-                    <td className="px-4 py-3">{row.status}</td>
-                    <td className="px-4 py-3">
-                      <div className="flex justify-end gap-2">
-                        <button
-                          className="h-9 rounded-ui-control border border-divider px-3 text-xs font-semibold disabled:opacity-50"
-                          disabled={
-                            !canMutate ||
-                            isPending ||
-                            row.status !== "Taslak"
-                          }
-                          onClick={() => mutateStatus(row.id, "post")}
-                          type="button"
-                        >
-                          Kesinleştir
-                        </button>
-                        <button
-                          className="h-9 rounded-ui-control border border-divider px-3 text-xs font-semibold disabled:opacity-50"
-                          disabled={
-                            !canMutate ||
-                            isPending ||
-                            row.status === "İptal"
-                          }
-                          onClick={() => mutateStatus(row.id, "cancel")}
-                          type="button"
-                        >
-                          İptal
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))
+                visibleRows.map((row) => {
+                  const linkedPayrollAccrual = payrollAccruals.find(
+                    (payrollAccrual) =>
+                      payrollAccrual.sourceTimesheetId === row.id &&
+                      payrollAccrual.status !== "İptal",
+                  );
+
+                  return (
+                    <tr className="hover:bg-brand-primary-subtle" key={row.id}>
+                      <td className="px-4 py-3 font-mono text-xs">
+                        {row.documentNo}
+                      </td>
+                      <td className="px-4 py-3">
+                        {row.year}/{String(row.month).padStart(2, "0")}
+                      </td>
+                      <td className="px-4 py-3">{row.siteName}</td>
+                      <td className="px-4 py-3">{row.contractorName || "-"}</td>
+                      <td className="px-4 py-3 text-right font-mono">
+                        {formatNumber(row.totalWorkedDays)}
+                      </td>
+                      <td className="px-4 py-3 text-right font-mono font-semibold">
+                        {formatMoney(row.netTotal)}
+                      </td>
+                      <td className="px-4 py-3">{row.status}</td>
+                      <td className="px-4 py-3">
+                        <div className="flex justify-end gap-2">
+                          <button
+                            className="h-9 rounded-ui-control border border-divider px-3 text-xs font-semibold disabled:opacity-50"
+                            disabled={
+                              !canMutate ||
+                              isPending ||
+                              row.status !== "Taslak"
+                            }
+                            onClick={() => mutateStatus(row.id, "post")}
+                            type="button"
+                          >
+                            Kesinleştir
+                          </button>
+                          <button
+                            className="h-9 rounded-ui-control border border-divider px-3 text-xs font-semibold disabled:opacity-50"
+                            disabled={
+                              !canMutate ||
+                              isPending ||
+                              row.status === "İptal" ||
+                              Boolean(linkedPayrollAccrual)
+                            }
+                            onClick={() => mutateStatus(row.id, "cancel")}
+                            type="button"
+                            title={
+                              linkedPayrollAccrual
+                                ? `Bağlı maaş tahakkuku önce sonuçlandırılmalıdır: ${linkedPayrollAccrual.documentNo}`
+                                : undefined
+                            }
+                          >
+                            İptal
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })
               )}
             </tbody>
           </table>
