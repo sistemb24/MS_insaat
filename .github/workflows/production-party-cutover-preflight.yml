@@ -1,0 +1,71 @@
+name: Production Party Cutover Preflight (Read-only)
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirmation:
+        description: Type production-party-cutover-preflight
+        required: true
+        type: string
+      expected_release_sha:
+        description: Exact main release SHA
+        required: true
+        type: string
+      tenant_id:
+        description: Exact production tenant identifier
+        required: true
+        type: string
+      company_id:
+        description: Exact production company identifier
+        required: true
+        type: string
+      period_id:
+        description: Exact production period identifier
+        required: true
+        type: string
+      actor_user_id:
+        description: Exact active admin user identifier
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: noa-production-recovery
+  cancel-in-progress: false
+
+jobs:
+  preflight:
+    if: >-
+      github.ref == 'refs/heads/main' &&
+      inputs.confirmation == 'production-party-cutover-preflight' &&
+      inputs.expected_release_sha == github.sha
+    environment: production
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      DATABASE_URL: ${{ secrets.PRODUCTION_TENANT_INVENTORY_DATABASE_URL }}
+      NOA_EXPECTED_RELEASE_SHA: ${{ inputs.expected_release_sha }}
+      NOA_PARTY_CUTOVER_ACTOR_USER_ID: ${{ inputs.actor_user_id }}
+      NOA_PARTY_CUTOVER_COMPANY_ID: ${{ inputs.company_id }}
+      NOA_PARTY_CUTOVER_PERIOD_ID: ${{ inputs.period_id }}
+      NOA_PARTY_CUTOVER_TENANT_ID: ${{ inputs.tenant_id }}
+      NOA_PRODUCTION_PARTY_CUTOVER_CONFIRMATION: ${{ inputs.confirmation }}
+      NOA_RELEASE_ID: ${{ github.sha }}
+      NOA_RUNTIME_ENV: production
+      NOA_SOURCE_REF: ${{ github.ref }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile --ignore-scripts
+      - name: Generate Prisma client without database mutation
+        run: pnpm db:generate
+      - name: Read exact Party parity, cutover state and migration inventory
+        run: pnpm production:party-cutover:preflight
