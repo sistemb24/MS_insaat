@@ -67,3 +67,51 @@ test("production cutover migration is exact, backup/restore gated and activation
   expect(workflow.match(/pnpm db:migrate/g)).toHaveLength(1);
   expect(workflow).not.toMatch(/shadow-activate|shadow-rollback|party-cutover:activate/);
 });
+
+test("production cutover transition is exact, runtime-gated and rollback-safe", () => {
+  const workflow = readFileSync(
+    resolve(
+      process.cwd(),
+      ".github/workflows/production-party-cutover-transition.yml",
+    ),
+    "utf8",
+  );
+  const execute = workflow.indexOf("pnpm production:party-cutover:transition");
+  const postflight = workflow.indexOf(
+    "pnpm production:party-cutover:transition:postflight",
+  );
+  const readiness = workflow.indexOf(
+    "Verify activation runtime readiness before checkout",
+  );
+  const checkout = workflow.indexOf("actions/checkout@v4");
+
+  expect(workflow).toContain("workflow_dispatch:");
+  expect(workflow).toContain("github.ref == 'refs/heads/main'");
+  expect(workflow).toContain("inputs.expected_release_sha == github.sha");
+  expect(workflow).toContain("environment: production");
+  expect(workflow).toContain("permissions:\n  contents: read");
+  expect(workflow).toContain("group: noa-production-recovery");
+  expect(workflow).toContain("cancel-in-progress: false");
+  expect(workflow).toContain("secrets.PRODUCTION_DATABASE_URL");
+  expect(workflow).toContain(
+    "secrets.PRODUCTION_TENANT_INVENTORY_DATABASE_URL",
+  );
+  expect(workflow).toContain("production-party-shadow-activate");
+  expect(workflow).toContain("production-party-shadow-exact-retry");
+  expect(workflow).toContain("production-party-shadow-rollback");
+  expect(workflow).toContain("production-party-shadow-rollback-exact-retry");
+  expect(workflow).toContain(
+    "NOA_PARTY_SHADOW_RUNTIME_READY_RELEASE_SHA: ${{ vars.PRODUCTION_PARTY_SHADOW_RUNTIME_READY_RELEASE_SHA }}",
+  );
+  expect(workflow).toContain(
+    'test "${NOA_PARTY_SHADOW_RUNTIME_READY_RELEASE_SHA:-}" = "${GITHUB_SHA}"',
+  );
+  expect(readiness).toBeGreaterThan(-1);
+  expect(checkout).toBeGreaterThan(readiness);
+  expect(execute).toBeGreaterThan(-1);
+  expect(postflight).toBeGreaterThan(execute);
+  expect(workflow).toContain(".ready == true and .blockers == []");
+  expect(workflow).not.toMatch(
+    /pnpm db:migrate|prisma migrate deploy|production:backup|production:restore|R2_/,
+  );
+});

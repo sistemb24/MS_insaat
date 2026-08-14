@@ -1,0 +1,209 @@
+name: Production Party Cutover Transition
+
+on:
+  workflow_dispatch:
+    inputs:
+      transition_kind:
+        description: Exact transition kind
+        required: true
+        type: choice
+        options:
+          - ACTIVATE
+          - ACTIVATE_RETRY
+          - ROLLBACK
+          - ROLLBACK_RETRY
+      confirmation:
+        description: Exact confirmation for the selected transition kind
+        required: true
+        type: string
+      expected_release_sha:
+        description: Exact main release SHA
+        required: true
+        type: string
+      tenant_id:
+        description: Exact production tenant identifier
+        required: true
+        type: string
+      company_id:
+        description: Exact production company identifier
+        required: true
+        type: string
+      period_id:
+        description: Exact production period identifier
+        required: true
+        type: string
+      actor_user_id:
+        description: Exact active admin user identifier
+        required: true
+        type: string
+      operation_id:
+        description: Exact operation identifier; retries must reuse the original
+        required: true
+        type: string
+      expected_preflight_manifest_checksum:
+        description: Exact approved pre-transition manifest checksum
+        required: true
+        type: string
+      expected_business_checksum:
+        description: Exact approved business checksum
+        required: true
+        type: string
+      expected_eligibility_manifest_checksum:
+        description: Exact approved eligibility manifest checksum
+        required: true
+        type: string
+      expected_state_manifest_checksum:
+        description: Exact approved cutover state manifest checksum
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: noa-production-recovery
+  cancel-in-progress: false
+
+jobs:
+  transition:
+    if: >-
+      github.ref == 'refs/heads/main' &&
+      inputs.expected_release_sha == github.sha &&
+      (
+        (
+          inputs.transition_kind == 'ACTIVATE' &&
+          inputs.confirmation == 'production-party-shadow-activate'
+        ) ||
+        (
+          inputs.transition_kind == 'ACTIVATE_RETRY' &&
+          inputs.confirmation == 'production-party-shadow-exact-retry'
+        ) ||
+        (
+          inputs.transition_kind == 'ROLLBACK' &&
+          inputs.confirmation == 'production-party-shadow-rollback'
+        ) ||
+        (
+          inputs.transition_kind == 'ROLLBACK_RETRY' &&
+          inputs.confirmation == 'production-party-shadow-rollback-exact-retry'
+        )
+      )
+    environment: production
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      NOA_EXPECTED_RELEASE_SHA: ${{ inputs.expected_release_sha }}
+      NOA_PARTY_CUTOVER_ACTOR_USER_ID: ${{ inputs.actor_user_id }}
+      NOA_PARTY_CUTOVER_COMPANY_ID: ${{ inputs.company_id }}
+      NOA_PARTY_CUTOVER_EXPECTED_BUSINESS_CHECKSUM: ${{ inputs.expected_business_checksum }}
+      NOA_PARTY_CUTOVER_EXPECTED_ELIGIBILITY_MANIFEST_CHECKSUM: ${{ inputs.expected_eligibility_manifest_checksum }}
+      NOA_PARTY_CUTOVER_EXPECTED_PREFLIGHT_MANIFEST_CHECKSUM: ${{ inputs.expected_preflight_manifest_checksum }}
+      NOA_PARTY_CUTOVER_EXPECTED_STATE_MANIFEST_CHECKSUM: ${{ inputs.expected_state_manifest_checksum }}
+      NOA_PARTY_CUTOVER_OPERATION_ID: ${{ inputs.operation_id }}
+      NOA_PARTY_CUTOVER_PERIOD_ID: ${{ inputs.period_id }}
+      NOA_PARTY_CUTOVER_TENANT_ID: ${{ inputs.tenant_id }}
+      NOA_PARTY_CUTOVER_TRANSITION_KIND: ${{ inputs.transition_kind }}
+      NOA_PRODUCTION_PARTY_CUTOVER_CONFIRMATION: ${{ inputs.confirmation }}
+      NOA_RELEASE_ID: ${{ github.sha }}
+      NOA_RUNTIME_ENV: production
+      NOA_SOURCE_REF: ${{ github.ref }}
+      NOA_PARTY_SHADOW_RUNTIME_READY_RELEASE_SHA: ${{ vars.PRODUCTION_PARTY_SHADOW_RUNTIME_READY_RELEASE_SHA }}
+    steps:
+      - name: Verify activation runtime readiness before checkout
+        shell: bash
+        run: |
+          set -euo pipefail
+          case "${NOA_PARTY_CUTOVER_TRANSITION_KIND}" in
+            ACTIVATE|ACTIVATE_RETRY)
+              test "${NOA_PARTY_SHADOW_RUNTIME_READY_RELEASE_SHA:-}" = "${GITHUB_SHA}"
+              ;;
+            ROLLBACK|ROLLBACK_RETRY)
+              ;;
+            *) exit 1 ;;
+          esac
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile --ignore-scripts
+      - name: Generate Prisma client without schema mutation
+        run: pnpm db:generate
+      - name: Execute exact PRE-gated Party cutover transition
+        id: transition
+        shell: bash
+        env:
+          DATABASE_URL: ${{ secrets.PRODUCTION_DATABASE_URL }}
+          NOA_PARTY_CUTOVER_INVENTORY_DATABASE_URL: ${{ secrets.PRODUCTION_TENANT_INVENTORY_DATABASE_URL }}
+        run: |
+          set -euo pipefail
+          result="$(pnpm production:party-cutover:transition | tee /dev/stderr | tail -n 1)"
+          case "${NOA_PARTY_CUTOVER_TRANSITION_KIND}" in
+            ACTIVATE)
+              expected_status=ACTIVATED
+              expected_mode=SHADOW_READ
+              expected_revision=1
+              expected_replayed=false
+              ;;
+            ACTIVATE_RETRY)
+              expected_status=UNCHANGED
+              expected_mode=SHADOW_READ
+              expected_revision=1
+              expected_replayed=true
+              ;;
+            ROLLBACK)
+              expected_status=ROLLED_BACK
+              expected_mode=LEGACY_ONLY
+              expected_revision=2
+              expected_replayed=false
+              ;;
+            ROLLBACK_RETRY)
+              expected_status=UNCHANGED
+              expected_mode=LEGACY_ONLY
+              expected_revision=2
+              expected_replayed=true
+              ;;
+            *) exit 1 ;;
+          esac
+          jq -e \
+            --arg kind "${NOA_PARTY_CUTOVER_TRANSITION_KIND}" \
+            --arg status "${expected_status}" \
+            --arg mode "${expected_mode}" \
+            --argjson revision "${expected_revision}" \
+            --argjson replayed "${expected_replayed}" \
+            '.kind == $kind and .status == $status and .mode == $mode and
+             .revisionNo == $revision and .replayed == $replayed and
+             .releaseId == env.GITHUB_SHA' <<<"${result}" >/dev/null
+          echo "status=${expected_status}" >> "${GITHUB_OUTPUT}"
+          echo "mode=${expected_mode}" >> "${GITHUB_OUTPUT}"
+          echo "revision=${expected_revision}" >> "${GITHUB_OUTPUT}"
+      - name: Verify exact read-only Party cutover postflight
+        shell: bash
+        env:
+          NOA_PARTY_CUTOVER_INVENTORY_DATABASE_URL: ${{ secrets.PRODUCTION_TENANT_INVENTORY_DATABASE_URL }}
+        run: |
+          set -euo pipefail
+          result="$(pnpm production:party-cutover:transition:postflight | tee /dev/stderr | tail -n 1)"
+          jq -e \
+            --arg kind "${NOA_PARTY_CUTOVER_TRANSITION_KIND}" \
+            --arg mode "${{ steps.transition.outputs.mode }}" \
+            --argjson revision "${{ steps.transition.outputs.revision }}" \
+            '.ready == true and .blockers == [] and .kind == $kind and
+             .mode == $mode and .revisionNo == $revision and
+             .releaseId == env.GITHUB_SHA and
+             (($revision == 1 and .eventCount == 1) or
+              ($revision == 2 and .eventCount == 2))' <<<"${result}" >/dev/null
+      - name: Write redacted transition summary
+        shell: bash
+        run: |
+          {
+            echo "### Party cutover transition"
+            echo "- Release: \`${GITHUB_SHA}\`"
+            echo "- Kind: \`${NOA_PARTY_CUTOVER_TRANSITION_KIND}\`"
+            echo "- Status: \`${{ steps.transition.outputs.status }}\`"
+            echo "- Mode: \`${{ steps.transition.outputs.mode }}\`"
+            echo "- Revision: \`${{ steps.transition.outputs.revision }}\`"
+            echo "- Postflight: \`ready=true\`"
+          } >> "${GITHUB_STEP_SUMMARY}"
