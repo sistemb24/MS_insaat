@@ -4,6 +4,7 @@ import { resolve } from "node:path";
 import { describe, expect, test } from "vitest";
 
 import {
+  assertProductionBackupManifestRelease,
   createProductionBackupId,
   readProductionBackupConfig,
   readProductionMigrationConfig,
@@ -97,6 +98,20 @@ describe("production backup execution contract", () => {
     expect(createProductionBackupId(new Date("2026-08-06T09:30:45.123Z"), validEnv.NOA_RELEASE_ID)).toBe("20260806T093045Z-release-2026-08-06");
   });
 
+  test("binds an isolated restore manifest to the exact release SHA", () => {
+    const releaseId = "a".repeat(40);
+    expect(() => assertProductionBackupManifestRelease({
+      backupId: `20260814T120000Z-${releaseId}`,
+      expectedReleaseId: releaseId,
+      manifestReleaseId: releaseId,
+    })).not.toThrow();
+    expect(() => assertProductionBackupManifestRelease({
+      backupId: `20260814T120000Z-${releaseId}`,
+      expectedReleaseId: releaseId,
+      manifestReleaseId: "b".repeat(40),
+    })).toThrow(/manifest release/);
+  });
+
   test("orders the production workflow as preflight, verified backup, migration and post-check", () => {
     const workflow = readFileSync(
       resolve(process.cwd(), ".github/workflows/production-backup-and-migrate.yml"),
@@ -124,6 +139,11 @@ describe("production backup execution contract", () => {
     expect(workflow).toContain("pnpm production:restore:rehearsal");
     expect(workflow).not.toContain("pnpm db:migrate");
     expect(workflow).not.toContain("vercel");
+    const source = readFileSync(
+      resolve(process.cwd(), "scripts/rehearse-production-restore.ts"),
+      "utf8",
+    );
+    expect(source).toContain("assertProductionBackupManifestRelease");
   });
 
   test("keeps the daily backup scheduled, migration-free and manual-once gated", () => {

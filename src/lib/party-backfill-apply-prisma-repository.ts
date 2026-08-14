@@ -1,3 +1,5 @@
+import type { PrismaClient } from "@prisma/client";
+
 import {
   buildPartyBackfillPlan,
   type ExistingPartyRole,
@@ -65,6 +67,12 @@ export type PartyBackfillApplyPrismaClientLike = TransactionClient & {
   ): Promise<T>;
 };
 
+export function asPartyBackfillApplyPrismaClient(
+  prisma: PrismaClient,
+): PartyBackfillApplyPrismaClientLike {
+  return prisma as unknown as PartyBackfillApplyPrismaClientLike;
+}
+
 const partySlugs: PartySlug[] = ["musteriler", "taseronlar", "tedarikciler"];
 
 export function createPartyBackfillApplyPrismaRepository(
@@ -93,25 +101,23 @@ async function applyInTransaction(
   command: PartyBackfillApplyCommand,
   occurredAt: Date,
 ): Promise<PartyBackfillApplySummary> {
-  const [period, access] = await Promise.all([
-    transaction.period.findFirst({
-      select: { id: true, isClosed: true },
-      where: {
-        companyId: command.scope.companyId,
-        id: command.scope.periodId,
-        tenantId: command.scope.tenantId,
-      },
-    }),
-    transaction.appUserScopeAccess.findFirst({
-      select: { id: true },
-      where: {
-        ...scopeFields(command.scope),
-        isActive: true,
-        role: "admin",
-        userId: command.actorUserId,
-      },
-    }),
-  ]);
+  const period = await transaction.period.findFirst({
+    select: { id: true, isClosed: true },
+    where: {
+      companyId: command.scope.companyId,
+      id: command.scope.periodId,
+      tenantId: command.scope.tenantId,
+    },
+  });
+  const access = await transaction.appUserScopeAccess.findFirst({
+    select: { id: true },
+    where: {
+      ...scopeFields(command.scope),
+      isActive: true,
+      role: "admin",
+      userId: command.actorUserId,
+    },
+  });
   if (!period) {
     throw new PartyBackfillExecutionError("Party backfill hedef dönemi bulunamadı.");
   }
@@ -247,17 +253,15 @@ async function buildPlan(
   scope: PartyBackfillApplyCommand["scope"],
   version: string,
 ) {
-  const [records, roleRecords] = await Promise.all([
-    transaction.entityRecord.findMany({
-      orderBy: [{ slug: "asc" }, { code: "asc" }],
-      where: { ...scopeFields(scope), slug: { in: partySlugs } },
-    }),
-    transaction.partyRole.findMany({
-      include: { party: true },
-      orderBy: [{ kind: "asc" }, { normalizedCode: "asc" }],
-      where: scopeFields(scope),
-    }),
-  ]);
+  const records = await transaction.entityRecord.findMany({
+    orderBy: [{ slug: "asc" }, { code: "asc" }],
+    where: { ...scopeFields(scope), slug: { in: partySlugs } },
+  });
+  const roleRecords = await transaction.partyRole.findMany({
+    include: { party: true },
+    orderBy: [{ kind: "asc" }, { normalizedCode: "asc" }],
+    where: scopeFields(scope),
+  });
   return buildPartyBackfillPlan({
     existingRoles: toExistingRoles(roleRecords),
     records,

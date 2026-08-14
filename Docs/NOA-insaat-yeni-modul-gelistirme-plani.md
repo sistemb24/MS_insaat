@@ -4314,3 +4314,27 @@ dispatch edilmedi. Hedefli 3 dosya/24 test, tam 396 dosya/2.133 test, type-check
 Prisma validate, sıfır uyarılı lint, 102 sayfalık production build, 1.295 dosyalık
 secret scan ve diff-check geçti. Dilim **İZOLE POSTGRESQL KABULÜ TAMAMLANDI /
 PRODUCTION BOOTSTRAP VE PARTY PREFLIGHT AYRI ONAY BEKLİYOR** durumundadır.
+
+**Mevcut durum yol haritası Dilim 3B-E2-A Party production migration ve sıfır-aday apply güvenlik kapıları — 14.08.2026:**
+Party migration için exact main SHA, production environment ve açık onayla çalışan
+ayrı workflow hazırlandı. Akış aynı release'e bağlı yeni production backup'ını
+oluşturup manifest release kimliğini doğrular, aynı backup'ı izole geçici DB'ye
+restore eder, salt-okunur PRE_MIGRATION kapısında yalnız 68 uygulanmış migration
+ve tek bekleyen Party migration'ını kabul eder; ardından migration deploy edip
+salt-okunur POST_MIGRATION kapısında 69/69 envanteri ve sıfır kaynak/adayı yeniden
+kanıtlar. Sıfır-aday apply ayrı workflow'ta exact POST manifest checksum'ı ve canlı
+preview drift kontrolüyle yalnız bir `VERIFIED` run ve bir redacted audit üretir;
+Party, rol, issue veya finansal kayıt yazmaz, retry `UNCHANGED` olur. Bağımsız
+salt-okunur postflight exact run/audit ve beş finansal tablonun sıfır durumunu
+`REPEATABLE READ` snapshot'ta doğrular. Onaylı izole kabul runner'ında geçici local
+PostgreSQL hedefe 69 migration uygulandı; temiz/blocked/closed/drift/foreign ve
+zorlanmış rollback senaryolarının yanında sıfır-aday ilk apply `VERIFIED`, retry
+`UNCHANGED`, run/audit sayıları 1/1 ve Party/rol/issue sayıları 0/0/0 kanıtlandı.
+Kaynak `insaatMuhasebe` envanteri 68 migration/117 tabloda değişmedi, geçici hedef
+kaldırıldı ve kalan `noa_party_acceptance_*` DB sayısı 0 doğrulandı. Production
+workflow dispatch, production migration veya canlı veri yazımı yapılmadı. Hedefli
+6 dosya/52 test, tam 399 dosya/2.149 test, type-check, Prisma validate, sıfır
+uyarılı lint, 102 sayfalık
+production build, 1.306 dosyalık secret scan, YAML parse ve diff-check geçti.
+Dilim **İZOLE POSTGRESQL MIGRATION VE SIFIR-ADAY APPLY KABULÜ TAMAMLANDI /
+YAYINLAMA VE PRODUCTION YÜRÜTME AYRI ONAY BEKLİYOR** durumundadır.

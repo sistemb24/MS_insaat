@@ -33,6 +33,12 @@ export type PartyBackfillAcceptanceEvidence = {
   rollbackRunCount: number;
   sourceInventoryUnchanged: boolean;
   temporaryDatabaseRemoved: boolean;
+  zeroApplyAuditCountAfterRetry: number;
+  zeroApplyIssueCountAfterRetry: number;
+  zeroApplyPartyCountAfterRetry: number;
+  zeroApplyRoleCountAfterRetry: number;
+  zeroApplyRunCountAfterRetry: number;
+  zeroApplyRunStatus: string;
 };
 
 export function readPartyBackfillAcceptanceConfig(
@@ -110,6 +116,12 @@ export function evaluatePartyBackfillAcceptance(
       && evidence.blockedRoleCount === 0
       && evidence.closedRunStatus === "VERIFIED"
       && evidence.foreignPartyCount === 0
+      && evidence.zeroApplyRunStatus === "UNCHANGED"
+      && evidence.zeroApplyRunCountAfterRetry === 1
+      && evidence.zeroApplyAuditCountAfterRetry === 1
+      && evidence.zeroApplyPartyCountAfterRetry === 0
+      && evidence.zeroApplyRoleCountAfterRetry === 0
+      && evidence.zeroApplyIssueCountAfterRetry === 0
       && evidence.driftRejected
       && rollbackClean
       && evidence.sourceInventoryUnchanged

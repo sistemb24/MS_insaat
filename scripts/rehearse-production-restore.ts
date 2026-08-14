@@ -8,7 +8,10 @@ import { GetObjectCommand } from "@aws-sdk/client-s3";
 import { Client } from "pg";
 
 import { createR2Client } from "../src/lib/document-storage-r2";
-import { readProductionRestoreConfig } from "../src/lib/production-backup";
+import {
+  assertProductionBackupManifestRelease,
+  readProductionRestoreConfig,
+} from "../src/lib/production-backup";
 import {
   evaluateProductionMigrationPreflight,
   type ProductionMigrationRecord,
@@ -46,6 +49,11 @@ async function main() {
     if (manifest.backupId !== config.backupId) {
       throw new Error("Backup manifest kimliği istenen restore kimliğiyle eşleşmiyor.");
     }
+    assertProductionBackupManifestRelease({
+      backupId: manifest.backupId,
+      expectedReleaseId: config.releaseId,
+      manifestReleaseId: manifest.releaseId,
+    });
     if (manifest.binaryObjects.length > 0) {
       throw new Error("Binary içeren production backup için ayrı binary restore kanıtı zorunludur.");
     }
