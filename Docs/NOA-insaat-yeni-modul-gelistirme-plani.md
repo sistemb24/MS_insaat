@@ -4289,3 +4289,28 @@ dosya/2.088 test, type-check, Prisma validate, sıfır uyarılı lint, 102 sayfa
 production build, 1.473 dosyalık secret scan ve diff-check geçti. Dilim **KOD VE
 YEREL DOĞRULAMA TAMAMLANDI / READ-ONLY CREDENTIAL VE EXACT SCOPE İLE CANLI
 PREFLIGHT AYRI ONAY BEKLİYOR** durumundadır.
+
+**Mevcut durum yol haritası Dilim 3B-E1-P1 kontrollü production scope bootstrap — 14.08.2026:**
+Production Party preflight için eksik olan gerçek firma/dönem/admin kapsamını demo
+seed hattından ayıran kontrollü bootstrap çekirdeği, Prisma repository, CLI, manuel
+GitHub Actions workflow'u ve izole PostgreSQL kabul runner'ı hazırlandı. Akış yalnız
+mevcut `ACTIVE` tenant üzerinde; exact main release SHA, production environment,
+birebir onay ve `PRODUCTION_DATABASE_URL` ile açılır. Şirket, açık dönem, credentialsız
+AppUser ve aktif/default admin scope erişimi tek `Serializable` transaction ve tenant
+advisory lock altında oluşturulur; zorunlu audit yazımı başarısızsa tamamı rollback
+olur. Aynı manifest exact audit ile `UNCHANGED` döner; kısmi state, isim/scope drift'i,
+kapalı dönem, pasif tenant veya salt-okunur DB fail-closed reddedilir. Credential,
+parola, session, demo/finansal kayıt ve Prisma migration oluşturulmaz. Onaylı izole
+runner çalıştırmasında geçici local PostgreSQL hedefe 69 migration uygulandı;
+create `CREATED`, exact retry `UNCHANGED`, company/period/user/admin access/audit
+sayımları 1/1/1/1/1, partial ve drift reddi, zorlanmış audit hatasında beş hedef
+tablonun tamamında sıfır kayıtla gerçek transaction rollback'i, kaynak envanter
+değişmezliği ve geçici DB cleanup'ı kanıtlandı. İlk gerçek koşu advisory lock'ın
+PostgreSQL `void` dönüşümünü Prisma'nın deserialize edemediğini yakaladı; sonuç text
+cast edildi. pg@9 uyumluluğu için aynı transaction içindeki scope okumaları sıralı
+hale getirildi ve final kabul uyarısız `ready=true / rollbackClean=true` geçti;
+kalan `noa_scope_bootstrap_acceptance_*` DB sayısı 0 doğrulandı. Production workflow
+dispatch edilmedi. Hedefli 3 dosya/24 test, tam 396 dosya/2.133 test, type-check,
+Prisma validate, sıfır uyarılı lint, 102 sayfalık production build, 1.295 dosyalık
+secret scan ve diff-check geçti. Dilim **İZOLE POSTGRESQL KABULÜ TAMAMLANDI /
+PRODUCTION BOOTSTRAP VE PARTY PREFLIGHT AYRI ONAY BEKLİYOR** durumundadır.

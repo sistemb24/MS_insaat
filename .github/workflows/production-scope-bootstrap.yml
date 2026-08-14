@@ -1,0 +1,96 @@
+name: Production Scope Bootstrap (Controlled Write)
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirmation:
+        description: Type production-scope-bootstrap
+        required: true
+        type: string
+      expected_release_sha:
+        description: Exact main release SHA
+        required: true
+        type: string
+      tenant_id:
+        description: Exact existing production tenant identifier
+        required: true
+        type: string
+      company_id:
+        description: New production company identifier
+        required: true
+        type: string
+      company_name:
+        description: Production company display name
+        required: true
+        type: string
+      period_id:
+        description: New production period identifier
+        required: true
+        type: string
+      period_label:
+        description: Production period display label
+        required: true
+        type: string
+      period_starts_on:
+        description: Period start date as YYYY-MM-DD
+        required: true
+        type: string
+      period_ends_on:
+        description: Period end date as YYYY-MM-DD
+        required: true
+        type: string
+      admin_user_id:
+        description: Initial admin actor identifier without login credential
+        required: true
+        type: string
+      admin_name:
+        description: Initial admin actor display name
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: noa-production-recovery
+  cancel-in-progress: false
+
+jobs:
+  bootstrap:
+    if: >-
+      github.ref == 'refs/heads/main' &&
+      inputs.confirmation == 'production-scope-bootstrap' &&
+      inputs.expected_release_sha == github.sha
+    environment: production
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      DATABASE_URL: ${{ secrets.PRODUCTION_DATABASE_URL }}
+      NOA_EXPECTED_RELEASE_SHA: ${{ inputs.expected_release_sha }}
+      NOA_PRODUCTION_SCOPE_ADMIN_NAME: ${{ inputs.admin_name }}
+      NOA_PRODUCTION_SCOPE_ADMIN_USER_ID: ${{ inputs.admin_user_id }}
+      NOA_PRODUCTION_SCOPE_BOOTSTRAP_CONFIRMATION: ${{ inputs.confirmation }}
+      NOA_PRODUCTION_SCOPE_COMPANY_ID: ${{ inputs.company_id }}
+      NOA_PRODUCTION_SCOPE_COMPANY_NAME: ${{ inputs.company_name }}
+      NOA_PRODUCTION_SCOPE_PERIOD_ENDS_ON: ${{ inputs.period_ends_on }}
+      NOA_PRODUCTION_SCOPE_PERIOD_ID: ${{ inputs.period_id }}
+      NOA_PRODUCTION_SCOPE_PERIOD_LABEL: ${{ inputs.period_label }}
+      NOA_PRODUCTION_SCOPE_PERIOD_STARTS_ON: ${{ inputs.period_starts_on }}
+      NOA_PRODUCTION_SCOPE_TENANT_ID: ${{ inputs.tenant_id }}
+      NOA_RELEASE_ID: ${{ github.sha }}
+      NOA_RUNTIME_ENV: production
+      NOA_SOURCE_REF: ${{ github.ref }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile --ignore-scripts
+      - name: Generate Prisma client without schema mutation
+        run: pnpm db:generate
+      - name: Create exact production company, period and admin scope
+        run: pnpm production:scope:bootstrap
