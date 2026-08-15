@@ -67,9 +67,14 @@ describe("Party shadow-read Prisma observer", () => {
 
   it("never propagates observer failure to the legacy caller", async () => {
     const log = vi.fn();
+    const alert = vi.fn(() => { throw new Error("provider-unavailable"); });
     const observer = createPartyShadowReadPrismaObserver({
       $transaction: vi.fn(async () => { throw new TypeError("business-value"); }),
-    } as unknown as PartyShadowReadPrismaClientLike, { log, runtimeReleaseId: releaseId });
+    } as unknown as PartyShadowReadPrismaClientLike, {
+      alert,
+      log,
+      runtimeReleaseId: releaseId,
+    });
 
     await expect(observer.observeRead({ scope, slug: "taseronlar" })).resolves.toBeUndefined();
     expect(log).toHaveBeenCalledWith(
@@ -78,11 +83,17 @@ describe("Party shadow-read Prisma observer", () => {
       expect.objectContaining({ errorName: "TypeError", status: "SHADOW_READ_ERROR" }),
     );
     expect(JSON.stringify(log.mock.calls)).not.toContain("business-value");
+    expect(alert).toHaveBeenCalledWith(expect.objectContaining({
+      status: "SHADOW_READ_ERROR",
+    }));
+    expect(JSON.stringify(alert.mock.calls)).not.toContain("business-value");
   });
 
   it("warns after a legacy write while shadow mode is active", async () => {
     const fake = createFake({ mode: "SHADOW_READ", releaseId, revisionNo: 1 });
+    const alert = vi.fn();
     await createPartyShadowReadPrismaObserver(fake.client, {
+      alert,
       log: fake.log,
       runtimeReleaseId: releaseId,
     }).observeLegacyWrite({ scope, slug: "tedarikciler" });
@@ -92,6 +103,13 @@ describe("Party shadow-read Prisma observer", () => {
       "party.shadow_read.legacy_write",
       expect.objectContaining({ status: "LEGACY_WRITE_WHILE_SHADOW" }),
     );
+    expect(alert).toHaveBeenCalledWith({
+      releaseId,
+      revisionNo: 1,
+      scopeFingerprint: expect.stringMatching(/^[a-f0-9]{12}$/),
+      slug: "tedarikciler",
+      status: "LEGACY_WRITE_WHILE_SHADOW",
+    });
   });
 
   it("keeps an uninitialized scope silent during ordinary legacy writes", async () => {

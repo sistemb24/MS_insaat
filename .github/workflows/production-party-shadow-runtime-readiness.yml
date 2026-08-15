@@ -1,0 +1,123 @@
+name: Production Party Shadow Runtime Readiness (Read-only)
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirmation:
+        description: Type production-party-shadow-runtime-readiness
+        required: true
+        type: string
+      expected_release_sha:
+        description: Exact deployed main release SHA
+        required: true
+        type: string
+      production_origin:
+        description: Exact HTTPS production origin without a path
+        required: true
+        type: string
+      tenant_id:
+        description: Exact production tenant identifier
+        required: true
+        type: string
+      company_id:
+        description: Exact production company identifier
+        required: true
+        type: string
+      period_id:
+        description: Exact production period identifier
+        required: true
+        type: string
+      actor_user_id:
+        description: Exact active admin user identifier
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: noa-production-recovery
+  cancel-in-progress: false
+
+jobs:
+  readiness:
+    if: >-
+      github.ref == 'refs/heads/main' &&
+      inputs.confirmation == 'production-party-shadow-runtime-readiness' &&
+      inputs.expected_release_sha == github.sha
+    environment: production
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      NOA_EXPECTED_RELEASE_SHA: ${{ inputs.expected_release_sha }}
+      NOA_PARTY_CUTOVER_ACTOR_USER_ID: ${{ inputs.actor_user_id }}
+      NOA_PARTY_CUTOVER_COMPANY_ID: ${{ inputs.company_id }}
+      NOA_PARTY_CUTOVER_PERIOD_ID: ${{ inputs.period_id }}
+      NOA_PARTY_CUTOVER_TENANT_ID: ${{ inputs.tenant_id }}
+      NOA_APPROVED_PRODUCTION_ORIGIN: ${{ vars.PRODUCTION_APP_ORIGIN }}
+      NOA_PARTY_SHADOW_PRODUCTION_ORIGIN: ${{ inputs.production_origin }}
+      NOA_PRODUCTION_PARTY_SHADOW_RUNTIME_CONFIRMATION: ${{ inputs.confirmation }}
+      NOA_RELEASE_ID: ${{ github.sha }}
+      NOA_RUNTIME_ENV: production
+      NOA_SOURCE_REF: ${{ github.ref }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile --ignore-scripts
+      - name: Verify exact deployed runtime before any database secret access
+        id: runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          result="$(pnpm production:party-shadow-runtime:attestation | tee /dev/stderr | tail -n 1)"
+          jq -e \
+            '.ready == true and .blockers == [] and
+             .legacyAuthoritative == true and
+             .negativeAlertingReady == true and
+             .redactedStructuredLogs == true and
+             .releaseId == env.GITHUB_SHA' <<<"${result}" >/dev/null
+          encoded="$(printf '%s' "${result}" | base64 -w0)"
+          echo "attestation_base64=${encoded}" >> "${GITHUB_OUTPUT}"
+      - name: Generate Prisma client without database mutation
+        run: pnpm db:generate
+      - name: Read exact production cutover inventory and write redacted manifest
+        id: readiness
+        shell: bash
+        env:
+          DATABASE_URL: ${{ secrets.PRODUCTION_TENANT_INVENTORY_DATABASE_URL }}
+          NOA_PARTY_SHADOW_RUNTIME_ATTESTATION_BASE64: ${{ steps.runtime.outputs.attestation_base64 }}
+        run: |
+          set -euo pipefail
+          result="$(pnpm production:party-shadow-runtime:readiness | tee /dev/stderr | tail -n 1)"
+          jq -e \
+            '.ready == true and .blockers == [] and .readOnly == true and
+             .releaseId == env.GITHUB_SHA and
+             .cutover.migration.schemaState == "POST_MIGRATION" and
+             .cutover.migration.appliedMigrationCount == 70 and
+             .cutover.migration.pendingMigrationNames == [] and
+             .cutover.stateCount == 0 and .cutover.eventCount == 0 and
+             .cutover.auditCount == 0 and
+             .observability.negativeAlertingReady == true' \
+            <<<"${result}" >/dev/null
+          echo "manifest_checksum=$(jq -r '.manifestChecksum' <<<"${result}")" >> "${GITHUB_OUTPUT}"
+          echo "valid_until=$(jq -r '.validUntil' <<<"${result}")" >> "${GITHUB_OUTPUT}"
+          echo "scope_fingerprint=$(jq -r '.scopeFingerprint' <<<"${result}")" >> "${GITHUB_OUTPUT}"
+      - name: Write redacted readiness summary
+        shell: bash
+        run: |
+          {
+            echo "### Party SHADOW_READ runtime readiness"
+            echo "- Release: \`${GITHUB_SHA}\`"
+            echo "- Scope fingerprint: \`${{ steps.readiness.outputs.scope_fingerprint }}\`"
+            echo "- Manifest: \`${{ steps.readiness.outputs.manifest_checksum }}\`"
+            echo "- Valid until: \`${{ steps.readiness.outputs.valid_until }}\`"
+            echo "- Runtime attestation: \`ready=true\`"
+            echo "- Production inventory: \`readOnly=true\`"
+            echo "- Readiness variables: \`not changed\`"
+          } >> "${GITHUB_STEP_SUMMARY}"
