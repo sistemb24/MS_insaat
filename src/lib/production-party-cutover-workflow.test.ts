@@ -3,9 +3,8 @@ import { resolve } from "node:path";
 
 import { expect, test } from "vitest";
 
-const preflightWorkflow = readFileSync(
-  resolve(process.cwd(), ".github/workflows/production-party-cutover-preflight.yml"),
-  "utf8",
+const preflightWorkflow = readWorkflow(
+  "production-party-cutover-preflight.yml",
 );
 
 test("production cutover preflight workflow is manual, exact-release and read-only", () => {
@@ -25,13 +24,7 @@ test("production cutover preflight workflow is manual, exact-release and read-on
 });
 
 test("production cutover migration is exact, backup/restore gated and activation-free", () => {
-  const workflow = readFileSync(
-    resolve(
-      process.cwd(),
-      ".github/workflows/production-party-cutover-migration.yml",
-    ),
-    "utf8",
-  );
+  const workflow = readWorkflow("production-party-cutover-migration.yml");
   const backup = workflow.indexOf("pnpm production:backup:execute");
   const restore = workflow.indexOf("pnpm production:restore:rehearsal");
   const preGate = workflow.indexOf(
@@ -69,13 +62,7 @@ test("production cutover migration is exact, backup/restore gated and activation
 });
 
 test("production cutover transition is exact, runtime-gated and rollback-safe", () => {
-  const workflow = readFileSync(
-    resolve(
-      process.cwd(),
-      ".github/workflows/production-party-cutover-transition.yml",
-    ),
-    "utf8",
-  );
+  const workflow = readWorkflow("production-party-cutover-transition.yml");
   const execute = workflow.indexOf("pnpm production:party-cutover:transition");
   const postflight = workflow.indexOf(
     "pnpm production:party-cutover:transition:postflight",
@@ -115,3 +102,10 @@ test("production cutover transition is exact, runtime-gated and rollback-safe", 
     /pnpm db:migrate|prisma migrate deploy|production:backup|production:restore|R2_/,
   );
 });
+
+function readWorkflow(fileName: string) {
+  return readFileSync(
+    resolve(process.cwd(), ".github/workflows", fileName),
+    "utf8",
+  ).replace(/\r\n/g, "\n");
+}

@@ -15,6 +15,11 @@ import {
 } from "./subscription-route-guard";
 import type { SubscriptionOverview } from "./subscription-service";
 import type { TenantScope, TenantUserRole } from "./tenant-scope";
+import {
+  createPartyShadowReadObserverIfSupported,
+  type PartyShadowReadObserver,
+} from "./party-shadow-read-prisma-observer";
+import type { PartySlug } from "./party-read-model";
 
 export const GLOBAL_SEARCH_SOURCE_CANDIDATE_LIMIT = 24;
 
@@ -124,7 +129,12 @@ const allowedSearchRoles: readonly TenantUserRole[] = [
 
 export function createGlobalSearchPrismaRepository(
   prisma: GlobalSearchPrismaClientLike,
+  options: { partyShadowReadObserver?: PartyShadowReadObserver | null } = {},
 ): GlobalSearchRepository {
+  const partyShadowReadObserver = options.partyShadowReadObserver === undefined
+    ? createPartyShadowReadObserverIfSupported(prisma)
+    : options.partyShadowReadObserver;
+
   return {
     async search(input) {
       const preparedQuery = prepareGlobalSearchQuery(input.query);
@@ -178,6 +188,12 @@ export function createGlobalSearchPrismaRepository(
 
       const sourceCandidates = (await Promise.all(sourceTasks)).flat();
 
+      if (partyShadowReadObserver) {
+        await Promise.all(partySearchSlugs.map((slug) =>
+          partyShadowReadObserver.observeRead({ scope: input.scope, slug })
+        ));
+      }
+
       return buildGlobalSearchResponse(preparedQuery, [
         ...navigationCandidates,
         ...sourceCandidates,
@@ -185,6 +201,12 @@ export function createGlobalSearchPrismaRepository(
     },
   };
 }
+
+const partySearchSlugs: readonly PartySlug[] = [
+  "musteriler",
+  "tedarikciler",
+  "taseronlar",
+];
 
 async function searchEntityRecords(
   prisma: GlobalSearchPrismaClientLike,

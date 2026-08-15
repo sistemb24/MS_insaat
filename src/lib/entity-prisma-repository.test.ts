@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
 import { getEntityDefinition } from "./entities";
 import { createEntityPrismaRepository } from "./entity-prisma-repository";
@@ -124,6 +124,46 @@ describe("Prisma entity repository adapter", () => {
         data: expect.objectContaining({ name: "Yeni Kalıcı Tedarikçi" }),
       }),
     ]);
+  });
+
+  it("keeps legacy rows authoritative while observing Party reads and writes", async () => {
+    const definition = getEntityDefinition("musteriler");
+    expect(definition).toBeDefined();
+    const prisma = createFakePrismaClient([{
+      tenantId: defaultTenantScope.tenantId,
+      companyId: defaultTenantScope.companyId,
+      periodId: defaultTenantScope.periodId,
+      slug: "musteriler",
+      code: "MUS-0001",
+      data: { name: "Legacy Müşteri", status: "Aktif" },
+      createdBy: "user-main",
+      updatedBy: "user-main",
+      createdAt: new Date("2026-08-14T00:00:00.000Z"),
+      updatedAt: new Date("2026-08-14T00:00:00.000Z"),
+    }]);
+    const observer = {
+      observeLegacyWrite: vi.fn(async () => undefined),
+      observeRead: vi.fn(async () => undefined),
+    };
+    const repository = createEntityPrismaRepository(prisma, {
+      partyShadowReadObserver: observer,
+    });
+
+    const rows = await repository.read({ scope: defaultTenantScope, definition: definition! });
+    expect(rows).toEqual([
+      expect.objectContaining({ code: "MUS-0001", name: "Legacy Müşteri" }),
+    ]);
+    expect(observer.observeRead).toHaveBeenCalledWith({
+      scope: defaultTenantScope,
+      slug: "musteriler",
+    });
+
+    await repository.replace({ scope: defaultTenantScope, definition: definition!, rows });
+    expect(observer.observeLegacyWrite).toHaveBeenCalledWith({
+      scope: defaultTenantScope,
+      slug: "musteriler",
+    });
+    expect(prisma.entityRecord.rows[0]?.data.name).toBe("Legacy Müşteri");
   });
 });
 

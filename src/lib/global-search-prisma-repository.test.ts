@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
 import { listSubscriptionOverview } from "./subscription-service";
 import {
@@ -6,6 +6,7 @@ import {
   GLOBAL_SEARCH_SOURCE_CANDIDATE_LIMIT,
   type GlobalSearchPrismaClientLike,
 } from "./global-search-prisma-repository";
+import type { PartyShadowReadObserver } from "./party-shadow-read-prisma-observer";
 import { defaultTenantScope, type TenantScope } from "./tenant-scope";
 
 type SearchCall = {
@@ -358,6 +359,44 @@ describe("global search Prisma repository", () => {
       }),
     ).rejects.toThrow("TENDER_SOURCE_FAILED");
     expect(fake.calls.map((call) => call.source)).toContain("tender");
+  });
+
+  it("observes all three Party groups without changing legacy search results", async () => {
+    const fake = createFakePrisma({
+      entityRecord: [scoped({
+        id: "legacy-customer",
+        slug: "musteriler",
+        code: "MUS-ATLAS",
+        data: { name: "Atlas Müşteri", status: "Aktif" },
+      })],
+    });
+    const observeRead = vi.fn<PartyShadowReadObserver["observeRead"]>(
+      async () => undefined,
+    );
+    const observer: PartyShadowReadObserver = {
+      observeLegacyWrite: vi.fn(async () => undefined),
+      observeRead,
+    };
+    const repository = createGlobalSearchPrismaRepository(fake.client, {
+      partyShadowReadObserver: observer,
+    });
+
+    const result = await repository.search({
+      query: "atlas",
+      scope: defaultTenantScope,
+      subscriptionOverview: activeOverview(),
+      today: "2026-07-22",
+    });
+
+    expect("results" in result ? result.results : []).toEqual([
+      expect.objectContaining({ code: "MUS-ATLAS", title: "Atlas Müşteri" }),
+    ]);
+    expect(observeRead.mock.calls.map(([input]) => input.slug).sort()).toEqual([
+      "musteriler",
+      "taseronlar",
+      "tedarikciler",
+    ]);
+    expect(observer.observeLegacyWrite).not.toHaveBeenCalled();
   });
 });
 
