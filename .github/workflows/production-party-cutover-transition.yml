@@ -56,6 +56,10 @@ on:
         description: Exact approved cutover state manifest checksum
         required: true
         type: string
+      expected_runtime_readiness_manifest_checksum:
+        description: Exact unexpired runtime readiness manifest checksum
+        required: false
+        type: string
 
 permissions:
   contents: read
@@ -107,6 +111,9 @@ jobs:
       NOA_RUNTIME_ENV: production
       NOA_SOURCE_REF: ${{ github.ref }}
       NOA_PARTY_SHADOW_RUNTIME_READY_RELEASE_SHA: ${{ vars.PRODUCTION_PARTY_SHADOW_RUNTIME_READY_RELEASE_SHA }}
+      NOA_PARTY_SHADOW_RUNTIME_READY_MANIFEST_SHA256: ${{ vars.PRODUCTION_PARTY_SHADOW_RUNTIME_READY_MANIFEST_SHA256 }}
+      NOA_PARTY_SHADOW_RUNTIME_READY_UNTIL: ${{ vars.PRODUCTION_PARTY_SHADOW_RUNTIME_READY_UNTIL }}
+      NOA_PARTY_SHADOW_RUNTIME_EXPECTED_MANIFEST_SHA256: ${{ inputs.expected_runtime_readiness_manifest_checksum }}
     steps:
       - name: Verify activation runtime readiness before checkout
         shell: bash
@@ -115,6 +122,13 @@ jobs:
           case "${NOA_PARTY_CUTOVER_TRANSITION_KIND}" in
             ACTIVATE|ACTIVATE_RETRY)
               test "${NOA_PARTY_SHADOW_RUNTIME_READY_RELEASE_SHA:-}" = "${GITHUB_SHA}"
+              test "${NOA_PARTY_SHADOW_RUNTIME_READY_MANIFEST_SHA256:-}" = \
+                "${NOA_PARTY_SHADOW_RUNTIME_EXPECTED_MANIFEST_SHA256}"
+              [[ "${NOA_PARTY_SHADOW_RUNTIME_READY_MANIFEST_SHA256}" =~ ^[a-f0-9]{64}$ ]]
+              ready_until_epoch="$(date --date="${NOA_PARTY_SHADOW_RUNTIME_READY_UNTIL:-}" +%s)"
+              now_epoch="$(date +%s)"
+              test "${ready_until_epoch}" -gt "${now_epoch}"
+              test "${ready_until_epoch}" -le "$((now_epoch + 3900))"
               ;;
             ROLLBACK|ROLLBACK_RETRY)
               ;;

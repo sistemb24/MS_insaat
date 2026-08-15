@@ -93,6 +93,14 @@ test("production cutover transition is exact, runtime-gated and rollback-safe", 
   expect(workflow).toContain(
     'test "${NOA_PARTY_SHADOW_RUNTIME_READY_RELEASE_SHA:-}" = "${GITHUB_SHA}"',
   );
+  expect(workflow).toContain(
+    "vars.PRODUCTION_PARTY_SHADOW_RUNTIME_READY_MANIFEST_SHA256",
+  );
+  expect(workflow).toContain(
+    "vars.PRODUCTION_PARTY_SHADOW_RUNTIME_READY_UNTIL",
+  );
+  expect(workflow).toContain("ready_until_epoch");
+  expect(workflow).toContain("now_epoch + 3900");
   expect(readiness).toBeGreaterThan(-1);
   expect(checkout).toBeGreaterThan(readiness);
   expect(execute).toBeGreaterThan(-1);
@@ -101,6 +109,40 @@ test("production cutover transition is exact, runtime-gated and rollback-safe", 
   expect(workflow).not.toMatch(
     /pnpm db:migrate|prisma migrate deploy|production:backup|production:restore|R2_/,
   );
+});
+
+test("production shadow runtime readiness proves runtime before read-only inventory", () => {
+  const workflow = readWorkflow(
+    "production-party-shadow-runtime-readiness.yml",
+  );
+  const runtime = workflow.indexOf(
+    "Verify exact deployed runtime before any database secret access",
+  );
+  const inventorySecret = workflow.indexOf(
+    "secrets.PRODUCTION_TENANT_INVENTORY_DATABASE_URL",
+  );
+  const inventory = workflow.indexOf(
+    "pnpm production:party-shadow-runtime:readiness",
+  );
+
+  expect(workflow).toContain("workflow_dispatch:");
+  expect(workflow).toContain("github.ref == 'refs/heads/main'");
+  expect(workflow).toContain("inputs.expected_release_sha == github.sha");
+  expect(workflow).toContain("production-party-shadow-runtime-readiness");
+  expect(workflow).toContain(
+    "NOA_APPROVED_PRODUCTION_ORIGIN: ${{ vars.PRODUCTION_APP_ORIGIN }}",
+  );
+  expect(workflow).toContain("environment: production");
+  expect(workflow).toContain("permissions:\n  contents: read");
+  expect(workflow).toContain("group: noa-production-recovery");
+  expect(runtime).toBeGreaterThan(-1);
+  expect(inventorySecret).toBeGreaterThan(runtime);
+  expect(inventory).toBeGreaterThan(inventorySecret);
+  expect(workflow).not.toContain("secrets.PRODUCTION_DATABASE_URL");
+  expect(workflow).not.toMatch(
+    /pnpm db:migrate|prisma migrate deploy|shadow-activate|shadow-rollback|gh variable set/,
+  );
+  expect(workflow).toContain("Readiness variables: \\`not changed\\`");
 });
 
 function readWorkflow(fileName: string) {

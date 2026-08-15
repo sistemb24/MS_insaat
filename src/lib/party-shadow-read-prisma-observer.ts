@@ -15,6 +15,8 @@ import {
   type PartyShadowCutoverState,
   type PartyShadowReadObservation,
 } from "./party-shadow-read";
+import { writePartyShadowReadSafetyAlert } from "./party-shadow-read-alert";
+import { isPartyShadowRuntimeSafetyStatus } from "./party-shadow-runtime-contract";
 import { writeStructuredLog, type StructuredLogFields } from "./structured-logger";
 
 type PartyRoleWithParty = PartyParityRoleRecord & {
@@ -53,14 +55,18 @@ type StructuredLogWriter = (
   fields?: StructuredLogFields,
 ) => void;
 
+type SafetyAlertWriter = typeof writePartyShadowReadSafetyAlert;
+
 export function createPartyShadowReadPrismaObserver(
   prisma: PartyShadowReadPrismaClientLike,
   options: {
+    alert?: SafetyAlertWriter;
     log?: StructuredLogWriter;
     runtimeReleaseId?: string;
   } = {},
 ): PartyShadowReadObserver {
   const log = options.log ?? writeStructuredLog;
+  const alert = options.alert ?? writePartyShadowReadSafetyAlert;
   const runtimeReleaseId = normalizeReleaseId(
     options.runtimeReleaseId
       ?? process.env.VERCEL_GIT_COMMIT_SHA
@@ -83,14 +89,17 @@ export function createPartyShadowReadPrismaObserver(
           ...observation,
           durationMs: Date.now() - startedAt,
         });
+        writeSafetyAlert(alert, observation);
       } catch (error) {
-        log("warn", "party.shadow_read.parity", {
+        const failure = {
           durationMs: Date.now() - startedAt,
           errorName: error instanceof Error ? error.name : "UnknownError",
           scopeFingerprint: partyShadowScopeFingerprint(parityScope),
           slug,
-          status: "SHADOW_READ_ERROR",
-        });
+          status: "SHADOW_READ_ERROR" as const,
+        };
+        log("warn", "party.shadow_read.parity", failure);
+        writeSafetyAlert(alert, failure);
       }
     },
 
@@ -100,34 +109,64 @@ export function createPartyShadowReadPrismaObserver(
         const { state, stateCount } = await readState(prisma, parityScope);
         if (stateCount === 0 && !state) return;
         if (stateCount !== 1 || !state) {
-          log("warn", "party.shadow_read.legacy_write", {
+          const invalidState = {
             scopeFingerprint: partyShadowScopeFingerprint(parityScope),
             slug,
             stateCount,
-            status: "INVALID_CUTOVER_STATE",
-          });
+            status: "INVALID_CUTOVER_STATE" as const,
+          };
+          log("warn", "party.shadow_read.legacy_write", invalidState);
+          writeSafetyAlert(alert, invalidState);
           return;
         }
         if (state.mode !== "SHADOW_READ") return;
 
-        log("warn", "party.shadow_read.legacy_write", {
+        const warning = {
           mode: state.mode,
           releaseId: state.releaseId,
           revisionNo: state.revisionNo,
           scopeFingerprint: partyShadowScopeFingerprint(parityScope),
           slug,
-          status: "LEGACY_WRITE_WHILE_SHADOW",
-        });
+          status: "LEGACY_WRITE_WHILE_SHADOW" as const,
+        };
+        log("warn", "party.shadow_read.legacy_write", warning);
+        writeSafetyAlert(alert, warning);
       } catch (error) {
-        log("warn", "party.shadow_read.legacy_write", {
+        const failure = {
           errorName: error instanceof Error ? error.name : "UnknownError",
           scopeFingerprint: partyShadowScopeFingerprint(parityScope),
           slug,
-          status: "SHADOW_READ_ERROR",
-        });
+          status: "SHADOW_READ_ERROR" as const,
+        };
+        log("warn", "party.shadow_read.legacy_write", failure);
+        writeSafetyAlert(alert, failure);
       }
     },
   };
+}
+
+function writeSafetyAlert(
+  writer: SafetyAlertWriter,
+  value: {
+    releaseId?: string;
+    revisionNo?: number;
+    scopeFingerprint: string;
+    slug: PartySlug;
+    status: string;
+  },
+) {
+  if (!isPartyShadowRuntimeSafetyStatus(value.status)) return;
+  try {
+    writer({
+      releaseId: value.releaseId,
+      revisionNo: value.revisionNo,
+      scopeFingerprint: value.scopeFingerprint,
+      slug: value.slug,
+      status: value.status,
+    });
+  } catch {
+    // Gözlemleme ana legacy okuma/yazma akışını asla kesmez.
+  }
 }
 
 export function createPartyShadowReadObserverIfSupported(

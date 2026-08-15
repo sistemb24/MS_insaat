@@ -4587,3 +4587,66 @@ kaynak yine 68 migration/117 public tablo ve C2 geçici DB artığı 0 bulundu.
 Production DB okunmadı/yazılmadı; branch, stage, commit, push veya workflow işlemi
 yapılmadı. Dilim **İZOLE POSTGRESQL SHADOW_READ RUNTIME KABULÜ TAMAMLANDI /
 YAYIN HAZIRLIĞI VE PRODUCTION READINESS AYRI ONAY BEKLİYOR** durumundadır.
+
+**Mevcut durum yol haritası Dilim 3B-E2-B2-B3-C3-A production SHADOW_READ runtime readiness preflight, redacted manifest ve gözlemleme güvenlik kapıları — 15.08.2026:**
+Production origin'deki kapalı runtime attestation route'u çalışan
+`VERCEL_GIT_COMMIT_SHA`/`NOA_RELEASE_ID`, server-side `APP_BASE_URL` fingerprint'i,
+legacy-authoritative runtime sözleşme checksum'u, redacted structured log ve
+production Sentry SDK/proje hazırlığını veri veya sentetik event üretmeden kanıtlar.
+Workflow girdisi ayrıca oluşturulmamış `PRODUCTION_APP_ORIGIN` repository variable
+değeriyle exact eşleşmeden fail-closed durur. Runtime kanıtı DB secret'ı adı runner
+adımına açılmadan önce geçer; ardından yalnız
+`PRODUCTION_TENANT_INVENTORY_DATABASE_URL` ile transaction-level salt-okunur
+cutover/parity/migration envanteri okunur. Initial 0/0/0 state, 70/0 migration,
+blocksuz parity ve exact release kanıtından 60 dakika geçerli, scope kimliklerini
+yalnız fingerprint olarak taşıyan redacted readiness manifesti üretilir. Transition
+workflow activation/retry için release SHA yanında exact manifest checksum ve en
+fazla 65 dakika ileri tarihli expiry variable kapılarını checkout öncesinde zorunlu
+kılar; rollback/retry bu kapılardan bağımsız kalır. Runtime observer'ın beş negatif
+durumu sabit `noa.*` etiketleriyle production Sentry'ye yönlendirilir, ham cari/scope
+verisi taşınmaz ve aynı release/scope/slug/status sinyali beş dakika throttling ile
+olay fırtınasına karşı korunur; alert hatası legacy kullanıcı akışına taşınmaz.
+Hedefli 6 dosya/22 test, tam 421 dosya/2.250 test, type-check, Prisma validate,
+sıfır uyarılı lint, 103 route production build, YAML parse ve diff-check geçti.
+Resmî secret-scan launcher'ı tsx/esbuild `spawn EPERM` ortam sınırında durduğu için
+aynı 1.363 dosya uzantısı ve altı yüksek güvenli pattern PowerShell ile birebir
+tarandı; bulgu 0'dır. GitHub/Vercel variable veya secret değiştirilmedi, workflow
+dispatch edilmedi ve production DB okunmadı/yazılmadı. Dilim **KODLAMA VE YEREL
+KALİTE KAPILARI TAMAMLANDI / İZOLE POSTGRESQL KABULÜ, YAYINLAMA VE CANLI
+READINESS ÇALIŞTIRMASI AYRI ONAY BEKLİYOR** durumundadır.
+
+**Mevcut durum yol haritası Dilim 3B-E2-B2-B3-C3-B izole PostgreSQL runtime readiness, redacted manifest ve gözlemleme güvenlik kapıları kabul runner kodlaması — 15.08.2026:**
+Yalnız `NOA_RUNTIME_ENV=test`, exact confirmation ve local PostgreSQL URL'siyle
+açılan C3-B harness'i kodlandı. Runner kaynak DB'ye yazmadan güvenli adlı geçici
+kardeş DB oluşturacak, 70 migration uygulayacak ve active tenant/company/period/
+admin ile doğrulanmış sıfır-aday backfill fixture'ı kuracaktır. Runtime attestation
+dış ağa çıkmadan injected fetch üzerinde exact GET/header/no-store/redirect
+sözleşmesiyle, production benzeri release/origin/contract ve hazır Sentry
+configuration kanıtıyla yürütülür. Transaction-level salt-okunur envanterden
+0/0/0 initial cutover, 70/0 migration, blocksuz parity, deterministik checksum,
+60 dakikalık freshness, kanonik Base64 round-trip ve ham scope/actor/origin/DB/
+Sentry/fixture verisi taşımayan manifest zorunludur. Release, contract, origin,
+alerting, status allowlist, migration, parity, initial-state ve attestation drift
+senaryoları fail-closed reddedilir; writable credential ayrıca reddedilmelidir.
+Beş negatif runtime status'ü gerçek Prisma observer akışında injected capture ile
+kanıtlanır; alert alanları allowlist/redaction kontrolünden geçer, aynı sinyalin beş
+dakikalık throttle davranışı kontrollü saatle doğrulanır ve alert adapter hatasının
+legacy sonucu kesmediği zorunludur. Bunun için production Sentry adapter'ı varsayılan
+kalırken capture/clock/throttle state'i izole edilebilen dar factory refactor'ı
+eklendi; runner gerçek Sentry eventi üretmez. Kaynak migration/table envanteri
+önce/sonra karşılaştırılır ve geçici DB her sonuçta force-drop edilir. Hedefli 5
+dosya/21 test, tam 422 dosya/2.254 test, type-check, Prisma validate, sıfır uyarılı
+lint, 103 route production build ve diff-check geçti. Resmî secret-scan launcher'ı
+tsx/esbuild `spawn EPERM` ortam sınırında durduğu için aynı 1.366 dosya uzantısı ve
+altı yüksek güvenli pattern PowerShell ile birebir tarandı; bulgu 0'dır. Onaylı
+local PostgreSQL çalıştırmasında kaynak başlangıç envanteri 68 migration/117 public
+tablo ve C3-B geçici DB artığı 0 olarak doğrulandı. Güvenli adlı geçici DB'ye 70
+migration uygulandı; read-only manifest, initial 0/0/0 zinciri, deterministik/fresh/
+redacted manifest, attestation round-trip ve request contract, tüm blocker
+reddetmeleri, writable credential reddi, beş negatif alert status'ü, throttle,
+redaksiyon ve alert hata yalıtımı `true` döndü. Runner `ready=true`, kaynak envanter
+değişmezliği ve cleanup `true` sonucuyla tamamlandı. Bağımsız son kontrolde kaynak
+yine 68 migration/117 public tablo ve geçici DB artığı 0 bulundu. Production DB,
+dış HTTP/Sentry, GitHub/Vercel variable, secret ve workflow durumu değiştirilmedi.
+Dilim **İZOLE POSTGRESQL RUNTIME READINESS/MANIFEST/GÖZLEMLEME KABULÜ TAMAMLANDI /
+YAYIN HAZIRLIĞI AYRI ONAY BEKLİYOR** durumundadır.
