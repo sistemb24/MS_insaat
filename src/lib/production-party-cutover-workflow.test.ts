@@ -124,6 +124,13 @@ test("production shadow runtime readiness proves runtime before read-only invent
   const inventory = workflow.indexOf(
     "pnpm production:party-shadow-runtime:readiness",
   );
+  const generateStep = workflow.indexOf(
+    "- name: Generate Prisma client without database mutation",
+  );
+  const generateDatabaseUrl = workflow.indexOf(
+    "DATABASE_URL: postgresql://prisma_generate:unused@127.0.0.1:5432/prisma_generate",
+  );
+  const generateCommand = workflow.indexOf("run: pnpm db:generate");
 
   expect(workflow).toContain("workflow_dispatch:");
   expect(workflow).toContain("github.ref == 'refs/heads/main'");
@@ -136,8 +143,14 @@ test("production shadow runtime readiness proves runtime before read-only invent
   expect(workflow).toContain("permissions:\n  contents: read");
   expect(workflow).toContain("group: noa-production-recovery");
   expect(runtime).toBeGreaterThan(-1);
+  expect(generateStep).toBeGreaterThan(runtime);
+  expect(generateDatabaseUrl).toBeGreaterThan(generateStep);
+  expect(generateCommand).toBeGreaterThan(generateDatabaseUrl);
   expect(inventorySecret).toBeGreaterThan(runtime);
+  expect(inventorySecret).toBeGreaterThan(generateCommand);
   expect(inventory).toBeGreaterThan(inventorySecret);
+  expect(workflow.match(/postgresql:\/\/prisma_generate:unused@127\.0\.0\.1:5432\/prisma_generate/g)).toHaveLength(1);
+  expect(workflow.match(/secrets\.PRODUCTION_TENANT_INVENTORY_DATABASE_URL/g)).toHaveLength(1);
   expect(workflow).not.toContain("secrets.PRODUCTION_DATABASE_URL");
   expect(workflow).not.toMatch(
     /pnpm db:migrate|prisma migrate deploy|shadow-activate|shadow-rollback|gh variable set/,
