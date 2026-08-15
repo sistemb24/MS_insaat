@@ -144,6 +144,10 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile --ignore-scripts
       - name: Generate Prisma client without schema mutation
+        env:
+          # Prisma 7 loads prisma.config.ts during generate and requires a syntactically
+          # valid URL. This loopback-only value is never used to connect to a database.
+          DATABASE_URL: postgresql://prisma_generate:unused@127.0.0.1:5432/prisma_generate
         run: pnpm db:generate
       - name: Execute exact PRE-gated Party cutover transition
         id: transition
