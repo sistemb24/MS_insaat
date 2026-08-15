@@ -71,6 +71,28 @@ test("production cutover transition is exact, runtime-gated and rollback-safe", 
     "Verify activation runtime readiness before checkout",
   );
   const checkout = workflow.indexOf("actions/checkout@v4");
+  const generateStep = workflow.indexOf(
+    "- name: Generate Prisma client without schema mutation",
+  );
+  const generateDatabaseUrl = workflow.indexOf(
+    "DATABASE_URL: postgresql://prisma_generate:unused@127.0.0.1:5432/prisma_generate",
+  );
+  const generateCommand = workflow.indexOf("run: pnpm db:generate");
+  const executeStep = workflow.indexOf(
+    "- name: Execute exact PRE-gated Party cutover transition",
+  );
+  const postflightStep = workflow.indexOf(
+    "- name: Verify exact read-only Party cutover postflight",
+  );
+  const writeDatabaseSecret = workflow.indexOf(
+    "secrets.PRODUCTION_DATABASE_URL",
+  );
+  const firstInventorySecret = workflow.indexOf(
+    "secrets.PRODUCTION_TENANT_INVENTORY_DATABASE_URL",
+  );
+  const lastInventorySecret = workflow.lastIndexOf(
+    "secrets.PRODUCTION_TENANT_INVENTORY_DATABASE_URL",
+  );
 
   expect(workflow).toContain("workflow_dispatch:");
   expect(workflow).toContain("github.ref == 'refs/heads/main'");
@@ -103,8 +125,22 @@ test("production cutover transition is exact, runtime-gated and rollback-safe", 
   expect(workflow).toContain("now_epoch + 3900");
   expect(readiness).toBeGreaterThan(-1);
   expect(checkout).toBeGreaterThan(readiness);
+  expect(generateStep).toBeGreaterThan(checkout);
+  expect(generateDatabaseUrl).toBeGreaterThan(generateStep);
+  expect(generateCommand).toBeGreaterThan(generateDatabaseUrl);
+  expect(executeStep).toBeGreaterThan(generateCommand);
+  expect(writeDatabaseSecret).toBeGreaterThan(executeStep);
+  expect(writeDatabaseSecret).toBeLessThan(execute);
+  expect(firstInventorySecret).toBeGreaterThan(executeStep);
+  expect(firstInventorySecret).toBeLessThan(execute);
   expect(execute).toBeGreaterThan(-1);
+  expect(postflightStep).toBeGreaterThan(execute);
+  expect(lastInventorySecret).toBeGreaterThan(postflightStep);
+  expect(lastInventorySecret).toBeLessThan(postflight);
   expect(postflight).toBeGreaterThan(execute);
+  expect(workflow.match(/postgresql:\/\/prisma_generate:unused@127\.0\.0\.1:5432\/prisma_generate/g)).toHaveLength(1);
+  expect(workflow.match(/secrets\.PRODUCTION_DATABASE_URL/g)).toHaveLength(1);
+  expect(workflow.match(/secrets\.PRODUCTION_TENANT_INVENTORY_DATABASE_URL/g)).toHaveLength(2);
   expect(workflow).toContain(".ready == true and .blockers == []");
   expect(workflow).not.toMatch(
     /pnpm db:migrate|prisma migrate deploy|production:backup|production:restore|R2_/,
