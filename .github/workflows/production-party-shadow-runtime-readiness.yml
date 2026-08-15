@@ -85,6 +85,10 @@ jobs:
           encoded="$(printf '%s' "${result}" | base64 -w0)"
           echo "attestation_base64=${encoded}" >> "${GITHUB_OUTPUT}"
       - name: Generate Prisma client without database mutation
+        env:
+          # Prisma 7 loads prisma.config.ts during generate and requires a syntactically
+          # valid URL. This loopback-only value is never used to connect to a database.
+          DATABASE_URL: postgresql://prisma_generate:unused@127.0.0.1:5432/prisma_generate
         run: pnpm db:generate
       - name: Read exact production cutover inventory and write redacted manifest
         id: readiness
