@@ -69,6 +69,7 @@
     "party-cutover:acceptance:verify": "npm run db:generate && tsx scripts/verify-party-cutover-acceptance.ts",
     "party-cutover:preflight:acceptance:verify": "npm run db:generate && tsx scripts/verify-production-party-cutover-preflight-acceptance.ts",
     "party-cutover:transition:acceptance:verify": "npm run db:generate && tsx scripts/verify-production-party-cutover-transition-acceptance.ts",
+    "party-shadow-read:acceptance:verify": "npm run db:generate && tsx scripts/verify-party-shadow-read-acceptance.ts",
     "fleet:acceptance:verify": "tsx scripts/verify-vehicle-fleet-acceptance.ts",
     "tire:acceptance:verify": "tsx scripts/verify-vehicle-tire-acceptance.ts",
     "search:benchmark": "tsx scripts/benchmark-global-search.ts",

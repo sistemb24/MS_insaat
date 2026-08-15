@@ -4522,3 +4522,68 @@ test, tam 414 dosya/2.222 test, type-check, Prisma validate, sıfır uyarılı l
 run bloğu syntax kontrolü ve tracked/untracked diff-check geçti. Dilim **WORKFLOW
 KODU VE YEREL STATİK DOĞRULAMA TAMAMLANDI / YAYINLAMA, RUNTIME CONSUMER VE
 ACTIVATION READINESS VARIABLE'I AYRI ONAY BEKLİYOR** durumundadır.
+
+**Mevcut durum yol haritası Dilim 3B-E2-B2-B3-C1 legacy-authoritative Party SHADOW_READ runtime consumer ve redacted parity gözlemleme — 14.08.2026:**
+Üç cari slug'ının mevcut `EntityRecord` çıktısını değiştirmeyen merkezi runtime
+observer'ı kodlandı. Exact scope'taki cutover state'i transaction-level
+`READ ONLY` ve `REPEATABLE READ` snapshot'ta okunur; state yoksa veya
+`LEGACY_ONLY` ise Party sorgusu yapılmaz. `SHADOW_READ` yalnız revision 1 ve
+`VERCEL_GIT_COMMIT_SHA`/`NOA_RELEASE_ID` ile exact state release eşleşmesinde
+Party/PartyRole grubunu aynı snapshot'ta legacy ortak alanlarıyla karşılaştırır.
+Kullanıcı, API, fatura, hakediş, puantaj ve dashboard sonucu her durumda legacy
+satırlardan gelir; observer hatası çağırana taşınmaz. Match, drift, release/state
+uyuşmazlığı ve hata çıktıları yalnız scope fingerprint, slug, checksum, issue kodu,
+sayı ve süre taşır; cari kodu/adı/vergi/iletişim veya ham scope kimliği loglanmaz.
+Global arama da üç grubu sidecar olarak gözlemlerken arama sonucunu legacy tutar.
+Shadow sırasında legacy create/update/import/deactivate sonrası Party yazılmadan
+`LEGACY_WRITE_WHILE_SHADOW` uyarısı üretilir; state'i olmayan normal legacy
+scope'lar sessiz kalır. Migration, Party/PartyRole yazımı, dual-write, API/UI
+sözleşme değişikliği, production variable/secret veya workflow dispatch yapılmadı.
+Nested worktree doğrulaması için resmi Next 16.2.9 `turbopack.root` sözleşmesiyle
+proje kökü exact `cwd`'ye sabitlendi; Vitest config ESM-safe runner'a ve workflow
+testleri CRLF/LF bağımsız okumaya alındı. Hedefli 5 dosya/21 test, tam 416
+dosya/2.232 test, type-check, Prisma validate, sıfır uyarılı lint, 102 sayfalık
+production build, 1.349 dosyalık eşdeğer yüksek güvenli secret scan ve diff-check
+geçti. Dilim **RUNTIME CONSUMER KODU VE YEREL DOĞRULAMA TAMAMLANDI / İZOLE
+POSTGRESQL RUNTIME ACCEPTANCE, YAYINLAMA VE PRODUCTION ACTIVATION AYRI ONAY
+BEKLİYOR** durumundadır.
+
+**Mevcut durum yol haritası Dilim 3B-E2-B2-B3-C2 izole PostgreSQL SHADOW_READ runtime acceptance runner — 14-15.08.2026:**
+Yalnız `NOA_RUNTIME_ENV=test`, exact confirmation ve local PostgreSQL URL'siyle
+açılan runtime kabul harness'i kodlandı. Harness kaynak DB'ye yazmadan güvenli
+adlı geçici kardeş DB oluşturur, mevcut 70 migration'ı uygular ve üç Party slug'ı
+için missing-state/`LEGACY_ONLY` legacy otoritesi, exact-release `SHADOW_MATCH`,
+release mismatch fail-safe, parity drift altında değişmeyen legacy çıktı, tenant-
+company-period izolasyonu, global aramanın legacy-authoritative kalması, shadow
+sırasında legacy replace uyarısı, Party/PartyRole envanter değişmezliği, observer
+DB hatasının çağırana taşınmaması ve log redaksiyonunu gerçek Prisma repository
+akışlarında kanıtlamayı zorunlu tutar. Başarılı shadow gözlemi transaction-level
+`READ ONLY` kontrolünden geçer; unit sözleşmesi ayrıca `REPEATABLE READ`, max-wait
+ve timeout seçeneklerini exact doğrular. Kaynak migration/public-table envanteri
+önce/sonra karşılaştırılır ve geçici DB her sonuçta force-drop edilir. Yeni schema,
+migration, Party yazımı, dual-write, production secret/variable veya workflow
+dispatch eklenmedi. İlk local PostgreSQL çalıştırmasında geçici DB'ye 70 migration
+uygulandı; ancak full `TenantScope` nesnesinin Prisma `where` koşullarına sızması
+observer sorgularını fail-closed hata yoluna düşürdüğü için `ready=false` alındı.
+Kaynak 68 migration/117 public tablo olarak değişmeden kaldı, runner cleanup kanıtı
+`true` döndürdü ve bağımsız kontrolde geçici DB artığı 0 bulundu. Dar düzeltmeyle
+observer giriş scope'u yalnız `tenantId/companyId/periodId` alanlarına normalize
+edildi; sorgular ve fingerprint aynı kanonik scope'u kullanır hale getirildi. Full
+runtime scope'un Prisma'ya taşınmadığını ve fingerprint'in kullanıcı alanlarından
+etkilenmediğini doğrulayan regression testleri eklendi. Düzeltme sonrası hedefli 5
+dosya/22 test, tam 417 dosya/2.236 test, type-check, Prisma validate, sıfır uyarılı
+lint, 1.352 dosyalık eşdeğer yüksek güvenli secret scan ve diff-check geçti. Resmî
+secret-scan launcher'ının tsx/esbuild `spawn EPERM` ortam sınırı nedeniyle aynı
+tracked/untracked uzantı kümesi ve altı pattern PowerShell ile birebir tarandı.
+Production build C2 kodundan bağımsız olarak iki denemede de Google Fonts'tan
+`Inter` ve `JetBrains Mono` indirilemediği için dış ağ kapısında bloke oldu.
+Kontrollü PostgreSQL retry'da geçici DB'ye 70 migration uygulandı ve üç slug için
+`shadowMatchSlugCount=3`; missing-state/legacy-only otoritesi, release mismatch
+fail-safe, parity drift altında legacy çıktı, scope izolasyonu, global arama legacy
+otoritesi, legacy write redaksiyonu, Party/PartyRole değişmezliği, observer hata
+yalıtımı ve tüm log redaksiyon kanıtları `true` döndü. Runner `ready=true`, kaynak
+envanter değişmezliği ve cleanup `true` sonucuyla tamamlandı. Bağımsız son kontrolde
+kaynak yine 68 migration/117 public tablo ve C2 geçici DB artığı 0 bulundu.
+Production DB okunmadı/yazılmadı; branch, stage, commit, push veya workflow işlemi
+yapılmadı. Dilim **İZOLE POSTGRESQL SHADOW_READ RUNTIME KABULÜ TAMAMLANDI /
+YAYIN HAZIRLIĞI VE PRODUCTION READINESS AYRI ONAY BEKLİYOR** durumundadır.

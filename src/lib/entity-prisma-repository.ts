@@ -4,6 +4,11 @@ import type {
   EntityRepositoryReplaceInput,
 } from "./entity-crud-service";
 import type { EntityRow } from "./entities";
+import {
+  createPartyShadowReadObserverIfSupported,
+  type PartyShadowReadObserver,
+} from "./party-shadow-read-prisma-observer";
+import { isPartySlug } from "./party-read-model";
 
 type EntityRecord = {
   tenantId: string;
@@ -42,13 +47,22 @@ export type EntityPrismaClientLike = {
 
 export function createEntityPrismaRepository(
   prisma: EntityPrismaClientLike,
+  options: { partyShadowReadObserver?: PartyShadowReadObserver | null } = {},
 ): EntityCrudRepository {
+  const partyShadowReadObserver = options.partyShadowReadObserver === undefined
+    ? createPartyShadowReadObserverIfSupported(prisma)
+    : options.partyShadowReadObserver;
+
   return {
     async read({ scope, definition }: EntityRepositoryReadInput) {
       const records = await prisma.entityRecord.findMany({
         where: createWhere(scopeFields(scope, definition.slug)),
         orderBy: { code: "asc" },
       });
+
+      if (partyShadowReadObserver && isPartySlug(definition.slug)) {
+        await partyShadowReadObserver.observeRead({ scope, slug: definition.slug });
+      }
 
       return records.map(recordToRow);
     },
@@ -62,15 +76,20 @@ export function createEntityPrismaRepository(
 
       await prisma.entityRecord.deleteMany({ where });
 
-      if (rows.length === 0) {
-        return;
+      if (rows.length > 0) {
+        await prisma.entityRecord.createMany({
+          data: rows.map((row) =>
+            rowToRecord(scopeFields(scope, definition.slug), row),
+          ),
+        });
       }
 
-      await prisma.entityRecord.createMany({
-        data: rows.map((row) =>
-          rowToRecord(scopeFields(scope, definition.slug), row),
-        ),
-      });
+      if (partyShadowReadObserver && isPartySlug(definition.slug)) {
+        await partyShadowReadObserver.observeLegacyWrite({
+          scope,
+          slug: definition.slug,
+        });
+      }
     },
   };
 }
